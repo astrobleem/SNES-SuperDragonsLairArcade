@@ -5,7 +5,7 @@ __url__ = ("dforce3000", "dforce3000.de")
 __version__ = "0.1"
 
 '''
-road blaster iphone xml parser, spits out scene event list, video frames, audio file
+Dragon's Lair iphone xml parser, spits out scene event list, video frames, audio file
 '''
 
 import os
@@ -159,7 +159,7 @@ def copyConvertedFrames(chapter, options):
   chapterFrameNumber = 0
   for totalFrameNumber in range(chapter.framestart, chapter.frameend + 1):
 	logging.debug('Processing copy frame %s' % totalFrameNumber)
-	sourceBaseName = "%s/roadblaster_%06d.gfx_video" % (options.get('convertedframefolder'), totalFrameNumber + 1)
+	sourceBaseName = "%s/dragonslair_%06d.gfx_video" % (options.get('convertedframefolder'), totalFrameNumber + 1)
 	targetBaseName = "%s/video_%06d.gfx_video" % (chapterOutDir, chapterFrameNumber + 1)
 	for extension in ('tiles', 'tilemap', 'palette'):
 	  copyFile("%s.%s" % (sourceBaseName, extension), "%s.%s" % (targetBaseName, extension))
