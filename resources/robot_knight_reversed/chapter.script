@@ -1,0 +1,107 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER robot_knight_reversed
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter robot_knight_reversed_enter_room   
+
+    EVENT Event.seq8.CLS.PTR $0000 $0012 EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.seq7.CLS.PTR $0000 $0019 EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.seq3.CLS.PTR $0000 $001f EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.seq4.CLS.PTR $0000 $0026 EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.seq5.CLS.PTR $0000 $0033 EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.seq6.CLS.PTR $0000 $0033 EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.seq9.CLS.PTR $0000 $0041 EventResult.playchapter robot_knight_reversed_seq12   
+
+    EVENT Event.seq10.CLS.PTR $0000 $004c EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $54fa EventResult.none none robot_knight_reversed  
+
+    EVENT Event.seq8_left.CLS.PTR $0004 $0012 EventResult.playchapter robot_knight_reversed_seq9 4750 left seq9
+
+    EVENT Event.seq8_up.CLS.PTR $0004 $0012 EventResult.playchapter robot_knight_reversed_seq11  up seq11
+
+    EVENT Event.seq8_right.CLS.PTR $0004 $0012 EventResult.playchapter robot_knight_reversed_seq11  right seq11
+
+    EVENT Event.seq8_down.CLS.PTR $0004 $0012 EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.seq7_right.CLS.PTR $0009 $0018 EventResult.playchapter robot_knight_reversed_seq8 2191 right seq8
+
+    EVENT Event.seq7_up.CLS.PTR $0009 $0018 EventResult.playchapter robot_knight_reversed_seq11  up seq11
+
+    EVENT Event.seq7_down.CLS.PTR $0009 $0018 EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.seq7_left.CLS.PTR $0009 $0018 EventResult.playchapter robot_knight_reversed_seq11  left seq11
+
+    EVENT Event.seq3_right.CLS.PTR $000d $001e EventResult.playchapter robot_knight_reversed_seq4 2191 right seq4
+
+    EVENT Event.seq3_up.CLS.PTR $000d $001e EventResult.playchapter robot_knight_reversed_seq11  up seq11
+
+    EVENT Event.seq3_down.CLS.PTR $000d $001e EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.seq3_left.CLS.PTR $000d $001e EventResult.playchapter robot_knight_reversed_seq11  left seq11
+
+    EVENT Event.seq4_up.CLS.PTR $0016 $0025 EventResult.playchapter robot_knight_reversed_seq5 2675 up seq5
+
+    EVENT Event.seq4_down.CLS.PTR $0016 $0025 EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.seq4_right.CLS.PTR $0016 $0025 EventResult.playchapter robot_knight_reversed_seq11  right seq11
+
+    EVENT Event.seq4_left.CLS.PTR $0016 $0025 EventResult.playchapter robot_knight_reversed_seq11  left seq11
+
+    EVENT Event.seq6_left.CLS.PTR $001d $0032 EventResult.playchapter robot_knight_reversed_seq7 2191 left seq7
+
+    EVENT Event.seq6_up.CLS.PTR $001d $0032 EventResult.playchapter robot_knight_reversed_seq11  up seq11
+
+    EVENT Event.seq6_down.CLS.PTR $001d $0032 EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.seq6_right.CLS.PTR $001d $0032 EventResult.playchapter robot_knight_reversed_seq11  right seq11
+
+    EVENT Event.seq5_right.CLS.PTR $001d $0033 EventResult.playchapter robot_knight_reversed_seq6 2191 right seq6
+
+    EVENT Event.seq5_up.CLS.PTR $001d $0033 EventResult.playchapter robot_knight_reversed_seq11  up seq11
+
+    EVENT Event.seq5_down.CLS.PTR $001d $0033 EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.seq5_left.CLS.PTR $001d $0033 EventResult.playchapter robot_knight_reversed_seq11  left seq11
+
+    EVENT Event.seq9_up.CLS.PTR $002b $0040 EventResult.playchapter robot_knight_reversed_seq12  up seq12
+
+    EVENT Event.seq9_action.CLS.PTR $002b $0040 EventResult.playchapter robot_knight_reversed_seq10 2675 action seq10
+
+    EVENT Event.start_dead.CLS.PTR $520e $5246 EventResult.playchapter robot_knight_reversed_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $5246 $52af EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.seq2.CLS.PTR $5246 $52af EventResult.playchapter robot_knight_reversed_seq11   
+
+    EVENT Event.enter_room_left.CLS.PTR $5299 $52af EventResult.playchapter robot_knight_reversed_seq3 2191 left seq3
+
+    EVENT Event.enter_room_down.CLS.PTR $5299 $52af EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.enter_room_right.CLS.PTR $5299 $52af EventResult.playchapter robot_knight_reversed_seq11  right seq11
+
+    EVENT Event.seq2_left.CLS.PTR $5299 $52af EventResult.playchapter robot_knight_reversed_seq3 2191 left seq3
+
+    EVENT Event.seq2_down.CLS.PTR $5299 $52af EventResult.playchapter robot_knight_reversed_seq11  down seq11
+
+    EVENT Event.seq2_right.CLS.PTR $5299 $52af EventResult.playchapter robot_knight_reversed_seq11  right seq11
+
+    EVENT Event.enter_room_up.CLS.PTR $5299 $5300 EventResult.playchapter robot_knight_reversed_seq11  up seq11
+
+    EVENT Event.seq2_up.CLS.PTR $5299 $5300 EventResult.playchapter robot_knight_reversed_seq11  up seq11
+
+    EVENT Event.seq11.CLS.PTR $5456 $5486 EventResult.restartchapter robot_knight_reversed   
+
+    EVENT Event.seq12.CLS.PTR $5486 $549b EventResult.restartchapter robot_knight_reversed   
+
+    EVENT Event.game_over.CLS.PTR $54a6 $54fa EventResult.none none   
+
+    DIE

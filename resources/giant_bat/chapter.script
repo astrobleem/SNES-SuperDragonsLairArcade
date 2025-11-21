@@ -1,0 +1,65 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER giant_bat
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter giant_bat_enter_room   
+
+    EVENT Event.seq3.CLS.PTR $0000 $0021 EventResult.playchapter giant_bat_seq10   
+
+    EVENT Event.seq3_right.CLS.PTR $0000 $0021 EventResult.playchapter giant_bat_seq10  right seq10
+
+    EVENT Event.seq6.CLS.PTR $0000 $0022 EventResult.playchapter giant_bat_seq7   
+
+    EVENT Event.seq7.CLS.PTR $0000 $002a EventResult.none none   
+
+    EVENT Event.seq4.CLS.PTR $0000 $0038 EventResult.playchapter giant_bat_seq9   
+
+    EVENT Event.seq4_down.CLS.PTR $0000 $0038 EventResult.playchapter giant_bat_seq10  down seq10
+
+    EVENT Event.seq4_right.CLS.PTR $0000 $0038 EventResult.playchapter giant_bat_seq8  right seq8
+
+    EVENT Event.seq5.CLS.PTR $0000 $0038 EventResult.playchapter giant_bat_seq11   
+
+    EVENT Event.chapter.CLS.PTR $0000 $3932 EventResult.none none giant_bat  
+
+    EVENT Event.seq5_down.CLS.PTR $000e $001b EventResult.playchapter giant_bat_seq10  down seq10
+
+    EVENT Event.seq3_left.CLS.PTR $0013 $0020 EventResult.playchapter giant_bat_seq4 2191 left seq4
+
+    EVENT Event.seq4_upleft.CLS.PTR $0028 $0037 EventResult.playchapter giant_bat_seq5 1326 upleft seq5
+
+    EVENT Event.seq4_up.CLS.PTR $0028 $0037 EventResult.playchapter giant_bat_seq5 1326 up seq5
+
+    EVENT Event.seq4_left.CLS.PTR $0028 $0037 EventResult.playchapter giant_bat_seq5 1326 left seq5
+
+    EVENT Event.seq5_action.CLS.PTR $0029 $0037 EventResult.playchapter giant_bat_seq6 3551 action seq6
+
+    EVENT Event.seq5_left.CLS.PTR $0029 $0037 EventResult.playchapter giant_bat_seq11  left seq11
+
+    EVENT Event.start_dead.CLS.PTR $3701 $3739 EventResult.playchapter giant_bat_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $3761 $3779 EventResult.playchapter giant_bat_seq8   
+
+    EVENT Event.enter_room_action.CLS.PTR $3761 $3779 EventResult.playchapter giant_bat_seq3 1326 action seq3
+
+    EVENT Event.enter_room_right.CLS.PTR $3761 $3779 EventResult.playchapter giant_bat_seq10  right seq10
+
+    EVENT Event.seq2.CLS.PTR $3761 $3779 EventResult.playchapter giant_bat_seq8   
+
+    EVENT Event.seq2_action.CLS.PTR $3761 $3779 EventResult.playchapter giant_bat_seq3 1326 action seq3
+
+    EVENT Event.seq2_right.CLS.PTR $3761 $3779 EventResult.playchapter giant_bat_seq10  right seq10
+
+    EVENT Event.seq11.CLS.PTR $3859 $387e EventResult.restartchapter giant_bat   
+
+    EVENT Event.seq8.CLS.PTR $387d $38ae EventResult.restartchapter giant_bat   
+
+    EVENT Event.seq9.CLS.PTR $38ad $38bf EventResult.playchapter giant_bat_seq10   
+
+    EVENT Event.seq10.CLS.PTR $38c1 $38de EventResult.restartchapter giant_bat   
+
+    EVENT Event.game_over.CLS.PTR $38de $3932 EventResult.none none   
+
+    DIE

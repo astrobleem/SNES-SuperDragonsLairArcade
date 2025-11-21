@@ -1,0 +1,113 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER flying_horse_reversed
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter flying_horse_reversed_enter_room   
+
+    EVENT Event.seq3_right.CLS.PTR $0000 $0011 EventResult.playchapter flying_horse_reversed_seq9  right seq9
+
+    EVENT Event.seq3_left.CLS.PTR $0000 $0011 EventResult.playchapter flying_horse_reversed_seq9  left seq9
+
+    EVENT Event.seq7_right.CLS.PTR $0000 $0012 EventResult.playchapter flying_horse_reversed_seq9  right seq9
+
+    EVENT Event.seq7_left.CLS.PTR $0000 $0012 EventResult.playchapter flying_horse_reversed_seq9  left seq9
+
+    EVENT Event.seq6_right.CLS.PTR $0000 $001d EventResult.playchapter flying_horse_reversed_seq9  right seq9
+
+    EVENT Event.seq3.CLS.PTR $0000 $001e EventResult.playchapter flying_horse_reversed_seq9   
+
+    EVENT Event.seq4_left.CLS.PTR $0000 $001f EventResult.playchapter flying_horse_reversed_seq9  left seq9
+
+    EVENT Event.seq4_right.CLS.PTR $0000 $001f EventResult.playchapter flying_horse_reversed_seq9  right seq9
+
+    EVENT Event.seq5_right.CLS.PTR $0000 $001f EventResult.playchapter flying_horse_reversed_seq9  right seq9
+
+    EVENT Event.seq5_left.CLS.PTR $0000 $001f EventResult.playchapter flying_horse_reversed_seq9  left seq9
+
+    EVENT Event.seq7.CLS.PTR $0000 $0023 EventResult.playchapter flying_horse_reversed_seq9   
+
+    EVENT Event.seq6.CLS.PTR $0000 $002b EventResult.playchapter flying_horse_reversed_seq10   
+
+    EVENT Event.seq4.CLS.PTR $0000 $002f EventResult.playchapter flying_horse_reversed_seq9   
+
+    EVENT Event.seq5.CLS.PTR $0000 $002f EventResult.playchapter flying_horse_reversed_seq9   
+
+    EVENT Event.seq8.CLS.PTR $0000 $0078 EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $42a2 EventResult.none none flying_horse_reversed  
+
+    EVENT Event.seq7_up.CLS.PTR $0009 $0023 EventResult.playchapter flying_horse_reversed_seq9  up seq9
+
+    EVENT Event.seq3_right.CLS.PTR $0011 $001d EventResult.playchapter flying_horse_reversed_seq4 915 right seq4
+
+    EVENT Event.seq3_up.CLS.PTR $0011 $001e EventResult.playchapter flying_horse_reversed_seq9  up seq9
+
+    EVENT Event.seq3_left.CLS.PTR $0011 $001e EventResult.playchapter flying_horse_reversed_seq11  left seq11
+
+    EVENT Event.seq7_right.CLS.PTR $0012 $0022 EventResult.playchapter flying_horse_reversed_seq8 495 right seq8
+
+    EVENT Event.seq7_left.CLS.PTR $0012 $0022 EventResult.playchapter flying_horse_reversed_seq11  left seq11
+
+    EVENT Event.seq4_up.CLS.PTR $0014 $002f EventResult.playchapter flying_horse_reversed_seq9  up seq9
+
+    EVENT Event.seq6_up.CLS.PTR $0016 $002a EventResult.playchapter flying_horse_reversed_seq10  up seq10
+
+    EVENT Event.seq6_left.CLS.PTR $0016 $002a EventResult.playchapter flying_horse_reversed_seq10  left seq10
+
+    EVENT Event.seq5_up.CLS.PTR $0019 $002f EventResult.playchapter flying_horse_reversed_seq9  up seq9
+
+    EVENT Event.seq6_right.CLS.PTR $001d $002b EventResult.playchapter flying_horse_reversed_seq7 1939 right seq7
+
+    EVENT Event.seq4_left.CLS.PTR $001f $002f EventResult.playchapter flying_horse_reversed_seq5 495 left seq5
+
+    EVENT Event.seq4_right.CLS.PTR $001f $002f EventResult.playchapter flying_horse_reversed_seq11  right seq11
+
+    EVENT Event.seq5_right.CLS.PTR $001f $002f EventResult.playchapter flying_horse_reversed_seq6 495 right seq6
+
+    EVENT Event.seq5_left.CLS.PTR $001f $002f EventResult.playchapter flying_horse_reversed_seq11  left seq11
+
+    EVENT Event.start_dead.CLS.PTR $3fd2 $4007 EventResult.playchapter flying_horse_reversed_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $400a $4076 EventResult.playchapter flying_horse_reversed_seq9   
+
+    EVENT Event.seq2.CLS.PTR $400a $4076 EventResult.playchapter flying_horse_reversed_seq9   
+
+    EVENT Event.enter_room_upleft.CLS.PTR $405c $4064 EventResult.playchapter flying_horse_reversed_seq9  upleft seq9
+
+    EVENT Event.enter_room_left.CLS.PTR $405c $4064 EventResult.playchapter flying_horse_reversed_seq9  left seq9
+
+    EVENT Event.enter_room_right.CLS.PTR $405c $4064 EventResult.playchapter flying_horse_reversed_seq9  right seq9
+
+    EVENT Event.seq2_upleft.CLS.PTR $405c $4064 EventResult.playchapter flying_horse_reversed_seq9  upleft seq9
+
+    EVENT Event.seq2_left.CLS.PTR $405c $4064 EventResult.playchapter flying_horse_reversed_seq9  left seq9
+
+    EVENT Event.seq2_right.CLS.PTR $405c $4064 EventResult.playchapter flying_horse_reversed_seq9  right seq9
+
+    EVENT Event.enter_room_upleft.CLS.PTR $4064 $4075 EventResult.playchapter flying_horse_reversed_seq3 915 upleft seq3
+
+    EVENT Event.enter_room_left.CLS.PTR $4064 $4075 EventResult.playchapter flying_horse_reversed_seq3 915 left seq3
+
+    EVENT Event.enter_room_right.CLS.PTR $4064 $4075 EventResult.playchapter flying_horse_reversed_seq11  right seq11
+
+    EVENT Event.seq2_upleft.CLS.PTR $4064 $4075 EventResult.playchapter flying_horse_reversed_seq3 915 upleft seq3
+
+    EVENT Event.seq2_left.CLS.PTR $4064 $4075 EventResult.playchapter flying_horse_reversed_seq3 915 left seq3
+
+    EVENT Event.seq2_right.CLS.PTR $4064 $4075 EventResult.playchapter flying_horse_reversed_seq11  right seq11
+
+    EVENT Event.enter_room_up.CLS.PTR $4065 $4075 EventResult.playchapter flying_horse_reversed_seq9  up seq9
+
+    EVENT Event.seq2_up.CLS.PTR $4065 $4075 EventResult.playchapter flying_horse_reversed_seq9  up seq9
+
+    EVENT Event.seq9.CLS.PTR $41ba $41e6 EventResult.restartchapter flying_horse_reversed   
+
+    EVENT Event.seq10.CLS.PTR $41ea $422a EventResult.restartchapter flying_horse_reversed   
+
+    EVENT Event.seq11.CLS.PTR $422a $424f EventResult.restartchapter flying_horse_reversed   
+
+    EVENT Event.game_over.CLS.PTR $424e $42a2 EventResult.none none   
+
+    DIE

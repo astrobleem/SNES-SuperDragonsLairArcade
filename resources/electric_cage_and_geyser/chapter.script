@@ -1,0 +1,75 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER electric_cage_and_geyser
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter electric_cage_and_geyser_enter_room   
+
+    EVENT Event.seq3_up.CLS.PTR $0000 $0009 EventResult.playchapter electric_cage_and_geyser_seq4 1326 up seq4
+
+    EVENT Event.seq3.CLS.PTR $0000 $0024 EventResult.playchapter electric_cage_and_geyser_seq7   
+
+    EVENT Event.seq3_down.CLS.PTR $0000 $002a EventResult.playchapter electric_cage_and_geyser_seq7  down seq7
+
+    EVENT Event.seq3_right.CLS.PTR $0000 $002a EventResult.playchapter electric_cage_and_geyser_seq7  right seq7
+
+    EVENT Event.seq3_left.CLS.PTR $0000 $002a EventResult.playchapter electric_cage_and_geyser_seq7  left seq7
+
+    EVENT Event.chapter.CLS.PTR $0000 $69d4 EventResult.none none electric_cage_and_geyser  
+
+    EVENT Event.seq3_up.CLS.PTR $0009 $000e EventResult.playchapter electric_cage_and_geyser_seq6  up seq6
+
+    EVENT Event.seq3_up.CLS.PTR $000e $0019 EventResult.playchapter electric_cage_and_geyser_seq4 1326 up seq4
+
+    EVENT Event.seq3_up.CLS.PTR $0019 $001f EventResult.playchapter electric_cage_and_geyser_seq6  up seq6
+
+    EVENT Event.seq3_up.CLS.PTR $001f $002a EventResult.playchapter electric_cage_and_geyser_seq4 1326 up seq4
+
+    EVENT Event.start_dead.CLS.PTR $67cd $6804 EventResult.playchapter electric_cage_and_geyser_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $6804 $684a EventResult.playchapter electric_cage_and_geyser_seq7   
+
+    EVENT Event.seq2.CLS.PTR $6804 $684a EventResult.playchapter electric_cage_and_geyser_seq7   
+
+    EVENT Event.enter_room_up.CLS.PTR $6812 $684a EventResult.playchapter electric_cage_and_geyser_seq3 915 up seq3
+
+    EVENT Event.seq2_up.CLS.PTR $6812 $684a EventResult.playchapter electric_cage_and_geyser_seq3 915 up seq3
+
+    EVENT Event.enter_room_right.CLS.PTR $683c $684a EventResult.playchapter electric_cage_and_geyser_seq7  right seq7
+
+    EVENT Event.enter_room_left.CLS.PTR $683c $684a EventResult.playchapter electric_cage_and_geyser_seq7  left seq7
+
+    EVENT Event.seq2_right.CLS.PTR $683c $684a EventResult.playchapter electric_cage_and_geyser_seq7  right seq7
+
+    EVENT Event.seq2_left.CLS.PTR $683c $684a EventResult.playchapter electric_cage_and_geyser_seq7  left seq7
+
+    EVENT Event.enter_room_down.CLS.PTR $6840 $684a EventResult.playchapter electric_cage_and_geyser_seq7  down seq7
+
+    EVENT Event.seq2_down.CLS.PTR $6840 $684a EventResult.playchapter electric_cage_and_geyser_seq7  down seq7
+
+    EVENT Event.seq4.CLS.PTR $6877 $68f8 EventResult.playchapter electric_cage_and_geyser_seq8   
+
+    EVENT Event.seq4_right.CLS.PTR $68a6 $68f8 EventResult.playchapter electric_cage_and_geyser_seq7  right seq7
+
+    EVENT Event.seq4_left.CLS.PTR $68c2 $68cc EventResult.playchapter electric_cage_and_geyser_seq5 2191 left seq5
+
+    EVENT Event.seq4_left.CLS.PTR $68cc $68d7 EventResult.playchapter electric_cage_and_geyser_seq8  left seq8
+
+    EVENT Event.seq4_left.CLS.PTR $68d7 $68e1 EventResult.playchapter electric_cage_and_geyser_seq5 2191 left seq5
+
+    EVENT Event.seq4_left.CLS.PTR $68e2 $68ed EventResult.playchapter electric_cage_and_geyser_seq8  left seq8
+
+    EVENT Event.seq4_left.CLS.PTR $68ed $68f8 EventResult.playchapter electric_cage_and_geyser_seq5 2191 left seq5
+
+    EVENT Event.seq5.CLS.PTR $68fb $690d EventResult.none none   
+
+    EVENT Event.seq6.CLS.PTR $6914 $6938 EventResult.restartchapter electric_cage_and_geyser   
+
+    EVENT Event.seq7.CLS.PTR $6937 $695c EventResult.restartchapter electric_cage_and_geyser   
+
+    EVENT Event.seq8.CLS.PTR $695c $6980 EventResult.restartchapter electric_cage_and_geyser   
+
+    EVENT Event.game_over.CLS.PTR $6980 $69d4 EventResult.none none   
+
+    DIE

@@ -1,0 +1,71 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER flying_horse
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter flying_horse_enter_room   
+
+    EVENT Event.second_fire.CLS.PTR $0000 $0020 EventResult.playchapter flying_horse_hit_pillar   
+
+    EVENT Event.fifth_fire.CLS.PTR $0000 $0021 EventResult.playchapter flying_horse_hit_pillar   
+
+    EVENT Event.third_fire.CLS.PTR $0000 $002b EventResult.playchapter flying_horse_hit_pillar   
+
+    EVENT Event.brick_wall.CLS.PTR $0000 $002c EventResult.playchapter flying_horse_hit_brick_wall   
+
+    EVENT Event.fourth_fire.CLS.PTR $0000 $002f EventResult.playchapter flying_horse_hit_pillar   
+
+    EVENT Event.exit_room.CLS.PTR $0000 $0078 EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $2925 EventResult.none none flying_horse  
+
+    EVENT Event.fifth_fire_up.CLS.PTR $0009 $0021 EventResult.playchapter flying_horse_hit_pillar  up hit_pillar
+
+    EVENT Event.second_fire_left.CLS.PTR $0011 $0020 EventResult.playchapter flying_horse_third_fire 495 left third_fire
+
+    EVENT Event.second_fire_up.CLS.PTR $0011 $0020 EventResult.playchapter flying_horse_hit_pillar  up hit_pillar
+
+    EVENT Event.second_fire_right.CLS.PTR $0011 $0020 EventResult.playchapter flying_horse_burned_to_death  right burned_to_death
+
+    EVENT Event.fifth_fire_left.CLS.PTR $0011 $0020 EventResult.playchapter flying_horse_exit_room 495 left exit_room
+
+    EVENT Event.fifth_fire_right.CLS.PTR $0011 $0020 EventResult.playchapter flying_horse_burned_to_death  right burned_to_death
+
+    EVENT Event.third_fire_up.CLS.PTR $0014 $002b EventResult.playchapter flying_horse_hit_pillar  up hit_pillar
+
+    EVENT Event.brick_wall_up.CLS.PTR $0016 $002b EventResult.playchapter flying_horse_hit_brick_wall  up hit_brick_wall
+
+    EVENT Event.brick_wall_right.CLS.PTR $0016 $002b EventResult.playchapter flying_horse_hit_brick_wall  right hit_brick_wall
+
+    EVENT Event.fourth_fire_up.CLS.PTR $0019 $002f EventResult.playchapter flying_horse_hit_pillar  up hit_pillar
+
+    EVENT Event.third_fire_right.CLS.PTR $001d $002b EventResult.playchapter flying_horse_fourth_fire 495 right fourth_fire
+
+    EVENT Event.third_fire_left.CLS.PTR $001d $002b EventResult.playchapter flying_horse_burned_to_death  left burned_to_death
+
+    EVENT Event.brick_wall_left.CLS.PTR $001f $002c EventResult.playchapter flying_horse_fifth_fire 1326 left fifth_fire
+
+    EVENT Event.fourth_fire_left.CLS.PTR $001f $002f EventResult.playchapter flying_horse_brick_wall 495 left brick_wall
+
+    EVENT Event.fourth_fire_right.CLS.PTR $001f $002f EventResult.playchapter flying_horse_burned_to_death  right burned_to_death
+
+    EVENT Event.start_dead.CLS.PTR $2656 $2688 EventResult.playchapter flying_horse_enter_room   
+
+    EVENT Event.enter_room.CLS.PTR $268f $26fc EventResult.playchapter flying_horse_hit_pillar   
+
+    EVENT Event.enter_room_right.CLS.PTR $26ea $26fc EventResult.playchapter flying_horse_second_fire 495 right second_fire
+
+    EVENT Event.enter_room_up.CLS.PTR $26ea $26fc EventResult.playchapter flying_horse_hit_pillar  up hit_pillar
+
+    EVENT Event.enter_room_left.CLS.PTR $26ea $26fc EventResult.playchapter flying_horse_burned_to_death  left burned_to_death
+
+    EVENT Event.hit_pillar.CLS.PTR $283e $286e EventResult.restartchapter flying_horse   
+
+    EVENT Event.hit_brick_wall.CLS.PTR $286e $28a5 EventResult.restartchapter flying_horse   
+
+    EVENT Event.burned_to_death.CLS.PTR $28ae $28d2 EventResult.restartchapter flying_horse   
+
+    EVENT Event.game_over.CLS.PTR $28d1 $2925 EventResult.none none   
+
+    DIE

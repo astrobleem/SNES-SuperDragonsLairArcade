@@ -1,0 +1,93 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER flaming_ropes_reversed
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter flaming_ropes_reversed_enter_room   
+
+    EVENT Event.seq5_left.CLS.PTR $0000 $0014 EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.seq4_left.CLS.PTR $0000 $0019 EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.seq5.CLS.PTR $0000 $0023 EventResult.playchapter flaming_ropes_reversed_seq7   
+
+    EVENT Event.seq4.CLS.PTR $0000 $0025 EventResult.playchapter flaming_ropes_reversed_seq8   
+
+    EVENT Event.seq5_up.CLS.PTR $0000 $0029 EventResult.playchapter flaming_ropes_reversed_seq9  up seq9
+
+    EVENT Event.seq5_down.CLS.PTR $0000 $0029 EventResult.playchapter flaming_ropes_reversed_seq9  down seq9
+
+    EVENT Event.seq5_right.CLS.PTR $0000 $0029 EventResult.playchapter flaming_ropes_reversed_seq9  right seq9
+
+    EVENT Event.seq4_right.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_reversed_seq9  right seq9
+
+    EVENT Event.seq4_up.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_reversed_seq9  up seq9
+
+    EVENT Event.seq4_down.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_reversed_seq9  down seq9
+
+    EVENT Event.seq10_left.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.seq6.CLS.PTR $0000 $0031 EventResult.none none   
+
+    EVENT Event.seq10.CLS.PTR $0000 $003e EventResult.playchapter flaming_ropes_reversed_seq9   
+
+    EVENT Event.seq10_up.CLS.PTR $0000 $0045 EventResult.playchapter flaming_ropes_reversed_seq9  up seq9
+
+    EVENT Event.seq10_down.CLS.PTR $0000 $0045 EventResult.playchapter flaming_ropes_reversed_seq9  down seq9
+
+    EVENT Event.chapter.CLS.PTR $0000 $3329 EventResult.none none flaming_ropes_reversed  
+
+    EVENT Event.seq5_left.CLS.PTR $0014 $0028 EventResult.playchapter flaming_ropes_reversed_seq6 0 left seq6
+
+    EVENT Event.seq4_left.CLS.PTR $0019 $002b EventResult.playchapter flaming_ropes_reversed_seq5 0 left seq5
+
+    EVENT Event.seq10_left.CLS.PTR $002b $0045 EventResult.playchapter flaming_ropes_reversed_seq3 379 left seq3
+
+    EVENT Event.start_dead.CLS.PTR $30e6 $3118 EventResult.playchapter flaming_ropes_reversed_seq2   
+
+    EVENT Event.enter_room_left.CLS.PTR $311e $313c EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.seq2_left.CLS.PTR $311e $313c EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.enter_room_up.CLS.PTR $311e $315a EventResult.playchapter flaming_ropes_reversed_seq9  up seq9
+
+    EVENT Event.enter_room_down.CLS.PTR $311e $315a EventResult.playchapter flaming_ropes_reversed_seq9  down seq9
+
+    EVENT Event.seq2_up.CLS.PTR $311e $315a EventResult.playchapter flaming_ropes_reversed_seq9  up seq9
+
+    EVENT Event.seq2_down.CLS.PTR $311e $315a EventResult.playchapter flaming_ropes_reversed_seq9  down seq9
+
+    EVENT Event.enter_room.CLS.PTR $311e $315b EventResult.playchapter flaming_ropes_reversed_seq10   
+
+    EVENT Event.seq2.CLS.PTR $311e $315b EventResult.playchapter flaming_ropes_reversed_seq10   
+
+    EVENT Event.enter_room_left.CLS.PTR $313c $3152 EventResult.playchapter flaming_ropes_reversed_seq3 379 left seq3
+
+    EVENT Event.seq2_left.CLS.PTR $313c $3152 EventResult.playchapter flaming_ropes_reversed_seq3 379 left seq3
+
+    EVENT Event.enter_room_left.CLS.PTR $3152 $3185 EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.seq2_left.CLS.PTR $3152 $3185 EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.seq3_left.CLS.PTR $31a2 $31bd EventResult.playchapter flaming_ropes_reversed_seq9  left seq9
+
+    EVENT Event.seq3.CLS.PTR $31a2 $31c8 EventResult.playchapter flaming_ropes_reversed_seq8   
+
+    EVENT Event.seq3_right.CLS.PTR $31a2 $31ce EventResult.playchapter flaming_ropes_reversed_seq9  right seq9
+
+    EVENT Event.seq3_up.CLS.PTR $31a2 $31ce EventResult.playchapter flaming_ropes_reversed_seq9  up seq9
+
+    EVENT Event.seq3_down.CLS.PTR $31a2 $31ce EventResult.playchapter flaming_ropes_reversed_seq9  down seq9
+
+    EVENT Event.seq3_left.CLS.PTR $31bd $31ce EventResult.playchapter flaming_ropes_reversed_seq4 495 left seq4
+
+    EVENT Event.seq7.CLS.PTR $325a $328b EventResult.restartchapter flaming_ropes_reversed   
+
+    EVENT Event.seq8.CLS.PTR $328a $32d4 EventResult.restartchapter flaming_ropes_reversed   
+
+    EVENT Event.seq9.CLS.PTR $32b0 $32d4 EventResult.restartchapter flaming_ropes_reversed   
+
+    EVENT Event.game_over.CLS.PTR $32d5 $3329 EventResult.none none   
+
+    DIE

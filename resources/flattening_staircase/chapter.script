@@ -1,0 +1,57 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER flattening_staircase
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter flattening_staircase_enter_room   
+
+    EVENT Event.seq5_down.CLS.PTR $0000 $001e EventResult.playchapter flattening_staircase_seq11  down seq11
+
+    EVENT Event.seq4.CLS.PTR $0000 $0024 EventResult.playchapter flattening_staircase_seq5   
+
+    EVENT Event.seq4_down.CLS.PTR $0000 $0024 EventResult.playchapter flattening_staircase_seq8  down seq8
+
+    EVENT Event.seq4_right.CLS.PTR $0000 $0024 EventResult.playchapter flattening_staircase_seq8  right seq8
+
+    EVENT Event.seq6.CLS.PTR $0000 $0030 EventResult.none none   
+
+    EVENT Event.seq3.CLS.PTR $0000 $0035 EventResult.playchapter flattening_staircase_seq8   
+
+    EVENT Event.seq5.CLS.PTR $0000 $004c EventResult.playchapter flattening_staircase_seq7   
+
+    EVENT Event.chapter.CLS.PTR $0000 $1a66 EventResult.none none flattening_staircase  
+
+    EVENT Event.seq4_left.CLS.PTR $0012 $0023 EventResult.playchapter flattening_staircase_seq5 915 left seq5
+
+    EVENT Event.seq4_upleft.CLS.PTR $0012 $0023 EventResult.playchapter flattening_staircase_seq5 915 upleft seq5
+
+    EVENT Event.seq3_action.CLS.PTR $0023 $0034 EventResult.playchapter flattening_staircase_seq4 1939 action seq4
+
+    EVENT Event.seq5_left.CLS.PTR $002f $004c EventResult.playchapter flattening_staircase_seq6 1326 left seq6
+
+    EVENT Event.seq5_right.CLS.PTR $002f $004c EventResult.playchapter flattening_staircase_seq9  right seq9
+
+    EVENT Event.seq5_up.CLS.PTR $002f $004c EventResult.playchapter flattening_staircase_seq9  up seq9
+
+    EVENT Event.start_dead.CLS.PTR $17f4 $182c EventResult.playchapter flattening_staircase_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $1850 $188a EventResult.playchapter flattening_staircase_seq7   
+
+    EVENT Event.seq2.CLS.PTR $1850 $188a EventResult.playchapter flattening_staircase_seq7   
+
+    EVENT Event.enter_room_left.CLS.PTR $1881 $1892 EventResult.playchapter flattening_staircase_seq3 495 left seq3
+
+    EVENT Event.seq2_left.CLS.PTR $1881 $1892 EventResult.playchapter flattening_staircase_seq3 495 left seq3
+
+    EVENT Event.seq7.CLS.PTR $1960 $1991 EventResult.restartchapter flattening_staircase   
+
+    EVENT Event.seq8.CLS.PTR $1990 $19ac EventResult.restartchapter flattening_staircase   
+
+    EVENT Event.seq9.CLS.PTR $19b4 $1a15 EventResult.restartchapter flattening_staircase   
+
+    EVENT Event.seq11.CLS.PTR $19b4 $1a15 EventResult.restartchapter flattening_staircase   
+
+    EVENT Event.game_over.CLS.PTR $1a12 $1a66 EventResult.none none   
+
+    DIE

@@ -1,0 +1,31 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER alice_room
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter alice_room_enter_room   
+
+    EVENT Event.exit_room.CLS.PTR $0000 $002e EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $4818 EventResult.none none alice_room  
+
+    EVENT Event.start_dead.CLS.PTR $469c $46d4 EventResult.playchapter alice_room_enter_room   
+
+    EVENT Event.enter_room.CLS.PTR $46d5 $4705 EventResult.playchapter alice_room_burned_to_death   
+
+    EVENT Event.enter_room_right.CLS.PTR $46d5 $4706 EventResult.playchapter alice_room_exit_room 379 right exit_room
+
+    EVENT Event.enter_room_up.CLS.PTR $46d5 $4706 EventResult.playchapter alice_room_drinks_potion  up drinks_potion
+
+    EVENT Event.enter_room_down.CLS.PTR $46f0 $4706 EventResult.playchapter alice_room_burned_to_death  down burned_to_death
+
+    EVENT Event.enter_room_left.CLS.PTR $46f0 $4706 EventResult.playchapter alice_room_burned_to_death  left burned_to_death
+
+    EVENT Event.drinks_potion.CLS.PTR $4734 $4796 EventResult.restartchapter alice_room   
+
+    EVENT Event.burned_to_death.CLS.PTR $47a0 $47c1 EventResult.restartchapter alice_room   
+
+    EVENT Event.game_over.CLS.PTR $47c4 $4818 EventResult.none none   
+
+    DIE

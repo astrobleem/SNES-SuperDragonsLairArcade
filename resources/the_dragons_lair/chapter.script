@@ -1,0 +1,125 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER the_dragons_lair
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter the_dragons_lair_enter_room   
+
+    EVENT Event.seq9.CLS.PTR $0000 $0023 EventResult.playchapter the_dragons_lair_seq15   
+
+    EVENT Event.seq19.CLS.PTR $0000 $0027 EventResult.restartchapter the_dragons_lair   
+
+    EVENT Event.seq12.CLS.PTR $0000 $0035 EventResult.playchapter the_dragons_lair_seq16   
+
+    EVENT Event.seq8.CLS.PTR $0000 $0057 EventResult.playchapter the_dragons_lair_seq19   
+
+    EVENT Event.seq10.CLS.PTR $0000 $005a EventResult.playchapter the_dragons_lair_seq16   
+
+    EVENT Event.seq11.CLS.PTR $0000 $005d EventResult.playchapter the_dragons_lair_seq18   
+
+    EVENT Event.seq7.CLS.PTR $0000 $0080 EventResult.playchapter the_dragons_lair_seq19   
+
+    EVENT Event.seq6.CLS.PTR $0000 $00b1 EventResult.playchapter the_dragons_lair_seq17   
+
+    EVENT Event.seq4.CLS.PTR $0000 $00ce EventResult.playchapter the_dragons_lair_seq19   
+
+    EVENT Event.seq3.CLS.PTR $0000 $010c EventResult.playchapter the_dragons_lair_seq19   
+
+    EVENT Event.seq13.CLS.PTR $0000 $01bb EventResult.playchapter the_dragons_lair_endgame   
+
+    EVENT Event.seq5.CLS.PTR $0000 $0224 EventResult.playchapter the_dragons_lair_seq14   
+
+    EVENT Event.chapter.CLS.PTR $0000 $7ace EventResult.none none the_dragons_lair  
+
+    EVENT Event.seq9_action.CLS.PTR $0009 $0023 EventResult.playchapter the_dragons_lair_seq10 3551 action seq10
+
+    EVENT Event.seq9_right.CLS.PTR $0009 $0023 EventResult.playchapter the_dragons_lair_seq10 3551 right seq10
+
+    EVENT Event.seq12_action.CLS.PTR $001a $0035 EventResult.playchapter the_dragons_lair_seq13 5000 action seq13
+
+    EVENT Event.seq11_left.CLS.PTR $003a $005d EventResult.playchapter the_dragons_lair_seq12 4750 left seq12
+
+    EVENT Event.seq11_up.CLS.PTR $003a $005d EventResult.playchapter the_dragons_lair_seq12 4750 up seq12
+
+    EVENT Event.seq11_upleft.CLS.PTR $003a $005d EventResult.playchapter the_dragons_lair_seq12 4750 upleft seq12
+
+    EVENT Event.seq11_right.CLS.PTR $003a $005d EventResult.playchapter the_dragons_lair_seq18  right seq18
+
+    EVENT Event.seq8_right.CLS.PTR $003f $0057 EventResult.playchapter the_dragons_lair_seq9 2191 right seq9
+
+    EVENT Event.seq8_up.CLS.PTR $003f $0057 EventResult.playchapter the_dragons_lair_seq9 2191 up seq9
+
+    EVENT Event.seq8_upright.CLS.PTR $003f $0057 EventResult.playchapter the_dragons_lair_seq9 2191 upright seq9
+
+    EVENT Event.seq10_action.CLS.PTR $0040 $005a EventResult.playchapter the_dragons_lair_seq11 4026 action seq11
+
+    EVENT Event.seq10_up.CLS.PTR $0040 $005a EventResult.playchapter the_dragons_lair_seq16  up seq16
+
+    EVENT Event.seq10_down.CLS.PTR $0040 $005a EventResult.playchapter the_dragons_lair_seq16  down seq16
+
+    EVENT Event.seq10_right.CLS.PTR $0040 $005a EventResult.playchapter the_dragons_lair_seq16  right seq16
+
+    EVENT Event.seq10_left.CLS.PTR $0040 $005a EventResult.playchapter the_dragons_lair_seq16  left seq16
+
+    EVENT Event.seq7_down.CLS.PTR $006f $007f EventResult.playchapter the_dragons_lair_seq19  down seq19
+
+    EVENT Event.seq7_right.CLS.PTR $006f $007f EventResult.playchapter the_dragons_lair_seq8 3255 right seq8
+
+    EVENT Event.seq7_left.CLS.PTR $006f $007f EventResult.playchapter the_dragons_lair_seq19  left seq19
+
+    EVENT Event.seq6_up.CLS.PTR $009d $00b0 EventResult.playchapter the_dragons_lair_seq16  up seq16
+
+    EVENT Event.seq6_down.CLS.PTR $009d $00b0 EventResult.playchapter the_dragons_lair_seq7 2191 down seq7
+
+    EVENT Event.seq6_right.CLS.PTR $009d $00b0 EventResult.playchapter the_dragons_lair_seq17  right seq17
+
+    EVENT Event.seq6_left.CLS.PTR $009d $00b0 EventResult.playchapter the_dragons_lair_seq7 2191 left seq7
+
+    EVENT Event.seq6_downleft.CLS.PTR $009d $00b0 EventResult.playchapter the_dragons_lair_seq7 2191 downleft seq7
+
+    EVENT Event.seq6_action.CLS.PTR $009d $00b0 EventResult.playchapter the_dragons_lair_seq17  action seq17
+
+    EVENT Event.seq4_left.CLS.PTR $00a7 $00cd EventResult.playchapter the_dragons_lair_seq5 1326 left seq5
+
+    EVENT Event.seq3_left.CLS.PTR $00fd $010b EventResult.playchapter the_dragons_lair_seq4 1939 left seq4
+
+    EVENT Event.seq3_up.CLS.PTR $00fd $010b EventResult.playchapter the_dragons_lair_seq19  up seq19
+
+    EVENT Event.seq3_right.CLS.PTR $00fd $010b EventResult.playchapter the_dragons_lair_seq19  right seq19
+
+    EVENT Event.seq3_action.CLS.PTR $00fd $010b EventResult.playchapter the_dragons_lair_seq19  action seq19
+
+    EVENT Event.seq5_downleft.CLS.PTR $020f $0222 EventResult.playchapter the_dragons_lair_seq6 2191 downleft seq6
+
+    EVENT Event.seq5_left.CLS.PTR $020f $0222 EventResult.playchapter the_dragons_lair_seq6 2191 left seq6
+
+    EVENT Event.seq5_down.CLS.PTR $020f $0222 EventResult.playchapter the_dragons_lair_seq6 2191 down seq6
+
+    EVENT Event.seq5_action.CLS.PTR $020f $0222 EventResult.playchapter the_dragons_lair_seq14  action seq14
+
+    EVENT Event.start_dead.CLS.PTR $703d $7075 EventResult.playchapter the_dragons_lair_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $7075 $70ea EventResult.playchapter the_dragons_lair_seq19   
+
+    EVENT Event.seq2.CLS.PTR $7075 $70ea EventResult.playchapter the_dragons_lair_seq19   
+
+    EVENT Event.enter_room_left.CLS.PTR $70d3 $70e9 EventResult.playchapter the_dragons_lair_seq3 1326 left seq3
+
+    EVENT Event.seq2_left.CLS.PTR $70d3 $70e9 EventResult.playchapter the_dragons_lair_seq3 1326 left seq3
+
+    EVENT Event.endgame.CLS.PTR $7935 $7a25 EventResult.none none   
+
+    EVENT Event.seq14.CLS.PTR $7971 $79ad EventResult.restartchapter the_dragons_lair   
+
+    EVENT Event.seq15.CLS.PTR $79ad $79dd EventResult.restartchapter the_dragons_lair   
+
+    EVENT Event.seq16.CLS.PTR $79e5 $7a0b EventResult.restartchapter the_dragons_lair   
+
+    EVENT Event.seq17.CLS.PTR $7a0d $7a4a EventResult.restartchapter the_dragons_lair   
+
+    EVENT Event.seq18.CLS.PTR $7a49 $7a7a EventResult.restartchapter the_dragons_lair   
+
+    EVENT Event.game_over.CLS.PTR $7a7a $7ace EventResult.none none   
+
+    DIE

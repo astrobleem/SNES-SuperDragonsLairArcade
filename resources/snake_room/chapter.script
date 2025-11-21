@@ -1,0 +1,53 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER snake_room
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter snake_room_enter_room   
+
+    EVENT Event.seq9.CLS.PTR $0000 $0011 EventResult.playchapter snake_room_seq6   
+
+    EVENT Event.seq9_up.CLS.PTR $0000 $0011 EventResult.playchapter snake_room_seq5 1939 up seq5
+
+    EVENT Event.seq9_upright.CLS.PTR $0000 $0011 EventResult.playchapter snake_room_seq5 1939 upright seq5
+
+    EVENT Event.seq9_right.CLS.PTR $0000 $0011 EventResult.playchapter snake_room_seq5 1939 right seq5
+
+    EVENT Event.seq3.CLS.PTR $0000 $0028 EventResult.playchapter snake_room_seq7   
+
+    EVENT Event.seq4.CLS.PTR $0000 $002b EventResult.playchapter snake_room_seq9   
+
+    EVENT Event.seq5.CLS.PTR $0000 $004b EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $0d10 EventResult.none none snake_room  
+
+    EVENT Event.seq3_action.CLS.PTR $0016 $0027 EventResult.playchapter snake_room_seq4 2675 action seq4
+
+    EVENT Event.seq3_right.CLS.PTR $0016 $0027 EventResult.playchapter snake_room_seq7  right seq7
+
+    EVENT Event.seq4_left.CLS.PTR $0018 $002b EventResult.playchapter snake_room_seq7  left seq7
+
+    EVENT Event.seq4_action.CLS.PTR $0019 $002c EventResult.playchapter snake_room_seq9 49 action seq9
+
+    EVENT Event.start_dead.CLS.PTR $0b4a $0b83 EventResult.playchapter snake_room_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $0b82 $0bc3 EventResult.playchapter snake_room_seq7   
+
+    EVENT Event.seq2.CLS.PTR $0b82 $0bc3 EventResult.playchapter snake_room_seq7   
+
+    EVENT Event.enter_room_action.CLS.PTR $0bb1 $0bc2 EventResult.playchapter snake_room_seq3 495 action seq3
+
+    EVENT Event.enter_room_left.CLS.PTR $0bb1 $0bc2 EventResult.playchapter snake_room_seq7  left seq7
+
+    EVENT Event.seq2_action.CLS.PTR $0bb1 $0bc2 EventResult.playchapter snake_room_seq3 495 action seq3
+
+    EVENT Event.seq2_left.CLS.PTR $0bb1 $0bc2 EventResult.playchapter snake_room_seq7  left seq7
+
+    EVENT Event.seq6.CLS.PTR $0c7e $0ca6 EventResult.playchapter snake_room_seq7   
+
+    EVENT Event.seq7.CLS.PTR $0cae $0cc3 EventResult.restartchapter snake_room   
+
+    EVENT Event.game_over.CLS.PTR $0cbc $0d10 EventResult.none none   
+
+    DIE

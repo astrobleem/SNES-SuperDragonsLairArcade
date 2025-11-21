@@ -1,0 +1,73 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER rolling_balls
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter rolling_balls_enter_room   
+
+    EVENT Event.pit_in_ground_up.CLS.PTR $0000 $0021 EventResult.playchapter rolling_balls_exit_room 379 up exit_room
+
+    EVENT Event.red_ball.CLS.PTR $0000 $002c EventResult.playchapter rolling_balls_big_ball_crushes   
+
+    EVENT Event.red_ball_up.CLS.PTR $0000 $002c EventResult.playchapter rolling_balls_big_ball_crushes  up big_ball_crushes
+
+    EVENT Event.purple_ball.CLS.PTR $0000 $002d EventResult.playchapter rolling_balls_big_ball_crushes   
+
+    EVENT Event.purple_ball_up.CLS.PTR $0000 $002d EventResult.playchapter rolling_balls_big_ball_crushes  up big_ball_crushes
+
+    EVENT Event.pit_in_ground.CLS.PTR $0000 $002d EventResult.playchapter rolling_balls_big_ball_crushes   
+
+    EVENT Event.blue_ball.CLS.PTR $0000 $002f EventResult.playchapter rolling_balls_big_ball_crushes   
+
+    EVENT Event.blue_ball_up.CLS.PTR $0000 $002f EventResult.playchapter rolling_balls_big_ball_crushes  up big_ball_crushes
+
+    EVENT Event.green_ball.CLS.PTR $0000 $002f EventResult.playchapter rolling_balls_big_ball_crushes   
+
+    EVENT Event.green_ball_up.CLS.PTR $0000 $002f EventResult.playchapter rolling_balls_big_ball_crushes  up big_ball_crushes
+
+    EVENT Event.orange_ball.CLS.PTR $0000 $002f EventResult.playchapter rolling_balls_big_ball_crushes   
+
+    EVENT Event.orange_ball_up.CLS.PTR $0000 $002f EventResult.playchapter rolling_balls_big_ball_crushes  up big_ball_crushes
+
+    EVENT Event.exit_room.CLS.PTR $0000 $0037 EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $67cc EventResult.none none rolling_balls  
+
+    EVENT Event.red_ball_down.CLS.PTR $0014 $0019 EventResult.playchapter rolling_balls_small_ball_crushes  down small_ball_crushes
+
+    EVENT Event.purple_ball_down.CLS.PTR $0015 $001a EventResult.playchapter rolling_balls_small_ball_crushes  down small_ball_crushes
+
+    EVENT Event.green_ball_down.CLS.PTR $0015 $001b EventResult.playchapter rolling_balls_small_ball_crushes  down small_ball_crushes
+
+    EVENT Event.orange_ball_down.CLS.PTR $0015 $001b EventResult.playchapter rolling_balls_small_ball_crushes  down small_ball_crushes
+
+    EVENT Event.blue_ball_down.CLS.PTR $0015 $001d EventResult.playchapter rolling_balls_small_ball_crushes  down small_ball_crushes
+
+    EVENT Event.red_ball_down.CLS.PTR $0019 $002b EventResult.playchapter rolling_balls_blue_ball 379 down blue_ball
+
+    EVENT Event.purple_ball_down.CLS.PTR $001a $002c EventResult.playchapter rolling_balls_pit_in_ground 379 down pit_in_ground
+
+    EVENT Event.green_ball_down.CLS.PTR $001b $002e EventResult.playchapter rolling_balls_orange_ball 379 down orange_ball
+
+    EVENT Event.orange_ball_down.CLS.PTR $001b $002e EventResult.playchapter rolling_balls_purple_ball 379 down purple_ball
+
+    EVENT Event.blue_ball_down.CLS.PTR $001d $002e EventResult.playchapter rolling_balls_green_ball 379 down green_ball
+
+    EVENT Event.start_dead.CLS.PTR $6524 $655c EventResult.playchapter rolling_balls_enter_room   
+
+    EVENT Event.enter_room.CLS.PTR $655d $65ec EventResult.playchapter rolling_balls_big_ball_crushes   
+
+    EVENT Event.enter_room_down.CLS.PTR $65d2 $65d9 EventResult.playchapter rolling_balls_small_ball_crushes  down small_ball_crushes
+
+    EVENT Event.enter_room_down.CLS.PTR $65d9 $65ec EventResult.playchapter rolling_balls_red_ball 251 down red_ball
+
+    EVENT Event.enter_room_up.CLS.PTR $65da $65ec EventResult.playchapter rolling_balls_big_ball_crushes  up big_ball_crushes
+
+    EVENT Event.big_ball_crushes.CLS.PTR $674e $6760 EventResult.restartchapter rolling_balls   
+
+    EVENT Event.small_ball_crushes.CLS.PTR $675f $6778 EventResult.restartchapter rolling_balls   
+
+    EVENT Event.game_over.CLS.PTR $6778 $67cc EventResult.none none   
+
+    DIE

@@ -208,7 +208,10 @@ def evaluate_function(name: str, args: Iterable[LuaValue]) -> Number:
     """Evaluate known helper functions from game.lua."""
 
     if name == "time_to_ms":
-        seconds, milliseconds = list(args)
+        values = list(args)
+        if len(values) < 2:
+            raise ValueError("time_to_ms() expects at least two arguments")
+        seconds, milliseconds = values[0], values[1]
         return int(seconds) * 1000 + int(milliseconds)
     if name == "laserdisc_frame_to_ms":
         (frame,) = args

@@ -1,0 +1,21 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER attract_mode
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter attract_mode_attract_movie   
+
+    EVENT Event.chapter.CLS.PTR $0000 $04ae EventResult.none none attract_mode  
+
+    EVENT Event.start_dead.CLS.PTR $008b $00d3 EventResult.playchapter attract_mode_attract_movie   
+
+    EVENT Event.insert_coins.CLS.PTR $0094 $010c EventResult.playchapter attract_mode_attract_movie   
+
+    EVENT Event.insert_coins_start.CLS.PTR $0094 $0633 EventResult.none start_game  start None
+
+    EVENT Event.attract_movie.CLS.PTR $00a7 $04ae EventResult.playchapter attract_mode_insert_coins   
+
+    EVENT Event.attract_movie_start.CLS.PTR $00a7 $0646 EventResult.none start_game  start None
+
+    DIE
