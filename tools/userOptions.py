@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''
 stupid little command-line args parser
@@ -41,7 +41,7 @@ class Options():
 
 
   def __sanitizeOptions( self, options ):
-	for optionName, optionValue in options.iteritems():
+        for optionName, optionValue in options.items():
 	  sanitizerLUT = self.__getSanitizerLUT()
 	  options[optionName] = sanitizerLUT[optionValue['type']]( optionName, optionValue )	
 	return options
