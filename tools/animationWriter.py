@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = "Matthias Nagler <matt@dforce.de>"
 __url__ = ("dforce3000", "dforce3000.de")
@@ -63,7 +63,7 @@ options = {}
 
 
 INFINITY = 1e300000
-HEADER_MAGIC = 'SP'
+HEADER_MAGIC = b'SP'
 HEADER_SIZE = 9
 FRAME_HEADER_SIZE = 6
 ALLOWED_FRAME_FILETYPES = ('.png', '.gif', '.bmp')
@@ -206,38 +206,39 @@ def main():
   #write header
   outFile.write(HEADER_MAGIC)
 
-  outFile.write(chr(maxTileLength & 0xff))
-  outFile.write(chr((maxTileLength & 0xff00) >> 8 ))
+  outFile.write(bytes((maxTileLength & 0xff,)))
+  outFile.write(bytes(((maxTileLength & 0xff00) >> 8,)))
 
-  outFile.write(chr(maxPaletteLength & 0xff))
-  outFile.write(chr((maxPaletteLength & 0xff00) >> 8 ))
+  outFile.write(bytes((maxPaletteLength & 0xff,)))
+  outFile.write(bytes(((maxPaletteLength & 0xff00) >> 8,)))
 
-  outFile.write(chr(framecount & 0xff))
-  outFile.write(chr((framecount & 0xff00) >> 8 ))
-  
-  outFile.write(chr(int(options.get('bpp')/2) & 0xff))
+  outFile.write(bytes((framecount & 0xff,)))
+  outFile.write(bytes(((framecount & 0xff00) >> 8,)))
+
+  outFile.write(bytes((int(options.get('bpp')/2) & 0xff,)))
 
   #write framepointerlist
   outFile.seek(HEADER_SIZE)
   for framePointer in framePointers:
 	framePointer += HEADER_SIZE + len(framePointers)*2
-	outFile.write(chr(framePointer & 0xff))
-	outFile.write(chr((framePointer & 0xff00) >> 8 ))
+        outFile.write(bytes((framePointer & 0xff,)))
+        outFile.write(bytes(((framePointer & 0xff00) >> 8,)))
 
   #write frames
   for frame in frames:
 	#write frame header
-	outFile.write(chr(len(frame[0]) & 0xff))
-	outFile.write(chr((len(frame[0]) & 0xff00) >> 8 ))
+        outFile.write(bytes((len(frame[0]) & 0xff,)))
+        outFile.write(bytes(((len(frame[0]) & 0xff00) >> 8,)))
 
-	outFile.write(chr(len(frame[1]) & 0xff))
-	outFile.write(chr((len(frame[1]) & 0xff00) >> 8 ))
+        outFile.write(bytes((len(frame[1]) & 0xff,)))
+        outFile.write(bytes(((len(frame[1]) & 0xff00) >> 8,)))
 
-	outFile.write(chr(len(frame[2]) & 0xff))
-	outFile.write(chr((len(frame[2]) & 0xff00) >> 8 ))
+        outFile.write(bytes((len(frame[2]) & 0xff,)))
+        outFile.write(bytes(((len(frame[2]) & 0xff00) >> 8,)))
 
 	#write tiles, tilemap, palette
-	[outFile.write(byte) for block in frame for byte in block]
+        for block in frame:
+                outFile.write(block)
 	
 
   logging.info('Successfully wrote animation file %s.' % options.get('outfile'))
@@ -258,7 +259,7 @@ def debugLogRecursive( data, nestStr ):
   nestStr += ' '
   if type( data ) is dict:
 	logging.info( '%s dict{' % nestStr )	
-	for k, v in data.iteritems():
+    for k, v in data.items():
 	  logging.info( ' %s %s:' % tuple( [nestStr, k] ) )
 	  debugLogRecursive( v, nestStr )
 	logging.info( '%s }' % nestStr )

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = "Matthias Nagler <matt@dforce.de>"
 __url__ = ("dforce3000", "dforce3000.de")
@@ -76,8 +76,8 @@ def main():
 	sys.exit(1)
 
   outFile = getOutFile(options.get('outfile'))
-  outFile.write("S-MSU1")
-  outFile.write("%-21s" % options.get('title').upper())
+  outFile.write(b"S-MSU1")
+  outFile.write(("%-21s" % options.get('title').upper()).encode('ascii'))
   if (options.get('bpp') == 2):
 	colorDepth = 4
   elif (options.get('bpp') == 4):
@@ -88,13 +88,14 @@ def main():
 	  logging.error( 'Invalid color depth %s.' % options.get('bpp') )
 	  sys.exit(1)
 	  
-  outFile.write(chr(colorDepth))
-  outFile.write(chr(options.get('fps')))
-	  
-  outFile.write(chr(len(chapters) & 0xff))
+  outFile.write(bytes((colorDepth,)))
+  outFile.write(bytes((options.get('fps'),)))
+
+  outFile.write(bytes((len(chapters) & 0xff,)))
   
   #pad header
-  [outFile.write(chr(0)) for i in range(HEADER_SIZE - outFile.tell())]
+  for i in range(HEADER_SIZE - outFile.tell()):
+        outFile.write(b"\x00")
 
   scenePointerOffset = HEADER_SIZE
   sceneOffset = scenePointerOffset + (len(chapters) * POINTER_SIZE)
@@ -116,11 +117,11 @@ def main():
   for chapter in chapters:
 	logging.debug('Now writing scene %02d (%s) at offset 0x%08x.' % (chapter.id, chapter.name, outFile.tell()))
 	#write id/audio track #
-	outFile.write(chr(chapter.id & 0xff))
-	#write framecount
-	outFile.write(chr(len(chapter.frames) & 0xff))
-	outFile.write(chr((len(chapter.frames) & 0xff00) >> 8))
-	outFile.write(chr((len(chapter.frames) & 0xff0000) >> 16))
+        outFile.write(bytes((chapter.id & 0xff,)))
+        #write framecount
+        outFile.write(bytes((len(chapter.frames) & 0xff,)))
+        outFile.write(bytes(((len(chapter.frames) & 0xff00) >> 8,)))
+        outFile.write(bytes(((len(chapter.frames) & 0xff0000) >> 16,)))
 	#frame pointers to frames in chapter
 	for frame in chapter.frames:
 	  writePointer(outFile, pointer)
@@ -141,12 +142,12 @@ def main():
 	for frame in chapter.frames:
 	  logging.debug('Now writing frame %s of scene %02d (%s) at offset 0x%08x.' % (frame.name, chapter.id, chapter.name, outFile.tell()))
 	  lengthHeader = ((len(frame.tilemap) / 2) & 0x7ff) | (((len(frame.tiles) >> colorDepth) & 0x7ff) << 11) | (((len(frame.palette) / 2) & 0xff) << 22)
-	  outFile.write(chr(frameId & 0xff))
-	  outFile.write(chr((frameId & 0xff00) >> 8))
-	  outFile.write(chr(lengthHeader & 0xff))
-	  outFile.write(chr((lengthHeader & 0xff00) >> 8))
-	  outFile.write(chr((lengthHeader & 0xff0000) >> 16))
-	  outFile.write(chr((lengthHeader & 0xff000000) >> 24))	
+      outFile.write(bytes((frameId & 0xff,)))
+      outFile.write(bytes(((frameId & 0xff00) >> 8,)))
+      outFile.write(bytes((lengthHeader & 0xff,)))
+      outFile.write(bytes(((lengthHeader & 0xff00) >> 8,)))
+      outFile.write(bytes(((lengthHeader & 0xff0000) >> 16,)))
+      outFile.write(bytes(((lengthHeader & 0xff000000) >> 24,)))
 	  [outFile.write(byte) for byte in frame.tilemap]
 	  [outFile.write(byte) for byte in frame.tiles]
 	  [outFile.write(byte) for byte in frame.palette]
@@ -157,10 +158,10 @@ def main():
 
 
 def writePointer(fileHandle, pointer):
-  fileHandle.write(chr(pointer & 0xff))
-  fileHandle.write(chr((pointer & 0xff00) >> 8))
-  fileHandle.write(chr((pointer & 0xff0000) >> 16))
-  fileHandle.write(chr((pointer & 0xff000000) >> 24))
+  fileHandle.write(bytes((pointer & 0xff,)))
+  fileHandle.write(bytes(((pointer & 0xff00) >> 8,)))
+  fileHandle.write(bytes(((pointer & 0xff0000) >> 16,)))
+  fileHandle.write(bytes(((pointer & 0xff000000) >> 24,)))
 
 class Chapter():
   def __init__(self, chapterDir, options):
@@ -259,7 +260,7 @@ class UserOptions():
 
 
   def __sanitizeOptions( self, options ):
-	for optionName, optionValue in options.iteritems():
+    for optionName, optionValue in options.items():
 	  sanitizerLUT = self.__getSanitizerLUT()
 	  options[optionName] = sanitizerLUT[optionValue['type']]( optionName, optionValue )	
 	return options
@@ -344,7 +345,7 @@ def debugLogRecursive( data, nestStr ):
   nestStr += ' '
   if type( data ) is dict:
 	logging.debug( '%s dict{' % nestStr )	
-	for k, v in data.iteritems():
+    for k, v in data.items():
 	  logging.debug( ' %s %s:' % tuple( [nestStr, k] ) )
 	  debugLogRecursive( v, nestStr )
 	logging.debug( '%s }' % nestStr )

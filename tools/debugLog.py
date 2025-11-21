@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''
 couple of debug logging functions
@@ -25,7 +25,7 @@ def debugLogRecursive( data, nestStr ):
   nestStr += ' '
   if type( data ) is dict:
 	logging.debug( '%s dict{' % nestStr )	
-	for k, v in data.iteritems():
+        for k, v in data.items():
 	  logging.debug( ' %s %s:' % tuple( [nestStr, k] ) )
 	  debugLogRecursive( v, nestStr )
 	logging.debug( '%s }' % nestStr )

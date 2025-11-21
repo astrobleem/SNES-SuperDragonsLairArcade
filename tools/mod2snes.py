@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -38,6 +38,13 @@ globalSampleBuffer = {
   'last'		: 0,
   'beforeLast'	: 0
 }
+
+def byte_value(value):
+  if isinstance(value, int):
+    return value
+  if isinstance(value, (bytes, bytearray)):
+    return value[0]
+  return ord(value)
 
 statistics = {
   'samples'	: 0,
@@ -140,7 +147,7 @@ def outputStatistics( statistics ):
   logging.info( 'Converted %d BRR samples with error range %d-%d.\nFilter usage: 0:%d%% 1:%d%% 2:%d%% 3:%d%%\nRange usage: 0:%d%% 1:%d%% 2:%d%% 3:%d%% 4:%d%% 5:%d%% 6:%d%% 7:%d%% 8:%d%% 9:%d%% 10:%d%% 11:%d%% 12:%d%%' % outputTuple )
 
 def getModuleLength( mod ):
-  return ord( mod[950] )
+  return byte_value( mod[950] )
 
 
 def getModuleName( mod ):
@@ -164,13 +171,13 @@ def writeOutputFile( outFile, mod ):
 
 def writeChar( outFile, offset, data ):
   outFile.seek( offset )
-  outFile.write( chr( data ) )
+  outFile.write(bytes((data ,)))
 
 
 def writeSequence( outFile, sequence ):
   outFile.seek( SPCMOD_SEQUENCE )
   for pattern in sequence:
-    outFile.write( chr( pattern ) )
+    outFile.write(bytes((pattern ,)))
 
 
 def writePatterns( outFile, patterns ):
@@ -180,12 +187,12 @@ def writePatterns( outFile, patterns ):
     patternPointer.append( outFile.tell() - SPCMOD_PATTERN_DATA )	#relative pointer to pattern
     for channel in pattern:
       if channel['valid']:
-        outFile.write( chr( channel['instrument'] ) )
-        outFile.write( chr( channel['period'] ) )
-        outFile.write( chr( channel['effectCommand'] ) )
-        outFile.write( chr( channel['effectData'] ) )
+        outFile.write(bytes((channel['instrument'] ,)))
+        outFile.write(bytes((channel['period'] ,)))
+        outFile.write(bytes((channel['effectCommand'] ,)))
+        outFile.write(bytes((channel['effectData'] ,)))
       else:
-        outFile.write( chr( SPCMOD_EMPTY_CHANNEL ) )
+        outFile.write(bytes((SPCMOD_EMPTY_CHANNEL ,)))
   
   patternPointer.append( outFile.tell() - SPCMOD_PATTERN_DATA )	#relative pointer to end of last pattern. crude shit
   return {
@@ -197,8 +204,8 @@ def writePatterns( outFile, patterns ):
 def writePatternPointers( outFile, patternPointers ):
   outFile.seek( SPCMOD_PATTERN_POINTER )
   for pointer in patternPointers:
-    outFile.write( chr( (pointer & 0xff00) >> 8 ) )
-    outFile.write( chr( (pointer & 0xff) ) )
+    outFile.write(bytes(((pointer & 0xff00) >> 8,)))
+    outFile.write(bytes(((pointer & 0xff,))) )
 
 def writeSamples( outFile, sampleBufferPos, instruments ):
   outFile.seek( sampleBufferPos )
@@ -216,9 +223,9 @@ def writeSamples( outFile, sampleBufferPos, instruments ):
       end = 1 if ( i == len( instrument['samples'] ) - 1 ) else 0
       header = ( sampleBlock['range'] << 4 ) | ( sampleBlock['filter'] << 2 ) | ( loop << 1 ) | end
       
-      outFile.write( chr( header ) )
+      outFile.write(bytes((header ,)))
       for i in range( 8 ):
-        outFile.write( chr( mergeBrrSample( i, sampleBlock['samples'] ) ) )
+        outFile.write(bytes((mergeBrrSample( i, sampleBlock['samples'] ,))) )
   return samplePointer
 
 
@@ -229,14 +236,14 @@ def mergeBrrSample( pos, samples ):
 def writeInstruments( outFile, samplePointers, instruments ):
   outFile.seek( SPCMOD_INSTRUMENT_DATA )
   for i in range(len(instruments)):
-    outFile.write( chr( (samplePointers[i]['start'] & 0xff00) >> 8 ) )
-    outFile.write( chr( (samplePointers[i]['start'] & 0xff) ) )
-    outFile.write( chr( instruments[i]['finetune'] ) )
-    outFile.write( chr( instruments[i]['volume'] ) )
-    outFile.write( chr( (samplePointers[i]['repeatStart'] & 0xff00) >> 8 ) )
-    outFile.write( chr( (samplePointers[i]['repeatStart'] & 0xff) ) )
-    outFile.write( chr( 0 ) )
-    outFile.write( chr( 0 ) )
+    outFile.write(bytes(((samplePointers[i]['start'] & 0xff00) >> 8,)))
+    outFile.write(bytes(((samplePointers[i]['start'] & 0xff,))) )
+    outFile.write(bytes((instruments[i]['finetune'] ,)))
+    outFile.write(bytes((instruments[i]['volume'] ,)))
+    outFile.write(bytes(((samplePointers[i]['repeatStart'] & 0xff00) >> 8,)))
+    outFile.write(bytes(((samplePointers[i]['repeatStart'] & 0xff,))) )
+    outFile.write(bytes((0 ,)))
+    outFile.write(bytes((0 ,)))
     debugLog( 'wrote instrument %x start: %x, repeat: %x, length in samples: %x' % tuple( [i+1, samplePointers[i]['start'], samplePointers[i]['repeatStart'], len( instruments[i]['samples'] ) * 16  ] ) )
     
 
@@ -542,7 +549,7 @@ def getModulePatternCount( sequence ):
 def getModulePlaySequence( mod ):
   sequence = []
   for char in mod[952:1080]:
-    sequence.append( ord( char ) )
+    sequence.append( byte_value( char ) )
   return sequence
 
 
@@ -581,10 +588,10 @@ def getModulePatternRow( patternData, rowId ):
 def getModulePatternRowChannel( channelData, channelId ):
   singleChannelData = channelData[ channelId * MOD_BYTES_PER_CHANNEL : ( channelId + 1 ) * MOD_BYTES_PER_CHANNEL ]
   return {
-    'instrument'	: ( ord( singleChannelData[0] ) & 0xf0 ) | ( ( ord( singleChannelData[2] ) & 0xf0 ) >> 4 ),
-    'period'		: ( ( ord( singleChannelData[0] ) & 0xf ) << 8 ) | ord( singleChannelData[1] ),
-    'effectCommand'	: ord( singleChannelData[2] ) & 0xf,
-    'effectData'	: ord( singleChannelData[3] )
+    'instrument'	: ( byte_value( singleChannelData[0] ) & 0xf0 ) | ( ( byte_value( singleChannelData[2] ) & 0xf0 ) >> 4 ),
+    'period'		: ( ( byte_value( singleChannelData[0] ) & 0xf ) << 8 ) | byte_value( singleChannelData[1] ),
+    'effectCommand'	: byte_value( singleChannelData[2] ) & 0xf,
+    'effectData'	: byte_value( singleChannelData[3] )
   }
 
 
@@ -605,8 +612,8 @@ def getModuleInstrument( instrumentId, instrumentData, mod, sampleBufferPosition
     'name'			: singleInstrument[0:22],
     'start'			: sampleBufferPosition,
     'length'		: checkInstrumentLength( charWordToInt( singleInstrument[22:24] ) ),
-    'finetune'		: ord( singleInstrument[24] ),
-    'volume'		: ord( singleInstrument[25] ),
+    'finetune'		: byte_value( singleInstrument[24] ),
+    'volume'		: byte_value( singleInstrument[25] ),
     'repeatStart'	: charWordToInt( singleInstrument[26:28] ),
     'repeatLength'	: checkInstrumentLength( charWordToInt( singleInstrument[28:30] ) )
   }
@@ -627,13 +634,13 @@ def checkInstrumentLength( length ):
 def getInstrumentSamples( start, length, sampleData ):
   samples = []
   for char in sampleData[ start : start+length ]:
-    samples.append( ( ord( char ) << 8 ) | ord( char ) )	#fetch 16bit samples with dither
-    #samples.append( ord( char ) << 8 )	#fetch 16bit samples
+    samples.append( ( byte_value( char ) << 8 ) | byte_value( char ) )	#fetch 16bit samples with dither
+    #samples.append( byte_value( char ) << 8 )	#fetch 16bit samples
   return samples
 
 
 def charWordToInt( char ):
-  return ( ord( char[1] ) + ( ord( char[0] ) << 8 ) ) * 2
+  return ( byte_value( char[1] ) + ( byte_value( char[0] ) << 8 ) ) * 2
 
 
 def debugLog( data, message = '' ):
@@ -649,7 +656,7 @@ def debugLogRecursive( data, nestStr ):
   nestStr += ' '
   if type( data ) is dict:
     logging.debug( '%s dict{' % nestStr )	
-    for k, v in data.iteritems():
+    for k, v in data.items():
       logging.debug( ' %s %s:' % tuple( [nestStr, k] ) )
       debugLogRecursive( v, nestStr )
     logging.debug( '%s }' % nestStr )
@@ -744,5 +751,5 @@ if __name__ == "__main__":
 #            print "Cannot convert", infile
 #file = open(filename+'.'+'%03d' % framecounter, 'wb')
 #len(polys)
-#ord(): get int from char(file byte)
+#byte_value(): get int from char(file byte)
 #chr(): get 

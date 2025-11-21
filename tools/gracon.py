@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = "Matthias Nagler <matt@dforce.de>"
 __url__ = ("dforce3000", "dforce3000.de")
@@ -481,11 +481,11 @@ def getTileWriteStream( tiles, options ):
   return stream
 
 def getPaletteWriteStream( palettes, options ):
-  stream = []
+  stream = bytearray()
   for color in [pixel for palette in [palette for palette in palettes if palette['refId'] == None] for pixel in palette['color']]:
-	stream.append(chr((color & 0xff)))
-	stream.append(chr((color & 0xff00) >> 8 ))
-  return stream
+          stream.append(color & 0xff)
+          stream.append((color & 0xff00) >> 8 )
+  return bytes(stream)
 
 def fetchBitplanes( tile, options ):
   bitplanes = []
@@ -506,9 +506,9 @@ def fetchBitplanes( tile, options ):
 
 def writePalettes( palettes, options ):
   outFile = getOutputFile( options, ext='palette' )
-  for color in [pixel for palette in [palette for palette in palettes if palette['refId'] == None] for pixel in palette['color']]:
-	outFile.write(chr((color & 0xff)))
-	outFile.write(chr((color & 0xff00) >> 8 ))
+    for color in [pixel for palette in [palette for palette in palettes if palette['refId'] == None] for pixel in palette['color']]:
+          outFile.write(bytes((color & 0xff,)))
+          outFile.write(bytes(((color & 0xff00) >> 8,)))
   outFile.close()
 
 
@@ -733,7 +733,7 @@ def getNearestPaletteIndices( palette ):
 
 def getMinDifferenceIds( diffTable ):
   minDiff = { 'difference' : INFINITY }
-  for diffName, diff in diffTable.iteritems():
+  for diffName, diff in diffTable.items():
 	minDiff = diff if diff['difference'] < minDiff['difference'] else minDiff
   return minDiff
 
@@ -1147,7 +1147,7 @@ def debugLogRecursive( data, nestStr ):
   nestStr += ' '
   if type( data ) is dict:
 	logging.debug( '%s dict{' % nestStr )	
-	for k, v in data.iteritems():
+	for k, v in data.items():
 	  logging.debug( ' %s %s:' % tuple( [nestStr, k] ) )
 	  debugLogRecursive( v, nestStr )
 	logging.debug( '%s }' % nestStr )

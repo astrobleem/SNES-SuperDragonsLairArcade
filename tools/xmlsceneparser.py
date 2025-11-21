@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = "Matthias Nagler <matt@dforce.de>"
 __url__ = ("dforce3000", "dforce3000.de")
@@ -304,7 +304,7 @@ def debugLogRecursive( data, nestStr ):
   nestStr += ' '
   if type( data ) is dict:
 	logging.debug( '%s dict{' % nestStr )	
-	for k, v in data.iteritems():
+	for k, v in data.items():
 	  logging.debug( ' %s %s:' % tuple( [nestStr, k] ) )
 	  debugLogRecursive( v, nestStr )
 	logging.debug( '%s }' % nestStr )
@@ -423,7 +423,7 @@ class UserOptions():
 
 
   def __sanitizeOptions( self, options ):
-	for optionName, optionValue in options.iteritems():
+	for optionName, optionValue in options.items():
 	  sanitizerLUT = self.__getSanitizerLUT()
 	  options[optionName] = sanitizerLUT[optionValue['type']]( optionName, optionValue )	
 	return options

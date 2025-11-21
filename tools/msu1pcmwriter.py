@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = "Matthias Nagler <matt@dforce.de>"
 __url__ = ("dforce3000", "dforce3000.de")
@@ -43,10 +43,10 @@ options = {}
 
 INFINITY = 1e300000
 CHANNEL_NUMBER = 2
-SAMPLE_WIDTH = 16 / 8
+SAMPLE_WIDTH = 16 // 8
 SAMPLE_RATE = 44100
 COMPRESSION_TYPE = 'NONE'
-HEADER_MAGIC = 'MSU1'
+HEADER_MAGIC = b'MSU1'
 RIFF_PCM_DATA = 44
 
 
@@ -113,11 +113,11 @@ def main():
   inputFile.seek(RIFF_PCM_DATA)
   outFile.seek(0)
   outFile.write(HEADER_MAGIC)
-  outFile.write(chr(options.get('loopstart') & 0xff))
-  outFile.write(chr((options.get('loopstart') & 0xff00) >> 8))
-  outFile.write(chr((options.get('loopstart') & 0xff0000) >> 16))
-  outFile.write(chr((options.get('loopstart') & 0xff000000) >> 24))	
-  [outFile.write(byte) for byte in inputFile.read()]
+  outFile.write(bytes((options.get('loopstart') & 0xff,)))
+  outFile.write(bytes(((options.get('loopstart') & 0xff00) >> 8,)))
+  outFile.write(bytes(((options.get('loopstart') & 0xff0000) >> 16,)))
+  outFile.write(bytes(((options.get('loopstart') & 0xff000000) >> 24,)))
+  outFile.write(inputFile.read())
   
   logging.info('Successfully wrote msu1 pcm audio file %s.' % options.get('outfile'))
 
@@ -147,7 +147,7 @@ class UserOptions():
 
 
   def __sanitizeOptions( self, options ):
-	for optionName, optionValue in options.iteritems():
+        for optionName, optionValue in options.items():
 	  sanitizerLUT = self.__getSanitizerLUT()
 	  options[optionName] = sanitizerLUT[optionValue['type']]( optionName, optionValue )	
 	return options
@@ -232,7 +232,7 @@ def debugLogRecursive( data, nestStr ):
   nestStr += ' '
   if type( data ) is dict:
 	logging.debug( '%s dict{' % nestStr )	
-	for k, v in data.iteritems():
+    for k, v in data.items():
 	  logging.debug( ' %s %s:' % tuple( [nestStr, k] ) )
 	  debugLogRecursive( v, nestStr )
 	logging.debug( '%s }' % nestStr )
