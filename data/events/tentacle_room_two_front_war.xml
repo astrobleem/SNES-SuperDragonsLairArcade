@@ -1,0 +1,17 @@
+<chapter name="tentacle_room_two_front_war">
+	<timeline>
+		<timestart min="1" second="52" ms="530" />
+		<timeend min="1" second="55" ms="532" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="52" ms="530" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,17 @@
+<chapter name="smithee_reversed_seq11">
+	<timeline>
+		<timestart min="11" second="12" ms="799" />
+		<timeend min="11" second="13" ms="924" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="12" ms="799" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

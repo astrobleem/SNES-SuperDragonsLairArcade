@@ -1,0 +1,15 @@
+<chapter name="fire_room_game_over">
+	<timeline>
+		<timestart min="6" second="45" ms="782" />
+		<timeend min="6" second="49" ms="285" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="45" ms="782" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

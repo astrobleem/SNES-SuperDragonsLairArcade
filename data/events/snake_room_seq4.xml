@@ -1,0 +1,43 @@
+<chapter name="snake_room_seq4">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="834" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="48" />
+				<timeend min="0" second="1" ms="867" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="49" />
+			</params>
+			<result value="0">
+				<playchapter name="snake_room_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="0" second="1" ms="15" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="snake_room_seq7" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="snake_room_seq9" />
+	</result>
+</chapter>

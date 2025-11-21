@@ -1,0 +1,15 @@
+<chapter name="catwalk_bats_game_over">
+	<timeline>
+		<timestart min="8" second="38" ms="645" />
+		<timeend min="8" second="42" ms="148" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="38" ms="645" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

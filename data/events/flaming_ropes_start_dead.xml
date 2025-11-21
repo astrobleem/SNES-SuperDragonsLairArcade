@@ -1,0 +1,18 @@
+<chapter name="flaming_ropes_start_dead">
+	<timeline>
+		<timestart min="2" second="19" ms="891" />
+		<timeend min="2" second="22" ms="58" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="19" ms="891" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flaming_ropes_enter_room" />
+	</result>
+</chapter>

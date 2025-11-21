@@ -1,0 +1,17 @@
+<chapter name="wind_room_sucked_in">
+	<timeline>
+		<timestart min="6" second="6" ms="492" />
+		<timeend min="6" second="9" ms="494" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="6" ms="492" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,15 @@
+<chapter name="snake_room_game_over">
+	<timeline>
+		<timestart min="2" second="15" ms="970" />
+		<timeend min="2" second="19" ms="473" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="15" ms="970" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

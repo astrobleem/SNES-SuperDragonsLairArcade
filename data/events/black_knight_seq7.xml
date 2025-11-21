@@ -1,0 +1,17 @@
+<chapter name="black_knight_seq7">
+	<timeline>
+		<timestart min="17" second="53" ms="866" />
+		<timeend min="17" second="56" ms="242" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="17" second="53" ms="866" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

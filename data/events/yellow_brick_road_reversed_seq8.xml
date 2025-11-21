@@ -1,0 +1,55 @@
+<chapter name="yellow_brick_road_reversed_seq8">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="3" ms="243" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="2" ms="489" />
+				<timeend min="0" second="3" ms="210" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="4026" />
+			</params>
+			<result value="0">
+				<playchapter name="yellow_brick_road_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="3" ms="341" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="yellow_brick_road_reversed_seq14" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="0" second="2" ms="489" />
+				<timeend min="0" second="3" ms="309" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="yellow_brick_road_reversed_seq17" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="yellow_brick_road_reversed_seq17" />
+	</result>
+</chapter>

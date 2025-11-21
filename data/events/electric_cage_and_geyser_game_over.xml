@@ -1,0 +1,15 @@
+<chapter name="electric_cage_and_geyser_game_over">
+	<timeline>
+		<timestart min="18" second="46" ms="419" />
+		<timeend min="18" second="49" ms="922" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="18" second="46" ms="419" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

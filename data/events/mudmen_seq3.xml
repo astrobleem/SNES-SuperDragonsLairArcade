@@ -1,0 +1,91 @@
+<chapter name="mudmen_seq3">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="3" ms="702" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="0" second="2" ms="719" />
+				<timeend min="0" second="3" ms="669" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq15" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="0" second="2" ms="719" />
+				<timeend min="0" second="3" ms="669" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq15" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-3">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq15" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-4">
+			<timeline>
+				<timestart min="0" second="2" ms="719" />
+				<timeend min="0" second="3" ms="669" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq4" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-5">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="3" ms="702" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq15" />
+			</result>
+		</event>
+		<event type="direction" automacro="action" label="action-6">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="3" ms="702" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq15" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="mudmen_seq4" />
+	</result>
+</chapter>

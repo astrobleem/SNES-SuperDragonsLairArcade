@@ -1,0 +1,79 @@
+<chapter name="crypt_creeps_enter_crypt">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="834" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="687" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="495" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="1" ms="80" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_captured_by_ghouls" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-3">
+			<timeline>
+				<timestart min="0" second="0" ms="687" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_captured_by_ghouls" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="0" second="1" ms="80" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_captured_by_ghouls" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-5">
+			<timeline>
+				<timestart min="0" second="1" ms="80" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_captured_by_ghouls" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="crypt_creeps_captured_by_ghouls" />
+	</result>
+</chapter>

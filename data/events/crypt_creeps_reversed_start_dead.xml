@@ -1,0 +1,18 @@
+<chapter name="crypt_creeps_reversed_start_dead">
+	<timeline>
+		<timestart min="12" second="49" ms="729" />
+		<timeend min="12" second="52" ms="63" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="49" ms="729" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="crypt_creeps_reversed_seq2" />
+	</result>
+</chapter>

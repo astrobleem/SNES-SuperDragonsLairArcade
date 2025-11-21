@@ -1,0 +1,55 @@
+<chapter name="black_knight_seq3">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="3" ms="866" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="0" second="3" ms="112" />
+				<timeend min="0" second="3" ms="866" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="1939" />
+			</params>
+			<result value="0">
+				<playchapter name="black_knight_seq4" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="3" ms="112" />
+				<timeend min="0" second="3" ms="800" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="black_knight_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="0" second="3" ms="472" />
+				<timeend min="0" second="6" ms="848" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="black_knight_seq6" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="black_knight_seq9" />
+	</result>
+</chapter>

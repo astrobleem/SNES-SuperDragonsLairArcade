@@ -1,0 +1,17 @@
+<chapter name="giddy_goons_knife_in_back">
+	<timeline>
+		<timestart min="4" second="5" ms="580" />
+		<timeend min="4" second="7" ms="664" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="5" ms="580" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

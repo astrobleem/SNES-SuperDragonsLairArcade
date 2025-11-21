@@ -1,0 +1,67 @@
+<chapter name="crypt_creeps_jumped_slime">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="211" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="589" />
+				<timeend min="0" second="1" ms="179" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="915" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_attacked_second_hand" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="589" />
+				<timeend min="0" second="1" ms="146" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_crushed_by_hand" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-3">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="1" ms="211" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_eaten_by_slime" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="0" second="0" ms="589" />
+				<timeend min="0" second="1" ms="146" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_crushed_by_hand" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="crypt_creeps_crushed_by_hand" />
+	</result>
+</chapter>

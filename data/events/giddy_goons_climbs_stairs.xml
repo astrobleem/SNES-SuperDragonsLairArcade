@@ -1,0 +1,80 @@
+<chapter name="giddy_goons_climbs_stairs">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="162" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="474" />
+				<timeend min="0" second="2" ms="129" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_kill_upper_goons" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="129" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_kill_upper_goons" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-3">
+			<timeline>
+				<timestart min="0" second="1" ms="474" />
+				<timeend min="0" second="2" ms="129" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_fight_off_one_before_swarm" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-4">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="162" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_fight_off_one_before_swarm" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-5">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="162" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_fall_to_death" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="giddy_goons_swarm_of_goons" />
+	</result>
+</chapter>

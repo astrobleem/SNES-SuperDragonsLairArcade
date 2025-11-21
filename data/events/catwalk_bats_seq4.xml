@@ -1,0 +1,79 @@
+<chapter name="catwalk_bats_seq4">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="489" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="736" />
+				<timeend min="0" second="2" ms="457" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="2675" />
+			</params>
+			<result value="0">
+				<playchapter name="catwalk_bats_seq5" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="489" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="catwalk_bats_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-3">
+			<timeline>
+				<timestart min="0" second="1" ms="736" />
+				<timeend min="0" second="2" ms="457" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="catwalk_bats_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-4">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="0" ms="359" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="catwalk_bats_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-5">
+			<timeline>
+				<timestart min="0" second="0" ms="327" />
+				<timeend min="0" second="2" ms="784" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="catwalk_bats_seq9" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="catwalk_bats_seq8" />
+	</result>
+</chapter>

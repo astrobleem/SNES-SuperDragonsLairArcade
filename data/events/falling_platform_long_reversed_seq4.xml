@@ -1,0 +1,225 @@
+<chapter name="falling_platform_long_reversed_seq4">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="5" ms="701" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="522" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-2">
+			<timeline>
+				<timestart min="0" second="2" ms="522" />
+				<timeend min="0" second="2" ms="850" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="0" second="2" ms="850" />
+				<timeend min="0" second="3" ms="177" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="0" second="3" ms="210" />
+				<timeend min="0" second="3" ms="538" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-5">
+			<timeline>
+				<timestart min="0" second="3" ms="538" />
+				<timeend min="0" second="3" ms="866" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-6">
+			<timeline>
+				<timestart min="0" second="3" ms="866" />
+				<timeend min="0" second="4" ms="193" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-7">
+			<timeline>
+				<timestart min="0" second="4" ms="226" />
+				<timeend min="0" second="4" ms="718" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-8">
+			<timeline>
+				<timestart min="0" second="4" ms="718" />
+				<timeend min="0" second="5" ms="668" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-9">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="948" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-10">
+			<timeline>
+				<timestart min="0" second="2" ms="948" />
+				<timeend min="0" second="4" ms="718" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-11">
+			<timeline>
+				<timestart min="0" second="4" ms="718" />
+				<timeend min="0" second="5" ms="635" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-12">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="948" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-13">
+			<timeline>
+				<timestart min="0" second="2" ms="948" />
+				<timeend min="0" second="4" ms="718" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-14">
+			<timeline>
+				<timestart min="0" second="4" ms="718" />
+				<timeend min="0" second="5" ms="635" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-15">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="948" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-16">
+			<timeline>
+				<timestart min="0" second="2" ms="948" />
+				<timeend min="0" second="4" ms="718" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-17">
+			<timeline>
+				<timestart min="0" second="4" ms="718" />
+				<timeend min="0" second="5" ms="635" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_reversed_seq6" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="falling_platform_long_reversed_seq5" />
+	</result>
+</chapter>

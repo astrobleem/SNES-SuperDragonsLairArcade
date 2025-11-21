@@ -1,0 +1,18 @@
+<chapter name="bubbling_cauldron_start_dead">
+	<timeline>
+		<timestart min="3" second="25" ms="39" />
+		<timeend min="3" second="27" ms="123" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="3" second="25" ms="39" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="bubbling_cauldron_seq2" />
+	</result>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="the_dragons_lair_seq13">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="18" ms="500" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="the_dragons_lair_endgame" />
+	</result>
+</chapter>

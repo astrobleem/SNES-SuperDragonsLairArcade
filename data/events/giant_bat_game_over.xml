@@ -1,0 +1,15 @@
+<chapter name="giant_bat_game_over">
+	<timeline>
+		<timestart min="10" second="7" ms="150" />
+		<timeend min="10" second="10" ms="653" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="7" ms="150" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

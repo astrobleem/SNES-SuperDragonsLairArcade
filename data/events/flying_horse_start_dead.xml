@@ -1,0 +1,18 @@
+<chapter name="flying_horse_start_dead">
+	<timeline>
+		<timestart min="6" second="49" ms="327" />
+		<timeend min="6" second="51" ms="411" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="49" ms="327" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flying_horse_enter_room" />
+	</result>
+</chapter>

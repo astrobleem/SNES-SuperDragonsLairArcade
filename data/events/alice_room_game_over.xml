@@ -1,0 +1,15 @@
+<chapter name="alice_room_game_over">
+	<timeline>
+		<timestart min="12" second="46" ms="226" />
+		<timeend min="12" second="49" ms="729" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="46" ms="226" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

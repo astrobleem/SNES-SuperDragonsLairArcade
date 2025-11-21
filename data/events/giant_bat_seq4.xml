@@ -1,0 +1,81 @@
+<chapter name="giant_bat_seq4">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="358" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="upleft" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="703" />
+				<timeend min="0" second="2" ms="326" />
+			</timeline>
+			<params>
+				<str key="type" value="upleft" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq5" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="1" ms="703" />
+				<timeend min="0" second="2" ms="326" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq5" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="0" second="1" ms="703" />
+				<timeend min="0" second="2" ms="326" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq5" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-4">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="358" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq10" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-5">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="358" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq8" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="giant_bat_seq9" />
+	</result>
+</chapter>

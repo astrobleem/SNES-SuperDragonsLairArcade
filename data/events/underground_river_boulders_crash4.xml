@@ -1,0 +1,17 @@
+<chapter name="underground_river_boulders_crash4">
+	<timeline>
+		<timestart min="16" second="35" ms="121" />
+		<timeend min="16" second="35" ms="662" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="16" second="35" ms="121" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

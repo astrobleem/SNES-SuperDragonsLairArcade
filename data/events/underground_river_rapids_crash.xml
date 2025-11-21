@@ -1,0 +1,17 @@
+<chapter name="underground_river_rapids_crash">
+	<timeline>
+		<timestart min="16" second="36" ms="122" />
+		<timeend min="16" second="38" ms="498" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="16" second="36" ms="122" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

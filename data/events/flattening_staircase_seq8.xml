@@ -1,0 +1,17 @@
+<chapter name="flattening_staircase_seq8">
+	<timeline>
+		<timestart min="4" second="32" ms="941" />
+		<timeend min="4" second="34" ms="107" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="32" ms="941" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

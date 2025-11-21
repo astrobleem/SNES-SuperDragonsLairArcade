@@ -1,0 +1,79 @@
+<chapter name="mudmen_seq7">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="637" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="up" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="654" />
+				<timeend min="0" second="1" ms="605" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="654" />
+				<timeend min="0" second="1" ms="572" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq12" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="0" second="0" ms="654" />
+				<timeend min="0" second="1" ms="572" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq14" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-4">
+			<timeline>
+				<timestart min="0" second="0" ms="654" />
+				<timeend min="0" second="1" ms="572" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq15" />
+			</result>
+		</event>
+		<event type="direction" automacro="action" label="action-5">
+			<timeline>
+				<timestart min="0" second="0" ms="654" />
+				<timeend min="0" second="1" ms="572" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result value="0">
+				<playchapter name="mudmen_seq15" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="mudmen_seq15" />
+	</result>
+</chapter>

@@ -1,0 +1,15 @@
+<chapter name="wind_room_game_over">
+	<timeline>
+		<timestart min="6" second="9" ms="495" />
+		<timeend min="6" second="12" ms="998" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="9" ms="495" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

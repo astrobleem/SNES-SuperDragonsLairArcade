@@ -1,0 +1,79 @@
+<chapter name="smithee_enter_room">
+	<timeline>
+		<timestart min="4" second="45" ms="411" />
+		<timeend min="4" second="48" ms="524" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="4" second="47" ms="639" />
+				<timeend min="4" second="48" ms="491" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="915" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+				<timeend min="4" second="48" ms="524" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+				<timeend min="4" second="48" ms="524" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-4">
+			<timeline>
+				<timestart min="4" second="46" ms="918" />
+				<timeend min="4" second="48" ms="589" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-5">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+				<timeend min="4" second="48" ms="65" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_seq8" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="smithee_seq9" />
+	</result>
+</chapter>

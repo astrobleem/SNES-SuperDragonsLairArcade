@@ -1,0 +1,17 @@
+<chapter name="falling_platform_short_fell_to_death">
+	<timeline>
+		<timestart min="10" second="33" ms="426" />
+		<timeend min="10" second="34" ms="592" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="33" ms="426" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

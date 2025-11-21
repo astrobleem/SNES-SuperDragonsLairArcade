@@ -1,0 +1,17 @@
+<chapter name="robot_knight_reversed_seq11">
+	<timeline>
+		<timestart min="15" second="0" ms="443" />
+		<timeend min="15" second="2" ms="444" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="0" ms="443" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

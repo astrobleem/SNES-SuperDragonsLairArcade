@@ -1,0 +1,17 @@
+<chapter name="giddy_goons_shoves_off_edge">
+	<timeline>
+		<timestart min="4" second="7" ms="749" />
+		<timeend min="4" second="10" ms="469" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="7" ms="749" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,17 @@
+<chapter name="the_dragons_lair_seq14">
+	<timeline>
+		<timestart min="21" second="36" ms="589" />
+		<timeend min="21" second="39" ms="90" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="21" second="36" ms="589" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

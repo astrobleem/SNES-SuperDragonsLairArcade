@@ -1,0 +1,17 @@
+<chapter name="giant_bat_seq11">
+	<timeline>
+		<timestart min="10" second="1" ms="603" />
+		<timeend min="10" second="3" ms="145" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="1" ms="603" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

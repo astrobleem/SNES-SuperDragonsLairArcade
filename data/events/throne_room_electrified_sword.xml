@@ -1,0 +1,17 @@
+<chapter name="throne_room_electrified_sword">
+	<timeline>
+		<timestart min="14" second="26" ms="576" />
+		<timeend min="14" second="29" ms="411" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="26" ms="576" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

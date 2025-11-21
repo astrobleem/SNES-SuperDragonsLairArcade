@@ -1,0 +1,15 @@
+<chapter name="the_dragons_lair_game_over">
+	<timeline>
+		<timestart min="21" second="47" ms="642" />
+		<timeend min="21" second="51" ms="145" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="21" second="47" ms="642" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

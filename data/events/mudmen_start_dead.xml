@@ -1,0 +1,18 @@
+<chapter name="mudmen_start_dead">
+	<timeline>
+		<timestart min="16" second="48" ms="134" />
+		<timeend min="16" second="50" ms="468" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="16" second="48" ms="134" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="mudmen_seq2" />
+	</result>
+</chapter>

@@ -1,0 +1,141 @@
+<chapter name="falling_platform_long_third_jump_set">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="4" ms="292" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="457" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_missed_jump" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="0" second="2" ms="457" />
+				<timeend min="0" second="2" ms="784" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="0" second="2" ms="784" />
+				<timeend min="0" second="3" ms="112" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_missed_jump" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="0" second="3" ms="145" />
+				<timeend min="0" second="3" ms="472" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-5">
+			<timeline>
+				<timestart min="0" second="3" ms="472" />
+				<timeend min="0" second="3" ms="800" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_missed_jump" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-6">
+			<timeline>
+				<timestart min="0" second="3" ms="800" />
+				<timeend min="0" second="4" ms="128" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-7">
+			<timeline>
+				<timestart min="0" second="4" ms="161" />
+				<timeend min="0" second="5" ms="570" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-8">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="5" ms="570" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-9">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="5" ms="570" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-10">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="5" ms="570" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_long_fell_to_death" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="falling_platform_long_crash_landing" />
+	</result>
+</chapter>

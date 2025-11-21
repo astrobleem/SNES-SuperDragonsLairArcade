@@ -1,0 +1,17 @@
+<chapter name="flying_horse_reversed_seq9">
+	<timeline>
+		<timestart min="11" second="41" ms="744" />
+		<timeend min="11" second="43" ms="578" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="41" ms="744" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

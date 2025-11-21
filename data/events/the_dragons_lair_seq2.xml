@@ -1,0 +1,31 @@
+<chapter name="the_dragons_lair_seq2">
+	<timeline>
+		<timestart min="20" second="0" ms="660" />
+		<timeend min="20" second="5" ms="542" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="20" second="0" ms="660" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="20" second="4" ms="592" />
+				<timeend min="20" second="5" ms="510" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq3" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="the_dragons_lair_seq19" />
+	</result>
+</chapter>

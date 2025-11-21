@@ -1,0 +1,18 @@
+<chapter name="introduction_start_dead">
+	<timeline>
+		<timestart min="0" second="50" ms="718" />
+		<timeend min="0" second="52" ms="750" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="50" ms="718" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="introduction_castle_exterior" />
+	</result>
+</chapter>

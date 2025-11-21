@@ -1,0 +1,15 @@
+<chapter name="crypt_creeps_reversed_game_over">
+	<timeline>
+		<timestart min="13" second="15" ms="463" />
+		<timeend min="13" second="18" ms="966" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="13" second="15" ms="463" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,67 @@
+<chapter name="giddy_goons_kills_first_goon">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="834" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="113" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_climbs_stairs" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="884" />
+				<timeend min="0" second="1" ms="801" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_fall_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="0" second="1" ms="113" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_shoves_off_edge" />
+			</result>
+		</event>
+		<event type="direction" automacro="action" label="action-4">
+			<timeline>
+				<timestart min="0" second="1" ms="113" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result value="0">
+				<playchapter name="giddy_goons_shoves_off_edge" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="giddy_goons_knife_in_back" />
+	</result>
+</chapter>

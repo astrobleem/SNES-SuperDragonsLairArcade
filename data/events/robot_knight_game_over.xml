@@ -1,0 +1,15 @@
+<chapter name="robot_knight_game_over">
+	<timeline>
+		<timestart min="7" second="46" ms="676" />
+		<timeend min="7" second="50" ms="179" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="46" ms="676" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

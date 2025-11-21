@@ -1,0 +1,104 @@
+<chapter name="flying_horse_reversed_seq2">
+	<timeline>
+		<timestart min="11" second="23" ms="726" />
+		<timeend min="11" second="28" ms="248" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="23" ms="726" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="upleft" label="action-1">
+			<timeline>
+				<timestart min="11" second="27" ms="167" />
+				<timeend min="11" second="27" ms="494" />
+			</timeline>
+			<params>
+				<str key="type" value="upleft" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="upleft" label="action-2">
+			<timeline>
+				<timestart min="11" second="27" ms="494" />
+				<timeend min="11" second="28" ms="215" />
+			</timeline>
+			<params>
+				<str key="type" value="upleft" />
+				<int key="score" value="915" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_reversed_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="11" second="27" ms="167" />
+				<timeend min="11" second="27" ms="494" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="11" second="27" ms="494" />
+				<timeend min="11" second="28" ms="215" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="915" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_reversed_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-5">
+			<timeline>
+				<timestart min="11" second="27" ms="527" />
+				<timeend min="11" second="28" ms="215" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-6">
+			<timeline>
+				<timestart min="11" second="27" ms="167" />
+				<timeend min="11" second="27" ms="494" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-7">
+			<timeline>
+				<timestart min="11" second="27" ms="494" />
+				<timeend min="11" second="28" ms="182" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_reversed_seq11" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flying_horse_reversed_seq9" />
+	</result>
+</chapter>

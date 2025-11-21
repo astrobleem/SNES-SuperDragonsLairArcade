@@ -1,0 +1,18 @@
+<chapter name="lizard_king_start_dead">
+	<timeline>
+		<timestart min="11" second="51" ms="421" />
+		<timeend min="11" second="53" ms="755" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="51" ms="421" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="lizard_king_seq2" />
+	</result>
+</chapter>

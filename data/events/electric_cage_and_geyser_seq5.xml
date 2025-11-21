@@ -1,0 +1,15 @@
+<chapter name="electric_cage_and_geyser_seq5">
+	<timeline>
+		<timestart min="18" second="40" ms="872" />
+		<timeend min="18" second="41" ms="586" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="18" second="40" ms="872" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

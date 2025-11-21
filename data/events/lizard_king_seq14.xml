@@ -1,0 +1,15 @@
+<chapter name="lizard_king_seq14">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="5" ms="112" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

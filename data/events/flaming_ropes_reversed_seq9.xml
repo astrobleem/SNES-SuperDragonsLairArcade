@@ -1,0 +1,17 @@
+<chapter name="flaming_ropes_reversed_seq9">
+	<timeline>
+		<timestart min="9" second="1" ms="209" />
+		<timeend min="9" second="2" ms="709" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="9" second="1" ms="209" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

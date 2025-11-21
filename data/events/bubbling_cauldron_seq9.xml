@@ -1,0 +1,17 @@
+<chapter name="bubbling_cauldron_seq9">
+	<timeline>
+		<timestart min="3" second="41" ms="389" />
+		<timeend min="3" second="42" ms="806" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="3" second="41" ms="389" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

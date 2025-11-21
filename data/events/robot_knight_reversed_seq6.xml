@@ -1,0 +1,67 @@
+<chapter name="robot_knight_reversed_seq6">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="129" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="211" />
+				<timeend min="0" second="2" ms="96" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="2191" />
+			</params>
+			<result value="0">
+				<playchapter name="robot_knight_reversed_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="1" ms="211" />
+				<timeend min="0" second="2" ms="96" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="robot_knight_reversed_seq11" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-3">
+			<timeline>
+				<timestart min="0" second="1" ms="211" />
+				<timeend min="0" second="2" ms="96" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="robot_knight_reversed_seq11" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="0" second="1" ms="211" />
+				<timeend min="0" second="2" ms="96" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="robot_knight_reversed_seq11" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="robot_knight_reversed_seq11" />
+	</result>
+</chapter>

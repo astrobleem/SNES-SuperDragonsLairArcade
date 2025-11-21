@@ -1,0 +1,17 @@
+<chapter name="bower_trapped_in_wall">
+	<timeline>
+		<timestart min="6" second="21" ms="7" />
+		<timeend min="6" second="22" ms="799" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="21" ms="7" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,17 @@
+<chapter name="alice_room_burned_to_death">
+	<timeline>
+		<timestart min="12" second="44" ms="724" />
+		<timeend min="12" second="46" ms="99" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="44" ms="724" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="falling_platform_long_reversed_start_dead">
+	<timeline>
+		<timestart min="15" second="7" ms="283" />
+		<timeend min="15" second="9" ms="617" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="7" ms="283" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="falling_platform_long_reversed_seq2" />
+	</result>
+</chapter>

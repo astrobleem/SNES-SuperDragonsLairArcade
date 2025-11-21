@@ -1,0 +1,44 @@
+<chapter name="the_dragons_lair_seq9">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="474" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="392" />
+				<timeend min="0" second="1" ms="474" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="3551" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq10" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="392" />
+				<timeend min="0" second="1" ms="474" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="3551" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq10" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="the_dragons_lair_seq15" />
+	</result>
+</chapter>

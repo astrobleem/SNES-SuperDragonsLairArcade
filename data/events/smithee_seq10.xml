@@ -1,0 +1,17 @@
+<chapter name="smithee_seq10">
+	<timeline>
+		<timestart min="5" second="8" ms="560" />
+		<timeend min="5" second="10" ms="435" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="5" second="8" ms="560" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

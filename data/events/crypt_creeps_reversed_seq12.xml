@@ -1,0 +1,17 @@
+<chapter name="crypt_creeps_reversed_seq12">
+	<timeline>
+		<timestart min="13" second="10" ms="917" />
+		<timeend min="13" second="12" ms="250" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="13" second="10" ms="917" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

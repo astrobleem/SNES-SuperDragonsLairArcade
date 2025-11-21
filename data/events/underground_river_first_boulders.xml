@@ -1,0 +1,55 @@
+<chapter name="underground_river_first_boulders">
+	<timeline>
+		<timestart min="15" second="50" ms="326" />
+		<timeend min="15" second="51" ms="342" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+				<timeend min="15" second="51" ms="342" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="379" />
+			</params>
+			<result value="0">
+				<playchapter name="underground_river_second_boulders" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+				<timeend min="15" second="51" ms="342" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="underground_river_boulders_crash" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+				<timeend min="15" second="51" ms="342" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="underground_river_boulders_crash" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="underground_river_boulders_crash" />
+	</result>
+</chapter>

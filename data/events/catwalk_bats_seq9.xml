@@ -1,0 +1,17 @@
+<chapter name="catwalk_bats_seq9">
+	<timeline>
+		<timestart min="8" second="34" ms="98" />
+		<timeend min="8" second="36" ms="599" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="34" ms="98" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

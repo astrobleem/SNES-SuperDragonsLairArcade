@@ -1,0 +1,18 @@
+<chapter name="giant_bat_seq6">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="441" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="giant_bat_seq7" />
+	</result>
+</chapter>

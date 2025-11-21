@@ -1,0 +1,17 @@
+<chapter name="falling_platform_long_reversed_seq6">
+	<timeline>
+		<timestart min="15" second="30" ms="56" />
+		<timeend min="15" second="30" ms="875" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="30" ms="56" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

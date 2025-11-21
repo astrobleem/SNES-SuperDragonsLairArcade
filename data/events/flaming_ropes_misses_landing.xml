@@ -1,0 +1,17 @@
+<chapter name="flaming_ropes_misses_landing">
+	<timeline>
+		<timestart min="2" second="35" ms="490" />
+		<timeend min="2" second="37" ms="407" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="35" ms="490" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

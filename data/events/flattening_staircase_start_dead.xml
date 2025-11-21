@@ -1,0 +1,18 @@
+<chapter name="flattening_staircase_start_dead">
+	<timeline>
+		<timestart min="4" second="15" ms="757" />
+		<timeend min="4" second="18" ms="91" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="15" ms="757" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flattening_staircase_seq2" />
+	</result>
+</chapter>

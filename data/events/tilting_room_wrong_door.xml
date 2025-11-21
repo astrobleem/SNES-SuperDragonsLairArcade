@@ -1,0 +1,17 @@
+<chapter name="tilting_room_wrong_door">
+	<timeline>
+		<timestart min="14" second="3" ms="887" />
+		<timeend min="14" second="6" ms="597" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="3" ms="887" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,15 @@
+<chapter name="giddy_goons_game_over">
+	<timeline>
+		<timestart min="4" second="12" ms="212" />
+		<timeend min="4" second="15" ms="715" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="12" ms="212" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

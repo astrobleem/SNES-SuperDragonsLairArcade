@@ -1,0 +1,17 @@
+<chapter name="crypt_creeps_crushed_by_hand">
+	<timeline>
+		<timestart min="8" second="10" ms="742" />
+		<timeend min="8" second="11" ms="616" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="10" ms="742" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

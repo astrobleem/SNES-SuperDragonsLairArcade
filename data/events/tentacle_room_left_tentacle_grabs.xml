@@ -1,0 +1,17 @@
+<chapter name="tentacle_room_left_tentacle_grabs">
+	<timeline>
+		<timestart min="1" second="47" ms="525" />
+		<timeend min="1" second="50" ms="443" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="47" ms="525" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,15 @@
+<chapter name="lizard_king_game_over">
+	<timeline>
+		<timestart min="12" second="30" ms="376" />
+		<timeend min="12" second="33" ms="879" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="30" ms="376" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

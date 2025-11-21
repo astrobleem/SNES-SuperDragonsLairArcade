@@ -1,0 +1,15 @@
+<chapter name="underground_river_game_over">
+	<timeline>
+		<timestart min="16" second="44" ms="672" />
+		<timeend min="16" second="48" ms="175" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="16" second="44" ms="672" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

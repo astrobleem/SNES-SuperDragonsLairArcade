@@ -1,0 +1,15 @@
+<chapter name="falling_platform_long_reversed_seq7">
+	<timeline>
+		<timestart min="15" second="31" ms="224" />
+		<timeend min="15" second="36" ms="294" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="31" ms="224" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

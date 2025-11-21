@@ -1,0 +1,43 @@
+<chapter name="fire_room_enter_room">
+	<timeline>
+		<timestart min="6" second="31" ms="142" />
+		<timeend min="6" second="34" ms="681" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="31" ms="142" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="6" second="34" ms="26" />
+				<timeend min="6" second="34" ms="648" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="915" />
+			</params>
+			<result value="0">
+				<playchapter name="fire_room_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="6" second="34" ms="26" />
+				<timeend min="6" second="34" ms="615" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="fire_room_seq8" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="fire_room_seq8" />
+	</result>
+</chapter>

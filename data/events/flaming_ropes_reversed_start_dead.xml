@@ -1,0 +1,18 @@
+<chapter name="flaming_ropes_reversed_start_dead">
+	<timeline>
+		<timestart min="8" second="42" ms="106" />
+		<timeend min="8" second="44" ms="190" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="42" ms="106" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flaming_ropes_reversed_seq2" />
+	</result>
+</chapter>

@@ -1,0 +1,17 @@
+<chapter name="crypt_creeps_captured_by_ghouls">
+	<timeline>
+		<timestart min="8" second="13" ms="494" />
+		<timeend min="8" second="15" ms="786" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="13" ms="494" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

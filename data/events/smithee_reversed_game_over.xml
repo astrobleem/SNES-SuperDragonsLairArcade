@@ -1,0 +1,15 @@
+<chapter name="smithee_reversed_game_over">
+	<timeline>
+		<timestart min="11" second="17" ms="929" />
+		<timeend min="11" second="21" ms="432" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="17" ms="929" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

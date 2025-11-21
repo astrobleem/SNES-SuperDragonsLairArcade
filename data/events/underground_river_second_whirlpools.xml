@@ -1,0 +1,55 @@
+<chapter name="underground_river_second_whirlpools">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="719" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="408" />
+				<timeend min="0" second="2" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="251" />
+			</params>
+			<result value="0">
+				<playchapter name="underground_river_third_whirlpools" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="1" ms="408" />
+				<timeend min="0" second="2" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="underground_river_whirlpools_crash" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="0" second="1" ms="408" />
+				<timeend min="0" second="2" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="underground_river_whirlpools_crash" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="underground_river_whirlpools_crash" />
+	</result>
+</chapter>

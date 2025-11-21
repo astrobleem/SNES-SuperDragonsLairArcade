@@ -1,0 +1,129 @@
+<chapter name="grim_reaper_enter_room">
+	<timeline>
+		<timestart min="5" second="27" ms="537" />
+		<timeend min="5" second="33" ms="337" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="5" second="27" ms="537" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="up" label="action-1">
+			<timeline>
+				<timestart min="5" second="27" ms="537" />
+				<timeend min="5" second="29" ms="110" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="5" second="29" ms="110" />
+				<timeend min="5" second="29" ms="470" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="4026" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-3">
+			<timeline>
+				<timestart min="5" second="29" ms="470" />
+				<timeend min="5" second="30" ms="584" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-4">
+			<timeline>
+				<timestart min="5" second="30" ms="584" />
+				<timeend min="5" second="30" ms="945" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="4026" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-5">
+			<timeline>
+				<timestart min="5" second="30" ms="945" />
+				<timeend min="5" second="32" ms="59" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-6">
+			<timeline>
+				<timestart min="5" second="32" ms="92" />
+				<timeend min="5" second="32" ms="452" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="4026" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-7">
+			<timeline>
+				<timestart min="5" second="32" ms="452" />
+				<timeend min="5" second="33" ms="566" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-8">
+			<timeline>
+				<timestart min="5" second="27" ms="537" />
+				<timeend min="5" second="33" ms="632" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-9">
+			<timeline>
+				<timestart min="5" second="27" ms="537" />
+				<timeend min="5" second="33" ms="632" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_seq9" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="grim_reaper_seq7" />
+	</result>
+</chapter>

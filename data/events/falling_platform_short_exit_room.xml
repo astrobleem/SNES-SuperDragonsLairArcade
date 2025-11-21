@@ -1,0 +1,15 @@
+<chapter name="falling_platform_short_exit_room">
+	<timeline>
+		<timestart min="10" second="34" ms="594" />
+		<timeend min="10" second="39" ms="597" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="34" ms="594" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

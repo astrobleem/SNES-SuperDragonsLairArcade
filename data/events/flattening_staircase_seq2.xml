@@ -1,0 +1,31 @@
+<chapter name="flattening_staircase_seq2">
+	<timeline>
+		<timestart min="4" second="19" ms="594" />
+		<timeend min="4" second="22" ms="19" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="19" ms="594" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="4" second="21" ms="626" />
+				<timeend min="4" second="22" ms="347" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="495" />
+			</params>
+			<result value="0">
+				<playchapter name="flattening_staircase_seq3" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flattening_staircase_seq7" />
+	</result>
+</chapter>

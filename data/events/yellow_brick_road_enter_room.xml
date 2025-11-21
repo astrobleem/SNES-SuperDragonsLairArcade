@@ -1,0 +1,67 @@
+<chapter name="yellow_brick_road_enter_room">
+	<timeline>
+		<timestart min="2" second="46" ms="334" />
+		<timeend min="2" second="48" ms="202" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="46" ms="334" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="2" second="46" ms="334" />
+				<timeend min="2" second="48" ms="169" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="yellow_brick_road_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="2" second="47" ms="940" />
+				<timeend min="2" second="48" ms="333" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="yellow_brick_road_seq14" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-3">
+			<timeline>
+				<timestart min="2" second="47" ms="940" />
+				<timeend min="2" second="48" ms="333" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="yellow_brick_road_seq14" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="2" second="47" ms="940" />
+				<timeend min="2" second="48" ms="333" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="yellow_brick_road_seq14" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="yellow_brick_road_seq14" />
+	</result>
+</chapter>

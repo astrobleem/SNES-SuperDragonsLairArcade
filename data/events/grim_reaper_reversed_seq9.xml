@@ -1,0 +1,17 @@
+<chapter name="grim_reaper_reversed_seq9">
+	<timeline>
+		<timestart min="13" second="48" ms="288" />
+		<timeend min="13" second="49" ms="746" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="13" second="48" ms="288" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

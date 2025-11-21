@@ -1,0 +1,17 @@
+<chapter name="falling_platform_short_missed_jump">
+	<timeline>
+		<timestart min="10" second="32" ms="91" />
+		<timeend min="10" second="34" ms="592" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="32" ms="91" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

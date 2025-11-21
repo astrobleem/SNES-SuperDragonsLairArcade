@@ -1,0 +1,18 @@
+<chapter name="catwalk_bats_start_dead">
+	<timeline>
+		<timestart min="8" second="19" ms="751" />
+		<timeend min="8" second="21" ms="793" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="19" ms="751" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="catwalk_bats_seq2" />
+	</result>
+</chapter>

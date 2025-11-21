@@ -1,0 +1,17 @@
+<chapter name="lizard_king_seq15">
+	<timeline>
+		<timestart min="12" second="25" ms="955" />
+		<timeend min="12" second="26" ms="955" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="25" ms="955" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

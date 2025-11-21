@@ -1,0 +1,15 @@
+<chapter name="mudmen_game_over">
+	<timeline>
+		<timestart min="17" second="32" ms="929" />
+		<timeend min="17" second="36" ms="432" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="17" second="32" ms="929" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

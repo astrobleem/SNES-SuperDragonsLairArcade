@@ -1,0 +1,17 @@
+<chapter name="electric_cage_and_geyser_seq8">
+	<timeline>
+		<timestart min="18" second="44" ms="918" />
+		<timeend min="18" second="46" ms="418" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="18" second="44" ms="918" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

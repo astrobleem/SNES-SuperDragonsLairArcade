@@ -1,0 +1,17 @@
+<chapter name="mudmen_seq13">
+	<timeline>
+		<timestart min="17" second="20" ms="500" />
+		<timeend min="17" second="21" ms="374" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="17" second="20" ms="500" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

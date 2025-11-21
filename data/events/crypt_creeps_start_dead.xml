@@ -1,0 +1,18 @@
+<chapter name="crypt_creeps_start_dead">
+	<timeline>
+		<timestart min="7" second="50" ms="555" />
+		<timeend min="7" second="52" ms="889" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="50" ms="555" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="crypt_creeps_enter_room" />
+	</result>
+</chapter>

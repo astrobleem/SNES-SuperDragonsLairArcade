@@ -1,0 +1,18 @@
+<chapter name="yellow_brick_road_reversed_start_dead">
+	<timeline>
+		<timestart min="9" second="6" ms="214" />
+		<timeend min="9" second="8" ms="548" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="9" second="6" ms="214" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="yellow_brick_road_reversed_seq2" />
+	</result>
+</chapter>

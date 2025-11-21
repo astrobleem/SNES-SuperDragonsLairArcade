@@ -1,0 +1,17 @@
+<chapter name="flaming_ropes_fall_to_death">
+	<timeline>
+		<timestart min="2" second="38" ms="993" />
+		<timeend min="2" second="40" ms="410" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="38" ms="993" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,15 @@
+<chapter name="bubbling_cauldron_game_over">
+	<timeline>
+		<timestart min="3" second="44" ms="809" />
+		<timeend min="3" second="48" ms="312" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="3" second="44" ms="809" />
+			</timeline>
+		</event>
+	</events>
+</chapter>
