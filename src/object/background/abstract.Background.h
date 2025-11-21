@@ -73,6 +73,7 @@ BackgroundAnimationLUT:
   PTRLONG BackgroundAnimationLUT BG.hiscore
   PTRLONG BackgroundAnimationLUT BG.scoreentry
   PTRLONG BackgroundAnimationLUT BG.hud
+  PTRLONG BackgroundAnimationLUT BG.levelcomplete.0
   PTRLONG BackgroundAnimationLUT BG.levelcomplete.1
   PTRLONG BackgroundAnimationLUT BG.levelcomplete.2
   
@@ -83,6 +84,7 @@ BackgroundAnimationLUT:
   BG_ANIMATION hiscore gfx_bg
   BG_ANIMATION scoreentry gfx_bg
   BG_ANIMATION hud gfx_directcolor
+  BG_ANIMATION levelcomplete.0 gfx_bg
   BG_ANIMATION levelcomplete.1 gfx_bg
-  BG_ANIMATION levelcomplete.2 gfx_bg  
+  BG_ANIMATION levelcomplete.2 gfx_bg
 

@@ -1,0 +1,5 @@
+Background: Title Screen
+Target output filename: titlescreen.gfx_bg.png
+Resolution: 256x224 SNES background (8x8 tiles), 4bpp with up to 8 palettes (16 colors each, keep totals under 128 colors). Favor broad, flat color regions to avoid tile breakup.
+Prompt: "Dragon's Lair arcade title screen, Dirk the Daring silhouette with raised sword in front of a stone castle gate, bold 'Dragon's Lair' logotype in glowing magenta and gold, dramatic torchlight, dark vignette edges, crisp 16-bit SNES style, limited color bands, no gradients, 256x224." 
+Alignment notes: Keep the logo horizontally centered; leave safe margins around edges for HUD overlays and palette cycling. Avoid fine text that would muddy after 4bpp quantization.
