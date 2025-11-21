@@ -1,53 +1,28 @@
-# SNES-SuperDragonsLairArcade
 # Super Dragon’s Lair Arcade (SNES)
 
 Super Dragon’s Lair Arcade is a full-motion-video (FMV) game for the Super Nintendo Entertainment System, targeting real NTSC SNES hardware and the SD2SNES/FXPAK Pro MSU-1 enhancement chip.
 
-This project is a conversion/translation of the existing
-SuperRoadBlaster
- engine into a SNES version of Dragon’s Lair (Arcade) — preserving the look, flow, and timing of the arcade original as closely as the SNES/MSU-1 hardware allows.
-
-The RoadBlaster engine already supports:
-
-MSU-1 FMV playback (tile-streaming)
-
-MSU-1 PCM audio
-
-Scene scripting
-
-Tilemap backgrounds
-
-Sprite overlays
-
-Controller input windows
-
-Full build system
-
-This project focuses primarily on asset replacement, not engine changes.
+The game translates the battle-tested RoadBlaster engine into a faithful, MSU-1–powered take on the arcade original. Engineering is largely settled; our current focus is preparing Dragon’s Lair–appropriate assets and wiring them into the existing scene system.
 
 🎯 Project Goals
 
-Recreate the original Dragon’s Lair arcade experience on the SNES
+- Recreate the original Dragon’s Lair arcade experience on the SNES.
+- Retain RoadBlaster’s battle-tested MSU-1 FMV engine.
+- Replace all RoadBlaster assets with Dragon’s Lair equivalents (video, audio, sprites, UI, input prompts).
+- Maintain original arcade scene timings and player cues.
+- Produce a fully playable SNES ROM + MSU-1 PCM set.
 
-Retain RoadBlaster’s battle-tested MSU-1 FMV engine
+📈 Current Progress
 
-Replace all RoadBlaster assets with Dragon’s Lair equivalents:
+- Scene chapter scripts are staged per encounter in `resources/`, matching the Dragon’s Lair scene list (e.g., `crypt_creeps`, `rolling_balls`, `throne_room`).
+- Root engine scripts are now documented with theming guidance in `src/README.md`, including notes to retheme remaining martial-arts SFX on the title screen.
+- Chapter event coverage has been inventoried across 40 scenes; 352 unique event types are referenced, with 14 implemented and 351 still needing object handlers.
 
-FMV scenes
+🧭 Documentation Map
 
-Backgrounds
-
-Sprites
-
-UI elements
-
-Audio tracks
-
-Input prompts
-
-Maintain original arcade scene timings and player cues
-
-Produce a fully playable SNES ROM + MSU-1 PCM set
+- `src/README.md` – High-level tour of the boot/title/score/MSU1 scripts plus theming expectations.
+- `data/chapter_event_inventory.md` – Chapter-by-chapter event coverage and gaps to implement in the engine.
+- `tools/README.md` – Python 2.7 tooling notes and converter usage (image, tile, XML, PCM).
 
 🕹️ Hardware Targets
 
@@ -62,24 +37,28 @@ SNES9x / bsnes for debugging and dev-iteration
 We test against both real hardware and accurate emulators.
 
 📁 Repository Structure
-/src/           65816 assembly source (core engine, scene tables, logic)
-/data/          Graphics, tilemaps, FMV frames, audio (Dragon’s Lair assets)
-/tools/         Utilities for converting images, tiles, maps, audio, XML -> binary
-/tests/         ROM tests and automated validation
-makefile        Full build pipeline (ROM + MSU1)
-README.md       You’re reading it
+
+- `src/` – 65816 assembly source (core engine, scene tables, logic).
+- `data/` – Backgrounds, HUD assets, audio, and other converted data. See `data/backgrounds/README.md` for the current audit of RoadBlaster placeholders.
+- `resources/` – Extracted scene scripts organized per Dragon’s Lair encounter (inputs for converters).
+- `tools/` – Utilities for converting images, tiles, maps, audio, XML -> binary.
+- `tests/` – ROM tests and automated validation.
+- `makefile` – Full build pipeline (ROM + MSU1).
+- `README.md` – You’re reading it.
 
 
 
 🔄 What We Replace (Top-Level Checklist)
-Component	Status	Description
-FMV Sequences	☐	Replace all RoadBlaster MSU-1 video frames with Dragon’s Lair scenes
-PCM Audio	☐	Convert arcade audio to MSU-1 PCM
-Backgrounds	☐	Generate SNES-compatible 4bpp backgrounds from DL art
-HUD / UI	☐	Title logo, menus, prompts, “Quest Advanced” cards
-Sprites	☐	Replace RoadBlaster overlays with Dirk/Daphne cues
-Scene Scripts	☐	Update XML input windows + scene flow
-Build System	✔	Working via original RoadBlaster makefile
+
+| Component     | Status      | Notes |
+| ---           | ---         | --- |
+| FMV Sequences | In progress | Chapter scripts exist per scene in `resources/`; frame conversion and MSU1 packaging remain. |
+| PCM Audio     | Planned     | Use MSU1 PCM once chapter audio is extracted and normalized. |
+| Backgrounds   | In progress | Audit of remaining RoadBlaster captures lives in `data/backgrounds/README.md`; replacements needed for title, high score, level-complete, and score entry screens. |
+| HUD / UI      | In progress | Title/logo and prompt replacements tracked alongside background updates. |
+| Sprites       | Planned     | Sprite overlays still reference RoadBlaster cues and need Dirk/Daphne equivalents. |
+| Scene Scripts | In progress | Event coverage inventoried; most event object types still need implementations. |
+| Build System  | ✅ Done     | RoadBlaster makefile builds the ROM and MSU1 pack. |
 
 This checklist mirrors the project board and planned GitHub issues.
 
@@ -123,17 +102,11 @@ Outputs appear in bin/.
 
 🚧 Status
 
-Early stages.
-The RoadBlaster engine is functioning and fully buildable.
-We are presently:
+The RoadBlaster engine is functioning and fully buildable. Current focus:
 
-Cataloging all RoadBlaster assets
-
-Documenting tools
-
-Setting up the Dragon’s Lair asset pipeline
-
-Beginning first background/splash-screen conversions
+- Replace RoadBlaster-branded backgrounds called out in `data/backgrounds/README.md`.
+- Implement the missing scene events captured in `data/chapter_event_inventory.md` and wire them to engine objects.
+- Retime title/audio cues to match the lair theme noted in `src/README.md`.
 
 📌 License
 
