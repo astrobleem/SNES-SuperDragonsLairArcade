@@ -69,28 +69,7 @@ We test against both real hardware and accurate emulators.
 makefile        Full build pipeline (ROM + MSU1)
 README.md       You’re reading it
 
-🛠️ Tools & Asset Pipeline
 
-RoadBlaster includes a suite of conversion tools in /tools.
-We are documenting these in a dedicated tools/README.md.
-
-You do not need to write tooling from scratch — most required converters already exist:
-
-bgtool — background tile converter
-
-bmp2snes / bmp2pic — general image → SNES tile conversion
-
-metatiler — splits large images into SNES meta-tiles
-
-sprtool — sprite sheet converter
-
-tmx2msu — tilemap formatter
-
-wav2msu — WAV/FLAC → MSU-1 PCM audio
-
-xml2bin — scene metadata compiler
-
-Custom scripts may be added when required for Dragon’s Lair-specific tuning.
 
 🔄 What We Replace (Top-Level Checklist)
 Component	Status	Description
