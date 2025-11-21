@@ -1,0 +1,1 @@
+Dragon's Lair-style HUD burst labeled "SUPER" in radiant gold with violet highlights, looping radiance to signal ultimate power without masking other UI.

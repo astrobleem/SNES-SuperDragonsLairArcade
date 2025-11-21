@@ -1,0 +1,1 @@
+Dragon's Lair-style HUD arrow overlay, bright gold outline with red pulse fill, pointing right; looping blink to cue next turn without covering the road.

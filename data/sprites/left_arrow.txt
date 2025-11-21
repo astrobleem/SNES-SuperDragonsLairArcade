@@ -1,0 +1,1 @@
+Dragon's Lair-style HUD arrow overlay, bright gold outline with red pulse fill, pointing left; looping blink to guide lane change while keeping road visible.

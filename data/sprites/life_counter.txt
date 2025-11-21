@@ -1,0 +1,1 @@
+Dragon's Lair-style life counter with Dirk head tally, frames counting down remaining lives; after a brief delay the strip drifts upward to clear space.
