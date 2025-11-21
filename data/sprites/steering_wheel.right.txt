@@ -1,1 +1,1 @@
-Dragon's Lair steering wheel animation, three frames leaning right with confident hand twist, rim tilting and highlights moving to show right input.
+Not needed for Dragon's Lair; leave this legacy steering wheel (right tilt) prompt unused so cues stay on-theme.

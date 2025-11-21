@@ -1,1 +1,1 @@
-Dragon's Lair-style HUD warning labeled "Brake" in crimson with amber backlight, strobing loop when slowing is required without obscuring gauges.
+Not needed for Dragon's Lair; leave this legacy brake prompt unused so cues stay on-theme.
