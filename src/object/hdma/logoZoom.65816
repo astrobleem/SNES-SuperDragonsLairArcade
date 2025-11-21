@@ -1,0 +1,132 @@
+/**
+* title screen logo fade in effect
+* 
+*/
+.include "src/object/hdma/logoZoom.h"
+.section "hdma.logoZoom"
+
+/**
+* @param 1 <int, 8bit> target layer (0-3)
+*/
+  METHOD init
+  sep #$20
+
+  lda OBJECT.CALL.ARG.1,s
+  cmp.b #BG.LAYER.3 + 1
+  bcc +
+	pha
+    TRIGGER_ERROR E_BadBgLayer
+
++
+  asl a
+  clc
+  adc #BG1VOFS & $ff
+  sta hdma.target
+
+  rep #$31
+  lda #LOGO_ZOOM.TABLE.LENGTH
+  sta hdma.ramBuffer.length
+  jsr abstract.Hdma.allocateBuffer
+
+
+  lda.w #GLOBAL.wramBuffer.start
+  clc
+  adc hdma.ramBuffer.start
+  tax
+  sep #$20
+  lda #RAM
+  jsr abstract.Hdma.setTableAdress
+
+  lda hdma.flags
+  ora #DMAP_1_REG_WRITE_TWICE
+  sta hdma.flags
+
+  jsr _initTable
+  jsr abstract.Hdma.start
+  rts
+
+  METHOD play
+  jsr _updateTable
+  rts
+
+  METHOD kill
+  rep #$31
+  jsr abstract.Hdma.stop
+  jsr abstract.Hdma.deallocateBuffer
+  lda #OBJR_kill
+  sta 3,s	
+  rts
+
+_updateTable:
+  php
+  rep #$31
+  pha
+  lda this.tablePointer
+  sta 1,s
+  asl a
+  clc
+  adc 1,s
+  clc
+  adc hdma.ramBuffer.start
+  clc
+  adc #GLOBAL.wramBuffer.start
+  tax
+  lda #RAM
+  jsr abstract.Hdma.setTableAdress
+  jsr abstract.Hdma.makePhysical
+
+  inc this.tablePointer
+  lda this.tablePointer
+  cmp #$c0
+  bne +
+	CALL LogoZoom.kill.MTD iterator.self
++
+  pla
+  plp
+  rts
+
+_initTable:
+  php
+  rep #$31
+  lda.w #$dd
+  sta this.tablePointer
+  lda.w #$30
+  sta this.lutPointer
+  lda #$2a0
+  clc
+  adc hdma.ramBuffer.start
+  sta this.tableEnd
+  ldx hdma.ramBuffer.start
+
+-	lda #1
+	sta.w GLOBAL.wramBuffer.start,x
+	inx
+
+	phx
+	lda this.lutPointer
+	and.w #$3f
+	tax
+	lda.l logoZoomInitLUT,x
+	plx
+
+	clc
+	adc this.tablePointer
+	sta.w GLOBAL.wramBuffer.start,x
+
+	inc this.lutPointer
+	dec this.tablePointer
+	inx
+	inx
+	cpx this.tableEnd
+	bne -
+
+  ;terminate table
+  stz.w GLOBAL.wramBuffer.start,x
+  stz this.tablePointer
+
+  plp
+  rts
+  
+  CLASS LogoZoom
+.ends	
+	

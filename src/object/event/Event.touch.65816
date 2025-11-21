@@ -1,0 +1,15 @@
+/**
+* 
+*/
+.include "src/object/event/Event.touch.h"
+.section "Event.touch"
+
+  ;debug, kill immediately
+  METHOD play
+  rep #$31
+  CALL Event.touch.kill.MTD iterator.self
+  rts
+
+  CLASS Event.touch
+.ends	
+	
