@@ -103,6 +103,16 @@ OBJID.Iterator_test db
 OBJID.Background.framebuffer db
 OBJID.abstract.Event db
 OBJID.Event.chapter db
+OBJID.Event.start_alive db
+OBJID.Event.start_dead db
+OBJID.Event.enter_room db
+OBJID.Event.enter_room_left db
+OBJID.Event.enter_room_right db
+OBJID.Event.enter_room_up db
+OBJID.Event.enter_room_down db
+OBJID.Event.enter_room_upleft db
+OBJID.Event.exit_room db
+OBJID.Event.game_over db
 OBJID.Event.hide_dash db
 OBJID.Event.touch db
 OBJID.Event.target db
@@ -184,12 +194,22 @@ OopClassLut:
 	PTRLONG OopClassLut Test_object.CLS
 	PTRLONG OopClassLut Iterator_test.CLS
 	PTRLONG OopClassLut Background.framebuffer.CLS
-	PTRLONG OopClassLut abstract.Event.CLS
-	PTRLONG OopClassLut Event.chapter.CLS
-	PTRLONG OopClassLut Event.hide_dash.CLS
-	PTRLONG OopClassLut Event.touch.CLS
-	PTRLONG OopClassLut Event.target.CLS
-	PTRLONG OopClassLut Event.checkpoint.CLS
+    PTRLONG OopClassLut abstract.Event.CLS
+    PTRLONG OopClassLut Event.chapter.CLS
+    PTRLONG OopClassLut Event.start_alive.CLS
+    PTRLONG OopClassLut Event.start_dead.CLS
+    PTRLONG OopClassLut Event.enter_room.CLS
+    PTRLONG OopClassLut Event.enter_room_left.CLS
+    PTRLONG OopClassLut Event.enter_room_right.CLS
+    PTRLONG OopClassLut Event.enter_room_up.CLS
+    PTRLONG OopClassLut Event.enter_room_down.CLS
+    PTRLONG OopClassLut Event.enter_room_upleft.CLS
+    PTRLONG OopClassLut Event.exit_room.CLS
+    PTRLONG OopClassLut Event.game_over.CLS
+    PTRLONG OopClassLut Event.hide_dash.CLS
+    PTRLONG OopClassLut Event.touch.CLS
+    PTRLONG OopClassLut Event.target.CLS
+    PTRLONG OopClassLut Event.checkpoint.CLS
 	PTRLONG OopClassLut Event.confirm.CLS
 	PTRLONG OopClassLut Event.show_help.CLS
 	PTRLONG OopClassLut Event.direction_right.CLS
