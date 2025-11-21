@@ -18,6 +18,7 @@ This directory contains the per-chapter XML descriptors that drive the original 
   - `confirm`: Waits for a start/confirm input before branching to another chapter.
   - `hide-dash`: UI helper to hide the HUD during prerendered sequences.
   - Other game-specific helpers follow the same structure: a `<timeline>`, optional `<params>`, and one or more `<result>` branches chosen by `value`.
+- **Debug/runtime params and conversion output:** `xmlsceneparser.py` loads every `<params>` key but only uses a handful (`cockpit` on chapters, `type` on `direction` events) when emitting `chapter.script`, so debug keys like `godmode`, `cursorSpeed`, and `analogControls` never propagate beyond the in-memory parse. You can leave them in place without affecting frame slicing or script generation, or remove them for clarity if desired.
 - **`<result>`**: Defines the chapter that should play next when the chapter finishes or when an event branch is taken. Branches use `<playchapter name="..."/>` to jump forward; a single `<result>` outside of `<events>` acts as the default completion path.
 
 ## Timing conventions
