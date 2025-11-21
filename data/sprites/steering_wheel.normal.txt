@@ -1,1 +1,1 @@
-Dragon's Lair steering wheel animation, three-frame loop centered on neutral grip, slight shimmer on chrome rim to show idle wheel awaiting input.
+Not needed for Dragon's Lair; leave this legacy steering wheel (neutral) prompt unused so cues stay on-theme.
