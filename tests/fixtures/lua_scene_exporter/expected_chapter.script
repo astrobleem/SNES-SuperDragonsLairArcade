@@ -1,0 +1,20 @@
+# chapter.script generated from Lua scenes
+scene sample_scene
+  sequence fail
+    start_time: 1600
+    end_time: 1700
+    is_single_frame: False
+
+  sequence start_alive
+    start_time: 100
+    end_time: 400
+    timeout: when=800 next=fail
+    is_single_frame: False
+    actions:
+      - input=left from=150 to=300 next=success interrupt=jump
+      - input=right from=200 to=350 next=fail interrupt=duck
+
+  sequence success
+    start_time: 1200
+    end_time: 1300
+    is_single_frame: True
