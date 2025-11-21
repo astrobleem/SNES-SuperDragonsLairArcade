@@ -1,0 +1,779 @@
+# Chapter Script Event Inventory
+
+This file summarizes the event types referenced in chapter script resources and compares them with the currently implemented event objects.
+
+## Summary
+
+- Chapters analyzed: 40
+- Unique event types referenced: 352
+- Implemented event object types: 14
+- Referenced event types not yet implemented: 351
+
+## Implemented event object types
+
+- accelerate
+- brake
+- change_dash
+- chapter
+- checkpoint
+- confirm
+- direction_left
+- direction_right
+- hide_dash
+- hide_sunscreen
+- shake
+- show_help
+- target
+- touch
+
+## Referenced chapter event types not implemented
+
+- **attacked_first_hand** – crypt_creeps
+- **attacked_first_hand_down** – crypt_creeps
+- **attacked_first_hand_left** – crypt_creeps
+- **attacked_first_hand_right** – crypt_creeps
+- **attacked_first_hand_up** – crypt_creeps
+- **attacked_second_hand** – crypt_creeps
+- **attacked_second_hand_down** – crypt_creeps
+- **attacked_second_hand_left** – crypt_creeps
+- **attacked_second_hand_right** – crypt_creeps
+- **attract_movie** – attract_mode
+- **attract_movie_start** – attract_mode
+- **big_ball_crushes** – rolling_balls
+- **blue_ball** – rolling_balls
+- **blue_ball_down** – rolling_balls
+- **blue_ball_up** – rolling_balls
+- **boulders_crash** – underground_river
+- **boulders_crash2** – underground_river
+- **boulders_crash3** – underground_river
+- **boulders_crash4** – underground_river
+- **bounce_to_chain** – underground_river
+- **bounce_to_chain_down** – underground_river
+- **bounce_to_chain_left** – underground_river
+- **bounce_to_chain_right** – underground_river
+- **bounce_to_chain_up** – underground_river
+- **brick_wall** – flying_horse
+- **brick_wall_left** – flying_horse
+- **brick_wall_right** – flying_horse
+- **brick_wall_up** – flying_horse
+- **burned_to_death** – alice_room, flying_horse
+- **burns_hands** – flaming_ropes
+- **captured_by_ghouls** – crypt_creeps
+- **castle_exterior** – introduction
+- **catches_fire** – tilting_room
+- **climbs_stairs** – giddy_goons
+- **climbs_stairs_action** – giddy_goons
+- **climbs_stairs_down** – giddy_goons
+- **climbs_stairs_left** – giddy_goons
+- **climbs_stairs_up** – giddy_goons
+- **crash_landing** – falling_platform_long, falling_platform_short
+- **crushed_by_hand** – crypt_creeps
+- **drinks_potion** – alice_room
+- **eaten_by_skulls** – crypt_creeps
+- **eaten_by_slime** – crypt_creeps
+- **electrified_floor** – throne_room
+- **electrified_sword** – throne_room
+- **electrified_throne** – throne_room
+- **endgame** – the_dragons_lair
+- **enter_crypt** – crypt_creeps
+- **enter_crypt_action** – crypt_creeps
+- **enter_crypt_down** – crypt_creeps
+- **enter_crypt_left** – crypt_creeps
+- **enter_crypt_right** – crypt_creeps
+- **enter_crypt_up** – crypt_creeps
+- **enter_room** – alice_room, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_action** – crypt_creeps, crypt_creeps_reversed, giant_bat, giddy_goons, mudmen, smithee, smithee_reversed, snake_room, tentacle_room
+- **enter_room_down** – alice_room, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, flaming_ropes, flaming_ropes_reversed, lizard_king, mudmen, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, throne_room, tilting_room, vestibule, yellow_brick_road
+- **enter_room_left** – alice_room, black_knight, bubbling_cauldron, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, throne_room, tilting_room, vestibule, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_right** – alice_room, black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, throne_room, tilting_room, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_up** – alice_room, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, flaming_ropes, flaming_ropes_reversed, flying_horse, flying_horse_reversed, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, throne_room, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_upleft** – flying_horse_reversed, lizard_king
+- **exit_room** – alice_room, bower, crypt_creeps, falling_platform_long, falling_platform_short, flaming_ropes, flying_horse, giddy_goons, introduction, rolling_balls, tentacle_room, throne_room, tilting_room, underground_river, vestibule, wind_room
+- **fall_to_death** – flaming_ropes, giddy_goons
+- **falls_to_death** – tilting_room
+- **fell_to_death** – falling_platform_long, falling_platform_short, vestibule
+- **fifth_fire** – flying_horse
+- **fifth_fire_left** – flying_horse
+- **fifth_fire_right** – flying_horse
+- **fifth_fire_up** – flying_horse
+- **fight_off_one_before_swarm** – giddy_goons
+- **first_boulders** – underground_river
+- **first_boulders_left** – underground_river
+- **first_boulders_right** – underground_river
+- **first_boulders_up** – underground_river
+- **first_jump** – throne_room
+- **first_jump_down** – throne_room
+- **first_jump_left** – throne_room
+- **first_jump_right** – throne_room
+- **first_jump_up** – throne_room
+- **first_rapids** – underground_river
+- **first_rapids_left** – underground_river
+- **first_rapids_right** – underground_river
+- **first_rapids_up** – underground_river
+- **first_whirlpools** – underground_river
+- **first_whirlpools_left** – underground_river
+- **first_whirlpools_right** – underground_river
+- **first_whirlpools_up** – underground_river
+- **fourth_boulders** – underground_river
+- **fourth_boulders_left** – underground_river
+- **fourth_boulders_right** – underground_river
+- **fourth_boulders_up** – underground_river
+- **fourth_fire** – flying_horse
+- **fourth_fire_left** – flying_horse
+- **fourth_fire_right** – flying_horse
+- **fourth_fire_up** – flying_horse
+- **fourth_rapids** – underground_river
+- **fourth_rapids_left** – underground_river
+- **fourth_rapids_right** – underground_river
+- **fourth_rapids_up** – underground_river
+- **fourth_whirlpools** – underground_river
+- **fourth_whirlpools_left** – underground_river
+- **fourth_whirlpools_right** – underground_river
+- **fourth_whirlpools_up** – underground_river
+- **game_over** – alice_room, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **green_ball** – rolling_balls
+- **green_ball_down** – rolling_balls
+- **green_ball_up** – rolling_balls
+- **hit_brick_wall** – flying_horse
+- **hit_pillar** – flying_horse
+- **insert_coins** – attract_mode
+- **insert_coins_start** – attract_mode
+- **jump_to_door** – tentacle_room
+- **jump_to_door_action** – tentacle_room
+- **jump_to_door_down** – tentacle_room
+- **jump_to_door_left** – tentacle_room
+- **jump_to_door_right** – tentacle_room
+- **jump_to_door_up** – tentacle_room
+- **jump_to_stairs** – tentacle_room
+- **jump_to_stairs_action** – tentacle_room
+- **jump_to_stairs_down** – tentacle_room
+- **jump_to_stairs_left** – tentacle_room
+- **jump_to_stairs_up** – tentacle_room
+- **jump_to_table** – tentacle_room
+- **jump_to_table_action** – tentacle_room
+- **jump_to_table_down** – tentacle_room
+- **jump_to_table_left** – tentacle_room
+- **jump_to_table_right** – tentacle_room
+- **jump_to_table_up** – tentacle_room
+- **jump_to_weapon_rack** – tentacle_room
+- **jump_to_weapon_rack_action** – tentacle_room
+- **jump_to_weapon_rack_down** – tentacle_room
+- **jump_to_weapon_rack_left** – tentacle_room
+- **jump_to_weapon_rack_right** – tentacle_room
+- **jumped_skulls** – crypt_creeps
+- **jumped_skulls_action** – crypt_creeps
+- **jumped_skulls_down** – crypt_creeps
+- **jumped_skulls_left** – crypt_creeps
+- **jumped_skulls_up** – crypt_creeps
+- **jumped_slime** – crypt_creeps
+- **jumped_slime_action** – crypt_creeps
+- **jumped_slime_down** – crypt_creeps
+- **jumped_slime_right** – crypt_creeps
+- **jumped_slime_up** – crypt_creeps
+- **jumps_back** – tilting_room
+- **jumps_back_down** – tilting_room
+- **jumps_back_left** – tilting_room
+- **jumps_back_up** – tilting_room
+- **jumps_forward** – tilting_room
+- **jumps_forward_down** – tilting_room
+- **jumps_forward_left** – tilting_room
+- **jumps_forward_right** – tilting_room
+- **jumps_forward_up** – tilting_room
+- **kill_upper_goons** – giddy_goons
+- **kill_upper_goons_action** – giddy_goons
+- **kill_upper_goons_down** – giddy_goons
+- **kill_upper_goons_left** – giddy_goons
+- **kill_upper_goons_up** – giddy_goons
+- **kills_first_goon** – giddy_goons
+- **kills_first_goon_action** – giddy_goons
+- **kills_first_goon_left** – giddy_goons
+- **kills_first_goon_right** – giddy_goons
+- **kills_first_goon_up** – giddy_goons
+- **kills_first_tentacle** – tentacle_room
+- **kills_first_tentacle_up** – tentacle_room
+- **knife_in_back** – giddy_goons
+- **left_tentacle_grabs** – tentacle_room
+- **miss_chain** – underground_river
+- **missed_jump** – falling_platform_long, falling_platform_short
+- **misses_landing** – flaming_ropes
+- **on_throne** – throne_room
+- **on_throne_left** – throne_room
+- **on_throne_right** – throne_room
+- **orange_ball** – rolling_balls
+- **orange_ball_down** – rolling_balls
+- **orange_ball_up** – rolling_balls
+- **overpowered_by_skulls** – crypt_creeps
+- **pit_in_ground** – rolling_balls
+- **pit_in_ground_up** – rolling_balls
+- **platform_sliding** – flaming_ropes
+- **platform_sliding_down** – flaming_ropes
+- **platform_sliding_left** – flaming_ropes
+- **platform_sliding_right** – flaming_ropes
+- **platform_sliding_up** – flaming_ropes
+- **purple_ball** – rolling_balls
+- **purple_ball_down** – rolling_balls
+- **purple_ball_up** – rolling_balls
+- **rapids_crash** – underground_river
+- **red_ball** – rolling_balls
+- **red_ball_down** – rolling_balls
+- **red_ball_up** – rolling_balls
+- **rope1** – flaming_ropes
+- **rope1_down** – flaming_ropes
+- **rope1_left** – flaming_ropes
+- **rope1_right** – flaming_ropes
+- **rope1_up** – flaming_ropes
+- **rope2** – flaming_ropes
+- **rope2_down** – flaming_ropes
+- **rope2_left** – flaming_ropes
+- **rope2_right** – flaming_ropes
+- **rope2_up** – flaming_ropes
+- **rope3** – flaming_ropes
+- **rope3_down** – flaming_ropes
+- **rope3_left** – flaming_ropes
+- **rope3_right** – flaming_ropes
+- **rope3_up** – flaming_ropes
+- **second_boulders** – underground_river
+- **second_boulders_left** – underground_river
+- **second_boulders_right** – underground_river
+- **second_boulders_up** – underground_river
+- **second_fire** – flying_horse
+- **second_fire_left** – flying_horse
+- **second_fire_right** – flying_horse
+- **second_fire_up** – flying_horse
+- **second_jump** – throne_room
+- **second_jump_down** – throne_room
+- **second_jump_left** – throne_room
+- **second_jump_right** – throne_room
+- **second_jump_set** – falling_platform_long
+- **second_jump_set_down** – falling_platform_long
+- **second_jump_set_left** – falling_platform_long
+- **second_jump_set_right** – falling_platform_long
+- **second_jump_set_up** – falling_platform_long
+- **second_jump_up** – throne_room
+- **second_rapids** – underground_river
+- **second_rapids_left** – underground_river
+- **second_rapids_right** – underground_river
+- **second_rapids_up** – underground_river
+- **second_whirlpools** – underground_river
+- **second_whirlpools_left** – underground_river
+- **second_whirlpools_right** – underground_river
+- **second_whirlpools_up** – underground_river
+- **seq10** – bubbling_cauldron, crypt_creeps_reversed, flaming_ropes_reversed, flying_horse_reversed, giant_bat, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_action** – lizard_king, mudmen, the_dragons_lair
+- **seq10_down** – flaming_ropes_reversed, lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_left** – flaming_ropes_reversed, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_right** – mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_up** – flaming_ropes_reversed, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq11** – crypt_creeps_reversed, flattening_staircase, flying_horse_reversed, giant_bat, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq11_action** – lizard_king
+- **seq11_left** – the_dragons_lair
+- **seq11_right** – the_dragons_lair
+- **seq11_up** – the_dragons_lair
+- **seq11_upleft** – the_dragons_lair
+- **seq12** – crypt_creeps_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq12_action** – lizard_king, the_dragons_lair
+- **seq12_down** – lizard_king
+- **seq12_left** – lizard_king
+- **seq12_right** – lizard_king
+- **seq13** – crypt_creeps_reversed, lizard_king, mudmen, smithee, smithee_reversed, the_dragons_lair
+- **seq13_action** – lizard_king
+- **seq14** – lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq15** – lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq16** – lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq17** – lizard_king, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq18** – the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq19** – the_dragons_lair
+- **seq2** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_action** – crypt_creeps_reversed, giant_bat, mudmen, smithee, smithee_reversed, snake_room
+- **seq2_down** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, flaming_ropes_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road
+- **seq2_left** – black_knight, bubbling_cauldron, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_right** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_up** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, flaming_ropes_reversed, flying_horse_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_upleft** – flying_horse_reversed, lizard_king
+- **seq3** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq3_action** – bubbling_cauldron, crypt_creeps_reversed, flattening_staircase, grim_reaper, grim_reaper_reversed, mudmen, smithee, smithee_reversed, snake_room, the_dragons_lair
+- **seq3_down** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed
+- **seq3_left** – black_knight, bubbling_cauldron, catwalk_bats, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq3_right** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road
+- **seq3_up** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, grim_reaper_reversed, mudmen, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq3_upleft** – catwalk_bats
+- **seq4** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_action** – catwalk_bats, mudmen, snake_room
+- **seq4_down** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_downleft** – fire_room
+- **seq4_downright** – bubbling_cauldron
+- **seq4_left** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_right** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_up** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, mudmen, robot_knight, robot_knight_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_upleft** – flattening_staircase, giant_bat, mudmen
+- **seq5** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_action** – bubbling_cauldron, crypt_creeps_reversed, giant_bat, mudmen, smithee, smithee_reversed, the_dragons_lair
+- **seq5_down** – catwalk_bats, crypt_creeps_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_downleft** – the_dragons_lair
+- **seq5_left** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_right** – bubbling_cauldron, catwalk_bats, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_up** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, grim_reaper, grim_reaper_reversed, mudmen, robot_knight_reversed, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_upright** – catwalk_bats, mudmen
+- **seq6** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_action** – mudmen, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_down** – catwalk_bats, crypt_creeps_reversed, lizard_king, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_downleft** – the_dragons_lair
+- **seq6_left** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight_reversed, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_right** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_up** – bubbling_cauldron, catwalk_bats, flying_horse_reversed, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_action** – crypt_creeps_reversed, mudmen
+- **seq7_down** – crypt_creeps_reversed, lizard_king, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_left** – crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_right** – crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_up** – flying_horse_reversed, mudmen, robot_knight_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq8** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq8_action** – lizard_king, yellow_brick_road, yellow_brick_road_reversed
+- **seq8_down** – mudmen, robot_knight_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq8_left** – mudmen, robot_knight_reversed, yellow_brick_road
+- **seq8_right** – mudmen, robot_knight, robot_knight_reversed, the_dragons_lair, yellow_brick_road_reversed
+- **seq8_up** – lizard_king, mudmen, robot_knight_reversed, the_dragons_lair
+- **seq8_upleft** – mudmen
+- **seq8_upright** – the_dragons_lair
+- **seq9** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_action** – lizard_king, mudmen, robot_knight, robot_knight_reversed, the_dragons_lair
+- **seq9_down** – lizard_king, mudmen, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_left** – mudmen, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_right** – mudmen, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_up** – mudmen, robot_knight, robot_knight_reversed, snake_room
+- **seq9_upright** – snake_room
+- **shoves_off_edge** – giddy_goons
+- **small_ball_crushes** – rolling_balls
+- **squeeze_to_death** – tentacle_room
+- **squeeze_to_death_by_door** – tentacle_room
+- **stagger** – vestibule
+- **stagger_left** – vestibule
+- **stagger_right** – vestibule
+- **stagger_up** – vestibule
+- **start_alive** – alice_room, attract_mode, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, introduction, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **start_dead** – alice_room, attract_mode, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, introduction, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **sucked_in** – wind_room
+- **swarm_of_goons** – giddy_goons
+- **third_boulders** – underground_river
+- **third_boulders_left** – underground_river
+- **third_boulders_right** – underground_river
+- **third_boulders_up** – underground_river
+- **third_fire** – flying_horse
+- **third_fire_left** – flying_horse
+- **third_fire_right** – flying_horse
+- **third_fire_up** – flying_horse
+- **third_jump_set** – falling_platform_long
+- **third_jump_set_down** – falling_platform_long
+- **third_jump_set_left** – falling_platform_long
+- **third_jump_set_right** – falling_platform_long
+- **third_jump_set_up** – falling_platform_long
+- **third_rapids** – underground_river
+- **third_rapids_left** – underground_river
+- **third_rapids_right** – underground_river
+- **third_rapids_up** – underground_river
+- **third_whirlpools** – underground_river
+- **third_whirlpools_left** – underground_river
+- **third_whirlpools_right** – underground_river
+- **third_whirlpools_up** – underground_river
+- **trapped_in_wall** – bower
+- **two_front_war** – tentacle_room
+- **whirlpools_crash** – underground_river
+- **wrong_door** – tilting_room
+
+## Per-chapter unique event counts
+
+- alice_room: 12
+- attract_mode: 7
+- black_knight: 25
+- bower: 8
+- bubbling_cauldron: 39
+- catwalk_bats: 38
+- crypt_creeps: 41
+- crypt_creeps_reversed: 46
+- electric_cage_and_geyser: 26
+- falling_platform_long: 23
+- falling_platform_long_reversed: 28
+- falling_platform_short: 13
+- fire_room: 29
+- flaming_ropes: 32
+- flaming_ropes_reversed: 35
+- flattening_staircase: 25
+- flying_horse: 32
+- flying_horse_reversed: 38
+- giant_bat: 29
+- giddy_goons: 30
+- grim_reaper: 31
+- grim_reaper_reversed: 32
+- introduction: 5
+- lizard_king: 58
+- mudmen: 72
+- robot_knight: 26
+- robot_knight_reversed: 50
+- rolling_balls: 27
+- smithee: 38
+- smithee_reversed: 43
+- snake_room: 23
+- tentacle_room: 35
+- the_dragons_lair: 59
+- throne_room: 26
+- tilting_room: 21
+- underground_river: 66
+- vestibule: 15
+- wind_room: 9
+- yellow_brick_road: 59
+- yellow_brick_road_reversed: 56
+
+## All referenced event types with chapters
+
+- **attacked_first_hand** – crypt_creeps
+- **attacked_first_hand_down** – crypt_creeps
+- **attacked_first_hand_left** – crypt_creeps
+- **attacked_first_hand_right** – crypt_creeps
+- **attacked_first_hand_up** – crypt_creeps
+- **attacked_second_hand** – crypt_creeps
+- **attacked_second_hand_down** – crypt_creeps
+- **attacked_second_hand_left** – crypt_creeps
+- **attacked_second_hand_right** – crypt_creeps
+- **attract_movie** – attract_mode
+- **attract_movie_start** – attract_mode
+- **big_ball_crushes** – rolling_balls
+- **blue_ball** – rolling_balls
+- **blue_ball_down** – rolling_balls
+- **blue_ball_up** – rolling_balls
+- **boulders_crash** – underground_river
+- **boulders_crash2** – underground_river
+- **boulders_crash3** – underground_river
+- **boulders_crash4** – underground_river
+- **bounce_to_chain** – underground_river
+- **bounce_to_chain_down** – underground_river
+- **bounce_to_chain_left** – underground_river
+- **bounce_to_chain_right** – underground_river
+- **bounce_to_chain_up** – underground_river
+- **brick_wall** – flying_horse
+- **brick_wall_left** – flying_horse
+- **brick_wall_right** – flying_horse
+- **brick_wall_up** – flying_horse
+- **burned_to_death** – alice_room, flying_horse
+- **burns_hands** – flaming_ropes
+- **captured_by_ghouls** – crypt_creeps
+- **castle_exterior** – introduction
+- **catches_fire** – tilting_room
+- **chapter** – alice_room, attract_mode, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, introduction, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **climbs_stairs** – giddy_goons
+- **climbs_stairs_action** – giddy_goons
+- **climbs_stairs_down** – giddy_goons
+- **climbs_stairs_left** – giddy_goons
+- **climbs_stairs_up** – giddy_goons
+- **crash_landing** – falling_platform_long, falling_platform_short
+- **crushed_by_hand** – crypt_creeps
+- **drinks_potion** – alice_room
+- **eaten_by_skulls** – crypt_creeps
+- **eaten_by_slime** – crypt_creeps
+- **electrified_floor** – throne_room
+- **electrified_sword** – throne_room
+- **electrified_throne** – throne_room
+- **endgame** – the_dragons_lair
+- **enter_crypt** – crypt_creeps
+- **enter_crypt_action** – crypt_creeps
+- **enter_crypt_down** – crypt_creeps
+- **enter_crypt_left** – crypt_creeps
+- **enter_crypt_right** – crypt_creeps
+- **enter_crypt_up** – crypt_creeps
+- **enter_room** – alice_room, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_action** – crypt_creeps, crypt_creeps_reversed, giant_bat, giddy_goons, mudmen, smithee, smithee_reversed, snake_room, tentacle_room
+- **enter_room_down** – alice_room, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, flaming_ropes, flaming_ropes_reversed, lizard_king, mudmen, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, throne_room, tilting_room, vestibule, yellow_brick_road
+- **enter_room_left** – alice_room, black_knight, bubbling_cauldron, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, throne_room, tilting_room, vestibule, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_right** – alice_room, black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, throne_room, tilting_room, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_up** – alice_room, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, flaming_ropes, flaming_ropes_reversed, flying_horse, flying_horse_reversed, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, throne_room, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **enter_room_upleft** – flying_horse_reversed, lizard_king
+- **exit_room** – alice_room, bower, crypt_creeps, falling_platform_long, falling_platform_short, flaming_ropes, flying_horse, giddy_goons, introduction, rolling_balls, tentacle_room, throne_room, tilting_room, underground_river, vestibule, wind_room
+- **fall_to_death** – flaming_ropes, giddy_goons
+- **falls_to_death** – tilting_room
+- **fell_to_death** – falling_platform_long, falling_platform_short, vestibule
+- **fifth_fire** – flying_horse
+- **fifth_fire_left** – flying_horse
+- **fifth_fire_right** – flying_horse
+- **fifth_fire_up** – flying_horse
+- **fight_off_one_before_swarm** – giddy_goons
+- **first_boulders** – underground_river
+- **first_boulders_left** – underground_river
+- **first_boulders_right** – underground_river
+- **first_boulders_up** – underground_river
+- **first_jump** – throne_room
+- **first_jump_down** – throne_room
+- **first_jump_left** – throne_room
+- **first_jump_right** – throne_room
+- **first_jump_up** – throne_room
+- **first_rapids** – underground_river
+- **first_rapids_left** – underground_river
+- **first_rapids_right** – underground_river
+- **first_rapids_up** – underground_river
+- **first_whirlpools** – underground_river
+- **first_whirlpools_left** – underground_river
+- **first_whirlpools_right** – underground_river
+- **first_whirlpools_up** – underground_river
+- **fourth_boulders** – underground_river
+- **fourth_boulders_left** – underground_river
+- **fourth_boulders_right** – underground_river
+- **fourth_boulders_up** – underground_river
+- **fourth_fire** – flying_horse
+- **fourth_fire_left** – flying_horse
+- **fourth_fire_right** – flying_horse
+- **fourth_fire_up** – flying_horse
+- **fourth_rapids** – underground_river
+- **fourth_rapids_left** – underground_river
+- **fourth_rapids_right** – underground_river
+- **fourth_rapids_up** – underground_river
+- **fourth_whirlpools** – underground_river
+- **fourth_whirlpools_left** – underground_river
+- **fourth_whirlpools_right** – underground_river
+- **fourth_whirlpools_up** – underground_river
+- **game_over** – alice_room, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **green_ball** – rolling_balls
+- **green_ball_down** – rolling_balls
+- **green_ball_up** – rolling_balls
+- **hit_brick_wall** – flying_horse
+- **hit_pillar** – flying_horse
+- **insert_coins** – attract_mode
+- **insert_coins_start** – attract_mode
+- **jump_to_door** – tentacle_room
+- **jump_to_door_action** – tentacle_room
+- **jump_to_door_down** – tentacle_room
+- **jump_to_door_left** – tentacle_room
+- **jump_to_door_right** – tentacle_room
+- **jump_to_door_up** – tentacle_room
+- **jump_to_stairs** – tentacle_room
+- **jump_to_stairs_action** – tentacle_room
+- **jump_to_stairs_down** – tentacle_room
+- **jump_to_stairs_left** – tentacle_room
+- **jump_to_stairs_up** – tentacle_room
+- **jump_to_table** – tentacle_room
+- **jump_to_table_action** – tentacle_room
+- **jump_to_table_down** – tentacle_room
+- **jump_to_table_left** – tentacle_room
+- **jump_to_table_right** – tentacle_room
+- **jump_to_table_up** – tentacle_room
+- **jump_to_weapon_rack** – tentacle_room
+- **jump_to_weapon_rack_action** – tentacle_room
+- **jump_to_weapon_rack_down** – tentacle_room
+- **jump_to_weapon_rack_left** – tentacle_room
+- **jump_to_weapon_rack_right** – tentacle_room
+- **jumped_skulls** – crypt_creeps
+- **jumped_skulls_action** – crypt_creeps
+- **jumped_skulls_down** – crypt_creeps
+- **jumped_skulls_left** – crypt_creeps
+- **jumped_skulls_up** – crypt_creeps
+- **jumped_slime** – crypt_creeps
+- **jumped_slime_action** – crypt_creeps
+- **jumped_slime_down** – crypt_creeps
+- **jumped_slime_right** – crypt_creeps
+- **jumped_slime_up** – crypt_creeps
+- **jumps_back** – tilting_room
+- **jumps_back_down** – tilting_room
+- **jumps_back_left** – tilting_room
+- **jumps_back_up** – tilting_room
+- **jumps_forward** – tilting_room
+- **jumps_forward_down** – tilting_room
+- **jumps_forward_left** – tilting_room
+- **jumps_forward_right** – tilting_room
+- **jumps_forward_up** – tilting_room
+- **kill_upper_goons** – giddy_goons
+- **kill_upper_goons_action** – giddy_goons
+- **kill_upper_goons_down** – giddy_goons
+- **kill_upper_goons_left** – giddy_goons
+- **kill_upper_goons_up** – giddy_goons
+- **kills_first_goon** – giddy_goons
+- **kills_first_goon_action** – giddy_goons
+- **kills_first_goon_left** – giddy_goons
+- **kills_first_goon_right** – giddy_goons
+- **kills_first_goon_up** – giddy_goons
+- **kills_first_tentacle** – tentacle_room
+- **kills_first_tentacle_up** – tentacle_room
+- **knife_in_back** – giddy_goons
+- **left_tentacle_grabs** – tentacle_room
+- **miss_chain** – underground_river
+- **missed_jump** – falling_platform_long, falling_platform_short
+- **misses_landing** – flaming_ropes
+- **on_throne** – throne_room
+- **on_throne_left** – throne_room
+- **on_throne_right** – throne_room
+- **orange_ball** – rolling_balls
+- **orange_ball_down** – rolling_balls
+- **orange_ball_up** – rolling_balls
+- **overpowered_by_skulls** – crypt_creeps
+- **pit_in_ground** – rolling_balls
+- **pit_in_ground_up** – rolling_balls
+- **platform_sliding** – flaming_ropes
+- **platform_sliding_down** – flaming_ropes
+- **platform_sliding_left** – flaming_ropes
+- **platform_sliding_right** – flaming_ropes
+- **platform_sliding_up** – flaming_ropes
+- **purple_ball** – rolling_balls
+- **purple_ball_down** – rolling_balls
+- **purple_ball_up** – rolling_balls
+- **rapids_crash** – underground_river
+- **red_ball** – rolling_balls
+- **red_ball_down** – rolling_balls
+- **red_ball_up** – rolling_balls
+- **rope1** – flaming_ropes
+- **rope1_down** – flaming_ropes
+- **rope1_left** – flaming_ropes
+- **rope1_right** – flaming_ropes
+- **rope1_up** – flaming_ropes
+- **rope2** – flaming_ropes
+- **rope2_down** – flaming_ropes
+- **rope2_left** – flaming_ropes
+- **rope2_right** – flaming_ropes
+- **rope2_up** – flaming_ropes
+- **rope3** – flaming_ropes
+- **rope3_down** – flaming_ropes
+- **rope3_left** – flaming_ropes
+- **rope3_right** – flaming_ropes
+- **rope3_up** – flaming_ropes
+- **second_boulders** – underground_river
+- **second_boulders_left** – underground_river
+- **second_boulders_right** – underground_river
+- **second_boulders_up** – underground_river
+- **second_fire** – flying_horse
+- **second_fire_left** – flying_horse
+- **second_fire_right** – flying_horse
+- **second_fire_up** – flying_horse
+- **second_jump** – throne_room
+- **second_jump_down** – throne_room
+- **second_jump_left** – throne_room
+- **second_jump_right** – throne_room
+- **second_jump_set** – falling_platform_long
+- **second_jump_set_down** – falling_platform_long
+- **second_jump_set_left** – falling_platform_long
+- **second_jump_set_right** – falling_platform_long
+- **second_jump_set_up** – falling_platform_long
+- **second_jump_up** – throne_room
+- **second_rapids** – underground_river
+- **second_rapids_left** – underground_river
+- **second_rapids_right** – underground_river
+- **second_rapids_up** – underground_river
+- **second_whirlpools** – underground_river
+- **second_whirlpools_left** – underground_river
+- **second_whirlpools_right** – underground_river
+- **second_whirlpools_up** – underground_river
+- **seq10** – bubbling_cauldron, crypt_creeps_reversed, flaming_ropes_reversed, flying_horse_reversed, giant_bat, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_action** – lizard_king, mudmen, the_dragons_lair
+- **seq10_down** – flaming_ropes_reversed, lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_left** – flaming_ropes_reversed, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_right** – mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq10_up** – flaming_ropes_reversed, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq11** – crypt_creeps_reversed, flattening_staircase, flying_horse_reversed, giant_bat, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq11_action** – lizard_king
+- **seq11_left** – the_dragons_lair
+- **seq11_right** – the_dragons_lair
+- **seq11_up** – the_dragons_lair
+- **seq11_upleft** – the_dragons_lair
+- **seq12** – crypt_creeps_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq12_action** – lizard_king, the_dragons_lair
+- **seq12_down** – lizard_king
+- **seq12_left** – lizard_king
+- **seq12_right** – lizard_king
+- **seq13** – crypt_creeps_reversed, lizard_king, mudmen, smithee, smithee_reversed, the_dragons_lair
+- **seq13_action** – lizard_king
+- **seq14** – lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq15** – lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq16** – lizard_king, mudmen, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq17** – lizard_king, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq18** – the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq19** – the_dragons_lair
+- **seq2** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_action** – crypt_creeps_reversed, giant_bat, mudmen, smithee, smithee_reversed, snake_room
+- **seq2_down** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, flaming_ropes_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road
+- **seq2_left** – black_knight, bubbling_cauldron, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_right** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_up** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, flaming_ropes_reversed, flying_horse_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq2_upleft** – flying_horse_reversed, lizard_king
+- **seq3** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq3_action** – bubbling_cauldron, crypt_creeps_reversed, flattening_staircase, grim_reaper, grim_reaper_reversed, mudmen, smithee, smithee_reversed, snake_room, the_dragons_lair
+- **seq3_down** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed
+- **seq3_left** – black_knight, bubbling_cauldron, catwalk_bats, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq3_right** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road
+- **seq3_up** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, grim_reaper_reversed, mudmen, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq3_upleft** – catwalk_bats
+- **seq4** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_action** – catwalk_bats, mudmen, snake_room
+- **seq4_down** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_downleft** – fire_room
+- **seq4_downright** – bubbling_cauldron
+- **seq4_left** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_right** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_up** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, mudmen, robot_knight, robot_knight_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq4_upleft** – flattening_staircase, giant_bat, mudmen
+- **seq5** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_action** – bubbling_cauldron, crypt_creeps_reversed, giant_bat, mudmen, smithee, smithee_reversed, the_dragons_lair
+- **seq5_down** – catwalk_bats, crypt_creeps_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_downleft** – the_dragons_lair
+- **seq5_left** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_right** – bubbling_cauldron, catwalk_bats, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight_reversed, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_up** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, grim_reaper, grim_reaper_reversed, mudmen, robot_knight_reversed, smithee_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq5_upright** – catwalk_bats, mudmen
+- **seq6** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_action** – mudmen, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_down** – catwalk_bats, crypt_creeps_reversed, lizard_king, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_downleft** – the_dragons_lair
+- **seq6_left** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight_reversed, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_right** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq6_up** – bubbling_cauldron, catwalk_bats, flying_horse_reversed, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_action** – crypt_creeps_reversed, mudmen
+- **seq7_down** – crypt_creeps_reversed, lizard_king, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_left** – crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_right** – crypt_creeps_reversed, flying_horse_reversed, lizard_king, mudmen, robot_knight_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq7_up** – flying_horse_reversed, mudmen, robot_knight_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq8** – bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long_reversed, fire_room, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq8_action** – lizard_king, yellow_brick_road, yellow_brick_road_reversed
+- **seq8_down** – mudmen, robot_knight_reversed, yellow_brick_road, yellow_brick_road_reversed
+- **seq8_left** – mudmen, robot_knight_reversed, yellow_brick_road
+- **seq8_right** – mudmen, robot_knight, robot_knight_reversed, the_dragons_lair, yellow_brick_road_reversed
+- **seq8_up** – lizard_king, mudmen, robot_knight_reversed, the_dragons_lair
+- **seq8_upleft** – mudmen
+- **seq8_upright** – the_dragons_lair
+- **seq9** – black_knight, bubbling_cauldron, catwalk_bats, crypt_creeps_reversed, flaming_ropes_reversed, flattening_staircase, flying_horse_reversed, giant_bat, grim_reaper, grim_reaper_reversed, lizard_king, mudmen, robot_knight, robot_knight_reversed, smithee, smithee_reversed, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_action** – lizard_king, mudmen, robot_knight, robot_knight_reversed, the_dragons_lair
+- **seq9_down** – lizard_king, mudmen, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_left** – mudmen, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_right** – mudmen, snake_room, the_dragons_lair, yellow_brick_road, yellow_brick_road_reversed
+- **seq9_up** – mudmen, robot_knight, robot_knight_reversed, snake_room
+- **seq9_upright** – snake_room
+- **shoves_off_edge** – giddy_goons
+- **small_ball_crushes** – rolling_balls
+- **squeeze_to_death** – tentacle_room
+- **squeeze_to_death_by_door** – tentacle_room
+- **stagger** – vestibule
+- **stagger_left** – vestibule
+- **stagger_right** – vestibule
+- **stagger_up** – vestibule
+- **start_alive** – alice_room, attract_mode, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, introduction, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **start_dead** – alice_room, attract_mode, black_knight, bower, bubbling_cauldron, catwalk_bats, crypt_creeps, crypt_creeps_reversed, electric_cage_and_geyser, falling_platform_long, falling_platform_long_reversed, falling_platform_short, fire_room, flaming_ropes, flaming_ropes_reversed, flattening_staircase, flying_horse, flying_horse_reversed, giant_bat, giddy_goons, grim_reaper, grim_reaper_reversed, introduction, lizard_king, mudmen, robot_knight, robot_knight_reversed, rolling_balls, smithee, smithee_reversed, snake_room, tentacle_room, the_dragons_lair, throne_room, tilting_room, underground_river, vestibule, wind_room, yellow_brick_road, yellow_brick_road_reversed
+- **sucked_in** – wind_room
+- **swarm_of_goons** – giddy_goons
+- **third_boulders** – underground_river
+- **third_boulders_left** – underground_river
+- **third_boulders_right** – underground_river
+- **third_boulders_up** – underground_river
+- **third_fire** – flying_horse
+- **third_fire_left** – flying_horse
+- **third_fire_right** – flying_horse
+- **third_fire_up** – flying_horse
+- **third_jump_set** – falling_platform_long
+- **third_jump_set_down** – falling_platform_long
+- **third_jump_set_left** – falling_platform_long
+- **third_jump_set_right** – falling_platform_long
+- **third_jump_set_up** – falling_platform_long
+- **third_rapids** – underground_river
+- **third_rapids_left** – underground_river
+- **third_rapids_right** – underground_river
+- **third_rapids_up** – underground_river
+- **third_whirlpools** – underground_river
+- **third_whirlpools_left** – underground_river
+- **third_whirlpools_right** – underground_river
+- **third_whirlpools_up** – underground_river
+- **trapped_in_wall** – bower
+- **two_front_war** – tentacle_room
+- **whirlpools_crash** – underground_river
+- **wrong_door** – tilting_room
