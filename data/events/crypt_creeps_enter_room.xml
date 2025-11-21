@@ -1,0 +1,79 @@
+<chapter name="crypt_creeps_enter_room">
+	<timeline>
+		<timestart min="7" second="52" ms="891" />
+		<timeend min="7" second="56" ms="135" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="52" ms="891" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="up" label="action-1">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="135" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="495" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_jumped_skulls" />
+			</result>
+		</event>
+		<event type="direction" automacro="action" label="action-2">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_overpowered_by_skulls" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-3">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_eaten_by_skulls" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_eaten_by_skulls" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-5">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="crypt_creeps_eaten_by_skulls" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="crypt_creeps_eaten_by_skulls" />
+	</result>
+</chapter>

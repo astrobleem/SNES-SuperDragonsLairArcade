@@ -1,0 +1,31 @@
+<chapter name="tentacle_room_enter_room">
+	<timeline>
+		<timestart min="1" second="31" ms="843" />
+		<timeend min="1" second="35" ms="808" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="31" ms="843" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="1" second="34" ms="530" />
+				<timeend min="1" second="35" ms="808" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="49" />
+			</params>
+			<result value="0">
+				<playchapter name="tentacle_room_kills_first_tentacle" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="tentacle_room_left_tentacle_grabs" />
+	</result>
+</chapter>

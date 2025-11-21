@@ -1,0 +1,15 @@
+<chapter name="black_knight_game_over">
+	<timeline>
+		<timestart min="17" second="56" ms="286" />
+		<timeend min="17" second="59" ms="789" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="17" second="56" ms="286" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

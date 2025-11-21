@@ -1,0 +1,17 @@
+<chapter name="flying_horse_burned_to_death">
+	<timeline>
+		<timestart min="7" second="14" ms="352" />
+		<timeend min="7" second="15" ms="852" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="14" ms="352" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

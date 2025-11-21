@@ -1,0 +1,18 @@
+<chapter name="giddy_goons_start_dead">
+	<timeline>
+		<timestart min="3" second="48" ms="396" />
+		<timeend min="3" second="50" ms="480" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="3" second="48" ms="396" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="giddy_goons_enter_room" />
+	</result>
+</chapter>

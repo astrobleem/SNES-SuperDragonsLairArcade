@@ -1,0 +1,17 @@
+<chapter name="rolling_balls_big_ball_crushes">
+	<timeline>
+		<timestart min="18" second="22" ms="979" />
+		<timeend min="18" second="23" ms="728" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="18" second="22" ms="979" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

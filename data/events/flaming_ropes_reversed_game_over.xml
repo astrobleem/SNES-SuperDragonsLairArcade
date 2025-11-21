@@ -1,0 +1,15 @@
+<chapter name="flaming_ropes_reversed_game_over">
+	<timeline>
+		<timestart min="9" second="2" ms="752" />
+		<timeend min="9" second="6" ms="255" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="9" second="2" ms="752" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,31 @@
+<chapter name="tentacle_room_kills_first_tentacle">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="358" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="up" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="408" />
+				<timeend min="0" second="2" ms="326" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="379" />
+			</params>
+			<result value="0">
+				<playchapter name="tentacle_room_jump_to_weapon_rack" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="tentacle_room_squeeze_to_death" />
+	</result>
+</chapter>

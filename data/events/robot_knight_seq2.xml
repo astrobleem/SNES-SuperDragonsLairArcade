@@ -1,0 +1,31 @@
+<chapter name="robot_knight_seq2">
+	<timeline>
+		<timestart min="7" second="21" ms="693" />
+		<timeend min="7" second="25" ms="986" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="21" ms="693" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="7" second="24" ms="577" />
+				<timeend min="7" second="25" ms="953" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="1939" />
+			</params>
+			<result value="0">
+				<playchapter name="robot_knight_seq3" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="robot_knight_seq11" />
+	</result>
+</chapter>

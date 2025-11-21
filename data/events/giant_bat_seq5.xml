@@ -1,0 +1,55 @@
+<chapter name="giant_bat_seq5">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="358" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="736" />
+				<timeend min="0" second="2" ms="326" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="3551" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq6" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="589" />
+				<timeend min="0" second="1" ms="146" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq10" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="0" second="1" ms="736" />
+				<timeend min="0" second="2" ms="326" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="giant_bat_seq11" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="giant_bat_seq11" />
+	</result>
+</chapter>

@@ -1,0 +1,68 @@
+<chapter name="vestibule_enter_room">
+	<timeline>
+		<timestart min="1" second="12" ms="407" />
+		<timeend min="1" second="16" ms="405" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="12" ms="407" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="1" second="14" ms="373" />
+				<timeend min="1" second="16" ms="405" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="251" />
+			</params>
+			<result value="0">
+				<playchapter name="vestibule_stagger" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="1" second="14" ms="373" />
+				<timeend min="1" second="16" ms="405" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+				<int key="score" value="251" />
+			</params>
+			<result value="0">
+				<playchapter name="vestibule_stagger" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-3">
+			<timeline>
+				<timestart min="1" second="14" ms="373" />
+				<timeend min="1" second="16" ms="405" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="vestibule_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="1" second="14" ms="897" />
+				<timeend min="1" second="16" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="vestibule_fell_to_death" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="vestibule_fell_to_death" />
+	</result>
+</chapter>

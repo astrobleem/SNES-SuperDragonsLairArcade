@@ -1,0 +1,18 @@
+<chapter name="grim_reaper_start_dead">
+	<timeline>
+		<timestart min="5" second="20" ms="238" />
+		<timeend min="5" second="22" ms="572" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="5" second="20" ms="238" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="grim_reaper_seq2" />
+	</result>
+</chapter>

@@ -1,0 +1,17 @@
+<chapter name="alice_room_drinks_potion">
+	<timeline>
+		<timestart min="12" second="40" ms="220" />
+		<timeend min="12" second="44" ms="306" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="40" ms="220" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

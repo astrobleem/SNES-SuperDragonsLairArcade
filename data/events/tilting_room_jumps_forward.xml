@@ -1,0 +1,67 @@
+<chapter name="tilting_room_jumps_forward">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="0" ms="785" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="491" />
+				<timeend min="0" second="1" ms="48" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="1939" />
+			</params>
+			<result value="0">
+				<playchapter name="tilting_room_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="491" />
+				<timeend min="0" second="1" ms="48" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="tilting_room_wrong_door" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-3">
+			<timeline>
+				<timestart min="0" second="0" ms="327" />
+				<timeend min="0" second="1" ms="48" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="tilting_room_falls_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="0" second="0" ms="327" />
+				<timeend min="0" second="1" ms="48" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="tilting_room_falls_to_death" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="tilting_room_falls_to_death" />
+	</result>
+</chapter>

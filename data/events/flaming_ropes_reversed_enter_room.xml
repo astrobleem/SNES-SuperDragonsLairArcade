@@ -1,0 +1,79 @@
+<chapter name="flaming_ropes_reversed_enter_room">
+	<timeline>
+		<timestart min="8" second="44" ms="442" />
+		<timeend min="8" second="46" ms="965" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="44" ms="442" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="8" second="44" ms="442" />
+				<timeend min="8" second="45" ms="687" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="8" second="45" ms="687" />
+				<timeend min="8" second="46" ms="572" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="379" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_reversed_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="8" second="46" ms="572" />
+				<timeend min="8" second="48" ms="702" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-4">
+			<timeline>
+				<timestart min="8" second="44" ms="442" />
+				<timeend min="8" second="46" ms="932" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-5">
+			<timeline>
+				<timestart min="8" second="44" ms="442" />
+				<timeend min="8" second="46" ms="932" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_reversed_seq9" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flaming_ropes_reversed_seq10" />
+	</result>
+</chapter>

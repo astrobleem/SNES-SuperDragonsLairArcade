@@ -1,0 +1,17 @@
+<chapter name="tilting_room_catches_fire">
+	<timeline>
+		<timestart min="14" second="6" ms="639" />
+		<timeend min="14" second="8" ms="139" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="6" ms="639" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

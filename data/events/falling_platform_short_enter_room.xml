@@ -1,0 +1,129 @@
+<chapter name="falling_platform_short_enter_room">
+	<timeline>
+		<timestart min="10" second="12" ms="989" />
+		<timeend min="10" second="19" ms="870" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="12" ms="989" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="10" second="15" ms="807" />
+				<timeend min="10" second="18" ms="3" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="10" second="18" ms="3" />
+				<timeend min="10" second="18" ms="330" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="10" second="18" ms="330" />
+				<timeend min="10" second="18" ms="658" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_missed_jump" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="10" second="18" ms="691" />
+				<timeend min="10" second="19" ms="18" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-5">
+			<timeline>
+				<timestart min="10" second="19" ms="18" />
+				<timeend min="10" second="19" ms="346" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-6">
+			<timeline>
+				<timestart min="10" second="19" ms="346" />
+				<timeend min="10" second="19" ms="674" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="3255" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-7">
+			<timeline>
+				<timestart min="10" second="15" ms="807" />
+				<timeend min="10" second="20" ms="198" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-8">
+			<timeline>
+				<timestart min="10" second="15" ms="807" />
+				<timeend min="10" second="20" ms="198" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_fell_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-9">
+			<timeline>
+				<timestart min="10" second="15" ms="807" />
+				<timeend min="10" second="20" ms="198" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="falling_platform_short_fell_to_death" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="falling_platform_short_crash_landing" />
+	</result>
+</chapter>

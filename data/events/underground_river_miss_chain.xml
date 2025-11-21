@@ -1,0 +1,17 @@
+<chapter name="underground_river_miss_chain">
+	<timeline>
+		<timestart min="16" second="42" ms="503" />
+		<timeend min="16" second="44" ms="504" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="16" second="42" ms="503" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

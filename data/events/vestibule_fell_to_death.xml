@@ -1,0 +1,17 @@
+<chapter name="vestibule_fell_to_death">
+	<timeline>
+		<timestart min="1" second="20" ms="665" />
+		<timeend min="1" second="22" ms="707" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="20" ms="665" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

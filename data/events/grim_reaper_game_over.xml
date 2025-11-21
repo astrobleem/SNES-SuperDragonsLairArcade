@@ -1,0 +1,15 @@
+<chapter name="grim_reaper_game_over">
+	<timeline>
+		<timestart min="5" second="51" ms="102" />
+		<timeend min="5" second="54" ms="605" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="5" second="51" ms="102" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

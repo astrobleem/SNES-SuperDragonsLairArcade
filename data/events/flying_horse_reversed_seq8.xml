@@ -1,0 +1,15 @@
+<chapter name="flying_horse_reversed_seq8">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="5" ms="7" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

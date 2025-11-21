@@ -1,0 +1,17 @@
+<chapter name="giddy_goons_swarm_of_goons">
+	<timeline>
+		<timestart min="4" second="4" ms="579" />
+		<timeend min="4" second="5" ms="287" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="4" ms="579" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

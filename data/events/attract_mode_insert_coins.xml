@@ -1,0 +1,27 @@
+<chapter name="attract_mode_insert_coins">
+	<timeline>
+		<timestart min="0" second="6" ms="200" />
+		<timeend min="0" second="11" ms="200" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="6" ms="200" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="start" label="action-1">
+			<timeline>
+				<timestart min="0" second="6" ms="200" />
+				<timeend min="60" second="6" ms="200" />
+			</timeline>
+			<params>
+				<str key="type" value="start" />
+			</params>
+		</event>
+	</events>
+	<result>
+		<playchapter name="attract_mode_attract_movie" />
+	</result>
+</chapter>

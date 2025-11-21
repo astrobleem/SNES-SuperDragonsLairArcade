@@ -1,0 +1,15 @@
+<chapter name="flattening_staircase_game_over">
+	<timeline>
+		<timestart min="4" second="38" ms="363" />
+		<timeend min="4" second="41" ms="866" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="38" ms="363" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,17 @@
+<chapter name="crypt_creeps_overpowered_by_skulls">
+	<timeline>
+		<timestart min="8" second="9" ms="240" />
+		<timeend min="8" second="10" ms="740" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="9" ms="240" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

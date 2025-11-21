@@ -1,0 +1,17 @@
+<chapter name="giddy_goons_fall_to_death">
+	<timeline>
+		<timestart min="4" second="10" ms="752" />
+		<timeend min="4" second="11" ms="793" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="10" ms="752" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

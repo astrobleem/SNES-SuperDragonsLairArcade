@@ -1,0 +1,93 @@
+<chapter name="the_dragons_lair_seq6">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="7" ms="405" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="up" label="action-1">
+			<timeline>
+				<timestart min="0" second="6" ms="553" />
+				<timeend min="0" second="7" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq16" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="0" second="6" ms="553" />
+				<timeend min="0" second="7" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+				<int key="score" value="2191" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="0" second="6" ms="553" />
+				<timeend min="0" second="7" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq17" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="0" second="6" ms="553" />
+				<timeend min="0" second="7" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="2191" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="downleft" label="action-5">
+			<timeline>
+				<timestart min="0" second="6" ms="553" />
+				<timeend min="0" second="7" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="downleft" />
+				<int key="score" value="2191" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="action" label="action-6">
+			<timeline>
+				<timestart min="0" second="6" ms="553" />
+				<timeend min="0" second="7" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result value="0">
+				<playchapter name="the_dragons_lair_seq17" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="the_dragons_lair_seq17" />
+	</result>
+</chapter>

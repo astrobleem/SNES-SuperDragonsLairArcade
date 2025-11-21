@@ -1,0 +1,15 @@
+<chapter name="smithee_game_over">
+	<timeline>
+		<timestart min="5" second="16" ms="734" />
+		<timeend min="5" second="20" ms="237" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="5" second="16" ms="734" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="introduction_castle_exterior">
+	<timeline>
+		<timestart min="0" second="53" ms="96" />
+		<timeend min="0" second="58" ms="863" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="53" ms="96" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="introduction_exit_room" />
+	</result>
+</chapter>

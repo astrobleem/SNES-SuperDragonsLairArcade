@@ -1,0 +1,55 @@
+<chapter name="smithee_reversed_seq6">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="6" ms="225" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="5" ms="176" />
+				<timeend min="0" second="6" ms="225" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="915" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq7" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-2">
+			<timeline>
+				<timestart min="0" second="5" ms="209" />
+				<timeend min="0" second="6" ms="258" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq13" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="0" second="5" ms="209" />
+				<timeend min="0" second="6" ms="258" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq13" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="smithee_reversed_seq13" />
+	</result>
+</chapter>

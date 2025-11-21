@@ -1,0 +1,55 @@
+<chapter name="flying_horse_brick_wall">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="867" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="left" label="action-1">
+			<timeline>
+				<timestart min="0" second="1" ms="310" />
+				<timeend min="0" second="1" ms="867" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_fifth_fire" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="949" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_hit_brick_wall" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="0" second="0" ms="949" />
+				<timeend min="0" second="1" ms="834" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="flying_horse_hit_brick_wall" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flying_horse_hit_brick_wall" />
+	</result>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="tilting_room_start_dead">
+	<timeline>
+		<timestart min="13" second="53" ms="293" />
+		<timeend min="13" second="55" ms="544" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="13" second="53" ms="293" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="tilting_room_enter_room" />
+	</result>
+</chapter>

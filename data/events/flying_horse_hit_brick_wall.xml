@@ -1,0 +1,17 @@
+<chapter name="flying_horse_hit_brick_wall">
+	<timeline>
+		<timestart min="7" second="11" ms="683" />
+		<timeend min="7" second="13" ms="975" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="11" ms="683" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

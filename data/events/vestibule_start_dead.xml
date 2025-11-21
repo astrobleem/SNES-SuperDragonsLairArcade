@@ -1,0 +1,18 @@
+<chapter name="vestibule_start_dead">
+	<timeline>
+		<timestart min="2" second="43" ms="998" />
+		<timeend min="2" second="46" ms="82" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="43" ms="998" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="vestibule_enter_room" />
+	</result>
+</chapter>

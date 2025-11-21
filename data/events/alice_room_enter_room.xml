@@ -1,0 +1,67 @@
+<chapter name="alice_room_enter_room">
+	<timeline>
+		<timestart min="12" second="36" ms="257" />
+		<timeend min="12" second="38" ms="280" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="36" ms="257" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="12" second="36" ms="257" />
+				<timeend min="12" second="38" ms="321" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="379" />
+			</params>
+			<result value="0">
+				<playchapter name="alice_room_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-2">
+			<timeline>
+				<timestart min="12" second="36" ms="257" />
+				<timeend min="12" second="38" ms="321" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="alice_room_drinks_potion" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-3">
+			<timeline>
+				<timestart min="12" second="37" ms="388" />
+				<timeend min="12" second="38" ms="289" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="alice_room_burned_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="12" second="37" ms="388" />
+				<timeend min="12" second="38" ms="289" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="alice_room_burned_to_death" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="alice_room_burned_to_death" />
+	</result>
+</chapter>

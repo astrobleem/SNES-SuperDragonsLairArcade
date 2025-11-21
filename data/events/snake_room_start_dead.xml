@@ -1,0 +1,18 @@
+<chapter name="snake_room_start_dead">
+	<timeline>
+		<timestart min="2" second="0" ms="538" />
+		<timeend min="2" second="2" ms="914" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="0" ms="538" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="snake_room_seq2" />
+	</result>
+</chapter>

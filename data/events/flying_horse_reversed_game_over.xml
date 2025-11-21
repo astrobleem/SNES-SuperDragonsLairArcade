@@ -1,0 +1,15 @@
+<chapter name="flying_horse_reversed_game_over">
+	<timeline>
+		<timestart min="11" second="47" ms="917" />
+		<timeend min="11" second="51" ms="420" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="47" ms="917" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

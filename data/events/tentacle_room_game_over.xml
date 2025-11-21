@@ -1,0 +1,15 @@
+<chapter name="tentacle_room_game_over">
+	<timeline>
+		<timestart min="1" second="56" ms="910" />
+		<timeend min="2" second="0" ms="413" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="56" ms="910" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

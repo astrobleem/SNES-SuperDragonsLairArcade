@@ -1,0 +1,91 @@
+<chapter name="smithee_reversed_enter_room">
+	<timeline>
+		<timestart min="10" second="46" ms="564" />
+		<timeend min="10" second="49" ms="742" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="46" ms="564" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="10" second="48" ms="39" />
+				<timeend min="10" second="48" ms="759" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="action" label="action-2">
+			<timeline>
+				<timestart min="10" second="48" ms="759" />
+				<timeend min="10" second="49" ms="677" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="1326" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="10" second="46" ms="564" />
+				<timeend min="10" second="49" ms="677" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-4">
+			<timeline>
+				<timestart min="10" second="46" ms="564" />
+				<timeend min="10" second="49" ms="677" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-5">
+			<timeline>
+				<timestart min="10" second="48" ms="71" />
+				<timeend min="10" second="49" ms="742" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq8" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-6">
+			<timeline>
+				<timestart min="10" second="46" ms="564" />
+				<timeend min="10" second="49" ms="218" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="smithee_reversed_seq8" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="smithee_reversed_seq9" />
+	</result>
+</chapter>

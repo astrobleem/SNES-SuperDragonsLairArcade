@@ -1,0 +1,17 @@
+<chapter name="fire_room_seq8">
+	<timeline>
+		<timestart min="6" second="44" ms="822" />
+		<timeend min="6" second="45" ms="822" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="44" ms="822" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

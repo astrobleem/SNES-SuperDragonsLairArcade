@@ -1,0 +1,18 @@
+<chapter name="alice_room_start_dead">
+	<timeline>
+		<timestart min="12" second="33" ms="880" />
+		<timeend min="12" second="36" ms="214" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="33" ms="880" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="alice_room_enter_room" />
+	</result>
+</chapter>

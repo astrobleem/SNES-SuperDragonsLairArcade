@@ -1,0 +1,15 @@
+<chapter name="underground_river_exit_room">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="3" ms="64" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

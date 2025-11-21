@@ -1,0 +1,15 @@
+<chapter name="mudmen_seq11">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="3" ms="420" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

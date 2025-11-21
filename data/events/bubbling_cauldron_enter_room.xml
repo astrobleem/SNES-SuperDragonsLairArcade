@@ -1,0 +1,67 @@
+<chapter name="bubbling_cauldron_enter_room">
+	<timeline>
+		<timestart min="3" second="27" ms="375" />
+		<timeend min="3" second="30" ms="128" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="3" second="27" ms="375" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="up" label="action-1">
+			<timeline>
+				<timestart min="3" second="29" ms="341" />
+				<timeend min="3" second="30" ms="95" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+				<int key="score" value="2191" />
+			</params>
+			<result value="0">
+				<playchapter name="bubbling_cauldron_seq3" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="3" second="29" ms="341" />
+				<timeend min="3" second="30" ms="95" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="bubbling_cauldron_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="3" second="29" ms="341" />
+				<timeend min="3" second="30" ms="95" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="bubbling_cauldron_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="3" second="29" ms="341" />
+				<timeend min="3" second="30" ms="95" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="bubbling_cauldron_seq9" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="bubbling_cauldron_seq9" />
+	</result>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="attract_mode_start_dead">
+	<timeline>
+		<timestart min="0" second="5" ms="830" />
+		<timeend min="0" second="8" ms="830" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="5" ms="830" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="attract_mode_attract_movie" />
+	</result>
+</chapter>

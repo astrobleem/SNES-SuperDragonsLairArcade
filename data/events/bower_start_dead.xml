@@ -1,0 +1,18 @@
+<chapter name="bower_start_dead">
+	<timeline>
+		<timestart min="6" second="12" ms="957" />
+		<timeend min="6" second="15" ms="323" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="12" ms="957" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="bower_enter_room" />
+	</result>
+</chapter>

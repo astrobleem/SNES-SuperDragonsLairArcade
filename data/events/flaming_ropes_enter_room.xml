@@ -1,0 +1,79 @@
+<chapter name="flaming_ropes_enter_room">
+	<timeline>
+		<timestart min="2" second="22" ms="227" />
+		<timeend min="2" second="24" ms="455" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="22" ms="227" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="2" second="22" ms="227" />
+				<timeend min="2" second="23" ms="472" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_fall_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-2">
+			<timeline>
+				<timestart min="2" second="23" ms="472" />
+				<timeend min="2" second="24" ms="357" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="251" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_rope1" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="2" second="24" ms="357" />
+				<timeend min="2" second="26" ms="487" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_fall_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-4">
+			<timeline>
+				<timestart min="2" second="22" ms="227" />
+				<timeend min="2" second="24" ms="717" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_fall_to_death" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-5">
+			<timeline>
+				<timestart min="2" second="22" ms="227" />
+				<timeend min="2" second="24" ms="717" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="flaming_ropes_fall_to_death" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="flaming_ropes_platform_sliding" />
+	</result>
+</chapter>

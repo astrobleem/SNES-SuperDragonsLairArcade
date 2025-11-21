@@ -1,0 +1,15 @@
+<chapter name="falling_platform_long_game_over">
+	<timeline>
+		<timestart min="10" second="39" ms="641" />
+		<timeend min="10" second="43" ms="144" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="39" ms="641" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

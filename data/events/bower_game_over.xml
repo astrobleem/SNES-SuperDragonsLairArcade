@@ -1,0 +1,15 @@
+<chapter name="bower_game_over">
+	<timeline>
+		<timestart min="6" second="25" ms="220" />
+		<timeend min="6" second="28" ms="870" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="25" ms="220" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

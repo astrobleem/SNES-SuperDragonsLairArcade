@@ -1,0 +1,17 @@
+<chapter name="underground_river_whirlpools_crash">
+	<timeline>
+		<timestart min="16" second="38" ms="625" />
+		<timeend min="16" second="41" ms="293" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="16" second="38" ms="625" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

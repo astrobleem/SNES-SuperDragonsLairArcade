@@ -1,0 +1,79 @@
+<chapter name="grim_reaper_reversed_seq3">
+	<timeline>
+		<timestart min="13" second="32" ms="355" />
+		<timeend min="13" second="35" ms="959" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="13" second="32" ms="355" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="13" second="35" ms="402" />
+				<timeend min="13" second="35" ms="959" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="2191" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_reversed_seq4" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="13" second="35" ms="402" />
+				<timeend min="13" second="35" ms="992" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="right" label="action-3">
+			<timeline>
+				<timestart min="13" second="32" ms="355" />
+				<timeend min="13" second="35" ms="75" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-4">
+			<timeline>
+				<timestart min="13" second="32" ms="355" />
+				<timeend min="13" second="35" ms="75" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_reversed_seq9" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-5">
+			<timeline>
+				<timestart min="13" second="32" ms="355" />
+				<timeend min="13" second="35" ms="959" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="grim_reaper_reversed_seq8" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="grim_reaper_reversed_seq8" />
+	</result>
+</chapter>

@@ -1,0 +1,44 @@
+<chapter name="lizard_king_seq10">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="0" ms="949" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="327" />
+				<timeend min="0" second="0" ms="949" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+				<int key="score" value="0" />
+			</params>
+			<result value="0">
+				<playchapter name="lizard_king_seq11" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="327" />
+				<timeend min="0" second="0" ms="949" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+				<int key="score" value="0" />
+			</params>
+			<result value="0">
+				<playchapter name="lizard_king_seq11" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="lizard_king_seq11" />
+	</result>
+</chapter>

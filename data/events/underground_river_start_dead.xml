@@ -1,0 +1,18 @@
+<chapter name="underground_river_start_dead">
+	<timeline>
+		<timestart min="15" second="39" ms="732" />
+		<timeend min="15" second="42" ms="66" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="39" ms="732" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="underground_river_enter_room" />
+	</result>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="throne_room_start_dead">
+	<timeline>
+		<timestart min="14" second="13" ms="646" />
+		<timeend min="14" second="15" ms="980" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="13" ms="646" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="throne_room_enter_room" />
+	</result>
+</chapter>

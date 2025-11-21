@@ -1,0 +1,18 @@
+<chapter name="robot_knight_reversed_start_dead">
+	<timeline>
+		<timestart min="14" second="36" ms="85" />
+		<timeend min="14" second="38" ms="419" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="36" ms="85" />
+			</timeline>
+		</event>
+	</events>
+	<result>
+		<playchapter name="robot_knight_reversed_seq2" />
+	</result>
+</chapter>

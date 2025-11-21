@@ -1,0 +1,15 @@
+<chapter name="vestibule_game_over">
+	<timeline>
+		<timestart min="1" second="26" ms="45" />
+		<timeend min="1" second="29" ms="548" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="26" ms="45" />
+			</timeline>
+		</event>
+	</events>
+</chapter>

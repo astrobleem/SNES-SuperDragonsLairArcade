@@ -1,0 +1,55 @@
+<chapter name="throne_room_on_throne">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="4" ms="292" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="right" label="action-1">
+			<timeline>
+				<timestart min="0" second="3" ms="407" />
+				<timeend min="0" second="4" ms="357" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+				<int key="score" value="1939" />
+			</params>
+			<result value="0">
+				<playchapter name="throne_room_exit_room" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-2">
+			<timeline>
+				<timestart min="0" second="3" ms="407" />
+				<timeend min="0" second="4" ms="357" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="throne_room_electrified_floor" />
+			</result>
+		</event>
+		<event type="direction" automacro="left" label="action-3">
+			<timeline>
+				<timestart min="0" second="3" ms="407" />
+				<timeend min="0" second="4" ms="95" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result value="0">
+				<playchapter name="throne_room_electrified_floor" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="throne_room_electrified_throne" />
+	</result>
+</chapter>

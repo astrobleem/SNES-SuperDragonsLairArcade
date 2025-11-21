@@ -1,0 +1,55 @@
+<chapter name="rolling_balls_green_ball">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="965" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="down" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="884" />
+				<timeend min="0" second="1" ms="146" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result value="0">
+				<playchapter name="rolling_balls_small_ball_crushes" />
+			</result>
+		</event>
+		<event type="direction" automacro="down" label="action-2">
+			<timeline>
+				<timestart min="0" second="1" ms="146" />
+				<timeend min="0" second="1" ms="932" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+				<int key="score" value="379" />
+			</params>
+			<result value="0">
+				<playchapter name="rolling_balls_orange_ball" />
+			</result>
+		</event>
+		<event type="direction" automacro="up" label="action-3">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="1" ms="965" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result value="0">
+				<playchapter name="rolling_balls_big_ball_crushes" />
+			</result>
+		</event>
+	</events>
+	<result>
+		<playchapter name="rolling_balls_big_ball_crushes" />
+	</result>
+</chapter>

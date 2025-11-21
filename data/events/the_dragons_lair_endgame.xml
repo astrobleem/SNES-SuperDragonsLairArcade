@@ -1,0 +1,15 @@
+<chapter name="the_dragons_lair_endgame">
+	<timeline>
+		<timestart min="21" second="34" ms="87" />
+		<timeend min="21" second="44" ms="87" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="21" second="34" ms="87" />
+			</timeline>
+		</event>
+	</events>
+</chapter>
