@@ -1,0 +1,1 @@
+Dragon's Lair falling score popup: glowing yellow numbers dropping from hit enemies, brief sparkle trail and fade-out as they descend.

@@ -1,0 +1,1 @@
+Dragon's Lair-style HUD warning labeled "Brake" in crimson with amber backlight, strobing loop when slowing is required without obscuring gauges.

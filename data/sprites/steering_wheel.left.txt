@@ -1,0 +1,1 @@
+Dragon's Lair steering wheel animation, three frames leaning left with responsive hand turn, rim tilting and shadows shifting to show left input.

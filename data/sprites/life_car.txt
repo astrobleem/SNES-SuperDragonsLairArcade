@@ -1,0 +1,1 @@
+Dragon's Lair life icon row using Dirk the Daring head instead of car, multiple frames showing decreasing icons that gently scroll upward after a short timer.
