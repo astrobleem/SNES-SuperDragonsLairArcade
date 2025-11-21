@@ -1,0 +1,153 @@
+;self-contained exception printer
+	.include "src/core/error.h"
+	
+.section "excp"	
+core.error.trigger:
+	.ACCU 16
+	.INDEX 16
+	php
+	rep #$31
+	sta.l excA	
+	lda 2,s					;save call origin
+	dec a
+	dec a				;substract jsr len
+	sta.l excPc
+	lda 4,s	;get err-no
+	cmp.w #E_MaxException
+	bcc +
+	  lda.w #E_InvalidException
+
++	and #$ff
+	sta.l excErr
+	lda 6,s	;get (optional) arguments
+	sta.l excArgs
+	lda 8,s
+	sta.l excArgs+2
+	lda 10,s
+	sta.l excArgs+4
+	lda 12,s
+	sta.l excArgs+6
+
+	tsc
+	inc a
+	inc a	;skip return addr on stack
+	inc a
+	sta.l excStack
+	lda #STACK_strt
+	tcs		;set stack to sane range in case it's fucked up already
+	phb
+	phk
+	
+	phd
+	phx
+	phy
+	pea 0
+	pea ZP
+	pld
+	plb
+	plb
+	sei							;disable screen,irqs
+	lda #INIDSP_FORCE_BLANK
+	sta INIDSP
+	stz NMITIMEN
+
+	;save cpu status:
+	pla
+	sta.l excY
+	pla
+	sta.l excX
+	pla
+	sta.l excDp
+
+	sep #$20
+	pla
+	sta.l excPb
+	pla
+	sta.l excDb
+	pla
+	sta.l excFlags
+
+	rep #$31
+	jsr ClearRegisters
+	jsr ClearVRAM
+
+	sep #$20
+	lda #DMAP_2_REG_WRITE_ONCE			;upload font tiles
+	sta DMAP0
+	lda #VMDATAL & $ff
+	sta DMADEST0
+
+	rep #$31
+	lda #ExcFontTiles.LEN
+	sta DMALEN0L
+	lda #($2000+(TILE2BPP*32))/2	;vram target,after tilemap and after first 128 ascii chars
+	sta VMADDL
+	lda #ExcFontTiles			;dma source
+	sta DMASRC0L
+	sep #$20
+	lda #:ExcFontTiles
+	sta DMASRC0B
+	lda #VMAIN_INCREMENT_MODE
+	sta VMAIN			;set VRAM transfer mode to word-access, increment by 1
+	lda #DMA_CHANNEL0_ENABLE
+	sta MDMAEN
+
+	stz CGADD			;upload pal
+	ldx #ExcFontPal			;start at color 0 
+	stx DMASRC0L			;Store the data offset into DMA source offset
+	ldx #ExcFontPal.LEN
+	stx DMALEN0L   			;Store the size of the data block
+	lda #:ExcFontPal
+	sta DMASRC0B			;Store the data bank holding the tile data
+	stz DMAP0
+	lda #CGDATA & $ff    			;Set the destination register ( CGDATA: CG-RAM Write )
+	sta DMADEST0
+	lda #DMA_CHANNEL0_ENABLE    			;Initiate the DMA transfer
+	sta MDMAEN
+
+	rep #$31					;print main exception text
+	
+	jsr SetupCurrentObjectStringPointers
+	jsr core.string.reset
+	lda #T_EXCP_exception.PTR
+	jsr core.string.parse
+
+	lda.l excErr
+	and #$ff
+	cmp #errStrt
+	bcc ExceptionNoErrMsg
+									
+		and #$ff				;fetch corresponding string for this err-msg
+		tax
+		lda.l ExcErrMsgStrLut-errStrt,x
+		jsr core.string.parse
+  
+ExceptionNoErrMsg:
+	jsr _printStringToScreen
+	sep #$20
+	lda #BG1NBA_2000			;set up some regs
+	sta BG12NBA
+	lda #T_BG1_ENABLE
+	sta TMAIN
+	lda #INIDSP_BRIGHTNESS
+	sta INIDSP
+	
+	stp
+
+
+_printStringToScreen:
+  php
+  rep #$31
+  ldx #0
+  stz VMADDL
+-	lda.l GLOBAL.CORE.STRING.buffer,x
+	and.w #$ff
+	sta VMDATAL
+	inx
+	cpx.w #GLOBAL.CORE.STRING.buffer.length
+	bcc -
+
+  plp
+  rts
+
+.ends
