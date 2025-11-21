@@ -1,0 +1,1 @@
+Dragon's Lair-style HUD arrow overlay, bright gold outline with red pulse fill, pointing down; looping flash to cue Dirk to duck under swinging traps, drop through openings, or slide beneath incoming dangers.

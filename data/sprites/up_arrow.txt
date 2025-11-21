@@ -1,0 +1,1 @@
+Dragon's Lair-style HUD arrow overlay, bright gold outline with red pulse fill, pointing up; looping flash to cue Dirk to leap to higher ground, climb onto ropes or ledges, or ride rising platforms.
