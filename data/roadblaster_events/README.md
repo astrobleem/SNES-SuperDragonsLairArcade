@@ -6,6 +6,11 @@ This directory contains the per-chapter XML descriptors that drive the original 
 - **Root `<chapter>`**: Optional `name` attribute; otherwise the filename defines the chapter name.
 - **`<timeline>`**: Required start/end bounds for the clip. Times are split into `min`, `second`, and `ms` attributes so they can be mapped directly to frame counts when chopping source video.
 - **`<params>`**: Key/value pairs that configure how the engine should treat the clip (for example, `controller`, `cockpit`, `level`, debug switches). Keys are stored as `<int>` or `<str>` tags with `key`/`value` attributes.
+  - *Common debug/runtime keys*: The legacy XML dumps keep several engine toggles inside each chapter's `<params>`, even though the modern conversion scripts only pull out gameplay-critical values like `cockpit` or `type` when building script names. Frequent holdovers include:
+    - `godmode`: Original invulnerability switch; parsed but ignored by the conversion tools.
+    - `cursorSpeed`: Pointer sensitivity for the iPhone engine; retained for parity but not consumed by the converters.
+    - `analogControls`: Runtime flag to prefer analog input; present for historical accuracy and ignored by the tooling.
+  These keys typically live alongside chapter metadata near the top of the `<params>` block (see `data/roadblaster_events/level1.xml` lines 7–16 for an example placement).
 - **`<macros>`**: Optional macro overrides scoped to the chapter; when present they shadow any global macros loaded elsewhere in the pipeline.
 - **`<events>`**: Input windows and helpers that occur between `timestart` and `timeend`. Common event types include:
   - `checkpoint`: Marks respawn points; usually paired with the chapter entry timestamp.
