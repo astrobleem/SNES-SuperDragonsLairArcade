@@ -15,6 +15,7 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | `snes_convert.py` | Simple helper to letterbox and palette-reduce PNGs to SNES-friendly dimensions and color counts. | PNG input. | Palette-indexed PNG at 256×224. | Quick background mockups before full tile conversion.
 | `userOptions.py` | Lightweight command-line option parser used by other scripts. | CLI arguments. | Sanitized option dictionary. | Shared helper for Python tooling.
 | `xmlsceneparser.py` | Parses Dragon's Lair iPhone XML to emit scene event lists, frame folders, and audio references. | iPhone XML descriptor plus video/audio paths. | Extracted frame/audio listings written to folders. | Driving chapter/frame extraction ahead of tile conversion and MSU packaging.
+| `lua_scene_exporter.py` | Converts DirkSimple-style `game.lua` scene tables into readable chapter scripts for regression tests. | Trimmed `game.lua` inputs containing `scenes` tables. | Textual `chapter.script` summaries listing sequences, actions, and timeouts. | Validating scene metadata before running full conversion.
 | `snesbrr-2006-12-13/` | BRR encoder/decoder for SNES samples with loop handling. | WAV PCM audio. | BRR sample blocks or decoded WAV. | Building SPC sound effects or MOD sample banks.
 | `wla-dx-9.5-svn/` | Cross-platform macro assembler/linker suite for 65816/SPC700 and related CPUs. | Assembly source, object/library files. | Object files, linked ROM/SRAM binaries. | Main code build toolchain for SNES ROM and SPC binaries.
 
@@ -99,6 +100,11 @@ This folder contains the helper utilities used to prepare assets and builds for 
 * **Purpose:** Parse Dragon’s Lair iPhone XML descriptors and emit frame/audio listings per chapter, creating output folders for subsequent conversion.
 * **Inputs/Outputs:** XML scene definition and related media paths; writes scene event lists and organizes frame/audio references in folders.
 * **Pipeline:** Early extraction step before running image converters and MSU1 packers.
+
+### lua_scene_exporter.py
+* **Purpose:** Read DirkSimple-style `game.lua` scene tables and write a readable `chapter.script` summary that captures timings, timeouts, actions, and single-frame markers.
+* **Inputs/Outputs:** `game.lua` input; writes `chapter.script` text to the requested destination path.
+* **Tests:** `python -m pytest tests/test_lua_scene_exporter.py`
 
 ### snesbrr-2006-12-13
 * **Purpose:** Standalone SNES BRR encoder/decoder supporting loop points and optional Gaussian filtering.
