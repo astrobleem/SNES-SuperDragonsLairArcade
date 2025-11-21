@@ -13,6 +13,7 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | `msu1blockwriter.py` | Packages chapter folders (converted frames, tilemaps, palettes) and chapter audio into MSU1 data and per-chapter PCM files. | Chapter directories containing frame binaries; associated PCM audio per chapter. | MSU1 data file with scene/frame pointers plus chapter `.pcm` audio streams. | Bundling MSU video/audio chapters for playback.
 | `msu1pcmwriter.py` | Validates a WAV file (stereo, 16-bit, 44.1 kHz) and prepends MSU1 PCM headers with optional loop points. | WAV/RIFF PCM audio. | `.pcm` audio with MSU1 header and loop offset. | Preparing MSU1 background music or chapter audio.
 | `snes_convert.py` | Simple helper to letterbox and palette-reduce PNGs to SNES-friendly dimensions and color counts. | PNG input. | Palette-indexed PNG at 256×224. | Quick background mockups before full tile conversion.
+| `lua_scene_exporter.py` | Parses DirkSimple `game.lua` scenes and writes legacy `chapter.script` files. | `tools/game.lua` scene table. | Per-scene `chapter.script` folders. | Replacement for `xmlsceneparser.py` when working from the Lua scene source. |
 | `userOptions.py` | Lightweight command-line option parser used by other scripts. | CLI arguments. | Sanitized option dictionary. | Shared helper for Python tooling.
 | `xmlsceneparser.py` | Parses Dragon's Lair iPhone XML to emit scene event lists, frame folders, and audio references. | iPhone XML descriptor plus video/audio paths. | Extracted frame/audio listings written to folders. | Driving chapter/frame extraction ahead of tile conversion and MSU packaging.
 | `snesbrr-2006-12-13/` | BRR encoder/decoder for SNES samples with loop handling. | WAV PCM audio. | BRR sample blocks or decoded WAV. | Building SPC sound effects or MOD sample banks.
@@ -96,9 +97,20 @@ This folder contains the helper utilities used to prepare assets and builds for 
 * **Pipeline:** Utility dependency for `animationWriter.py`, `gracon.py`, `msu1blockwriter.py`, and others.
 
 ### xmlsceneparser.py
-* **Purpose:** Parse Dragon’s Lair iPhone XML descriptors and emit frame/audio listings per chapter, creating output folders for subsequent conversion.
+* **Purpose:** Parse Dragon’s Lair iPhone XML descriptors and emit frame/audio listings per chapter, creating output folders for subsequent conversion. The script remains for historical parity but is superseded by `lua_scene_exporter.py` when working from the DirkSimple Lua source.
 * **Inputs/Outputs:** XML scene definition and related media paths; writes scene event lists and organizes frame/audio references in folders.
 * **Pipeline:** Early extraction step before running image converters and MSU1 packers.
+* **Chapter script layout:** The exporter emits a banner comment, a `CHAPTER <name>` declaration, a sequence of `EVENT` rows, and a closing `DIE`. Each event line follows `EVENT Event.<type>.CLS.PTR $<start> $<end> EventResult.<result> <resultname> <arg0> <arg1> <arg2>` where `<start>`/`<end>` are chapter-relative frame numbers padded to four hexadecimal digits. Names, result identifiers, and parameters are sanitized (dashes become underscores). Direction and macro events include their subtype/name in the event type before sanitization. The chapter event fills `arg0` with the enumerated chapter number and `arg1` with the `cockpit` parameter from XML, and the exporter updates `chapter.include` so WLA-DX can `.include` new scripts automatically.
+
+### lua_scene_exporter.py
+* **Purpose:** Convert DirkSimple’s `tools/game.lua` scene table into the legacy `chapter.script` layout while preserving relative frame calculations plus timeout/action transitions as event results.
+* **Inputs/Outputs:** Parses the `scenes` table inside `game.lua` and emits one folder per scene under the chosen output directory, each containing `chapter.script`.
+* **Usage:**
+  ```bash
+  python3 lua_scene_exporter.py -i tools/game.lua -o ./build/chapters --chapter flaming_ropes
+  ```
+  Use `--chapter` repeatedly to filter scenes, `--fps` to override the default 23.9777 fps conversion, and `-v` for verbose logging.
+* **Notes:** Implements a lightweight Lua table parser (no external dependencies) tailored to the DirkSimple scene structure and replaces `xmlsceneparser.py` for pipelines that start from the Lua data instead of the legacy XML.
 
 ### snesbrr-2006-12-13
 * **Purpose:** Standalone SNES BRR encoder/decoder supporting loop points and optional Gaussian filtering.
