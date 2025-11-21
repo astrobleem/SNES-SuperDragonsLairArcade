@@ -1,0 +1,79 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER tentacle_room
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter tentacle_room_enter_room   
+
+    EVENT Event.exit_room.CLS.PTR $0000 $0019 EventResult.none none   
+
+    EVENT Event.jump_to_door.CLS.PTR $0000 $0022 EventResult.playchapter tentacle_room_squeeze_to_death_by_door   
+
+    EVENT Event.jump_to_door_left.CLS.PTR $0000 $0022 EventResult.playchapter tentacle_room_squeeze_to_death  left squeeze_to_death
+
+    EVENT Event.jump_to_door_action.CLS.PTR $0000 $0023 EventResult.playchapter tentacle_room_squeeze_to_death  action squeeze_to_death
+
+    EVENT Event.jump_to_weapon_rack.CLS.PTR $0000 $002d EventResult.playchapter tentacle_room_squeeze_to_death   
+
+    EVENT Event.jump_to_weapon_rack_down.CLS.PTR $0000 $002d EventResult.playchapter tentacle_room_squeeze_to_death  down squeeze_to_death
+
+    EVENT Event.jump_to_weapon_rack_action.CLS.PTR $0000 $002d EventResult.playchapter tentacle_room_squeeze_to_death  action squeeze_to_death
+
+    EVENT Event.jump_to_stairs_left.CLS.PTR $0000 $002f EventResult.playchapter tentacle_room_squeeze_to_death  left squeeze_to_death
+
+    EVENT Event.jump_to_table.CLS.PTR $0000 $0035 EventResult.playchapter tentacle_room_squeeze_to_death   
+
+    EVENT Event.jump_to_table_left.CLS.PTR $0000 $0035 EventResult.playchapter tentacle_room_squeeze_to_death  left squeeze_to_death
+
+    EVENT Event.jump_to_table_action.CLS.PTR $0000 $0035 EventResult.playchapter tentacle_room_squeeze_to_death  action squeeze_to_death
+
+    EVENT Event.jump_to_table_down.CLS.PTR $0000 $0035 EventResult.playchapter tentacle_room_squeeze_to_death  down squeeze_to_death
+
+    EVENT Event.kills_first_tentacle.CLS.PTR $0000 $0038 EventResult.playchapter tentacle_room_squeeze_to_death   
+
+    EVENT Event.jump_to_stairs.CLS.PTR $0000 $0041 EventResult.playchapter tentacle_room_two_front_war   
+
+    EVENT Event.jump_to_stairs_up.CLS.PTR $0000 $0041 EventResult.playchapter tentacle_room_two_front_war  up two_front_war
+
+    EVENT Event.jump_to_stairs_down.CLS.PTR $0000 $0041 EventResult.playchapter tentacle_room_squeeze_to_death  down squeeze_to_death
+
+    EVENT Event.jump_to_stairs_action.CLS.PTR $0000 $0041 EventResult.playchapter tentacle_room_two_front_war  action two_front_war
+
+    EVENT Event.chapter.CLS.PTR $0000 $0b47 EventResult.none none tentacle_room  
+
+    EVENT Event.jump_to_table_up.CLS.PTR $0008 $0034 EventResult.playchapter tentacle_room_exit_room 1939 up exit_room
+
+    EVENT Event.jump_to_table_right.CLS.PTR $0008 $0034 EventResult.playchapter tentacle_room_exit_room 1939 right exit_room
+
+    EVENT Event.jump_to_door_down.CLS.PTR $000b $0021 EventResult.playchapter tentacle_room_jump_to_stairs 915 down jump_to_stairs
+
+    EVENT Event.jump_to_door_right.CLS.PTR $000b $0021 EventResult.playchapter tentacle_room_jump_to_stairs 915 right jump_to_stairs
+
+    EVENT Event.jump_to_door_up.CLS.PTR $000b $0021 EventResult.playchapter tentacle_room_squeeze_to_death_by_door  up squeeze_to_death_by_door
+
+    EVENT Event.jump_to_weapon_rack_right.CLS.PTR $001c $002e EventResult.playchapter tentacle_room_jump_to_door 495 right jump_to_door
+
+    EVENT Event.jump_to_weapon_rack_left.CLS.PTR $001c $002e EventResult.playchapter tentacle_room_squeeze_to_death  left squeeze_to_death
+
+    EVENT Event.kills_first_tentacle_up.CLS.PTR $0021 $0037 EventResult.playchapter tentacle_room_jump_to_weapon_rack 379 up jump_to_weapon_rack
+
+    EVENT Event.jump_to_stairs_left.CLS.PTR $002f $0041 EventResult.playchapter tentacle_room_jump_to_table 1326 left jump_to_table
+
+    EVENT Event.start_dead.CLS.PTR $0862 $0894 EventResult.playchapter tentacle_room_enter_room   
+
+    EVENT Event.enter_room.CLS.PTR $089a $08f9 EventResult.playchapter tentacle_room_left_tentacle_grabs   
+
+    EVENT Event.enter_room_action.CLS.PTR $08da $08f9 EventResult.playchapter tentacle_room_kills_first_tentacle 49 action kills_first_tentacle
+
+    EVENT Event.left_tentacle_grabs.CLS.PTR $0a12 $0a58 EventResult.restartchapter tentacle_room   
+
+    EVENT Event.squeeze_to_death.CLS.PTR $0a5a $0a8b EventResult.restartchapter tentacle_room   
+
+    EVENT Event.two_front_war.CLS.PTR $0a8a $0ad2 EventResult.restartchapter tentacle_room   
+
+    EVENT Event.squeeze_to_death_by_door.CLS.PTR $0ade $0af3 EventResult.restartchapter tentacle_room   
+
+    EVENT Event.game_over.CLS.PTR $0af3 $0b47 EventResult.none none   
+
+    DIE

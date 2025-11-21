@@ -1,0 +1,119 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER yellow_brick_road_reversed
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter yellow_brick_road_reversed_enter_room   
+
+    EVENT Event.seq9_down.CLS.PTR $0000 $001f EventResult.playchapter yellow_brick_road_reversed_seq14  down seq14
+
+    EVENT Event.seq9.CLS.PTR $0000 $0024 EventResult.playchapter yellow_brick_road_reversed_seq14   
+
+    EVENT Event.seq11.CLS.PTR $0000 $0028 EventResult.none none   
+
+    EVENT Event.seq5.CLS.PTR $0000 $0029 EventResult.playchapter yellow_brick_road_reversed_seq14   
+
+    EVENT Event.seq5_down.CLS.PTR $0000 $0029 EventResult.playchapter yellow_brick_road_reversed_seq14  down seq14
+
+    EVENT Event.seq5_right.CLS.PTR $0000 $0029 EventResult.playchapter yellow_brick_road_reversed_seq14  right seq14
+
+    EVENT Event.seq5_left.CLS.PTR $0000 $0029 EventResult.playchapter yellow_brick_road_reversed_seq14  left seq14
+
+    EVENT Event.seq7.CLS.PTR $0000 $002e EventResult.playchapter yellow_brick_road_reversed_seq16   
+
+    EVENT Event.seq7_left.CLS.PTR $0000 $002e EventResult.playchapter yellow_brick_road_reversed_seq15  left seq15
+
+    EVENT Event.seq7_down.CLS.PTR $0000 $002e EventResult.playchapter yellow_brick_road_reversed_seq14  down seq14
+
+    EVENT Event.seq3.CLS.PTR $0000 $0031 EventResult.playchapter yellow_brick_road_reversed_seq12   
+
+    EVENT Event.seq3_left.CLS.PTR $0000 $0031 EventResult.playchapter yellow_brick_road_reversed_seq14  left seq14
+
+    EVENT Event.seq6.CLS.PTR $0000 $0032 EventResult.playchapter yellow_brick_road_reversed_seq15   
+
+    EVENT Event.seq10.CLS.PTR $0000 $0032 EventResult.playchapter yellow_brick_road_reversed_seq18   
+
+    EVENT Event.seq10_right.CLS.PTR $0000 $0032 EventResult.playchapter yellow_brick_road_reversed_seq14  right seq14
+
+    EVENT Event.seq10_left.CLS.PTR $0000 $0032 EventResult.playchapter yellow_brick_road_reversed_seq14  left seq14
+
+    EVENT Event.seq10_down.CLS.PTR $0000 $0032 EventResult.playchapter yellow_brick_road_reversed_seq15  down seq15
+
+    EVENT Event.seq4.CLS.PTR $0000 $0033 EventResult.playchapter yellow_brick_road_reversed_seq14   
+
+    EVENT Event.seq8.CLS.PTR $0000 $004d EventResult.playchapter yellow_brick_road_reversed_seq17   
+
+    EVENT Event.seq8_down.CLS.PTR $0000 $0050 EventResult.playchapter yellow_brick_road_reversed_seq14  down seq14
+
+    EVENT Event.chapter.CLS.PTR $0000 $3702 EventResult.none none yellow_brick_road_reversed  
+
+    EVENT Event.seq5_up.CLS.PTR $000b $0029 EventResult.playchapter yellow_brick_road_reversed_seq6 3255 up seq6
+
+    EVENT Event.seq6_right.CLS.PTR $000f $0031 EventResult.playchapter yellow_brick_road_reversed_seq7 3551 right seq7
+
+    EVENT Event.seq9_left.CLS.PTR $0011 $0024 EventResult.playchapter yellow_brick_road_reversed_seq10 5000 left seq10
+
+    EVENT Event.seq10_up.CLS.PTR $0012 $0031 EventResult.playchapter yellow_brick_road_reversed_seq11 4750 up seq11
+
+    EVENT Event.seq9_right.CLS.PTR $0015 $0024 EventResult.playchapter yellow_brick_road_reversed_seq14  right seq14
+
+    EVENT Event.seq3_up.CLS.PTR $0015 $0030 EventResult.playchapter yellow_brick_road_reversed_seq4 2191 up seq4
+
+    EVENT Event.seq6_up.CLS.PTR $0019 $0032 EventResult.playchapter yellow_brick_road_reversed_seq15  up seq15
+
+    EVENT Event.seq6_down.CLS.PTR $0019 $0032 EventResult.playchapter yellow_brick_road_reversed_seq15  down seq15
+
+    EVENT Event.seq6_action.CLS.PTR $0019 $0032 EventResult.playchapter yellow_brick_road_reversed_seq15  action seq15
+
+    EVENT Event.seq4_left.CLS.PTR $0019 $003a EventResult.playchapter yellow_brick_road_reversed_seq5 2675 left seq5
+
+    EVENT Event.seq4_up.CLS.PTR $0019 $003a EventResult.playchapter yellow_brick_road_reversed_seq14  up seq14
+
+    EVENT Event.seq4_down.CLS.PTR $0019 $003a EventResult.playchapter yellow_brick_road_reversed_seq14  down seq14
+
+    EVENT Event.seq6_left.CLS.PTR $001a $0033 EventResult.playchapter yellow_brick_road_reversed_seq15  left seq15
+
+    EVENT Event.seq7_right.CLS.PTR $001d $002d EventResult.playchapter yellow_brick_road_reversed_seq16  right seq16
+
+    EVENT Event.seq7_up.CLS.PTR $001d $002e EventResult.playchapter yellow_brick_road_reversed_seq8 4026 up seq8
+
+    EVENT Event.seq4_right.CLS.PTR $0024 $0039 EventResult.playchapter yellow_brick_road_reversed_seq14  right seq14
+
+    EVENT Event.seq8_action.CLS.PTR $003b $004c EventResult.playchapter yellow_brick_road_reversed_seq9 4026 action seq9
+
+    EVENT Event.seq8_right.CLS.PTR $003b $004f EventResult.playchapter yellow_brick_road_reversed_seq17  right seq17
+
+    EVENT Event.start_dead.CLS.PTR $3328 $3360 EventResult.playchapter yellow_brick_road_reversed_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $3360 $338d EventResult.playchapter yellow_brick_road_reversed_seq14   
+
+    EVENT Event.enter_room_right.CLS.PTR $3360 $338d EventResult.playchapter yellow_brick_road_reversed_seq3 1939 right seq3
+
+    EVENT Event.seq2.CLS.PTR $3360 $338d EventResult.playchapter yellow_brick_road_reversed_seq14   
+
+    EVENT Event.seq2_right.CLS.PTR $3360 $338d EventResult.playchapter yellow_brick_road_reversed_seq3 1939 right seq3
+
+    EVENT Event.enter_room_up.CLS.PTR $3387 $3390 EventResult.playchapter yellow_brick_road_reversed_seq14  up seq14
+
+    EVENT Event.enter_room_left.CLS.PTR $3387 $3390 EventResult.playchapter yellow_brick_road_reversed_seq14  left seq14
+
+    EVENT Event.seq2_up.CLS.PTR $3387 $3390 EventResult.playchapter yellow_brick_road_reversed_seq14  up seq14
+
+    EVENT Event.seq2_left.CLS.PTR $3387 $3390 EventResult.playchapter yellow_brick_road_reversed_seq14  left seq14
+
+    EVENT Event.seq12.CLS.PTR $3555 $3569 EventResult.restartchapter yellow_brick_road_reversed   
+
+    EVENT Event.seq14.CLS.PTR $359d $35cc EventResult.restartchapter yellow_brick_road_reversed   
+
+    EVENT Event.seq15.CLS.PTR $35cd $361b EventResult.restartchapter yellow_brick_road_reversed   
+
+    EVENT Event.seq16.CLS.PTR $361d $3636 EventResult.restartchapter yellow_brick_road_reversed   
+
+    EVENT Event.seq17.CLS.PTR $3641 $3671 EventResult.restartchapter yellow_brick_road_reversed   
+
+    EVENT Event.seq18.CLS.PTR $3671 $36aa EventResult.restartchapter yellow_brick_road_reversed   
+
+    EVENT Event.game_over.CLS.PTR $36ae $3702 EventResult.none none   
+
+    DIE

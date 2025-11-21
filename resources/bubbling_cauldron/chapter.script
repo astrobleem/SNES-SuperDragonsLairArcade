@@ -1,0 +1,85 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER bubbling_cauldron
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter bubbling_cauldron_enter_room   
+
+    EVENT Event.seq5_right.CLS.PTR $0000 $0006 EventResult.playchapter bubbling_cauldron_seq10  right seq10
+
+    EVENT Event.seq7.CLS.PTR $0000 $001b EventResult.none none   
+
+    EVENT Event.seq4.CLS.PTR $0000 $0021 EventResult.playchapter bubbling_cauldron_seq9   
+
+    EVENT Event.seq4_up.CLS.PTR $0000 $0021 EventResult.playchapter bubbling_cauldron_seq9  up seq9
+
+    EVENT Event.seq4_right.CLS.PTR $0000 $0021 EventResult.playchapter bubbling_cauldron_seq9  right seq9
+
+    EVENT Event.seq4_left.CLS.PTR $0000 $0021 EventResult.playchapter bubbling_cauldron_seq9  left seq9
+
+    EVENT Event.seq5.CLS.PTR $0000 $0029 EventResult.playchapter bubbling_cauldron_seq10   
+
+    EVENT Event.seq5_left.CLS.PTR $0000 $0029 EventResult.playchapter bubbling_cauldron_seq9  left seq9
+
+    EVENT Event.seq3.CLS.PTR $0000 $003c EventResult.playchapter bubbling_cauldron_seq8   
+
+    EVENT Event.seq6.CLS.PTR $0000 $0046 EventResult.playchapter bubbling_cauldron_seq9   
+
+    EVENT Event.seq6_up.CLS.PTR $0000 $0046 EventResult.playchapter bubbling_cauldron_seq9  up seq9
+
+    EVENT Event.seq6_left.CLS.PTR $0000 $0046 EventResult.playchapter bubbling_cauldron_seq9  left seq9
+
+    EVENT Event.chapter.CLS.PTR $0000 $1562 EventResult.none none bubbling_cauldron  
+
+    EVENT Event.seq4_down.CLS.PTR $000d $0020 EventResult.playchapter bubbling_cauldron_seq5 3255 down seq5
+
+    EVENT Event.seq4_downright.CLS.PTR $000d $0020 EventResult.playchapter bubbling_cauldron_seq5 3255 downright seq5
+
+    EVENT Event.seq5_action.CLS.PTR $000f $0029 EventResult.playchapter bubbling_cauldron_seq6 2191 action seq6
+
+    EVENT Event.seq5_up.CLS.PTR $000f $0029 EventResult.playchapter bubbling_cauldron_seq10  up seq10
+
+    EVENT Event.seq3_action.CLS.PTR $0027 $003b EventResult.playchapter bubbling_cauldron_seq4 3255 action seq4
+
+    EVENT Event.seq3_up.CLS.PTR $0027 $003b EventResult.playchapter bubbling_cauldron_seq8  up seq8
+
+    EVENT Event.seq3_down.CLS.PTR $0027 $003b EventResult.playchapter bubbling_cauldron_seq9  down seq9
+
+    EVENT Event.seq3_left.CLS.PTR $0027 $003b EventResult.playchapter bubbling_cauldron_seq8  left seq8
+
+    EVENT Event.seq3_right.CLS.PTR $002b $0041 EventResult.playchapter bubbling_cauldron_seq9  right seq9
+
+    EVENT Event.seq6_right.CLS.PTR $002b $0045 EventResult.playchapter bubbling_cauldron_seq7 1326 right seq7
+
+    EVENT Event.start_dead.CLS.PTR $1334 $1366 EventResult.playchapter bubbling_cauldron_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $136c $13ae EventResult.playchapter bubbling_cauldron_seq9   
+
+    EVENT Event.seq2.CLS.PTR $136c $13ae EventResult.playchapter bubbling_cauldron_seq9   
+
+    EVENT Event.enter_room_up.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq3 2191 up seq3
+
+    EVENT Event.enter_room_down.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq9  down seq9
+
+    EVENT Event.enter_room_right.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq9  right seq9
+
+    EVENT Event.enter_room_left.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq9  left seq9
+
+    EVENT Event.seq2_up.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq3 2191 up seq3
+
+    EVENT Event.seq2_down.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq9  down seq9
+
+    EVENT Event.seq2_right.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq9  right seq9
+
+    EVENT Event.seq2_left.CLS.PTR $139b $13ad EventResult.playchapter bubbling_cauldron_seq9  left seq9
+
+    EVENT Event.seq8.CLS.PTR $1498 $14ba EventResult.restartchapter bubbling_cauldron   
+
+    EVENT Event.seq9.CLS.PTR $14bc $14de EventResult.restartchapter bubbling_cauldron   
+
+    EVENT Event.seq10.CLS.PTR $14f2 $150d EventResult.restartchapter bubbling_cauldron   
+
+    EVENT Event.game_over.CLS.PTR $150e $1562 EventResult.none none   
+
+    DIE

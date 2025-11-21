@@ -1,0 +1,25 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER wind_room
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter wind_room_enter_room   
+
+    EVENT Event.exit_room.CLS.PTR $0000 $000d EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $22ef EventResult.none none wind_room  
+
+    EVENT Event.start_dead.CLS.PTR $2136 $216f EventResult.playchapter wind_room_enter_room   
+
+    EVENT Event.enter_room.CLS.PTR $216e $2232 EventResult.playchapter wind_room_sucked_in   
+
+    EVENT Event.enter_room_up.CLS.PTR $21fd $2231 EventResult.playchapter wind_room_sucked_in  up sucked_in
+
+    EVENT Event.enter_room_right.CLS.PTR $2220 $2231 EventResult.playchapter wind_room_exit_room 379 right exit_room
+
+    EVENT Event.sucked_in.CLS.PTR $2253 $229b EventResult.restartchapter wind_room   
+
+    EVENT Event.game_over.CLS.PTR $229b $22ef EventResult.none none   
+
+    DIE

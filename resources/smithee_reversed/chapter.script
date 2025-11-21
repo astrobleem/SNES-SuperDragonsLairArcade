@@ -1,0 +1,103 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER smithee_reversed
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter smithee_reversed_enter_room   
+
+    EVENT Event.seq4_right.CLS.PTR $0000 $0016 EventResult.playchapter smithee_reversed_seq8  right seq8
+
+    EVENT Event.seq3_down.CLS.PTR $0000 $001b EventResult.playchapter smithee_reversed_seq8  down seq8
+
+    EVENT Event.seq5.CLS.PTR $0000 $002b EventResult.playchapter smithee_reversed_seq12   
+
+    EVENT Event.seq3.CLS.PTR $0000 $003b EventResult.playchapter smithee_reversed_seq10   
+
+    EVENT Event.seq3_right.CLS.PTR $0000 $003b EventResult.playchapter smithee_reversed_seq8  right seq8
+
+    EVENT Event.seq3_left.CLS.PTR $0000 $003b EventResult.playchapter smithee_reversed_seq8  left seq8
+
+    EVENT Event.seq4.CLS.PTR $0000 $0042 EventResult.playchapter smithee_reversed_seq11   
+
+    EVENT Event.seq4_down.CLS.PTR $0000 $0042 EventResult.playchapter smithee_reversed_seq8  down seq8
+
+    EVENT Event.seq4_left.CLS.PTR $0000 $0042 EventResult.playchapter smithee_reversed_seq8  left seq8
+
+    EVENT Event.seq7.CLS.PTR $0000 $005f EventResult.none none   
+
+    EVENT Event.seq6.CLS.PTR $0000 $0095 EventResult.playchapter smithee_reversed_seq13   
+
+    EVENT Event.chapter.CLS.PTR $0000 $3fd3 EventResult.none none smithee_reversed  
+
+    EVENT Event.seq5_action.CLS.PTR $0005 $0017 EventResult.playchapter smithee_reversed_seq12  action seq12
+
+    EVENT Event.seq3_action.CLS.PTR $0014 $002e EventResult.playchapter smithee_reversed_seq10  action seq10
+
+    EVENT Event.seq4_right.CLS.PTR $0016 $0041 EventResult.playchapter smithee_reversed_seq5 1326 right seq5
+
+    EVENT Event.seq5_action.CLS.PTR $0017 $002b EventResult.playchapter smithee_reversed_seq6 1326 action seq6
+
+    EVENT Event.seq5_up.CLS.PTR $0019 $002c EventResult.playchapter smithee_reversed_seq12  up seq12
+
+    EVENT Event.seq5_down.CLS.PTR $0019 $002c EventResult.playchapter smithee_reversed_seq12  down seq12
+
+    EVENT Event.seq5_left.CLS.PTR $0019 $002c EventResult.playchapter smithee_reversed_seq12  left seq12
+
+    EVENT Event.seq5_right.CLS.PTR $0019 $002c EventResult.playchapter smithee_reversed_seq12  right seq12
+
+    EVENT Event.seq3_up.CLS.PTR $001b $003a EventResult.playchapter smithee_reversed_seq8  up seq8
+
+    EVENT Event.seq3_action.CLS.PTR $002e $003a EventResult.playchapter smithee_reversed_seq4 2191 action seq4
+
+    EVENT Event.seq6_action.CLS.PTR $007c $0095 EventResult.playchapter smithee_reversed_seq7 915 action seq7
+
+    EVENT Event.seq6_right.CLS.PTR $007c $0096 EventResult.playchapter smithee_reversed_seq13  right seq13
+
+    EVENT Event.seq6_left.CLS.PTR $007c $0096 EventResult.playchapter smithee_reversed_seq13  left seq13
+
+    EVENT Event.start_dead.CLS.PTR $3c3c $3c6e EventResult.playchapter smithee_reversed_seq2   
+
+    EVENT Event.enter_room_down.CLS.PTR $3c8f $3cce EventResult.playchapter smithee_reversed_seq8  down seq8
+
+    EVENT Event.seq2_down.CLS.PTR $3c8f $3cce EventResult.playchapter smithee_reversed_seq8  down seq8
+
+    EVENT Event.enter_room_left.CLS.PTR $3c8f $3cd9 EventResult.playchapter smithee_reversed_seq8  left seq8
+
+    EVENT Event.enter_room_right.CLS.PTR $3c8f $3cd9 EventResult.playchapter smithee_reversed_seq8  right seq8
+
+    EVENT Event.seq2_left.CLS.PTR $3c8f $3cd9 EventResult.playchapter smithee_reversed_seq8  left seq8
+
+    EVENT Event.seq2_right.CLS.PTR $3c8f $3cd9 EventResult.playchapter smithee_reversed_seq8  right seq8
+
+    EVENT Event.enter_room.CLS.PTR $3c8f $3cdb EventResult.playchapter smithee_reversed_seq9   
+
+    EVENT Event.seq2.CLS.PTR $3c8f $3cdb EventResult.playchapter smithee_reversed_seq9   
+
+    EVENT Event.enter_room_action.CLS.PTR $3cb2 $3cc3 EventResult.playchapter smithee_reversed_seq9  action seq9
+
+    EVENT Event.seq2_action.CLS.PTR $3cb2 $3cc3 EventResult.playchapter smithee_reversed_seq9  action seq9
+
+    EVENT Event.enter_room_up.CLS.PTR $3cb3 $3cdb EventResult.playchapter smithee_reversed_seq8  up seq8
+
+    EVENT Event.seq2_up.CLS.PTR $3cb3 $3cdb EventResult.playchapter smithee_reversed_seq8  up seq8
+
+    EVENT Event.enter_room_action.CLS.PTR $3cc3 $3cd9 EventResult.playchapter smithee_reversed_seq3 1326 action seq3
+
+    EVENT Event.seq2_action.CLS.PTR $3cc3 $3cd9 EventResult.playchapter smithee_reversed_seq3 1326 action seq3
+
+    EVENT Event.seq8.CLS.PTR $3e7e $3ea0 EventResult.restartchapter smithee_reversed   
+
+    EVENT Event.seq9.CLS.PTR $3ea2 $3eb5 EventResult.restartchapter smithee_reversed   
+
+    EVENT Event.seq10.CLS.PTR $3eba $3edf EventResult.restartchapter smithee_reversed   
+
+    EVENT Event.seq11.CLS.PTR $3f04 $3f1f EventResult.restartchapter smithee_reversed   
+
+    EVENT Event.seq12.CLS.PTR $3f1e $3f37 EventResult.restartchapter smithee_reversed   
+
+    EVENT Event.seq13.CLS.PTR $3f3f $3f7f EventResult.restartchapter smithee_reversed   
+
+    EVENT Event.game_over.CLS.PTR $3f7f $3fd3 EventResult.none none   
+
+    DIE

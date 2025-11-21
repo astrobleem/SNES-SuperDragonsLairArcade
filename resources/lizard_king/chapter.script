@@ -1,0 +1,123 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER lizard_king
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter lizard_king_enter_room   
+
+    EVENT Event.seq10.CLS.PTR $0000 $0016 EventResult.playchapter lizard_king_seq11   
+
+    EVENT Event.seq12.CLS.PTR $0000 $0016 EventResult.playchapter lizard_king_seq13   
+
+    EVENT Event.seq12_right.CLS.PTR $0000 $0016 EventResult.playchapter lizard_king_seq17  right seq17
+
+    EVENT Event.seq11.CLS.PTR $0000 $0018 EventResult.playchapter lizard_king_seq12   
+
+    EVENT Event.seq13.CLS.PTR $0000 $001a EventResult.playchapter lizard_king_seq14   
+
+    EVENT Event.seq9.CLS.PTR $0000 $0025 EventResult.playchapter lizard_king_seq15   
+
+    EVENT Event.seq5.CLS.PTR $0000 $0032 EventResult.playchapter lizard_king_seq17   
+
+    EVENT Event.seq5_left.CLS.PTR $0000 $0032 EventResult.playchapter lizard_king_seq16  left seq16
+
+    EVENT Event.seq5_down.CLS.PTR $0000 $0032 EventResult.playchapter lizard_king_seq15  down seq15
+
+    EVENT Event.seq7.CLS.PTR $0000 $0033 EventResult.playchapter lizard_king_seq17   
+
+    EVENT Event.seq8.CLS.PTR $0000 $0035 EventResult.playchapter lizard_king_seq17   
+
+    EVENT Event.seq4.CLS.PTR $0000 $0054 EventResult.playchapter lizard_king_seq17   
+
+    EVENT Event.seq3.CLS.PTR $0000 $006a EventResult.playchapter lizard_king_seq17   
+
+    EVENT Event.seq6.CLS.PTR $0000 $0073 EventResult.playchapter lizard_king_seq17   
+
+    EVENT Event.seq6_down.CLS.PTR $0000 $0073 EventResult.playchapter lizard_king_seq15  down seq15
+
+    EVENT Event.seq14.CLS.PTR $0000 $007a EventResult.none none   
+
+    EVENT Event.chapter.CLS.PTR $0000 $469c EventResult.none none lizard_king  
+
+    EVENT Event.seq11_action.CLS.PTR $0003 $0017 EventResult.playchapter lizard_king_seq12 0 action seq12
+
+    EVENT Event.seq10_action.CLS.PTR $0007 $0016 EventResult.playchapter lizard_king_seq11 0 action seq11
+
+    EVENT Event.seq10_down.CLS.PTR $0007 $0016 EventResult.playchapter lizard_king_seq11 0 down seq11
+
+    EVENT Event.seq12_action.CLS.PTR $000b $0016 EventResult.playchapter lizard_king_seq13 0 action seq13
+
+    EVENT Event.seq12_down.CLS.PTR $000b $0016 EventResult.playchapter lizard_king_seq13 0 down seq13
+
+    EVENT Event.seq12_left.CLS.PTR $000b $0016 EventResult.playchapter lizard_king_seq15  left seq15
+
+    EVENT Event.seq8_up.CLS.PTR $000b $0034 EventResult.playchapter lizard_king_seq9 3255 up seq9
+
+    EVENT Event.seq8_action.CLS.PTR $000b $0034 EventResult.playchapter lizard_king_seq9 3255 action seq9
+
+    EVENT Event.seq13_action.CLS.PTR $000d $0019 EventResult.playchapter lizard_king_seq14 0 action seq14
+
+    EVENT Event.seq9_action.CLS.PTR $0013 $0024 EventResult.playchapter lizard_king_seq10 0 action seq10
+
+    EVENT Event.seq9_down.CLS.PTR $0013 $0024 EventResult.playchapter lizard_king_seq15  down seq15
+
+    EVENT Event.seq5_right.CLS.PTR $001d $0031 EventResult.playchapter lizard_king_seq6 1326 right seq6
+
+    EVENT Event.seq7_right.CLS.PTR $0021 $0033 EventResult.playchapter lizard_king_seq8 2191 right seq8
+
+    EVENT Event.seq7_left.CLS.PTR $0021 $0033 EventResult.playchapter lizard_king_seq16  left seq16
+
+    EVENT Event.seq7_down.CLS.PTR $0021 $0033 EventResult.playchapter lizard_king_seq15  down seq15
+
+    EVENT Event.seq4_right.CLS.PTR $003f $0053 EventResult.playchapter lizard_king_seq5 1326 right seq5
+
+    EVENT Event.seq4_left.CLS.PTR $003f $0053 EventResult.playchapter lizard_king_seq16  left seq16
+
+    EVENT Event.seq4_down.CLS.PTR $003f $0053 EventResult.playchapter lizard_king_seq15  down seq15
+
+    EVENT Event.seq3_right.CLS.PTR $0055 $006a EventResult.playchapter lizard_king_seq4 1326 right seq4
+
+    EVENT Event.seq3_left.CLS.PTR $0055 $006a EventResult.playchapter lizard_king_seq16  left seq16
+
+    EVENT Event.seq3_down.CLS.PTR $0055 $006a EventResult.playchapter lizard_king_seq15  down seq15
+
+    EVENT Event.seq6_right.CLS.PTR $005b $0072 EventResult.playchapter lizard_king_seq7 1326 right seq7
+
+    EVENT Event.seq6_left.CLS.PTR $005b $0072 EventResult.playchapter lizard_king_seq16  left seq16
+
+    EVENT Event.start_dead.CLS.PTR $42a2 $42da EventResult.playchapter lizard_king_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $42da $430e EventResult.playchapter lizard_king_seq15   
+
+    EVENT Event.enter_room_right.CLS.PTR $42da $430e EventResult.playchapter lizard_king_seq16  right seq16
+
+    EVENT Event.seq2.CLS.PTR $42da $430e EventResult.playchapter lizard_king_seq15   
+
+    EVENT Event.seq2_right.CLS.PTR $42da $430e EventResult.playchapter lizard_king_seq16  right seq16
+
+    EVENT Event.enter_room_left.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq3 1939 left seq3
+
+    EVENT Event.enter_room_up.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq3 1939 up seq3
+
+    EVENT Event.enter_room_upleft.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq3 1939 upleft seq3
+
+    EVENT Event.enter_room_down.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq17  down seq17
+
+    EVENT Event.seq2_left.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq3 1939 left seq3
+
+    EVENT Event.seq2_up.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq3 1939 up seq3
+
+    EVENT Event.seq2_upleft.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq3 1939 upleft seq3
+
+    EVENT Event.seq2_down.CLS.PTR $42e5 $430d EventResult.playchapter lizard_king_seq17  down seq17
+
+    EVENT Event.seq15.CLS.PTR $45de $45f6 EventResult.restartchapter lizard_king   
+
+    EVENT Event.seq16.CLS.PTR $45f6 $4648 EventResult.restartchapter lizard_king   
+
+    EVENT Event.seq17.CLS.PTR $460c $4648 EventResult.restartchapter lizard_king   
+
+    EVENT Event.game_over.CLS.PTR $4648 $469c EventResult.none none   
+
+    DIE

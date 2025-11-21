@@ -1,0 +1,83 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER flaming_ropes
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter flaming_ropes_enter_room   
+
+    EVENT Event.exit_room.CLS.PTR $0000 $0012 EventResult.none none   
+
+    EVENT Event.rope3_right.CLS.PTR $0000 $0014 EventResult.playchapter flaming_ropes_fall_to_death  right fall_to_death
+
+    EVENT Event.rope2_right.CLS.PTR $0000 $0019 EventResult.playchapter flaming_ropes_fall_to_death  right fall_to_death
+
+    EVENT Event.rope3.CLS.PTR $0000 $0024 EventResult.playchapter flaming_ropes_misses_landing   
+
+    EVENT Event.rope3_up.CLS.PTR $0000 $002a EventResult.playchapter flaming_ropes_fall_to_death  up fall_to_death
+
+    EVENT Event.rope3_down.CLS.PTR $0000 $002a EventResult.playchapter flaming_ropes_fall_to_death  down fall_to_death
+
+    EVENT Event.rope3_left.CLS.PTR $0000 $002a EventResult.playchapter flaming_ropes_fall_to_death  left fall_to_death
+
+    EVENT Event.platform_sliding_right.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_fall_to_death  right fall_to_death
+
+    EVENT Event.rope2_up.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_fall_to_death  up fall_to_death
+
+    EVENT Event.rope2_down.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_fall_to_death  down fall_to_death
+
+    EVENT Event.rope2_left.CLS.PTR $0000 $002b EventResult.playchapter flaming_ropes_fall_to_death  left fall_to_death
+
+    EVENT Event.rope2.CLS.PTR $0000 $0035 EventResult.playchapter flaming_ropes_burns_hands   
+
+    EVENT Event.platform_sliding.CLS.PTR $0000 $003e EventResult.playchapter flaming_ropes_fall_to_death   
+
+    EVENT Event.platform_sliding_up.CLS.PTR $0000 $0045 EventResult.playchapter flaming_ropes_fall_to_death  up fall_to_death
+
+    EVENT Event.platform_sliding_down.CLS.PTR $0000 $0045 EventResult.playchapter flaming_ropes_fall_to_death  down fall_to_death
+
+    EVENT Event.chapter.CLS.PTR $0000 $0f5c EventResult.none none flaming_ropes  
+
+    EVENT Event.rope3_right.CLS.PTR $0014 $0028 EventResult.playchapter flaming_ropes_exit_room 915 right exit_room
+
+    EVENT Event.rope2_right.CLS.PTR $0019 $002b EventResult.playchapter flaming_ropes_rope3 495 right rope3
+
+    EVENT Event.platform_sliding_right.CLS.PTR $002b $0045 EventResult.playchapter flaming_ropes_rope1 251 right rope1
+
+    EVENT Event.platform_sliding_left.CLS.PTR $002b $0045 EventResult.playchapter flaming_ropes_fall_to_death  left fall_to_death
+
+    EVENT Event.start_dead.CLS.PTR $0d1a $0d4e EventResult.playchapter flaming_ropes_enter_room   
+
+    EVENT Event.enter_room_right.CLS.PTR $0d52 $0d70 EventResult.playchapter flaming_ropes_fall_to_death  right fall_to_death
+
+    EVENT Event.enter_room.CLS.PTR $0d52 $0d87 EventResult.playchapter flaming_ropes_platform_sliding   
+
+    EVENT Event.enter_room_up.CLS.PTR $0d52 $0d8d EventResult.playchapter flaming_ropes_fall_to_death  up fall_to_death
+
+    EVENT Event.enter_room_down.CLS.PTR $0d52 $0d8d EventResult.playchapter flaming_ropes_fall_to_death  down fall_to_death
+
+    EVENT Event.enter_room_right.CLS.PTR $0d70 $0d85 EventResult.playchapter flaming_ropes_rope1 251 right rope1
+
+    EVENT Event.enter_room_right.CLS.PTR $0d85 $0db8 EventResult.playchapter flaming_ropes_fall_to_death  right fall_to_death
+
+    EVENT Event.rope1_right.CLS.PTR $0dd6 $0df0 EventResult.playchapter flaming_ropes_fall_to_death  right fall_to_death
+
+    EVENT Event.rope1_up.CLS.PTR $0dd6 $0e02 EventResult.playchapter flaming_ropes_fall_to_death  up fall_to_death
+
+    EVENT Event.rope1_down.CLS.PTR $0dd6 $0e02 EventResult.playchapter flaming_ropes_fall_to_death  down fall_to_death
+
+    EVENT Event.rope1_left.CLS.PTR $0dd6 $0e02 EventResult.playchapter flaming_ropes_fall_to_death  left fall_to_death
+
+    EVENT Event.rope1.CLS.PTR $0dd6 $0e0b EventResult.playchapter flaming_ropes_burns_hands   
+
+    EVENT Event.rope1_right.CLS.PTR $0df0 $0e02 EventResult.playchapter flaming_ropes_rope2 379 right rope2
+
+    EVENT Event.misses_landing.CLS.PTR $0e90 $0ebe EventResult.restartchapter flaming_ropes   
+
+    EVENT Event.burns_hands.CLS.PTR $0ebe $0ee4 EventResult.playchapter flaming_ropes_fall_to_death   
+
+    EVENT Event.fall_to_death.CLS.PTR $0ee4 $0f06 EventResult.restartchapter flaming_ropes   
+
+    EVENT Event.game_over.CLS.PTR $0f08 $0f5c EventResult.none none   
+
+    DIE

@@ -1,0 +1,51 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER tilting_room
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter tilting_room_enter_room   
+
+    EVENT Event.jumps_forward.CLS.PTR $0000 $0012 EventResult.playchapter tilting_room_falls_to_death   
+
+    EVENT Event.exit_room.CLS.PTR $0000 $0021 EventResult.none none   
+
+    EVENT Event.jumps_back.CLS.PTR $0000 $0025 EventResult.playchapter tilting_room_falls_to_death   
+
+    EVENT Event.chapter.CLS.PTR $0000 $4ff5 EventResult.none none tilting_room  
+
+    EVENT Event.jumps_back_up.CLS.PTR $0007 $0015 EventResult.playchapter tilting_room_catches_fire  up catches_fire
+
+    EVENT Event.jumps_forward_down.CLS.PTR $0007 $0019 EventResult.playchapter tilting_room_falls_to_death  down falls_to_death
+
+    EVENT Event.jumps_forward_right.CLS.PTR $0007 $0019 EventResult.playchapter tilting_room_falls_to_death  right falls_to_death
+
+    EVENT Event.jumps_back_left.CLS.PTR $0007 $0025 EventResult.playchapter tilting_room_catches_fire  left catches_fire
+
+    EVENT Event.jumps_back_down.CLS.PTR $0007 $0025 EventResult.playchapter tilting_room_falls_to_death  down falls_to_death
+
+    EVENT Event.jumps_forward_left.CLS.PTR $000b $0019 EventResult.playchapter tilting_room_exit_room 1939 left exit_room
+
+    EVENT Event.jumps_forward_up.CLS.PTR $000b $0019 EventResult.playchapter tilting_room_wrong_door  up wrong_door
+
+    EVENT Event.jumps_back_up.CLS.PTR $0015 $0024 EventResult.playchapter tilting_room_jumps_forward 2675 up jumps_forward
+
+    EVENT Event.start_dead.CLS.PTR $4e0c $4e42 EventResult.playchapter tilting_room_enter_room   
+
+    EVENT Event.enter_room.CLS.PTR $4e45 $4eb0 EventResult.playchapter tilting_room_catches_fire   
+
+    EVENT Event.enter_room_left.CLS.PTR $4e88 $4eb1 EventResult.playchapter tilting_room_catches_fire  left catches_fire
+
+    EVENT Event.enter_room_down.CLS.PTR $4e9f $4eb1 EventResult.playchapter tilting_room_jumps_back 1939 down jumps_back
+
+    EVENT Event.enter_room_right.CLS.PTR $4e9f $4eb1 EventResult.playchapter tilting_room_falls_to_death  right falls_to_death
+
+    EVENT Event.wrong_door.CLS.PTR $4f0a $4f4b EventResult.restartchapter tilting_room   
+
+    EVENT Event.catches_fire.CLS.PTR $4f4c $4f70 EventResult.restartchapter tilting_room   
+
+    EVENT Event.falls_to_death.CLS.PTR $4f70 $4fa0 EventResult.restartchapter tilting_room   
+
+    EVENT Event.game_over.CLS.PTR $4fa1 $4ff5 EventResult.none none   
+
+    DIE

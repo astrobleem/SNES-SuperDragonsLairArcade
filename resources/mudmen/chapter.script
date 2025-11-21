@@ -1,0 +1,163 @@
+/**
+* this file has been auto-generated.
+*/
+
+    CHAPTER mudmen
+
+    EVENT Event.start_alive.CLS.PTR $0000 $0000 EventResult.playchapter mudmen_enter_room   
+
+    EVENT Event.seq5.CLS.PTR $0000 $0024 EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.seq4.CLS.PTR $0000 $0026 EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.seq7.CLS.PTR $0000 $0027 EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.seq6.CLS.PTR $0000 $002e EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.seq8.CLS.PTR $0000 $003f EventResult.playchapter mudmen_seq16   
+
+    EVENT Event.seq3_up.CLS.PTR $0000 $0041 EventResult.playchapter mudmen_seq15  up seq15
+
+    EVENT Event.seq9.CLS.PTR $0000 $0041 EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.seq11.CLS.PTR $0000 $0052 EventResult.none none   
+
+    EVENT Event.seq3.CLS.PTR $0000 $0058 EventResult.playchapter mudmen_seq4   
+
+    EVENT Event.seq3_left.CLS.PTR $0000 $0058 EventResult.playchapter mudmen_seq15  left seq15
+
+    EVENT Event.seq3_action.CLS.PTR $0000 $0058 EventResult.playchapter mudmen_seq15  action seq15
+
+    EVENT Event.seq10.CLS.PTR $0000 $0069 EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.chapter.CLS.PTR $0000 $62f2 EventResult.none none mudmen  
+
+    EVENT Event.seq4_action.CLS.PTR $0007 $0025 EventResult.playchapter mudmen_seq15  action seq15
+
+    EVENT Event.seq4_left.CLS.PTR $0007 $0025 EventResult.playchapter mudmen_seq12  left seq12
+
+    EVENT Event.seq4_right.CLS.PTR $0007 $0025 EventResult.playchapter mudmen_seq14  right seq14
+
+    EVENT Event.seq4_down.CLS.PTR $0007 $0025 EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq4_up.CLS.PTR $0007 $0026 EventResult.playchapter mudmen_seq5 2191 up seq5
+
+    EVENT Event.seq4_upleft.CLS.PTR $0007 $0026 EventResult.playchapter mudmen_seq5 2191 upleft seq5
+
+    EVENT Event.seq7_left.CLS.PTR $000f $0025 EventResult.playchapter mudmen_seq12  left seq12
+
+    EVENT Event.seq7_right.CLS.PTR $000f $0025 EventResult.playchapter mudmen_seq14  right seq14
+
+    EVENT Event.seq7_down.CLS.PTR $000f $0025 EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq7_action.CLS.PTR $000f $0025 EventResult.playchapter mudmen_seq15  action seq15
+
+    EVENT Event.seq7_up.CLS.PTR $000f $0026 EventResult.playchapter mudmen_seq8 1326 up seq8
+
+    EVENT Event.seq6_up.CLS.PTR $0014 $002e EventResult.playchapter mudmen_seq7 1326 up seq7
+
+    EVENT Event.seq6_left.CLS.PTR $0014 $002e EventResult.playchapter mudmen_seq12  left seq12
+
+    EVENT Event.seq6_down.CLS.PTR $0014 $002e EventResult.playchapter mudmen_seq13  down seq13
+
+    EVENT Event.seq5_up.CLS.PTR $0018 $0024 EventResult.playchapter mudmen_seq6 2675 up seq6
+
+    EVENT Event.seq5_right.CLS.PTR $0018 $0024 EventResult.playchapter mudmen_seq6 2675 right seq6
+
+    EVENT Event.seq5_upright.CLS.PTR $0018 $0024 EventResult.playchapter mudmen_seq6 2675 upright seq6
+
+    EVENT Event.seq5_down.CLS.PTR $0018 $0024 EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq5_left.CLS.PTR $0018 $0024 EventResult.playchapter mudmen_seq14  left seq14
+
+    EVENT Event.seq5_action.CLS.PTR $0018 $0024 EventResult.playchapter mudmen_seq15  action seq15
+
+    EVENT Event.seq9_up.CLS.PTR $001a $0041 EventResult.playchapter mudmen_seq10 1326 up seq10
+
+    EVENT Event.seq9_right.CLS.PTR $001a $0042 EventResult.playchapter mudmen_seq16  right seq16
+
+    EVENT Event.seq9_left.CLS.PTR $001a $0042 EventResult.playchapter mudmen_seq16  left seq16
+
+    EVENT Event.seq9_down.CLS.PTR $001a $0042 EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq9_action.CLS.PTR $001a $0042 EventResult.playchapter mudmen_seq15  action seq15
+
+    EVENT Event.seq6_right.CLS.PTR $001e $002e EventResult.playchapter mudmen_seq15  right seq15
+
+    EVENT Event.seq6_action.CLS.PTR $001e $002e EventResult.playchapter mudmen_seq15  action seq15
+
+    EVENT Event.seq8_upleft.CLS.PTR $0023 $002e EventResult.playchapter mudmen_seq16  upleft seq16
+
+    EVENT Event.seq8_up.CLS.PTR $0023 $002e EventResult.playchapter mudmen_seq16  up seq16
+
+    EVENT Event.seq8_left.CLS.PTR $0023 $003e EventResult.playchapter mudmen_seq16  left seq16
+
+    EVENT Event.seq8_right.CLS.PTR $0023 $003e EventResult.playchapter mudmen_seq16  right seq16
+
+    EVENT Event.seq8_down.CLS.PTR $0023 $003e EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq8_upleft.CLS.PTR $002e $003e EventResult.playchapter mudmen_seq9 1326 upleft seq9
+
+    EVENT Event.seq8_up.CLS.PTR $002e $003e EventResult.playchapter mudmen_seq9 1326 up seq9
+
+    EVENT Event.seq3_right.CLS.PTR $0041 $0057 EventResult.playchapter mudmen_seq15  right seq15
+
+    EVENT Event.seq3_down.CLS.PTR $0041 $0057 EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq3_up.CLS.PTR $0041 $0057 EventResult.playchapter mudmen_seq4 1326 up seq4
+
+    EVENT Event.seq10_down.CLS.PTR $0043 $005f EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq10_up.CLS.PTR $0043 $0070 EventResult.playchapter mudmen_seq11 1326 up seq11
+
+    EVENT Event.seq10_right.CLS.PTR $0043 $0070 EventResult.playchapter mudmen_seq11 1326 right seq11
+
+    EVENT Event.seq10_action.CLS.PTR $004f $00ac EventResult.playchapter mudmen_seq15  action seq15
+
+    EVENT Event.seq10_down.CLS.PTR $005f $00bd EventResult.playchapter mudmen_seq14  down seq14
+
+    EVENT Event.seq10_left.CLS.PTR $005f $00bd EventResult.playchapter mudmen_seq15  left seq15
+
+    EVENT Event.start_dead.CLS.PTR $5e6c $5ea4 EventResult.playchapter mudmen_seq2   
+
+    EVENT Event.enter_room.CLS.PTR $5ea4 $5f33 EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.seq2.CLS.PTR $5ea4 $5f33 EventResult.playchapter mudmen_seq15   
+
+    EVENT Event.enter_room_down.CLS.PTR $5ef9 $5f30 EventResult.playchapter mudmen_seq14  down seq14
+
+    EVENT Event.seq2_down.CLS.PTR $5ef9 $5f30 EventResult.playchapter mudmen_seq14  down seq14
+
+    EVENT Event.enter_room_action.CLS.PTR $5f03 $5f32 EventResult.playchapter mudmen_seq3 1326 action seq3
+
+    EVENT Event.enter_room_right.CLS.PTR $5f03 $5f32 EventResult.playchapter mudmen_seq15  right seq15
+
+    EVENT Event.enter_room_left.CLS.PTR $5f03 $5f32 EventResult.playchapter mudmen_seq15  left seq15
+
+    EVENT Event.seq2_action.CLS.PTR $5f03 $5f32 EventResult.playchapter mudmen_seq3 1326 action seq3
+
+    EVENT Event.seq2_right.CLS.PTR $5f03 $5f32 EventResult.playchapter mudmen_seq15  right seq15
+
+    EVENT Event.seq2_left.CLS.PTR $5f03 $5f32 EventResult.playchapter mudmen_seq15  left seq15
+
+    EVENT Event.enter_room_up.CLS.PTR $5f0a $5f32 EventResult.playchapter mudmen_seq13  up seq13
+
+    EVENT Event.seq2_up.CLS.PTR $5f0a $5f32 EventResult.playchapter mudmen_seq13  up seq13
+
+    EVENT Event.enter_room_down.CLS.PTR $5f30 $5f32 EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq2_down.CLS.PTR $5f30 $5f32 EventResult.playchapter mudmen_seq15  down seq15
+
+    EVENT Event.seq13.CLS.PTR $6174 $6189 EventResult.restartchapter mudmen   
+
+    EVENT Event.seq16.CLS.PTR $61a4 $61d4 EventResult.restartchapter mudmen   
+
+    EVENT Event.seq12.CLS.PTR $61d4 $623e EventResult.restartchapter mudmen   
+
+    EVENT Event.seq15.CLS.PTR $623e $626f EventResult.restartchapter mudmen   
+
+    EVENT Event.seq14.CLS.PTR $627a $629e EventResult.restartchapter mudmen   
+
+    EVENT Event.game_over.CLS.PTR $629e $62f2 EventResult.none none   
+
+    DIE
