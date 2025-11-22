@@ -1,6 +1,7 @@
 /**
-* Dirk's primary action prompt (sword swing / interact).
-* Uses button A; button B counts as an incorrect defensive tap.
+* Dirk's upward dodge/accelerate prompt (D-pad up).
+* RoadBlasters-era name retained for compatibility; prefer the up
+* direction standard over this deprecated event label.
 */
 .include "src/object/event/Event.accelerate.h"
 .section "Event.accelerate"
@@ -27,18 +28,18 @@
   jsr Event.template.waitTimeline
   bcc +
 
-  lda #JOY_BUTTON_B
+  lda #JOY_DIR_DOWN
   jsr Event.template.triggerOnWrongInput
   bcs +
 
   ;kill self if player pressed appropriate button
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.press
-  and.w #JOY_BUTTON_A
+  and.w #JOY_DIR_UP
   beq ++
 
       jsr core.input.get.trigger
-      and.w #JOY_BUTTON_A
+      and.w #JOY_DIR_UP
       beq +++
         lda this.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT

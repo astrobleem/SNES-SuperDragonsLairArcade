@@ -18,6 +18,12 @@ The game translates the battle-tested RoadBlaster engine into a faithful, MSU-1�
 - Root engine scripts are now documented with theming guidance in `src/README.md`, including notes to retheme remaining martial-arts SFX on the title screen.
 - Chapter event coverage has been inventoried across 40 scenes; 352 unique event types are referenced, with 14 implemented and 351 still needing object handlers.
 
+🎮 Prompt Control Standard
+
+- Directional prompts are bound to the D-pad: left/right stay horizontal, while up corresponds to RoadBlasters’ old **accelerate** cue and down to the **brake** cue.
+- The action/turbo prompt uses button A as the canonical action button; button B should be treated as an incorrect defensive tap when action is expected.
+- The legacy RoadBlasters prompt names `Event.accelerate` and `Event.brake` remain for compatibility but are considered deprecated; use them as up/down inputs until Dragon’s Lair–specific prompt handlers replace them.
+
 🧭 Documentation Map
 
 - `src/README.md` – High-level tour of the boot/title/score/MSU1 scripts plus theming expectations.
