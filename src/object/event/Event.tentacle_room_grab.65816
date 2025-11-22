@@ -1,0 +1,7 @@
+/**
+* Tentacle Room grab/failure resolution.
+* param1: grabbing tentacle id; param2: door squeeze flag.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT tentacle_room_grab 2

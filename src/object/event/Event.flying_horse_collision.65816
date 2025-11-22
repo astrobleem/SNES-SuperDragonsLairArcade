@@ -1,0 +1,7 @@
+/**
+* Flying Horse collision resolution (walls/pillars).
+* param1: collision id; param2: fire/wall overlap selector.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT flying_horse_collision 2

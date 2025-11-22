@@ -1,0 +1,7 @@
+/**
+* Giddy Goons grapple outcomes (knife, shove, falls).
+* param1: grapple/hazard id; param2: cinematic fallback flag.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT giddy_goons_grapple 2

@@ -1,0 +1,7 @@
+/**
+* Resolves Rolling Balls crush outcomes.
+* param1: crush scale (big/small/pit variants).
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT rolling_balls_crush 1

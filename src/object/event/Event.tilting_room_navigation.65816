@@ -1,0 +1,7 @@
+/**
+* Tilting Room navigation prompts and wrong-door fallbacks.
+* param1: navigation branch id; param2: fire/fall timeout flag.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT tilting_room_navigation 2

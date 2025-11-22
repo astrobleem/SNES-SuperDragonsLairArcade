@@ -1,0 +1,7 @@
+/**
+* Rolling Balls color/size prompt driven by chapter params.
+* param1: ball color id; param2: sprite scale/size id.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT rolling_balls_ball 2
