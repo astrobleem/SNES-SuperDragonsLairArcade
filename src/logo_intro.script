@@ -1,0 +1,57 @@
+
+        SCRIPT logo_intro
+.ACCU 16
+.INDEX 16
+
+  .def objLogoBg hashPtr.1
+  .def objBrightness hashPtr.2
+
+  NEW Brightness.CLS.PTR objBrightness
+
+  lda #BRIGHTNESS.NONE
+  CALL Brightness.set.MTD objBrightness
+
+  lda.w #OBJECT.PROPERTIES.isChapter
+  jsr abstract.Iterator.setProperties
+  jsr abstract.Iterator.killOthers
+
+  lda.w #OBJECT.PROPERTIES.isEvent
+  jsr abstract.Iterator.kill.byProperties
+
+  sep #$20
+  lda.b #BGMODE_MODE_1 | BGMODE_PRIORITY_LAYER_3
+  sta.w ScreenMode
+  lda.w MainScreen
+  and.b #(T_BG1_ENABLE | T_BG2_ENABLE | T_BG3_ENABLE | T_BG4_ENABLE) ~$ff
+  sta.w MainScreen
+
+  rep #$31
+
+  NEW Background.generic.CLS.PTR objLogoBg BG.LAYER.0 BG.logo.PTR
+
+  lda #BRIGHTNESS.FULL
+  CALL Brightness.fadeTo.MTD objBrightness
+
+  jsr SavePC
+
+  CALL Brightness.isDone.MTD objBrightness
+  bcs +
+    rts
++
+
+  lda #BRIGHTNESS.NONE
+  CALL Brightness.fadeTo.MTD objBrightness
+
+  jsr SavePC
+  CALL Brightness.isDone.MTD objBrightness
+
+  bcs +
+    rts
++
+
+  CALL Background.generic.kill.MTD objLogoBg
+
+  NEW Script.CLS.PTR oopCreateNoPtr title_screen
+
+  rts
+
