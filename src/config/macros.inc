@@ -766,6 +766,11 @@ sta.w ((\@*2)~$ff)&$ff,x
 ;msu1 chapter event definition for auto-generated chapter event script files
 ;calls event
 ;macro parameters: \1: event name \2: event startframe(chapter-relative) \3: event endframe(chapter-relative) \4: result(what action to trigger when event completes) \5: result target(parameter to \4) \6,\7,\8: parameters, 0 if void
+;argument order inside event instances is always:
+;  startframe (OBJECT.CALL.ARG.1,s)
+;  endframe   (OBJECT.CALL.ARG.2,s)
+;  result     (OBJECT.CALL.ARG.3,s)
+;  resultTarget (OBJECT.CALL.ARG.4,s)
 .macro EVENT
 
   lda.w #\2
@@ -789,6 +794,29 @@ sta.w ((\@*2)~$ff)&$ff,x
 
 
 
+.endm
+
+;helper macros to reduce script boilerplate for common event patterns
+.macro EVENT_ACTION_PRIMARY startframe endframe result target
+  ; Dirk's signature sword/interaction cue (button A)
+  EVENT Event.accelerate \1 \2 \3 \4
+.endm
+
+.macro EVENT_ACTION_DEFEND startframe endframe result target
+  ; Dirk's defensive/duck cue (button B)
+  EVENT Event.brake \1 \2 \3 \4
+.endm
+
+.macro EVENT_DIRECTION dir startframe endframe result target
+  EVENT Event.direction_\1 \2 \3 \4 \5
+.endm
+
+.macro EVENT_CUTSCENE_FIRE_AND_FORGET name startframe endframe
+  EVENT Event.\1 \2 \3 EventResult.none 0
+.endm
+
+.macro EVENT_RESTART_FROM_CHECKPOINT startframe endframe
+  EVENT Event.cutscene.start_dead \1 \2 EventResult.lastcheckpoint 0
 .endm
   ;parameters inside inside instanciated object:
   ;OBJECT.CALL.ARG.4,s	chapter id (first script parameter)

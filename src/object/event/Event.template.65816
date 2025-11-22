@@ -1,0 +1,65 @@
+/**
+* Shared helper routines for interactive timeline events.
+* Provides minimal init/play/kill helpers used by multiple Event.* classes.
+*/
+.include "src/object/event/abstract.Event.h"
+
+.section "Event.template"
+
+; copy common call arguments into the event struct and reset age counter
+Event.template.initCommon:
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  stz this.age
+  rts
+
+; wait until the timeline reaches the event start frame, then tick age
+; @return c<bool>  set when execution may continue for this frame
+Event.template.waitTimeline:
+  rep #$31
+  lda.b event.startFrame
+  jsr GLOBAL.checkFrameReached
+  bcs +
+    clc
+    rts
++
+  inc this.age
+  sec
+  rts
+
+; trigger the configured result if an unexpected input was pressed
+; @param a<uint16> mask to validate against core.input.get.trigger
+; @return c<bool>  set when the result routine executed
+Event.template.triggerOnWrongInput:
+  rep #$31
+  pha
+  ldx #INPUT.DEVICE.ID.0
+  jsr core.input.get.trigger
+  and 1,s
+  beq +
+    jsr abstract.Event.triggerResult
+    pla
+    sec
+    rts
++
+  pla
+  clc
+  rts
+
+; default kill helper shared by multiple events
+Event.template.kill:
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+.ends
