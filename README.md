@@ -16,7 +16,7 @@ The game translates the battle-tested RoadBlaster engine into a faithful, MSU-1�
 
 - Chapter XMLs in `data/events/` capture the current Dragon’s Lair scene list (e.g., `crypt_creeps`, `rolling_balls`, `throne_room`).
 - Root engine scripts are now documented with theming guidance in `src/README.md`, including notes to retheme remaining martial-arts SFX on the title screen.
-- Chapter event coverage now spans 516 chapters; the inventory calls out 2 unique XML event types, 118 chapter markers, 18 implemented object types, and 95 unmapped markers that still need handlers.
+- Chapter event coverage now spans 516 chapters; the inventory calls out 2 unique XML event types, 118 chapter markers, 18 implemented object types, and 79 unmapped markers after adding cutscene handlers for attract mode, early chapter beats, and common death/failure scenes.
 
 🎮 Prompt Control Standard
 
