@@ -39,6 +39,7 @@
 .include "src/main.script"
 .include "src/none.script"
 .include "src/title_screen.script"
+.include "src/logo_intro.script"
 .include "src/hall_of_fame.script"
 .include "src/msu1.script"
 .include "src/score_entry.script"

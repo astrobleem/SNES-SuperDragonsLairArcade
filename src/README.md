@@ -4,11 +4,12 @@ This directory holds the engine- and flow-control scripts that wire the core sta
 
 ## File guide
 - `main.script` bootstraps MSU1 state, loads persisted scores, and spawns the MSU1 management script for later scenes.
+- `msu1.script` uploads the MSU1 sample pack, shows the MSU1 splash background, and transitions to `logo_intro` when the player continues.
+- `logo_intro.script` handles the post-MSU1 splash transition by briefly showing the logo background, fading back to black, and spawning the title sequence.
 - `title_screen.script` builds the title presentation (logo zoom, palette rotation, intro sound effects) and hands off to `level1` after user input and cleanup.
 - `hall_of_fame.script` renders the high-score list, plays the attract-track audio, and waits for user dismissal before returning to the MSU1 intro.
 - `level_complete.script` shows chapter completion text, displays the player's score, and branches to the next level script after user confirmation.
 - `score_entry.script` runs the post-game name entry sequence, persists the high-score table, and returns to the MSU1 intro sequence.
-- `msu1.script` uploads the MSU1 sample pack, shows the MSU1 splash background, and transitions to `logo_intro` when the player continues.
 - `none.script` is a placeholder that currently errors if invoked.
 
 ## Theming and canonical content review

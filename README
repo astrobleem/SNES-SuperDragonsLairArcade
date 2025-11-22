@@ -252,7 +252,7 @@ Initial program flow:
 
 -after that, control is passed to ./src/msu1.script, which instanciates
   audio interfaces, displays and then passes control
-  to ./src/data/chapters/logo_intro/chapter.script.
+  to ./src/logo_intro.script for the splash transition into the title.
 
 -finally, all further game action is controlled by events in currently
  active chapter scripts, which are located in ./src/data/chapters/ and
