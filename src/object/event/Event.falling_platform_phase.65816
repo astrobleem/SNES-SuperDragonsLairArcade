@@ -1,0 +1,7 @@
+/**
+* Falling Platform phase handler across long/short/vestibule paths.
+* param1: length flag; param2: jump-set or landing variant id.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT falling_platform_phase 2

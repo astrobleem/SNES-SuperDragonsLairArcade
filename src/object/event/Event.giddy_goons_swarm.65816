@@ -1,0 +1,7 @@
+/**
+* Giddy Goons swarm management and stair/upper-wave prompts.
+* param1: wave id; param2: climb/approach cue selector.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT giddy_goons_swarm 2

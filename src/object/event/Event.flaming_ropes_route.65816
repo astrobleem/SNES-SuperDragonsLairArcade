@@ -1,0 +1,7 @@
+/**
+* Flaming Ropes route selection and platform sliding cues.
+* param1: rope index; param2: slide speed/variant flag.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT flaming_ropes_route 2

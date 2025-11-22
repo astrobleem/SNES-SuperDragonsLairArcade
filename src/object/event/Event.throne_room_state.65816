@@ -1,0 +1,7 @@
+/**
+* Throne Room hazard/jump state tracker.
+* param1: electrified target id; param2: jump sequence index.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT throne_room_state 2

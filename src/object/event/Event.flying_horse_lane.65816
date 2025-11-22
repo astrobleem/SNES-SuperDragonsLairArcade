@@ -1,0 +1,7 @@
+/**
+* Flying Horse fire-lane progression.
+* param1: lane/fire index; param2: damage timing id.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT flying_horse_lane 2

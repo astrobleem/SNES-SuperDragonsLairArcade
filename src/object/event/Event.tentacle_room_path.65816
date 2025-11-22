@@ -1,0 +1,7 @@
+/**
+* Tentacle Room escape routing (door/stairs/table/weapon rack).
+* param1: selected path id; param2: duel/war state flag.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT tentacle_room_path 2

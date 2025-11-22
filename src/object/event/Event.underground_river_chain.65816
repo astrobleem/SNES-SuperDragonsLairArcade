@@ -1,0 +1,7 @@
+/**
+* Underground River chain grab/bounce routing.
+* param1: chain target id; param2: fail-state flag.
+*/
+.include "src/object/event/abstract.Event.chapter_template.h"
+
+DEFINE_TIMELINE_EVENT underground_river_chain 2
