@@ -1,6 +1,7 @@
 /**
-* Dirk's defensive prompt (duck / block / sidestep).
-* Uses button B; button A counts as an incorrect aggressive tap.
+* Dirk's downward brake/duck prompt (D-pad down).
+* RoadBlasters-era name retained for compatibility; prefer the down
+* direction standard over this deprecated event label.
 */
 .include "src/object/event/Event.brake.h"
 .section "Event.brake"
@@ -27,17 +28,17 @@
   jsr Event.template.waitTimeline
   bcc +
 
-  lda #JOY_BUTTON_A
+  lda #JOY_DIR_UP
   jsr Event.template.triggerOnWrongInput
   bcs +
 
   ;kill self if player pressed appropriate button
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.press
-  and.w #JOY_BUTTON_B
+  and.w #JOY_DIR_DOWN
   beq ++
       jsr core.input.get.trigger
-      and.w #JOY_BUTTON_B
+      and.w #JOY_DIR_DOWN
       beq +++
         lda this.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT
