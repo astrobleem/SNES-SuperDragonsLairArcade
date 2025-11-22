@@ -113,6 +113,9 @@ OBJID.Event.enter_room_down db
 OBJID.Event.enter_room_upleft db
 OBJID.Event.exit_room db
 OBJID.Event.game_over db
+OBJID.Event.room_transition db
+OBJID.Event.seq_generic db
+OBJID.Event.direction_generic db
 OBJID.Event.hide_dash db
 OBJID.Event.touch db
 OBJID.Event.target db
@@ -206,14 +209,17 @@ OopClassLut:
     PTRLONG OopClassLut Event.enter_room_upleft.CLS
     PTRLONG OopClassLut Event.exit_room.CLS
     PTRLONG OopClassLut Event.game_over.CLS
+    PTRLONG OopClassLut Event.room_transition.CLS
+    PTRLONG OopClassLut Event.seq_generic.CLS
     PTRLONG OopClassLut Event.hide_dash.CLS
     PTRLONG OopClassLut Event.touch.CLS
     PTRLONG OopClassLut Event.target.CLS
     PTRLONG OopClassLut Event.checkpoint.CLS
-	PTRLONG OopClassLut Event.confirm.CLS
-	PTRLONG OopClassLut Event.show_help.CLS
-	PTRLONG OopClassLut Event.direction_right.CLS
-	PTRLONG OopClassLut Event.direction_left.CLS
+        PTRLONG OopClassLut Event.confirm.CLS
+        PTRLONG OopClassLut Event.show_help.CLS
+        PTRLONG OopClassLut Event.direction_generic.CLS
+        PTRLONG OopClassLut Event.direction_right.CLS
+        PTRLONG OopClassLut Event.direction_left.CLS
 	PTRLONG OopClassLut Event.accelerate.CLS
 	PTRLONG OopClassLut Event.brake.CLS
 	PTRLONG OopClassLut Event.shake.CLS
