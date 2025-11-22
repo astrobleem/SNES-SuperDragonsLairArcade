@@ -1,0 +1,110 @@
+/**
+* Directional prompt that can be configured for left/right inputs.
+* Shares the input and bonus timing logic with Event.direction_left/right
+* and Event.accelerate while allowing callers to specify the expected
+* direction mask at runtime.
+*/
+.include "src/object/event/Event.direction_generic.h"
+
+.section "Event.direction_generic"
+
+; expected direction mask is passed as OBJECT.CALL.ARG.5
+; optional immediate-branch flag is passed as OBJECT.CALL.ARG.6 (non-zero)
+
+  METHOD init
+  rep #$31
+
+  jsr Event.template.initCommon
+
+  lda OBJECT.CALL.ARG.5,s
+  sta this.direction
+
+  lda #(JOY_DIR_LEFT | JOY_DIR_RIGHT)
+  eor this.direction
+  sta this.wrongMask
+
+  lda OBJECT.CALL.ARG.6,s
+  beq +
+    lda #1
+    bra ++
++   lda #0
++  sta this.branchImmediate
+  stz this.hasTriggered
+
+  ;choose assets and positioning based on direction mask
+  lda this.direction
+  cmp #JOY_DIR_LEFT
+  beq +
+        NEW Right_arrow.CLS.PTR this.sprite 160 80
+        lda #160
+        sta this.scoreX
+        lda #80
+        sta this.scoreY
+        lda event.endFrame
+        CALL Right_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+        bra ++
+  ;default to left arrow assets
++ NEW Left_arrow.CLS.PTR this.sprite 60 80
+  lda #60
+  sta this.scoreX
+  lda #80
+  sta this.scoreY
++  lda event.endFrame
+  CALL Left_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+
+  NEW Spc.CLS.PTR this.audio
+  lda.w #SAMPLE.0.TURN
+  CALL Spc.SpcPlaySoundEffect.MTD this.audio
+
+  rts
+
+  METHOD play
+  rep #$31
+
+  jsr Event.template.waitTimeline
+  bcc +
+
+  lda this.wrongMask
+  jsr Event.template.triggerOnWrongInput
+  bcs +
+
+  ;kill self if player pressed appropriate button
+  ldx #INPUT.DEVICE.ID.0
+  jsr core.input.get.press
+  and this.direction
+  beq ++
+
+      jsr core.input.get.trigger
+      and this.direction
+      beq +++
+        lda this.age
+        cmp #EVENT.BONUS.EXTRA.TIMEOUT
+        bcs +++
+          lda #PLAYER.BONUS.EXTRA
+          bra ++++
++
+      lda #PLAYER.BONUS.DEFAULT
+++
+        NEW Sprite.score.CLS.PTR oopCreateNoPtr this.scoreX this.scoreY
+    CALL Event.confirm.kill.MTD iterator.self
+        lda this.branchImmediate
+        beq +
+        lda this.hasTriggered
+        bne +
+          jsr abstract.Event.triggerResult
+          lda #1
+          sta this.hasTriggered
+        rts
+
++
+
+  jsr abstract.Event.checkResult
+
++  rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.direction_generic
+.ends
+

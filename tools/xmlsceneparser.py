@@ -328,9 +328,9 @@ class Event():
     self.name = domElement.getAttribute('name')
     self.fps = options.get('fps')
 
-    self.arg0 = ''
-    self.arg1 = ''
-    self.arg2 = ''
+    self.arg0 = '0'
+    self.arg1 = '0'
+    self.arg2 = '0'
 
     timeline = self.__getImmediateChildByTagName(domElement, 'timeline')
     self.timestart = self.__parseTime(timeline.getElementsByTagName('timestart'))    
@@ -359,10 +359,9 @@ class Event():
     if self.type == 'chapter':
       self.arg0 = options.get('chapternumber')
       self.arg1 = self.parameters['cockpit']
-        
-    self.type = self.type if self.type != "direction" else "%s-%s" % (self.type, self.parameters['type'])
-    self.type = self.type if self.type != "macro" else "%s-%s" % (self.type, self.name)
-    
+
+    self.__normalize_type()
+
     self.type = self.__sanitizeName(self.type)
     self.name = self.__sanitizeName(self.name)
     self.result = self.__sanitizeName(self.result)
@@ -397,6 +396,39 @@ class Event():
 
   def __sanitizeName(self, name):
     return string.replace(name, '-', '_')
+
+  def __normalize_type(self):
+    direction_lut = {
+      'left': 'JOY_DIR_LEFT',
+      'right': 'JOY_DIR_RIGHT',
+      'up': 'JOY_DIR_UP',
+      'down': 'JOY_DIR_DOWN',
+    }
+
+    room_transition_lut = {
+      'enter_room': 0,
+      'enter_room_left': 1,
+      'enter_room_right': 2,
+      'enter_room_up': 3,
+      'enter_room_down': 4,
+      'enter_room_upleft': 5,
+      'start_alive': 6,
+      'start_dead': 7,
+    }
+
+    if self.type == 'direction' and 'type' in self.parameters:
+      direction = self.parameters['type']
+      if direction in direction_lut:
+        self.type = 'direction_generic'
+        self.arg0 = direction_lut[direction]
+    elif self.type in room_transition_lut:
+      self.arg0 = room_transition_lut[self.type]
+      self.type = 'room_transition'
+    elif self.type.startswith('seq') and self.type[3:].isdigit():
+      self.arg0 = self.type[3:]
+      self.type = 'seq_generic'
+    elif self.type == "macro":
+      self.type = "%s-%s" % (self.type, self.name)
     
 class UserOptions():
   def __init__( self, args, defaults ):

@@ -1,0 +1,57 @@
+/**
+* Simple timeline event that can represent any seqN* marker.
+* It reuses the base cutscene behavior while exposing the sequence id as
+* a parameter and optionally branching immediately on activation.
+*/
+.include "src/object/event/Event.seq_generic.h"
+
+.section "Event.seq_generic"
+
+; sequence id is passed as OBJECT.CALL.ARG.5
+; optional immediate-branch flag is passed as OBJECT.CALL.ARG.6 (non-zero)
+
+  METHOD init
+  rep #$31
+
+  jsr Event.template.initCommon
+
+  lda OBJECT.CALL.ARG.5,s
+  sta this.sequenceId
+
+  lda OBJECT.CALL.ARG.6,s
+  beq +
+    lda #1
+    bra ++
++   lda #0
++  sta this.branchImmediate
+  stz this.hasTriggered
+
+  rts
+
+  METHOD play
+  rep #$31
+
+  jsr Event.template.waitTimeline
+  bcc +
+
+  lda this.branchImmediate
+  beq +
+  lda this.hasTriggered
+  bne +
+    jsr abstract.Event.triggerResult
+    lda #1
+    sta this.hasTriggered
+
++ jsr abstract.Event.checkResult
+
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.seq_generic
+.ends
+
