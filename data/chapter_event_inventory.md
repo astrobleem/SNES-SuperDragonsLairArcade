@@ -8,7 +8,7 @@ This file summarizes the event types referenced in chapter script resources and 
 - Unique event types referenced: 2
 - Chapter markers referenced: 118
 - Implemented event object types: 18
-- Referenced entries without implemented handlers: 95
+- Referenced entries without implemented handlers: 79
 
 ## Implemented event object types
 
@@ -50,19 +50,14 @@ This file summarizes the event types referenced in chapter script resources and 
 - **balls_red_ball** – rolling_balls_red_ball
 - **big_ball_crushes** – rolling_balls_big_ball_crushes
 - **bounce_to_chain** – underground_river_bounce_to_chain
-- **burned_to_death** – alice_room_burned_to_death, flying_horse_burned_to_death
 - **captured_by_ghouls** – crypt_creeps_captured_by_ghouls
 - **creeps_enter_crypt** – crypt_creeps_enter_crypt
 - **creeps_jumped_skulls** – crypt_creeps_jumped_skulls
 - **creeps_jumped_slime** – crypt_creeps_jumped_slime
 - **crushed_by_hand** – crypt_creeps_crushed_by_hand
 - **death_by_door** – tentacle_room_squeeze_to_death_by_door
-- **dragons_lair_endgame** – the_dragons_lair_endgame
 - **eaten_by_skulls** – crypt_creeps_eaten_by_skulls
 - **eaten_by_slime** – crypt_creeps_eaten_by_slime
-- **fall_to_death** – flaming_ropes_fall_to_death, giddy_goons_fall_to_death
-- **falls_to_death** – tilting_room_falls_to_death
-- **fell_to_death** – falling_platform_long_fell_to_death, falling_platform_short_fell_to_death, vestibule_fell_to_death
 - **flaming_ropes_rope1** – flaming_ropes_rope1
 - **flaming_ropes_rope2** – flaming_ropes_rope2
 - **flaming_ropes_rope3** – flaming_ropes_rope3
@@ -74,7 +69,6 @@ This file summarizes the event types referenced in chapter script resources and 
 - **horse_hit_pillar** – flying_horse_hit_pillar
 - **horse_second_fire** – flying_horse_second_fire
 - **horse_third_fire** – flying_horse_third_fire
-- **introduction_castle_exterior** – introduction_castle_exterior
 - **jump_to_door** – tentacle_room_jump_to_door
 - **jump_to_stairs** – tentacle_room_jump_to_stairs
 - **jump_to_table** – tentacle_room_jump_to_table
@@ -85,11 +79,8 @@ This file summarizes the event types referenced in chapter script resources and 
 - **left_tentacle_grabs** – tentacle_room_left_tentacle_grabs
 - **long_crash_landing** – falling_platform_long_crash_landing
 - **long_missed_jump** – falling_platform_long_missed_jump
-- **mode_attract_movie** – attract_mode_attract_movie
-- **mode_insert_coins** – attract_mode_insert_coins
 - **one_before_swarm** – giddy_goons_fight_off_one_before_swarm
 - **overpowered_by_skulls** – crypt_creeps_overpowered_by_skulls
-- **pit_in_ground** – rolling_balls_pit_in_ground
 - **river_boulders_crash** – underground_river_boulders_crash
 - **river_boulders_crash2** – underground_river_boulders_crash2
 - **river_boulders_crash3** – underground_river_boulders_crash3
@@ -109,7 +100,6 @@ This file summarizes the event types referenced in chapter script resources and 
 - **river_third_rapids** – underground_river_third_rapids
 - **river_third_whirlpools** – underground_river_third_whirlpools
 - **river_whirlpools_crash** – underground_river_whirlpools_crash
-- **room_catches_fire** – tilting_room_catches_fire
 - **room_drinks_potion** – alice_room_drinks_potion
 - **room_electrified_floor** – throne_room_electrified_floor
 - **room_electrified_sword** – throne_room_electrified_sword
@@ -117,12 +107,7 @@ This file summarizes the event types referenced in chapter script resources and 
 - **room_first_jump** – throne_room_first_jump
 - **room_jumps_back** – tilting_room_jumps_back
 - **room_jumps_forward** – tilting_room_jumps_forward
-- **room_on_throne** – throne_room_on_throne
 - **room_second_jump** – throne_room_second_jump
-- **room_sucked_in** – wind_room_sucked_in
-- **room_wrong_door** – tilting_room_wrong_door
-- **ropes_burns_hands** – flaming_ropes_burns_hands
-- **ropes_misses_landing** – flaming_ropes_misses_landing
 - **ropes_platform_sliding** – flaming_ropes_platform_sliding
 - **second_jump_set** – falling_platform_long_second_jump_set
 - **short_crash_landing** – falling_platform_short_crash_landing
@@ -133,6 +118,5 @@ This file summarizes the event types referenced in chapter script resources and 
 - **swarm_of_goons** – giddy_goons_swarm_of_goons
 - **third_jump_set** – falling_platform_long_third_jump_set
 - **to_weapon_rack** – tentacle_room_jump_to_weapon_rack
-- **trapped_in_wall** – bower_trapped_in_wall
 - **two_front_war** – tentacle_room_two_front_war
 - **vestibule_stagger** – vestibule_stagger
