@@ -1,262 +1,95 @@
-Super Dragon's Lair Arcade v1.0 sourcecode for Super Nintendo
-Converted from Super Road Blaster by Matthias "d4s" Nagler <matt@dforce3000.de>
+Super Dragon's Lair Arcade
+==========================
 
-Please note:
-This release enables you to build the game ROM file, but does not build msu datafile
-& msu audio files by default.
-The tools & provisions to build these are there,
-but have been disabled because they require the original video file from the iPhone
-version of the game and also because the building will take ages, as the conversion
-tools are written in python and not optimized at all.
-Therefore, these files will have to be taken & copied from the regular release of
-the game instead.
+Source code for the Super Nintendo retheme of RoadBlaster into Dragon's Lair. The game builds a fully playable SNES ROM targeting real NTSC hardware with MSU-1 audio/video on SD2SNES/FXPAK Pro.
 
-Legacy RoadBlaster manifest XMLs and unused helper Python scripts have been removed
-from version control as part of the Dragon's Lair retheme. Use the curated chapter
-XMLs in ./data/events with the remaining toolchain.
+Current snapshot
+----------------
+- Engine and build scripts are intact from RoadBlaster and produce a working ROM.
+- Dragon's Lair chapter XMLs live in `./data/events` and drive chapter scripts in `./src/data/chapters`.
+- Background audits and sprite prompt notes are documented in `./data/backgrounds/README.md` and `./data/sprites/README.md`.
+- MSU-1 PCM/video assets are not bundled; supply your own Dragon's Lair audio and video captures when packaging chapters.
 
+Requirements to build the game ROM
+----------------------------------
+- OS: Linux is the primary target; WSL works on Windows.
+- Tools:
+  - WLA DX 9.5a available in the folder `wla-dx-9.5-svn`.
+  - Python 2.7.2 (not tested with Python 3+; tools may need adjustments).
+  - `snesbrr` by DMV27 available in the tools folder `snesbrr-2006-12-13`.
 
-Requirements to build game ROM:
--os: linux 
--tools:
-  -WLA DX 9.5a available in the folder wla-dx-9.5-svn
-  -python 2.7.2 (not tested with python 3+! Will probably need adjustments.)
-  -snesbrr by DMV27 available in the tools folder snesbrr-2006-12-13.
+Quick build steps
+-----------------
+1. Download, compile, and install WLA DX 9.5a by Ville Helin (http://www.villehelin.com/wla.html).
+2. Download, compile, and install `snesbrr` by DMV27 (http://www.romhacking.net/utilities/407/).
+3. Install Python 2.7.2. Other versions might work but may require modifications to tools.
+4. Unpack Super Dragon's Lair Arcade source code.
+5. Enter the source folder and run `make` to build the ROM.
+6. Download the regular Super Dragon's Lair Arcade release and manually copy the manifest XML, MSU data file, and PCM sound files into the `./build` folder.
+7. Run the game with an emulator, preferably bsnes v070.
 
+MSU-1 asset packaging
+---------------------
+This release enables you to build the game ROM file but does not build MSU data files by default. The tooling exists to generate MSU video/audio, but it has been disabled because it requires the original video file from the iPhone version of the game and conversion is slow. If you provide Dragon's Lair captures, re-enable the MSU packaging steps and follow the prompts in `tools/xmlsceneparser.py`, `tools/gracon.py`, `tools/animationWriter.py`, and `tools/msu1blockwriter.py`.
 
-Compilation instructions:
+General concept
+---------------
+This game is written purely in 65816 assembler. It uses an abstraction layer inspired by object-oriented programming to enhance flexibility. Resources such as work RAM, video RAM, color palettes, DMA channels, and more are allocated dynamically to optimize usage. The abstraction layer introduces a performance cost and is limited by WLA DX's capabilities.
 
--download, compile & install wla dx 9.5a by Ville Hellin
- (http://www.villehelin.com/wla.html).
+Advantages of representing game systems as objects
+--------------------------------------------------
+- Generate any number of object instances without micro-managing data access. Multiple control scripts can run simultaneously.
+- Group and process objects with shared interfaces. For example, objects implementing the dimension interface can be sorted by z-position for proper visual priority, while score objects can be sorted similarly for high-score lists.
+- Tag properties (for example, `isDash`) allow related objects to move or update in unison without exposing implementation details.
 
--download, compile & install snesbrr by DMV27
- (http://www.romhacking.net/utilities/407/).
+Terminology
+-----------
+- **class**: Defined with the `CLASS` macro, which names methods and public members. Every class has default methods (`init`, `play`, `kill`).
+- **object**: Instantiation of a class. Created with the `NEW` macro, which passes optional parameters to the constructor (`init`) and returns an object hash. Objects persist until explicitly killed; methods are called with the `CALL` macro.
+- **object stack**: List of currently active objects (not a true stack).
+- **object hash**: Unique reference pointing to an object in the object stack; auto-adjusts if the object moves.
+- **object zp**: Private zero-page memory for an object instance, referenced with the `this.` prefix inside object code.
+- **object properties**: Bitflags used to select and group objects (for example, all objects implementing the dimension interface expose position data).
+- **abstract**: Classes that cannot be instantiated but provide methods to nearby objects. For example, `abstract.Sprite.65816` allocates memory and starts sprite animations.
+- **garbage collection**: No implicit GC; objects are kept alive until explicitly killed. Killed objects are marked deleted and removed after the current frame finishes.
+- **script**: An object type that controls game flow (for example, each video chapter, high-score screen, and title screen).
+- **iterator**: Mechanism for iterating over sets of objects by class IDs or properties; each implementing object maintains iterator state.
+- **unit tests**: A small set of unit tests checks core engine behavior.
 
--download, compile & install python 2.7.2. Other versions might work, but might
- require modifications to tools.
+Source folder structure
+-----------------------
+- **data**
+  - `sounds`: Sound effect samples in WAV format; converted to BRR samples.
+  - `songs`: Music in ProTracker MOD format with hardware-driven limitations (sample length/loop points divisible by 16, max size ~50 KB).
+  - `sprites`: Sprite graphics (usually PNG); each file represents a frame in the resulting animation.
+  - `font`: Font graphics files.
+  - `backgrounds`: Background graphics files converted into background animation files.
+  - `events`: XML files containing timing and action information for gameplay. These are used to cut up the original video file into chapters and generate script files in `./data/chapters`.
+- **src**
+  - `config`: Global static definitions, macros, and shared includes.
+  - `core`: Core functionality such as booting, IRQ handling, and dynamic memory allocation for WRAM, VRAM, CGRAM, and DMA channels.
+  - `definition`: Aliases for SNES and MSU-1 registers.
+  - `object`: Classes that handle individual parts of the game (background layer types, HDMA effects, MSU1 interface, audio interface, etc.).
+  - `text`: Text variables used throughout the game.
+  - `*.script`: Top-level control scripts.
+- **tools**
+  - `animationWriter.py`: Uses `gracon.py` to write graphics animation files (sprite or backgrounds).
+  - `gracon.py`: Converts graphics to various SNES formats; can optimize tiles and palettes.
+  - `mod2snes.py`: Converts ProTracker MOD files to custom SNES format.
+  - `msu1blockwriter.py`: Creates the MSU1 data file from chapter frames and audio.
+  - `msu1pcmwriter.py`: Converts WAV audio to MSU1 PCM with headers.
+  - `userOptions.py`: Helper for user input handling.
+  - `xmlsceneparser.py`: Parses event XML files and generates chapter scripts and optional frame/audio extraction.
 
--unpack Super Dragon's Lair Arcade sourcecode
+Initial program flow
+--------------------
+- Code in `./src/core/boot.65816` initializes core modules, instantiates `./src/main.script`, and enters the main loop.
+- `./src/main.script` instantiates a copy of the MSU-1 interface and initializes high-score data (from battery-backed SRAM if applicable).
+- Control passes to `./src/msu1.script`, which instantiates audio interfaces, displays the MSU-1 splash, and transitions to `./src/logo_intro.script` for the title sequence.
+- Subsequent gameplay is controlled by events in chapter scripts located in `./src/data/chapters/`, generated from XML files in `./src/data/events/`.
 
--enter source folder, run make
-
--download regular Super Dragon's Lair Arcade release and manually copy manifest xml,
- msu datafile and pcm soundfiles into ./build folder.
-
--run game with emulator, preferably bsnes v070.
-
-
-General concept:
-This game is written purely in 65816-Assembler.
-Apart from that, this game builds upon an abstraction layer that takes ideas
-from object oriented programming intended to enhance flexibility.
-Also, most of the used resources such as work RAM, video RAM, color palettes,
-DMA channels and such are allocated dynamically to optimize resource usage and
-lessen the burden of resource micro-management.
-However, the abstraction layer also imposes a performance drop.
-The whole abstraction concept is severely limited by WLA DX's capabilities.
-Also, you'll find that I use many terms familiar from object oriented programming,
-but use them to adress functionality that deviates from the commonly accepted meaning.
-
-
-Some advantages of representing almost everything in the game, from textlayers,
-sound interface, scores, sprites and even keypress events by objects:
-
--it's possible to generate any number of instances of objects whenever required
- without having to micro-manage data access.
- For example, it's possible to have any number of active control scripts operating
- individually at the same time.
-
--objects presenting uniform interfaces can be grouped, selected and processed in a
- generalized fashion.
- For example, one might select all objects implementing the dimension interface
- (i.e. objects that have a visible representation onscreen) and sort them by their
- z-position for correct visual priority.
- The same sorting method can equally be employed to sort highscores by selecting all
- objects of type score.
- Another example: In Super Road Blaster, the dashboard during gameplay consists of
- a background layer, a steering wheel sprite and an HDMA effect to switch video modes,
- each represented by an object having a specific property ("isDash").
- By grabbing all objects with that specific property, it's possible to move them
- around in unison, without having to worry about their specific implementation details.
-
-
-Terminology:
--class:
-  -a set of named methods coupled with variable members, grouped under a common class
-   name
-  -defined with CLASS macro, which also denotes all public (=externally accessible)
-   methods.
-  -has at least three default methods (init,play,kill).
-
--object
-  -instanciation of a class, consisting of an entry on the object stack, aswell as
-   a private (=not externally accessible) slice of ram in the zero-page area
-   (some sort of heap) called object zp.  
-  -created with NEW macro, which takes class name and optional parameters passed
-   to the object constructor(method init) and returns object hash (sort of a
-   pointer/reference to instanciated object that gets adjusted automatically
-   if object moves around on object stack).
-  -always has default methods init(constructor, called on instanciation),
-   play(called once every frame), kill(destructor, called upon object deletion).
-  -lives until object is explicitly deleted/killed.
-  -methods of object are called with CALL macro, which takes method, object hash
-   and optional parameters
-
--object stack
-  -despite the name not a stack, but rather a list of currently active objects.
-
--object hash
-  -unique reference/pointer to an object consisting of class id, pointer to object
-   in object stack and instancation counter.
-  -will be generated upon object instanciation, required to call methods on
-   instanciated object.
-  -will be adjusted automatically if object moves around on object stack.
-
--object zp:
-  -block of memory linked to object instance containing objects private member
-   variables.
-  -commonly refered to with prefix "this." inside object code.
-
--object properties:
-  -each object has a set of bitflags called properties that are used to select
-   and group objects.
-   Examples are "isSprite"(representing a sprite onscreen),
-   "isSerializable"(being serializable and subsequently save & loadable from & to
-   battery-backed SRAM), "isHdma"(representing an HDMA effect) etc.
-
--core:
-  -static game-independant core functionality such as IRQ, DMA-channel handling
-   and VRAM/CGRAM allocation.
-
--inheritance
-  -despite the name, there is no inheritance parent/child model between classes at all.
-  -instead, inheritance files contain methods that are by default
-   implicitly "inherited" by any class.
-
--interface
-  -interfaces are predefined methods and variable members that each class
-   implementing the interface in question also implements.
-  -as an example, any class implementing the "dimension"-interface will
-   automatically implement methods and member variables to expose object position.
-
--abstract
-  -abstract classes are classes that may not be instanciated themselves, but
-   provide useful methods useable by other objects in their vicinity.
-   For example, abstract.Sprite.65816 implements a couple of methods to
-   automatically allocate memory and start sprite animations, which are used by
-   all other sprite objects.
-
--garbage collection
-  -there is no implicit garbage collection.
-  -even if nobody holds a pointer (=object hash) to an object, it is kept alive
-   until it is explicitly killed.
-  -a killed object will be marked deleted, then actually removed and its memory
-   freed after all objects in the current frame have had their play-methods triggered.
-
--script
-  -not a separate scripting language, but rather an object of type script controlling
-   logical game flow.
-   For example, each video chapter, the highscore screen and the title screen each
-   have their own script controlling game flow.
-
--iterator
-  -a provision for generically iterating/looping over sets of objects by their
-   class ids or properties.
-  -each object implementing the iterator interface maintains its own iterator state
-   and target variables.
-
--unit tests
-  -a sadly rather incomplete set of unit tests to make sure the engine is working
-   correctly.
-
-
-source folder structure
--data
-  -sounds: sound effect samples in wav-format. Get converted to brr-format samples.
-
-  -songs: music in ProTracker mod-format. A couple of limitations are imposed on
-    these because of hardware limitations. (sample length/loop points must
-    be dividable by 16, maximum filesize limited to ~50kbytes)
-
-  -sprites: folders containing sprite graphics (usually in png format, but other
-    common graphics formats are supported aswell). These get converted to
-    sprite animation files. Each individual graphics file represents a
-    frame in the resulting animation.
-
-  -font: font graphics files
-
-  -backgrounds: Background graphic files, get converted to background animation
-    files (though Super Road Blaster only uses static backgrounds)
-
-  -events: xml files containing timing & action information that drive gameplay.
-    These are used to both cut up the original video file into chapters
-    aswell as generate script files that control gameplay (written to ./data/chapters)
-
--src
-  -config: global static definitions, macros and such that get included in every
-    sourcecode file.
-
-  -core: core functionality such as booting, IRQ handling, dynamic memory allocation
-    for WRAM,VRAM,CGRAM,DMA channels and such.
-
-  -definition: aliases for SNES registers, MSU-1 registers etc.
-
-  -object: contain specific classes of objects that handle individual parts
-    of the game. For example, each background layer type, each HDMA effect,
-    the MSU1 interface, the audio interface and the like are each represented by
-    their own object.
-
-  -text: text variables used throughout the game.
-
-  *.script: top-level control scripts
-
--tools
-  -animationWriter.py: uses gracon.py to write graphics animation files
-    (sprite or backgrounds). Animations consists of multiple graphics frames
-    sharing common palettes (maybe comparable to gif-animations, but without
-    timing information).
-
-  -gracon.py: handles graphics conversion to various SNES formats.
-    Supports a vast array of input file formats. Can output background and
-    sprite graphics. Can optimize graphics (Merge similar-looking tiles)
-    and palettes. Slow.
-
-  -mod2snes.py: converts music in ProTracker mod-format to custom SNES format.
-    A couple of limitations are imposed on these because of hardware limitations.
-    (sample length/loop points must be dividable by 16, maximum filesize limited
-    to ~50kbytes)
-
-  -msu1blockwriter.py: takes video image files in ./data/chapters/* and creates
-    msu1 datafile consisting of chapters which in turn contain video frames in
-    snes format.
-
-  -msu1pcmwriter.py: takes wav-format audio files from ./data/chapters/* and
-    converts them to custom msu1 audio format.
-
-  -userOptions.py: just a couple of helpful stuff to handle user input.
-
-  -xmlsceneparser.py. parses event xml files in ./data/events and generates a
-    folder for each in ./data/chapters containing chapter id, chapter script
-    and (optionally) video frames in png-format and audio data in wav-format.
-    Also optionally triggers ffmpeg to generate chapter video frames from input
-    video in ./data/video and triggers gimp to smoothen out frame graphics to let
-    them compress better using gimp-batch-convert-indexed.scm.
-
-
-Initial program flow:
--first of all, code in ./src/core/boot.65816 is executed, which initializes
-  all core modules, then instanciates script ./src/main.script and enters mainloop.
-
--next, ./src/main.script instanciates a copy of the MSU-1 interface and
-  initializes highscore data (from battery-backed sram if applicable).
-
--after that, control is passed to ./src/msu1.script, which instanciates
-  audio interfaces, displays and then passes control
-  to ./src/logo_intro.script for the splash transition into the title.
-
--finally, all further game action is controlled by events in currently
- active chapter scripts, which are located in ./src/data/chapters/ and
- have been generated from chapter xml files in ./src/data/events/
-
-
-
+Next steps
+----------
+- Replace remaining RoadBlaster background captures identified in `./data/backgrounds/README.md` with Dragon's Lair artwork.
+- Package Dragon's Lair PCM audio and MSU video frames, then re-enable MSU-1 build steps for chapter bundles.
+- Implement and test any missing event object handlers referenced by the curated XMLs to ensure all chapters play correctly.
