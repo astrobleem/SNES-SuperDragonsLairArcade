@@ -8,15 +8,37 @@ compares them against the event object implementations under
 """
 from __future__ import annotations
 
+import re
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 EVENT_DIR = REPO_ROOT / "src" / "object" / "event"
 EVENT_DATA_DIR = REPO_ROOT / "data" / "events"
 OUTPUT_PATH = REPO_ROOT / "data" / "chapter_event_inventory.md"
+
+# Mapping from chapter name suffixes to the generic event handler that powers
+# them. The entries mirror the normalization performed in ``xmlsceneparser.py``
+# so coverage stays aligned between documentation and conversion outputs.
+MARKER_SUFFIX_MAP: Dict[str, str] = {
+    "enter_room_upleft": "room_transition",
+    "enter_room_left": "room_transition",
+    "enter_room_right": "room_transition",
+    "enter_room_up": "room_transition",
+    "enter_room_down": "room_transition",
+    "enter_room": "room_transition",
+    "start_alive": "room_transition",
+    "start_dead": "room_transition",
+    # The generic cutscene event template also defines dedicated classes for
+    # exit/game-over stingers even though they are emitted from the cutscene
+    # file rather than distinct assembly units.
+    "exit_room": "cutscene",
+    "game_over": "cutscene",
+}
+
+SEQ_MARKER_PATTERN = re.compile(r"_seq(\d+)$")
 
 
 def normalize_event_name(name: str) -> str:
@@ -77,9 +99,61 @@ def collect_referenced_events() -> Dict[str, Set[str]]:
     return referenced
 
 
+def extract_chapter_marker(chapter_name: str) -> Tuple[str, Optional[str]]:
+    """Return the marker suffix for a chapter and its mapped handler.
+
+    The function mirrors the suffix-driven normalization used by
+    ``xmlsceneparser.py`` so markers like ``*_enter_room`` and ``*_seq5`` can be
+    attributed to ``Event.room_transition`` and ``Event.seq_generic``
+    respectively. Any suffix that fails to match a known pattern still returns
+    a marker string (typically the trailing three tokens) so missing coverage is
+    easy to report.
+    """
+
+    cleaned = chapter_name.replace("-", "_")
+
+    # Check explicit suffixes first so more specific variants win before the
+    # base ``enter_room``.
+    for suffix in sorted(MARKER_SUFFIX_MAP, key=len, reverse=True):
+        if cleaned.endswith(f"_{suffix}"):
+            return suffix, MARKER_SUFFIX_MAP[suffix]
+
+    seq_match = SEQ_MARKER_PATTERN.search(cleaned)
+    if seq_match:
+        return f"seq{seq_match.group(1)}", "seq_generic"
+
+    parts = cleaned.split("_")
+    if len(parts) >= 3:
+        fallback = "_".join(parts[-3:])
+    elif len(parts) == 2:
+        fallback = "_".join(parts[-2:])
+    else:
+        fallback = cleaned
+
+    return fallback, None
+
+
+def collect_chapter_markers() -> Dict[str, Dict[str, object]]:
+    """Extract chapter markers and the chapters that reference them."""
+
+    markers: Dict[str, Dict[str, object]] = {}
+    for xml_path in EVENT_DATA_DIR.glob("*.xml"):
+        tree = ET.parse(xml_path)
+        root = tree.getroot()
+        chapter_name = (root.get("name") or xml_path.stem).replace("-", "_")
+
+        marker, handler = extract_chapter_marker(chapter_name)
+        entry = markers.setdefault(marker, {"chapters": set(), "handler": handler})
+        entry["chapters"].add(chapter_name)
+        entry.setdefault("handler", handler)
+
+    return markers
+
+
 def render_markdown(
     chapters_analyzed: int,
     referenced_events: Dict[str, Set[str]],
+    chapter_markers: Dict[str, Dict[str, object]],
     implemented_classes: List[str],
 ) -> str:
     implemented_normalized = {normalize_event_name(name) for name in implemented_classes}
@@ -87,6 +161,13 @@ def render_markdown(
         event_type: chapters
         for event_type, chapters in referenced_events.items()
         if normalize_event_name(event_type) not in implemented_normalized
+    }
+
+    marker_missing = {
+        marker: info
+        for marker, info in chapter_markers.items()
+        if not info.get("handler")
+        or normalize_event_name(str(info["handler"])) not in implemented_normalized
     }
 
     lines: List[str] = [
@@ -101,8 +182,12 @@ def render_markdown(
         "",
         f"- Chapters analyzed: {chapters_analyzed}",
         f"- Unique event types referenced: {len(referenced_events)}",
+        f"- Chapter markers referenced: {len(chapter_markers)}",
         f"- Implemented event object types: {len(implemented_classes)}",
-        f"- Referenced event types not yet implemented: {len(referenced_missing)}",
+        (
+            "- Referenced entries without implemented handlers: "
+            f"{len(referenced_missing) + len(marker_missing)}"
+        ),
         "",
         "## Implemented event object types",
         "",
@@ -112,13 +197,27 @@ def render_markdown(
         lines.append(f"- {name}")
 
     lines.append("")
+    lines.append("## Chapter marker → event handler mapping")
+    lines.append("")
+    lines.append("| Chapter marker | Generic handler | Notes |")
+    lines.append("| --- | --- | --- |")
+    lines.append("| enter_room*, start_* | room_transition | Transition id passed as handler argument |")
+    lines.append("| seq* | seq_generic | Sequence id derived from the numeric suffix |")
+    lines.append("| exit_room, game_over | cutscene | Uses the cutscene template-defined helpers |")
+    lines.append("")
+
     lines.append("## Referenced chapter event types not implemented")
     lines.append("")
 
-    if referenced_missing:
+    if referenced_missing or marker_missing:
         for event_type, chapters in sorted(referenced_missing.items()):
             scenes = ", ".join(sorted(chapters))
             lines.append(f"- **{event_type}** – {scenes}")
+        for marker, info in sorted(marker_missing.items()):
+            scenes = ", ".join(sorted(info["chapters"]))
+            handler = info.get("handler")
+            handler_note = f" (mapped to {handler})" if handler else ""
+            lines.append(f"- **{marker}** – {scenes}{handler_note}")
     else:
         lines.append("- None – every referenced event type has an implementation.")
 
@@ -129,9 +228,12 @@ def render_markdown(
 def main() -> None:
     implemented_classes = collect_event_classes()
     referenced_events = collect_referenced_events()
+    chapter_markers = collect_chapter_markers()
     chapters_analyzed = len(list(EVENT_DATA_DIR.glob("*.xml")))
 
-    markdown = render_markdown(chapters_analyzed, referenced_events, implemented_classes)
+    markdown = render_markdown(
+        chapters_analyzed, referenced_events, chapter_markers, implemented_classes
+    )
     OUTPUT_PATH.write_text(markdown, encoding="utf-8")
 
 
