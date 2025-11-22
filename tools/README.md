@@ -12,7 +12,6 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | `mod2snes.py` | Converts ProTracker MOD files into SNES-friendly SPC module format with BRR samples. | `.mod` tracker modules. | `.spcmod` binary plus embedded BRR sample data. | Legacy music path; bypassed when using MSU1 audio.
 | `msu1blockwriter.py` | Packages chapter folders (converted frames, tilemaps, palettes) and chapter audio into MSU1 data and per-chapter PCM files. | Chapter directories containing frame binaries; associated PCM audio per chapter. | MSU1 data file with scene/frame pointers plus chapter `.pcm` audio streams. | Bundling MSU video/audio chapters for playback.
 | `msu1pcmwriter.py` | Validates a WAV file (stereo, 16-bit, 44.1 kHz) and prepends MSU1 PCM headers with optional loop points. | WAV/RIFF PCM audio. | `.pcm` audio with MSU1 header and loop offset. | Preparing MSU1 background music or chapter audio.
-| `snes_convert.py` | Simple helper to letterbox and palette-reduce PNGs to SNES-friendly dimensions and color counts. | PNG input. | Palette-indexed PNG at 256×224. | Quick background mockups before full tile conversion.
 | `userOptions.py` | Lightweight command-line option parser used by other scripts. | CLI arguments. | Sanitized option dictionary. | Shared helper for Python tooling.
 | `xmlsceneparser.py` | Parses Dragon's Lair iPhone XML to emit scene event lists, frame folders, and audio references. | iPhone XML descriptor plus video/audio paths. | Extracted frame/audio listings written to folders. | Driving chapter/frame extraction ahead of tile conversion and MSU packaging.
 | `lua_scene_exporter.py` | Converts DirkSimple-style `game.lua` scene tables into readable chapter scripts for regression tests. | Trimmed `game.lua` inputs containing `scenes` tables. | Textual `chapter.script` summaries listing sequences, actions, and timeouts. | Validating scene metadata before running full conversion.
@@ -82,15 +81,6 @@ This folder contains the helper utilities used to prepare assets and builds for 
   ```
 * **Pipeline:** Produces MSU1-ready audio streams for chapters or background music.
 
-### snes_convert.py
-* **Purpose:** Quick helper to letterbox arbitrary PNGs to 256×224 and quantize them to a specified palette size using nearest-neighbor scaling.
-* **Inputs/Outputs:** PNG input; indexed PNG output.
-* **Example:**
-  ```bash
-  python3 snes_convert.py art/mockup.png build/mockup-indexed.png --colors 48
-  ```
-* **Pipeline:** Fast preview of how backgrounds will quantize before running `gracon.py` for full tile extraction.
-
 ### userOptions.py
 * **Purpose:** Minimal CLI option parser shared by multiple tools; handles type checking and bounds enforcement for `-option value` pairs.
 * **Inputs/Outputs:** Raw CLI arguments; returns sanitized option values.
@@ -128,7 +118,7 @@ This folder contains the helper utilities used to prepare assets and builds for 
 * **Pipeline:** Core build dependency for the game code and any SPC driver binaries.
 
 ## Planned Tool Usage for Dragon’s Lair
-* **Backgrounds:** Use `snes_convert.py` for quick previews, then `gracon.py` (bg mode) to generate tiles, palettes, and tilemaps.
+* **Backgrounds:** Use `gracon.py` (bg mode) to generate tiles, palettes, and tilemaps for final assets; quick-preview helpers like `snes_convert.py` were removed.
 * **Sprites/Animations:** Prepare sprite sheets with `gracon.py` (sprite mode) and package sequences with `animationWriter.py` for VRAM-ready animation files.
 * **Tilemaps:** `gracon.py` emits tilemaps for both backgrounds and sprites; these feed directly into VRAM layout and MSU1 chapter bundles.
 * **MSU1 Audio/Video:** Convert WAV sources with `msu1pcmwriter.py`, organize chapter frames, and package everything via `msu1blockwriter.py`. `xmlsceneparser.py` supplies frame/audio references.
@@ -142,6 +132,9 @@ This folder contains the helper utilities used to prepare assets and builds for 
 * There is no orchestration script that chains `xmlsceneparser.py` → `gracon.py` → `animationWriter.py`/`msu1blockwriter.py`; running conversions still requires manual per-folder commands.
 * Palette limiting across entire chapters (multiple frames sharing palettes) is manual; a batch palette optimizer would prevent redundant palettes during MSU1 packing.
 * Automated regression checks for tilemap limits (size/VRAM budgets) are missing; conversions currently rely on manual inspection.
+
+## Removed helper scripts
+Legacy helpers that were rarely used—such as `snes_convert.py` and Lua-to-XML generators—were removed alongside the RoadBlaster XML set. Rely on the remaining converters and chapter XMLs in `data/events/` when preparing assets.
 
 ## Platform Notes
 * Python tooling expects Pillow; if using Python 2.7, ensure compatible versions of Pillow/argparse are installed, or run with Python 3 where scripts already work.
