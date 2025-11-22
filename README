@@ -11,6 +11,10 @@ tools are written in python and not optimized at all.
 Therefore, these files will have to be taken & copied from the regular release of
 the game instead.
 
+Legacy RoadBlaster manifest XMLs and unused helper Python scripts have been removed
+from version control as part of the Dragon's Lair retheme. Use the curated chapter
+XMLs in ./data/events with the remaining toolchain.
+
 
 Requirements to build game ROM:
 -os: linux 

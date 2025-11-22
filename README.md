@@ -14,13 +14,14 @@ The game translates the battle-tested RoadBlaster engine into a faithful, MSU-1�
 
 📈 Current Progress
 
-- Scene chapter scripts are staged per encounter in `resources/`, matching the Dragon’s Lair scene list (e.g., `crypt_creeps`, `rolling_balls`, `throne_room`).
+- Chapter XMLs in `data/events/` capture the current Dragon’s Lair scene list (e.g., `crypt_creeps`, `rolling_balls`, `throne_room`).
 - Root engine scripts are now documented with theming guidance in `src/README.md`, including notes to retheme remaining martial-arts SFX on the title screen.
 - Chapter event coverage has been inventoried across 40 scenes; 352 unique event types are referenced, with 14 implemented and 351 still needing object handlers.
 
 🧭 Documentation Map
 
 - `src/README.md` – High-level tour of the boot/title/score/MSU1 scripts plus theming expectations.
+- `data/events/README.md` – Overview of the curated Dragon’s Lair chapter XMLs now tracked in this repo.
 - `data/chapter_event_inventory.md` – Chapter-by-chapter event coverage and gaps to implement in the engine.
 - `tools/README.md` – Python 2.7 tooling notes and converter usage (image, tile, XML, PCM).
 
@@ -39,9 +40,9 @@ We test against both real hardware and accurate emulators.
 📁 Repository Structure
 
 - `src/` – 65816 assembly source (core engine, scene tables, logic).
-- `data/` – Backgrounds, HUD assets, audio, and other converted data. See `data/backgrounds/README.md` for the current audit of RoadBlaster placeholders.
-- `resources/` – Extracted scene scripts organized per Dragon’s Lair encounter (inputs for converters).
-- `tools/` – Utilities for converting images, tiles, maps, audio, XML -> binary.
+- `data/` – Backgrounds, HUD assets, audio, chapter XMLs, and other converted data. See `data/backgrounds/README.md` for the current audit of RoadBlaster placeholders.
+- `data/events/` – Dragon’s Lair chapter XML descriptors used by the toolchain (legacy RoadBlaster XMLs have been removed).
+- `tools/` – Utilities for converting images, tiles, maps, audio, XML -> binary (extraneous helper scripts have been trimmed).
 - `tests/` – ROM tests and automated validation.
 - `makefile` – Full build pipeline (ROM + MSU1).
 - `README.md` – You’re reading it.
@@ -68,7 +69,7 @@ Extract Dragon’s Lair arcade assets
 
 Convert assets into SNES formats using tools in /tools
 
-Replace RoadBlaster data files in /data/
+Replace RoadBlaster data files in /data/ (legacy RoadBlaster XMLs and unused helper scripts have already been removed)
 
 Regenerate scene tables (xml2bin)
 

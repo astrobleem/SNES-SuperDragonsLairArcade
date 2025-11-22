@@ -1,18 +1,10 @@
-# Generated DirkSimple event XMLs
+# Dragon's Lair chapter XMLs
 
-This directory contains XML chapters produced from `tools/game.lua` using the Lua-to-XML converter in `tools/game_lua_to_xml.py`. The files mirror the DirkSimple scene table so the SNES pipeline can ingest the same branching and timing data that `game.lua` uses at runtime.
+This directory now tracks the curated Dragon's Lair chapter XMLs used by the SNES toolchain. The legacy RoadBlaster iPhone XML dumps and the auxiliary Lua-to-XML generator scripts were removed to avoid confusion; the files checked in here are the authoritative descriptors consumed by the conversion tools.
 
-## Regenerating
-Run the converter to rebuild the XML set after editing `game.lua`:
-
-```
-python3 tools/game_lua_to_xml.py --input tools/game.lua --output-dir data/events
-```
-
-Each sequence in the `scenes` table becomes a `<chapter>` file named `scene_sequence.xml` with the timing windows, checkpoints, and branching destinations defined in the Lua source.
 # Event XML Reference
 
-This directory contains the per-chapter XML descriptors that drive the original RoadBlaster/Dragon's Lair asset pipeline. Each file mirrors the format produced by the classic iPhone XML scene dumps so the legacy tooling (for example, `xmlsceneparser.py` and the frame/audio extraction steps) can recreate chapters or alternate XMLs without guessing at tag semantics.
+Each file mirrors the format produced by the classic iPhone XML scene dumps so the legacy tooling (for example, `xmlsceneparser.py` and the frame/audio extraction steps) can recreate chapters or alternate XMLs without guessing at tag semantics.
 
 ## Chapter layout
 - **Root `<chapter>`**: Optional `name` attribute; otherwise the filename defines the chapter name.
@@ -32,11 +24,11 @@ This directory contains the per-chapter XML descriptors that drive the original 
 - Individual events often re-state their own `<timeline>` window inside the chapter range so the tooling can trim per-input snippets or build MSU-1 frame folders with matching offsets.
 
 ## Recreating alternate XMLs
-1. Export or hand-author XMLs in this layout for each chapter you want to feed into the RoadBlaster conversion tools.
+1. Export or hand-author XMLs in this layout for each chapter you want to feed into the conversion tools.
 2. Run `xmlsceneparser.py` with the XML file, output folder, and optional video/audio inputs. It will:
    - Generate `chapter.script`/`chapter.include` references.
    - Slice frames/audio for the chapter when media is provided.
    - Copy any already-converted frame binaries if you point `convertedoutfolder`/`convertedframefolder` at an existing build.
 3. Feed the extracted frames into the usual `gracon.py` → `animationWriter.py`/`msu1blockwriter.py` pipeline.
 
-This documentation should be enough to rebuild the Dragon's Lair event XMLs—or author new ones—using the original RoadBlaster tooling without needing to reverse-engineer the individual files.
+This documentation should be enough to rebuild the Dragon's Lair event XMLs—or author new ones—using the original tooling without needing to reverse-engineer the individual files.
