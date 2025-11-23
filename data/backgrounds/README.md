@@ -4,9 +4,7 @@ The following background sources live under `data/backgrounds/`:
 
 - `hiscore.gfx_bg/Screenshot-RoadBlaster.mp4-39.gfx_bg.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*
 - `hud.gfx_directcolor/hud_xcf.png`
-- `levelcomplete.0.gfx_bg/Screenshot-RoadBlaster.mp4-50.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*
-- `levelcomplete.1.gfx_bg/Screenshot-RoadBlaster.mp4-38.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*
-- `levelcomplete.2.gfx_bg/Screenshot-RoadBlaster.mp4-23.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*
+- `final_rescue.gfx_bg/final_rescue.gfx_bg.txt` *(Dragon's Lair victory screen description)*
 - `logo.gfx_bg/logo.gfx_bg.png`
 - `msu1.gfx_bg/msu1.gfx_bg.png`
 - `scoreentry.gfx_bg/Screenshot-RoadBlaster.mp4-25.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*

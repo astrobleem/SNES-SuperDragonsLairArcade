@@ -1,0 +1,5 @@
+Background: Final Rescue (Victory)
+Target output filename: final_rescue.gfx_bg.png
+Resolution: 256x224 SNES background, 4bpp with up to 8 palettes; bright colors, limited shading.
+Prompt: "Dragon's Lair final rescue scene, Dirk and Daphne embracing in front of a glowing treasure chest, celebratory banner reading 'YOU WIN', 16-bit SNES pixel art, limited palette, 256x224."
+Alignment notes: Keep text and banner at top center; leave lower half for HUD overlays and avoid heavy gradients.
