@@ -1,0 +1,2 @@
+Sound: Dragon Roar (ambient)
+A deep, resonant dragon roar used for dramatic moments (e.g., boss introductions, victory). 8‑bit PCM, SNES‑compatible sample rate.

@@ -1,0 +1,2 @@
+Sound: Turn (left/right)
+Cue for Dirk turning left or right. 8‑bit PCM, SNES‑compatible sample rate.

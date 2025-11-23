@@ -1,0 +1,2 @@
+Sound: Shuriken (throw)
+Cue for Dirk throwing a shuriken. 8‑bit PCM, SNES‑compatible sample rate.

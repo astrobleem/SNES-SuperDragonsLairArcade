@@ -1,0 +1,2 @@
+Sound: OK (confirm)
+This is the generic confirmation cue used after name entry or menu selections. 8‑bit PCM, SNES‑compatible sample rate.

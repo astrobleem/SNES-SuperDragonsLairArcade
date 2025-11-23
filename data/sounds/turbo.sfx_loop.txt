@@ -1,0 +1,2 @@
+Sound: Turbo (legacy)
+This is a legacy RoadBlaster turbo loop sound that is not used in Dragon's Lair. It will be ignored by the engine.
