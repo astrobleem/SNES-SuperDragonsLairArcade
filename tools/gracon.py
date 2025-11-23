@@ -579,23 +579,45 @@ def getOutputFile(options, ext):
 
 def palettizeTiles(tiles, palettes):
     '''replaces direct tile colors with best-matching entries of assigned palette'''
-    return [(tile if tile['refId'] != None else palettizeTile(tile, palettes)) for tile in tiles]
+    # Shared cache across all tiles for performance
+    colorCache = {}
+    result = []
+    for tile in tiles:
+        if tile['refId'] != None:
+            result.append(tile)
+        else:
+            result.append(palettizeTile(tile, palettes, colorCache))
+    return result
 
 
-def findOptimumTilePalette(palettes, pixels):
+def findOptimumTilePalette(palettes, pixels, colorCache=None):
+    if colorCache is None:
+        colorCache = {}
+    
     optimumPalette = {'error': INFINITY}
     for palette in [pal for pal in palettes if pal['refId'] == None]:
         squareError = 0
-        for similarColor in [getSimilarColor(pixel, palette['color']) for scanline in pixels for pixel in scanline]:
-            squareError += similarColor['error'] * similarColor['error']
+        palId = palette['id']
+        for scanline in pixels:
+            for pixel in scanline:
+                # Use cache for color lookups
+                cacheKey = (pixel, palId)
+                if cacheKey in colorCache:
+                    similarColor = colorCache[cacheKey]
+                else:
+                    similarColor = getSimilarColor(pixel, palette['color'])
+                    colorCache[cacheKey] = similarColor
+                squareError += similarColor['error'] * similarColor['error']
         palette['error'] = math.sqrt(squareError)
         optimumPalette = palette if palette['error'] < optimumPalette['error'] else optimumPalette
     return optimumPalette
 
 
-def palettizeTile(tile, palettes):
+def palettizeTile(tile, palettes, colorCache=None):
+    if colorCache is None:
+        colorCache = {}
     # logging.debug('palettizing tile %s' % tile['id'])
-    palette = findOptimumTilePalette(palettes, tile['pixel'])
+    palette = findOptimumTilePalette(palettes, tile['pixel'], colorCache)
 
     indexedScanlines = []
     scanlines = []
@@ -604,7 +626,13 @@ def palettizeTile(tile, palettes):
         indexedPixels = []
         pixels = []
         for pixel in scanline:
-            similarColor = getSimilarColor(pixel, palette['color'])
+            # Use cache for color lookups
+            cacheKey = (pixel, palette['id'])
+            if cacheKey in colorCache:
+                similarColor = colorCache[cacheKey]
+            else:
+                similarColor = getSimilarColor(pixel, palette['color'])
+                colorCache[cacheKey] = similarColor
             indexedPixels.append(palette['color'].index(similarColor['value']))
             pixels.append(similarColor['value'])
         # indexedPixels.append( [getSimilarColorIndex( pixel, palette['color'] ) for pixel in scanline] )
