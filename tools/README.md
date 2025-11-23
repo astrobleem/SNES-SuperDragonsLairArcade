@@ -10,6 +10,7 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | `animationWriter.py` | Packs ordered frame images into a custom sprite animation file with tiles, tilemaps, and palettes. | Indexed or true-color frame images (`.png`, `.gif`, `.bmp`) in a folder. | Custom binary animation bundle (`SP` header) containing tile/palette chunks. | Sprite cutscenes and in-game animations.
 | `debugLog.py` | Helper to recursively log nested data structures for debugging. | Python data structures. | Text log output. | Shared helper for the legacy Python tools.
 | `gfx_converter.py` | **NEW** Unified wrapper for `superfamiconv` or `gracon.py` with consistent output naming. | Any Pillow-supported image (PNG, GIF, etc.). | `.palette`, `.tiles`, `.tilemap` binary files. | Replacement for direct `gracon.py` calls; allows swapping converters without changing build scripts.
+| `jpeg_to_png.py` | Converts JPEG images to PNG with optional colorspace normalization and overwrite protection. | `.jpg`, `.jpeg`. | `.png`. | Quick standalone conversion before SNES-specific processing.
 | `gimp-batch-convert-indexed.scm` | GIMP batch script that converts matching images to indexed palettes with Gaussian blur pre-pass. | Any GIMP-loadable images matching a pattern. | In-place indexed images. | Pre-processing art assets before tile conversion when manual palette control is needed.
 | `gracon.py` | Converts images into SNES bitplane graphics, palettes, and tilemaps for backgrounds or sprites with optional deduplication. | Any Pillow-supported image (PNG, GIF, etc.). | Bitplane tile data, palette data, and tilemaps; optional PNG verification. | Core background/sprite converter for RoadBlaster.
 | `img_processor.py` | **NEW** Resizes and crops images to SNES resolutions with color quantization. | Any Pillow-supported image. | Processed PNG at target resolution with optional color reduction. | Pre-processing artwork to 256x224 and reducing to 16 colors before conversion.
@@ -39,6 +40,15 @@ This folder contains the helper utilities used to prepare assets and builds for 
   - `contain`: Resize to fit within dimensions, pad with background color
   - `stretch`: Resize to exact dimensions ignoring aspect ratio
 * **Pipeline:** First step for processing high-resolution artwork before SNES conversion.
+
+### jpeg_to_png.py
+* **Purpose:** Lightweight converter for turning JPEGs into PNGs with optional colorspace normalization (e.g., force RGBA) and overwrite protection.
+* **Inputs/Outputs:** JPEG input; PNG output.
+* **Example:**
+  ```bash
+  python tools/jpeg_to_png.py --input photos/frame.jpg --colorspace RGBA
+  ```
+* **Pipeline:** Quick prep step when you receive JPEG assets but need lossless PNGs before running `img_processor.py` or `gfx_converter.py`.
 
 ### gfx_converter.py
 * **Purpose:** Unified wrapper for `superfamiconv` or `gracon.py` providing consistent output naming (`.palette`, `.tiles`, `.tilemap`).
