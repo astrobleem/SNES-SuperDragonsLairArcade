@@ -9,11 +9,14 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | --- | --- | --- | --- | --- |
 | `animationWriter.py` | Packs ordered frame images into a custom sprite animation file with tiles, tilemaps, and palettes. | Indexed or true-color frame images (`.png`, `.gif`, `.bmp`) in a folder. | Custom binary animation bundle (`SP` header) containing tile/palette chunks. | Sprite cutscenes and in-game animations.
 | `debugLog.py` | Helper to recursively log nested data structures for debugging. | Python data structures. | Text log output. | Shared helper for the legacy Python tools.
+| `gfx_converter.py` | **NEW** Unified wrapper for `superfamiconv` or `gracon.py` with consistent output naming. | Any Pillow-supported image (PNG, GIF, etc.). | `.palette`, `.tiles`, `.tilemap` binary files. | Replacement for direct `gracon.py` calls; allows swapping converters without changing build scripts.
 | `gimp-batch-convert-indexed.scm` | GIMP batch script that converts matching images to indexed palettes with Gaussian blur pre-pass. | Any GIMP-loadable images matching a pattern. | In-place indexed images. | Pre-processing art assets before tile conversion when manual palette control is needed.
 | `gracon.py` | Converts images into SNES bitplane graphics, palettes, and tilemaps for backgrounds or sprites with optional deduplication. | Any Pillow-supported image (PNG, GIF, etc.). | Bitplane tile data, palette data, and tilemaps; optional PNG verification. | Core background/sprite converter for RoadBlaster.
+| `img_processor.py` | **NEW** Resizes and crops images to SNES resolutions with color quantization. | Any Pillow-supported image. | Processed PNG at target resolution with optional color reduction. | Pre-processing artwork to 256x224 and reducing to 16 colors before conversion.
 | `mod2snes.py` | Converts ProTracker MOD files into SNES-friendly SPC module format with BRR samples. | `.mod` tracker modules. | `.spcmod` binary plus embedded BRR sample data. | Legacy music path; bypassed when using MSU1 audio.
 | `msu1blockwriter.py` | Packages chapter folders (converted frames, tilemaps, palettes) and chapter audio into MSU1 data and per-chapter PCM files. | Chapter directories containing frame binaries; associated PCM audio per chapter. | MSU1 data file with scene/frame pointers plus chapter `.pcm` audio streams. | Bundling MSU video/audio chapters for playback.
 | `msu1pcmwriter.py` | Validates a WAV file (stereo, 16-bit, 44.1 kHz) and prepends MSU1 PCM headers with optional loop points. | WAV/RIFF PCM audio. | `.pcm` audio with MSU1 header and loop offset. | Preparing MSU1 background music or chapter audio.
+| `superfamiconv/` | **NEW** Fast C++ SNES graphics converter (tiles, palettes, maps). | PNG images. | Binary `.chr`/`.map`/`.pal` or custom extensions. | Alternative to `gracon.py`; ~100x faster for large images.
 | `userOptions.py` | Lightweight command-line option parser used by other scripts. | CLI arguments. | Sanitized option dictionary. | Shared helper for Python tooling.
 | `xmlsceneparser.py` | Parses Dragon's Lair iPhone XML to emit scene event lists, frame folders, and audio references. | iPhone XML descriptor plus video/audio paths. | Extracted frame/audio listings written to folders. | Driving chapter/frame extraction ahead of tile conversion and MSU packaging.
 | `lua_scene_exporter.py` | Converts DirkSimple-style `game.lua` scene tables into readable chapter scripts for regression tests. | Trimmed `game.lua` inputs containing `scenes` tables. | Textual `chapter.script` summaries listing sequences, actions, and timeouts. | Validating scene metadata before running full conversion.
@@ -21,6 +24,81 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | `wla-dx-9.5-svn/` | Cross-platform macro assembler/linker suite for 65816/SPC700 and related CPUs. | Assembly source, object/library files. | Object files, linked ROM/SRAM binaries. | Main code build toolchain for SNES ROM and SPC binaries.
 
 ## Tool Details and Usage
+
+### img_processor.py
+* **Purpose:** Resize, crop, and quantize images for SNES target resolutions (typically 256x224). Essential for preparing high-resolution artwork for conversion.
+* **Inputs/Outputs:** Any Pillow-supported image; outputs processed PNG at target dimensions with optional color reduction.
+* **Example:**
+  ```bash
+  # Resize and quantize to 16 colors (4bpp single palette)
+  python tools/img_processor.py --input art/hiscore.png --output processed.png \
+    --width 256 --height 224 --mode cover --colors 16
+  ```
+* **Modes:**
+  - `cover`: Resize to fill dimensions maintaining aspect ratio, then crop center (best for backgrounds)
+  - `contain`: Resize to fit within dimensions, pad with background color
+  - `stretch`: Resize to exact dimensions ignoring aspect ratio
+* **Pipeline:** First step for processing high-resolution artwork before SNES conversion.
+
+### gfx_converter.py
+* **Purpose:** Unified wrapper for `superfamiconv` or `gracon.py` providing consistent output naming (`.palette`, `.tiles`, `.tilemap`).
+* **Inputs/Outputs:** PNG images; binary SNES data files with standardized extensions.
+* **Example:**
+  ```bash
+  # Using superfamiconv (fast)
+  python tools/gfx_converter.py --tool superfamiconv --input image.png \
+    --output-base output_name --bpp 4
+  
+  # Using gracon (slower but compatible)
+  python tools/gfx_converter.py --tool gracon --input image.png \
+    --output-base output_name --bpp 4
+  ```
+* **Pipeline:** Use this instead of calling converters directly to allow easy switching between tools.
+* **Note:** `superfamiconv` is ~100x faster than `gracon.py` for most images.
+
+### superfamiconv
+* **Purpose:** High-performance C++ SNES graphics converter supporting tiles, palettes, and tilemaps.
+* **Inputs/Outputs:** PNG images; binary SNES formats.
+* **Location:** `tools/superfamiconv/superfamiconv.exe` (Windows binary included)
+* **Pipeline:** Called via `gfx_converter.py` wrapper; direct usage not recommended.
+* **Performance:** Processes images in < 1s vs ~96s for `gracon.py`.
+
+## Background Graphics Workflow
+
+For processing background images (e.g., `data/backgrounds/hiscore.gfx_bg/`):
+
+1. **Prepare Image** - Use `img_processor.py` to resize and quantize:
+   ```bash
+   python tools/img_processor.py \
+     --input data/backgrounds/name.gfx_bg/source.png \
+     --output data/backgrounds/name.gfx_bg/name.gfx_bg.png \
+     --width 256 --height 224 --mode cover --colors 16
+   ```
+
+2. **Build System Handles Conversion** - The makefile automatically processes `*.gfx_bg` folders:
+   - `animationWriter.py` finds all PNG files in the folder
+   - Converts them using `gracon.py` with settings from `gfx_bg_flags` variable
+   - Outputs `.animation` file with packed tiles/palette/tilemap
+
+3. **Directory Structure:**
+   ```
+   data/backgrounds/name.gfx_bg/
+     name.gfx_bg.png        ← Processed image (256x224, ≤16 colors)
+     name.gfx_bg.txt        ← Metadata/description
+     name.gfx_bg.png.original  ← Optional backup of source
+   ```
+
+4. **Build Output:**
+   ```
+   build/data/backgrounds/name.gfx_bg.animation  ← Final packaged asset
+   ```
+
+**Key Points:**
+- Use 16 colors max for single palette 4bpp backgrounds
+- Use 128 colors max for 8-palette 4bpp backgrounds (requires `-palettes 8` flag)
+- The build system expects PNG files in `*.gfx_bg/` folders
+- File must be named `<folder_name>.png` (e.g., `hiscore.gfx_bg.png` in `hiscore.gfx_bg/`)
+
 ### animationWriter.py
 * **Purpose:** Convert a folder of ordered frame images into a packed sprite animation binary (`SP` header) containing tiles, palettes, and frame pointers. First frame determines the palette unless overridden.
 * **Inputs/Outputs:** Accepts `.png`, `.gif`, or `.bmp` frames; writes a binary animation file with frame headers, tiles, tilemaps, and palettes.
