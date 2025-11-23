@@ -129,13 +129,15 @@ Several tests include timeout protection (typically 30 seconds) to prevent hangi
 
 ## Known Issues and Considerations
 
-### Python 2→3 Conversion
-All tools were originally written for Python 2 and have been converted to Python 3. Key issues addressed:
-- **gracon.py**: Performance fixes for `checkDuplicateTileFast` and `getSnesPixels`
-- **String/bytes handling**: Proper encoding/decoding in binary file operations
-- **Print statements**: Converted to print functions
+### Python 2→3 Conversion (COMPLETE ✅)
+All tools were originally written for Python 2 and have been successfully migrated to Python 3. Key issues that were fixed:
+- **mod2snes.py**: Fixed bytes/string comparison in MOD file validation and integer division for repeat start calculations  
+- **gracon.py**: Replaced `chr()` with `bytes()` for binary file writes in legacy functions
+- **xmlsceneparser.py**: Fixed integer division in time formatting for ffmpeg commands
+- **String/bytes handling**: Proper encoding/decoding in binary file operations across all tools
+- **Performance**: Optimizations to `gracon.py` for efficient large image processing
 
-Tests help catch regressions from these conversions.
+All tools now run correctly on Python 3.10+. Tests help catch any regressions.
 
 ### Test Isolation
 Tests use pytest's `tmp_path` fixture to ensure:
@@ -189,7 +191,8 @@ Tests are designed to run in CI environments:
 ## Future Test Improvements
 
 - [ ] Add tests for `xmlsceneparser.py` with real XML fixtures
-- [ ] Add tests for `mod2snes.py` with sample MOD files
+- [x] Add tests for `mod2snes.py` with sample MOD files - COMPLETE (uses `trans_atlantic.mod`)
 - [ ] Add performance regression tests for gracon.py
 - [ ] Add integration tests for full pipeline (XML → gracon → animationWriter → MSU1)
 - [ ] Add tests for edge cases (empty frames, oversized images, invalid palettes)
+
