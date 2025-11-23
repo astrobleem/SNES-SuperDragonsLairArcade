@@ -1,0 +1,2 @@
+Sound: Buzz
+Used for error or invalid action.

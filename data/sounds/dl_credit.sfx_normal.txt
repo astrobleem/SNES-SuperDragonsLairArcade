@@ -1,0 +1,2 @@
+Sound: Credit
+Used when a credit is added.

@@ -1,0 +1,25 @@
+# Video files
+data/videos/
+!data/videos/README.md
+
+# Build artifacts
+build/
+*.o
+*.obj
+*.smc
+*.sfc
+*.sym
+*.map
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+env/
+venv/
+
+# OS generated files
+.DS_Store
+Thumbs.db
