@@ -1,15 +1,21 @@
-# Video files
+# Video files (large, user-supplied)
 data/videos/
 !data/videos/README.md
 
 # Build artifacts
 build/
+data/chapters/
 *.o
 *.obj
 *.smc
 *.sfc
 *.sym
 *.map
+
+# Graphics conversion temporary files
+*.tiles
+*.tilemap
+*.palette
 
 # Python
 __pycache__/
@@ -19,6 +25,23 @@ __pycache__/
 .venv/
 env/
 venv/
+*.pyc
+*.pyo
+
+# WLA-DX build artifacts (object files only - keep binaries!)
+tools/wla-dx-9.5-svn/*.o
+tools/wla-dx-9.5-svn/wlalink/*.o
+
+# Test/temporary files
+build.log
+*.log
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # OS generated files
 .DS_Store

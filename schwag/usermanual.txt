@@ -1,0 +1,149 @@
+SUPER DRAGON'S LAIR ARCADE (SNES CD) - INSTRUCTION BOOKLET
+
+TABLE OF CONTENTS
+
+Page 1: The Legend Begins (Story & Characters)
+
+Page 2: Controls (Arcade Style)
+
+Page 3: How to Play (Timing & Cues)
+
+Page 4: Survival Guide (Scene Cheats)
+
+PAGE 1: THE LEGEND RETURNS
+
+Story
+Lead on, Adventurer! Your quest awaits!
+
+Princess Daphne has been kidnapped by the foul dragon Singe and taken to a deadly castle. You are Dirk the Daring, a knight of incredible bravery. You must survive the wizard's traps, slay the dragon, and rescue the princess!
+
+This is not a platformer. This is an interactive cartoon—a faithful recreation of the original 1983 arcade classic, running on your SNES CD hardware (powered by the MSU-1 chip)! You control Dirk's reactions, not his every step. Watch the high-quality animation closely, and when danger strikes, act fast!
+
+Characters
+
+Dirk the Daring: Our clumsy but brave hero.
+
+Princess Daphne: The fair maiden trapped in the dragon's lair.
+
+Singe: The massive dragon guarding the castle's treasure.
+
+The Lizard King: Ruler of the subterranean caverns.
+
+The Black Knight: A heavily armored guardian who demands a duel.
+
+PAGE 2: CONTROLS (ARCADE STYLE)
+
+In this FMV adventure, you do not move Dirk freely around the screen. Instead, you guide him through the movie by pressing the correct direction or the sword button at the precise moment.
+
+The Inputs
+
+Control Pad (D-Pad): Used for movement and directional reactions.
+
+Up: Move Forward / Climb Up / Grab Top Rope
+
+Down: Duck / Crouch / Climb Down / Back Away
+
+Left: Move Left / Jump Left / Dodge Left
+
+Right: Move Right / Jump Right / Dodge Right
+
+Buttons (A, B, X, Y): All face buttons function as the SWORD.
+
+Press any button to Swing Sword / Attack / Draw Weapon.
+
+Start: Pause the game.
+
+Select: Insert Coin / Reset (Depends on configuration).
+
+PAGE 3: FMV CUE GUIDE & TIMING
+
+The difference between life and death is a split second. This version runs on the original arcade logic.
+
+How to Play
+
+Watch the Scene: Dirk walks into a room or situation automatically via the MSU-1 video stream.
+
+Wait for the Cue: A specific object will flash, or a danger will present itself.
+
+React: Press the corresponding direction or Sword button immediately.
+
+The "Flash" System
+The game helps you by briefly flashing yellow on the object you need to interact with or the direction you need to go.
+
+Yellow Flash on a Door/Path/Wall: Move in that direction (Up, Down, Left, or Right).
+
+Yellow Flash on Dirk's Sword: Press the Sword button immediately.
+
+Timing Your Moves
+
+Do Not Spam: Mashing buttons will often cause a "Misstep" (death). Press the button once decisively when you see the cue.
+
+The Window: You must press the button after the cue begins (or just as it flashes) but before the danger hits.
+
+Too Early: Dirk ignores the command (and usually walks off a cliff).
+
+Too Late: Dirk dies (skeletonized, burned, flattened, etc.).
+
+Audio Cues: Listen closely! Thanks to the MSU-1 audio, many visual flashes are accompanied by a distinctive "Beep" or clear musical sting.
+
+PAGE 4: SURVIVAL GUIDE (CHEAT SHEET)
+
+Common Scene Cues
+
+Scene
+
+Visual Cue
+
+Action
+
+The Drawbridge
+
+The castle door flashes or the planks gap.
+
+Up (Enter)
+
+Tentacles (Moat)
+
+Tentacle rises from water on the right.
+
+Sword (Attack it)
+
+Falling Platform
+
+The wind blows Dirk's hair.
+
+Opposite Direction of wind
+
+The Snake Room
+
+Snakes drop; Sword flashes.
+
+Sword (Attack)
+
+The Whirlpools
+
+Water spins rapidly in front of the boat.
+
+Left/Right (Steer away)
+
+The Smithy
+
+Weapons fly off the rack toward you.
+
+Sword (Block/Parry)
+
+Checkerboard Knight
+
+The floor panel flashes electricity.
+
+Jump (Direction of safe panel)
+
+Singe the Dragon
+
+Singe inhales deeply (fire breath).
+
+Left/Right (Hide behind pillar)
+
+GAME OVER?
+
+Don't give up! Memorization is the key to mastering Dragon's Lair. If you die, remember the move for next time. Good luck, Knight!

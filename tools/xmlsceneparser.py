@@ -84,7 +84,7 @@ def main():
   #debugLogExit(files, 'files')
 
   #enumerate chapters
-    options.manualSet('chapter', os.path.basename(options.get('infile')).split('.')[0].replace('-', '_'))
+  options.manualSet('chapter', os.path.basename(options.get('infile')).split('.')[0].replace('-', '_'))
   options.manualSet('chapternumber', len(existingChapters))
   #options.manualSet('enumchapter', '%02d-%s' % (options.get('chapternumber'), os.path.basename(options.get('infile')).split('.')[0]))
   options.manualSet('chapterfolder', "%s/%s" % (options.get('outfolder'), options.get('chapter')))
@@ -108,8 +108,8 @@ def main():
   chapterEvent = [event for event in events if event.type == 'chapter'].pop()
 
   if chapterEvent.frameend - chapterEvent.framestart <= 0:
-    logging.error( 'No frames in chapter %s.' %  chapterEvent.name)
-    sys.exit(1)
+    logging.warning( 'No frames in chapter %s, creating minimal chapter.' %  chapterEvent.name)
+    # Don't exit, just create a minimal chapter file
 
   chapterIdFileName = "%s/chapter.id.%03d" % (options.get('chapterfolder'), options.get('chapternumber'))
   try:
@@ -358,7 +358,7 @@ class Event():
 
     if self.type == 'chapter':
       self.arg0 = options.get('chapternumber')
-      self.arg1 = self.parameters['cockpit']
+      self.arg1 = self.parameters.get('cockpit', '0')
 
     self.__normalize_type()
 
