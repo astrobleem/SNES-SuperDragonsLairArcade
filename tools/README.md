@@ -1,6 +1,6 @@
 # Tools Overview
 
-This folder contains the helper utilities used to prepare assets and builds for the SNES Dragon's Lair/RoadBlaster pipeline. Most scripts were originally written for Python 2.7 but carry Python 3 shebangs; Pillow is required for image tools, and audio scripts rely on the Python standard library. External dependencies such as GIMP (for batch palette conversion) and WLA-DX (for assembly) are included where possible.
+This folder contains the helper utilities used to prepare assets and builds for the SNES Dragon's Lair/RoadBlaster pipeline. The scripts are written for Python 3; Pillow is required for image tools, and audio scripts rely on the Python standard library. External dependencies such as GIMP (for batch palette conversion) and WLA-DX (for assembly) are included where possible.
 
 ## Quick Reference Table
 | Tool | Purpose | Input Formats | Output Formats | Pipeline Usage |
@@ -137,7 +137,7 @@ This folder contains the helper utilities used to prepare assets and builds for 
 Legacy helpers that were rarely used—such as `snes_convert.py` and Lua-to-XML generators—were removed alongside the RoadBlaster XML set. Rely on the remaining converters and chapter XMLs in `data/events/` when preparing assets.
 
 ## Platform Notes
-* Python tooling expects Pillow; if using Python 2.7, ensure compatible versions of Pillow/argparse are installed, or run with Python 3 where scripts already work.
+* Python tooling expects Pillow; ensure it is installed (`pip install -r requirements.txt`).
 * Audio scripts rely on the standard library (`wave`); no external encoders are bundled.
 * `gimp-batch-convert-indexed.scm` requires a GIMP installation with Script-Fu enabled (`gimp -i -b ...`).
 * `snesbrr-2006-12-13` ships a Windows `snesbrr.exe`; build from `src/` on Linux if native execution is required.

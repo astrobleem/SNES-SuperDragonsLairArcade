@@ -84,7 +84,7 @@ def main():
   #debugLogExit(files, 'files')
 
   #enumerate chapters
-  options.manualSet('chapter', string.replace(os.path.basename(options.get('infile')).split('.')[0], '-', '_'))
+    options.manualSet('chapter', os.path.basename(options.get('infile')).split('.')[0].replace('-', '_'))
   options.manualSet('chapternumber', len(existingChapters))
   #options.manualSet('enumchapter', '%02d-%s' % (options.get('chapternumber'), os.path.basename(options.get('infile')).split('.')[0]))
   options.manualSet('chapterfolder', "%s/%s" % (options.get('outfolder'), options.get('chapter')))
@@ -395,7 +395,7 @@ class Event():
     return "EVENT Event.%s $%04x $%04x EventResult.%s EventTarget.%s" % (self.type, self.__msToFrame(self.timestart), self.__msToFrame(self.timeend), self.result, self.resultname)
 
   def __sanitizeName(self, name):
-    return string.replace(name, '-', '_')
+    return name.replace('-', '_')
 
   def __normalize_type(self):
     direction_lut = {

@@ -89,7 +89,25 @@ LOOKBACK_TILES = 128
 EMPTY_COLOR = 0
 
 
+def print_usage():
+    print("Usage: gracon.py -infile <filename> [options]")
+    print("\nOptions:")
+    print("  -outfilebase <base>   Output filename base (default: infile base)")
+    print("  -bpp <1/2/4/8>        Bits per pixel (default: 4)")
+    print("  -palettes <1-8>       Number of palettes (default: 1)")
+    print("  -mode <bg/sprite>     Mode (default: bg)")
+    print("  -optimize <on/off>    Optimize tiles (default: on)")
+    print("  -verify <on/off>      Verify output (default: off)")
+    print("  -transcol <hex>       Transparent color (default: 0x7C1F)")
+    print("  -tilethreshold <int>  Tile optimization threshold (default: 1)")
+    print("\nExample:")
+    print("  python gracon.py -infile myimage.png -mode bg -bpp 4 -verify on")
+
 def main():
+    if len(sys.argv) == 1 or any(arg in sys.argv for arg in ['-h', '--help', '-help']):
+        print_usage()
+        sys.exit(0)
+
     options = userOptions.Options(sys.argv, {
         'bpp': {
             'value': 4,
@@ -174,7 +192,7 @@ def main():
             'min': 1
         },
     })
-    t0 = time.clock()
+    t0 = time.perf_counter()
 
     if options.get('directcolor'):
         options.set('bpp', 8)
@@ -183,14 +201,30 @@ def main():
     if not options.get('outfilebase'):
         options.set('outfilebase', options.get('infile'))
 
+    if not options.get('infile'):
+        print_usage()
+        sys.exit(1)
+
     inputImage = getInputImage(options, options.get('infile'))
+    logging.info(f"Input image loaded and reduced in {time.perf_counter() - t0:.2f}s")
+    
+    t1 = time.perf_counter()
     tiles = parseTiles(inputImage, options)
+    logging.info(f"Tiles parsed in {time.perf_counter() - t1:.2f}s")
+
+    t2 = time.perf_counter()
     optimizedPalette = parseGlobalPalettes(tiles, options)
+    logging.info(f"Global palettes parsed in {time.perf_counter() - t2:.2f}s")
+
+    t3 = time.perf_counter()
     palettizedTiles = palettizeTiles(tiles, optimizedPalette)
+    logging.info(f"Tiles palettized in {time.perf_counter() - t3:.2f}s")
 
     # stupid hack that ensures certain amount of tiles are never exceeded for any given picture
     if options.get('optimize'):
+        t4 = time.perf_counter()
         optimizedTiles = optimizeTiles(palettizedTiles, options)
+        logging.info(f"Tiles optimized in {time.perf_counter() - t4:.2f}s")
         while len([tile for tile in optimizedTiles if tile['refId'] == None]) > options.get('maxtiles'):
             options.set('tilethreshold', options.get('tilethreshold') + 3)
             logging.info('maxtiles %s exceed, running again with threshold %s.' % (
@@ -203,7 +237,9 @@ def main():
 
     # debugLogTileStatus(optimizedTiles)
 
+    t5 = time.perf_counter()
     writeOutputFiles(optimizedTiles, optimizedPalette, inputImage, options)
+    logging.info(f"Output files written in {time.perf_counter() - t5:.2f}s")
 
     stats = Statistics(optimizedTiles, optimizedPalette, t0)
     logging.info('conversion complete, optimized from %s to %s tiles, %s palettes used. Wasted %s seconds' % (
@@ -230,15 +266,14 @@ def writeOutputFiles(tiles, palettes, image, options):
 
     # writeTiles( outTiles, options )
     tileFile = getOutputFile(options, ext='tiles')
-    [tileFile.write(char) for char in getTileWriteStream(outTiles, options)]
-    tileFile.close
+    tileFile.write(getTileWriteStream(outTiles, options))
+    tileFile.close()
 
     if not options.get('directcolor'):
         # writePalettes( outPalettes, options )
         palFile = getOutputFile(options, ext='palette')
-        [palFile.write(char)
-         for char in getPaletteWriteStream(outPalettes, options)]
-        palFile.close
+        palFile.write(getPaletteWriteStream(outPalettes, options))
+        palFile.close()
         if options.get('verify'):
             writeSamplePalette(outPalettes, options)
 
@@ -246,8 +281,8 @@ def writeOutputFiles(tiles, palettes, image, options):
     tilemapFile = getOutputFile(options, ext='tilemap')
     tilemapStream = getSpriteTileMapStream(tiles, palettes, options) if options.get(
         'mode') == 'sprite' else getBgTileMapStream(tiles, palettes, options)
-    [tilemapFile.write(char) for char in tilemapStream]
-    tilemapFile.close
+    tilemapFile.write(tilemapStream)
+    tilemapFile.close()
 
     if options.get('verify'):
         writeSampleImage(outTiles, outPalettes, image, options)
@@ -336,9 +371,9 @@ def getBgTileMapStream(tiles, palettes, options):
     stream = []
     bgTilemaps = getBgTilemaps(tiles, palettes, options)
     for tile in [tile for tilemap in bgTilemaps for tile in tilemap]:
-        stream.append(chr(tile & 0xff))
-        stream.append(chr((tile & 0xff00) >> 8))
-    return stream
+        stream.append(bytes([tile & 0xff]))
+        stream.append(bytes([(tile & 0xff00) >> 8]))
+    return b''.join(stream)
 
 
 def writeBgTileMap(tiles, palettes, options):
@@ -403,11 +438,11 @@ def getSpriteTileMapStream(tiles, palettes, options):
     stream = []
     for tile in tiles:
         tileConfig = fetchSpriteTileConfig(tile, tiles, palettes)
-        stream.append(chr(tileConfig['x'] & 0xff))
-        stream.append(chr(tileConfig['y'] & 0xff))
-        stream.append(chr(tileConfig['concatConfig'] & 0xff))
-        stream.append(chr((tileConfig['concatConfig'] & 0xff00) >> 8))
-    return stream
+        stream.append(bytes([tileConfig['x'] & 0xff]))
+        stream.append(bytes([tileConfig['y'] & 0xff]))
+        stream.append(bytes([tileConfig['concatConfig'] & 0xff]))
+        stream.append(bytes([(tileConfig['concatConfig'] & 0xff00) >> 8]))
+    return b''.join(stream)
 
 
 def writeSpriteTileMap(tiles, palettes, options):
@@ -493,9 +528,9 @@ def getTileWriteStream(tiles, options):
             bitplanes = fetchBitplanes(tile, options)
             for i in range(0, len(bitplanes), 2):
                 while bitplanes[i].notEmpty():
-                    stream.append((chr(bitplanes[i].first())))
-                    stream.append((chr(bitplanes[i+1].first())))
-    return stream
+                    stream.append(bytes([bitplanes[i].first()]))
+                    stream.append(bytes([bitplanes[i+1].first()]))
+    return b''.join(stream)
 
 
 def getPaletteWriteStream(palettes, options):
@@ -800,7 +835,7 @@ def checkDuplicateTileFast(tile, refTiles, options):
                     ((refPixels[i] & 0x3E0) >> 5)
                 b = ((inPixels[i] & 0x7C00) >> 10) - \
                     ((refPixels[i] & 0x7C00) >> 10)
-                redMean = (inPixels[i] & 0x1f) + (refPixels[i] & 0x1f) / 2
+                redMean = (inPixels[i] & 0x1f) + (refPixels[i] & 0x1f) // 2
                 squareError += math.sqrt((((512+redMean)*r*r) >> 8) +
                                          4*g*g + (((767-redMean)*b*b) >> 8))**2
             error = math.sqrt(squareError)
@@ -1035,10 +1070,14 @@ def getSnesPixels(image):
     '''extract color-converted pixels from image'''
     rawPixels = list(image.getdata())
     outputPixels = []
-    for y in range(image.size[1]):
-        outputPixels.append([])
-        for x in range(image.size[0]):
-            outputPixels[y].append(convertColorRGBToSnes(rawPixels.pop(0)))
+    idx = 0
+    width, height = image.size
+    for y in range(height):
+        row = []
+        for x in range(width):
+            row.append(convertColorRGBToSnes(rawPixels[idx]))
+            idx += 1
+        outputPixels.append(row)
     return outputPixels
 
 
@@ -1054,9 +1093,13 @@ def padImageReduceColdepth(inputImage, options):
     paddedImage.paste(inputImage, (0, 0))
 
     colorCount = (((options.get('bpp') ** 2) - 1) * options.get('palettes'))
+    print(f"Reducing to {colorCount} colors. Image size: {paddedImage.size}")
+    sys.stdout.flush()
     # logging.info('Reducing to %s colors.' % colorCount)
     reducedImage = paddedImage.convert(
         'P', palette=Image.ADAPTIVE, colors=colorCount).convert('RGB')
+    print("Done reducing colors.")
+    sys.stdout.flush()
     # logging.debug('Done reducing colors.')
     return reducedImage
 
@@ -1112,7 +1155,7 @@ class Statistics():
             [tile for tile in tiles if tile['refId'] == None])
         self.actualPalettes = len(
             [pal for pal in palettes if pal['refId'] == None])
-        self.timeWasted = time.clock() - startTime
+        self.timeWasted = time.perf_counter() - startTime
 
 
 class ColObj():
