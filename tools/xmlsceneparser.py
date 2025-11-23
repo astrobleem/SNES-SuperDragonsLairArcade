@@ -203,8 +203,8 @@ def extractChapterVideo(chapterEvent, options):
       logging.error('unable to find input video file %s.' % options.get('videofile'))
       sys.exit(1)
 
-    timestart = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.timestart / (60 * 1000)), int((chapterEvent.timestart % (60 * 1000)) / 1000), int(chapterEvent.timestart % (1000)))
-    duration = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.duration / (60 * 1000)), int((chapterEvent.duration % (60 * 1000)) / 1000), int(chapterEvent.duration % (1000)))
+    timestart = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.timestart // (60 * 1000)), int((chapterEvent.timestart % (60 * 1000)) // 1000), int(chapterEvent.timestart % (1000)))
+    duration = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.duration // (60 * 1000)), int((chapterEvent.duration % (60 * 1000)) // 1000), int(chapterEvent.duration % (1000)))
 
     returnVal = os.system("ffmpeg -y -i %s -s 256x192 -pix_fmt rgb8 %s/video_%%06d.gfx_video.png -ss %s -t %s" % (options.get('videofile'), options.get('chapterfolder'), timestart, duration))
     if not 0 == returnVal:
@@ -221,8 +221,8 @@ def extractChapterAudio(chapterEvent, options):
       logging.error('unable to find input video file %s.' % options.get('videofile'))
       sys.exit(1)
 
-    timestart = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.timestart / (60 * 1000)), int((chapterEvent.timestart % (60 * 1000)) / 1000), int(chapterEvent.timestart % (1000)))
-    duration = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.duration / (60 * 1000)), int((chapterEvent.duration % (60 * 1000)) / 1000), int(chapterEvent.duration % (1000)))
+    timestart = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.timestart // (60 * 1000)), int((chapterEvent.timestart % (60 * 1000)) // 1000), int(chapterEvent.timestart % (1000)))
+    duration = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.duration // (60 * 1000)), int((chapterEvent.duration % (60 * 1000)) // 1000), int(chapterEvent.duration % (1000)))
 
     returnVal = os.system("ffmpeg -y -i %s -acodec pcm_s16le -ar 44100 -ac 2 %s/audio.sfx_video.wav -ss %s -t %s" % (options.get('videofile'), options.get('chapterfolder'), timestart, duration))
     if not 0 == returnVal:

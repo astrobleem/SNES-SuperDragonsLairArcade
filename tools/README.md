@@ -2,6 +2,8 @@
 
 This folder contains the helper utilities used to prepare assets and builds for the SNES Dragon's Lair/RoadBlaster pipeline. The scripts are written for Python 3; Pillow is required for image tools, and audio scripts rely on the Python standard library. External dependencies such as GIMP (for batch palette conversion) and WLA-DX (for assembly) are included where possible.
 
+**Note:** All Python tools have been modernized for Python 3 compatibility. Critical performance fixes have been applied to `gracon.py` to handle large images efficiently. Install dependencies with `pip install -r requirements.txt` before using these tools.
+
 ## Quick Reference Table
 | Tool | Purpose | Input Formats | Output Formats | Pipeline Usage |
 | --- | --- | --- | --- | --- |
@@ -28,6 +30,7 @@ This folder contains the helper utilities used to prepare assets and builds for 
     -outfile build/dragon_run.anim -palettes 4 -tilesizex 8 -tilesizey 8 -optimize on
   ```
 * **Pipeline:** Use after sprite frames are prepared to create VRAM-ready animation bundles.
+* **Tests:** Comprehensive test in `tests/test_tools.py::test_animation_writer` validates the SP header format, frame count, and binary structure using real sprite frames from `data/sprites/bang.gfx_sprite/`. Run with `python -m pytest tests/test_tools.py::test_animation_writer -v`.
 
 ### debugLog.py
 * **Purpose:** Recursively pretty-prints nested lists/dicts to the logging output for inspection.
@@ -48,6 +51,10 @@ This folder contains the helper utilities used to prepare assets and builds for 
 * **Inputs/Outputs:** Pillow-supported images; outputs binary tile/tilemap/palette data and optional PNG verification.
 * **Example:**
   ```bash
+  # Show help and options
+  python3 gracon.py --help
+  
+  # Convert an image
   python3 gracon.py -mode bg -bpp 4 -palettes 8 -transcol 0x7C1F \
     -verify on -tilethreshold 2 input/title.png output/title
   ```

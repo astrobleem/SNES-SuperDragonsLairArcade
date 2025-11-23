@@ -155,7 +155,7 @@ def getModuleName( mod ):
 
 
 def isValidModule( mod ):
-  validModSignatures = [ 'M.K.', '4CHN']
+  validModSignatures = [ b'M.K.', b'4CHN']
   return mod[1080:1084] in validModSignatures
 
 def writeOutputFile( outFile, mod ):
@@ -214,7 +214,7 @@ def writeSamples( outFile, sampleBufferPos, instruments ):
   for instrument in instruments:
     samplePointer.append( {
       'start'        : outFile.tell(),
-      'repeatStart' : outFile.tell() + ( instrument['repeatStart'] / BRR_BLOCK_SAMPLES * BRR_BLOCK_LENGTH )
+      'repeatStart' : outFile.tell() + ( instrument['repeatStart'] // BRR_BLOCK_SAMPLES * BRR_BLOCK_LENGTH )
     } )
     
     for i in range( len( instrument['samples'] ) ):

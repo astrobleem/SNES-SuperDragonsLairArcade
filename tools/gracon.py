@@ -381,8 +381,8 @@ def writeBgTileMap(tiles, palettes, options):
     bgTilemaps = getBgTilemaps(tiles, palettes, options)
     outFile = getOutputFile(options, ext='tilemap')
     for tile in [tile for tilemap in bgTilemaps for tile in tilemap]:
-        outFile.write(chr(tile & 0xff))
-        outFile.write(chr((tile & 0xff00) >> 8))
+        outFile.write(bytes((tile & 0xff,)))
+        outFile.write(bytes(((tile & 0xff00) >> 8,)))
     outFile.close()
 
 
@@ -449,10 +449,10 @@ def writeSpriteTileMap(tiles, palettes, options):
     outFile = getOutputFile(options, ext='spritemap')
     for tile in tiles:
         tileConfig = fetchSpriteTileConfig(tile, tiles, palettes)
-        outFile.write(chr(tileConfig['concatConfig'] & 0xff))
-        outFile.write(chr((tileConfig['concatConfig'] & 0xff00) >> 8))
-        outFile.write(chr(tileConfig['x'] & 0xff))
-        outFile.write(chr(tileConfig['y'] & 0xff))
+        outFile.write(bytes((tileConfig['concatConfig'] & 0xff,)))
+        outFile.write(bytes(((tileConfig['concatConfig'] & 0xff00) >> 8,)))
+        outFile.write(bytes((tileConfig['x'] & 0xff,)))
+        outFile.write(bytes((tileConfig['y'] & 0xff,)))
     outFile.close()
 
 
@@ -517,8 +517,8 @@ def writeBitplaneTile(outFile, tile, options):
     bitplanes = fetchBitplanes(tile, options)
     for i in range(0, len(bitplanes), 2):
         while bitplanes[i].notEmpty():
-            outFile.write(chr(bitplanes[i].first()))
-            outFile.write(chr(bitplanes[i+1].first()))
+            outFile.write(bytes((bitplanes[i].first(),)))
+            outFile.write(bytes((bitplanes[i+1].first(),)))
 
 
 def getTileWriteStream(tiles, options):
