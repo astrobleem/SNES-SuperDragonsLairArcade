@@ -1,1 +1,3 @@
-Dragon's Lair-style HUD dashboard overlay: sleek metallic panel with neon gauges and indicator lights, subtle looping shimmer while leaving central road view clear.
+Sprite: Legacy - Not Used in Dragon's Lair
+This sprite is from the RoadBlaster codebase and is not applicable to Dragon's Lair.
+The dashboard/HUD elements are handled differently in Dragon's Lair.

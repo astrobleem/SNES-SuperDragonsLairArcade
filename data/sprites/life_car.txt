@@ -1,1 +1,4 @@
-Dragon's Lair life icon row using Dirk the Daring head instead of car, multiple frames showing decreasing icons that gently scroll upward after a short timer.
+Sprite: Life Icon
+Dragon's Lair life indicator: small glowing heart or Dirk helmet icon representing player lives. Bright red heart with golden border or silver knight's helmet.
+Style: Small HUD sprite, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+Animation: 2-frame gentle pulse or shimmer effect.

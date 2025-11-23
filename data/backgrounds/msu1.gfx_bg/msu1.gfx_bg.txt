@@ -1,0 +1,5 @@
+Background: MSU1 Video Placeholder
+Target output filename: msu1.gfx_bg.png
+Resolution: 256x224 SNES background, 4bpp with up to 8 palettes; keep design minimal for low VRAM usage.
+Prompt: "Dragon's Lair MSU1 loading screen, simple dragon emblem in center, parchment or stone texture background, 'Loading...' or 'MSU-1' text in medieval script, dim torchlight ambiance, 16-bit SNES pixel art, minimal palette, 256x224." 
+Alignment notes: Keep all elements centered; use flat colors to minimize tile count as this is a transitional placeholder screen.

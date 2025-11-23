@@ -1,1 +1,4 @@
-Dragon's Lair-style HUD arrow overlay, bright gold outline with red pulse fill, pointing up; looping flash to cue Dirk to leap to higher ground, climb onto ropes or ledges, or ride rising platforms.
+Sprite: Action Prompt - Up/Jump
+Dragon's Lair directional cue: glowing upward arrow in bright cyan with pulsing glow, indicates player should jump/climb. Medieval fantasy style with subtle sparkle trail.
+Style: Clear directional indicator, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+Animation: Single frame or gentle pulse effect.

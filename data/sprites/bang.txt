@@ -1,1 +1,3 @@
-Dragon's Lair "BANG" burst for bonus hits: comic star-shaped explosion in hot pink and white, popping in with a quick expanding frame then fading sparks.
+Sprite: Bang/Impact Effect
+Dragon's Lair impact burst: bright starburst explosion in gold and white with magical sparkles, used for sword strikes hitting targets, shield blocks, or treasure collection. Quick 5-frame animation expanding then fading with residual twinkles.
+Style: Medieval fantasy sparkle effect, 16-bit arcade pixel art, limited sprite palette (16 colors max).

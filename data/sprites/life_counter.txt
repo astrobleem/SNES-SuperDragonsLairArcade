@@ -1,1 +1,4 @@
-Dragon's Lair-style life counter with Dirk head tally, frames counting down remaining lives; after a brief delay the strip drifts upward to clear space.
+Sprite: Life Counter Digit
+Dragon's Lair life counter number: ornate medieval-style numeral (0-9) in golden color with dark outline, displayed alongside life icons to show remaining lives.
+Style: Clear readable digit, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+Animation: Static or subtle shimmer.

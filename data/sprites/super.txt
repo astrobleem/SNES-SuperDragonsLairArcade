@@ -1,1 +1,4 @@
-Dragon's Lair-style HUD burst labeled "SUPER" in radiant gold with violet highlights, looping radiance to signal ultimate power without masking other UI.
+Sprite: "SUPER" Bonus Indicator
+Dragon's Lair "PERFECT!" or "SUPER!" text: Large golden letters with magical sparkle effect, appears for flawless scene completion or exceptional timing.
+Style: Celebratory text banner, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+Animation: Quick flash-in with sparkles, brief hold, fade out.

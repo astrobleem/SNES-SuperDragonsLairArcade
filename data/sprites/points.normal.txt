@@ -1,1 +1,4 @@
-Dragon's Lair falling score popup: glowing yellow numbers dropping from hit enemies, brief sparkle trail and fade-out as they descend.
+Sprite: Bonus Points - Normal
+Dragon's Lair score popup: "+1000" or similar standard value in glowing yellow/gold numbers, appears for successful actions and correct moves.
+Style: Clear score indicator, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+Animation: Brief appearance then fade.
