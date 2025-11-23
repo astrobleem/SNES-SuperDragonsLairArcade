@@ -125,6 +125,8 @@ PtPlayerSamplePackPointertable:
   SAMPLE.0.TURN db
   SAMPLE.0.OK db
   SAMPLE.0.SHURIKEN db
+  SAMPLE.0.DRAGON_ROAR db
+  SAMPLE.0.SWORD_CLANK db
 .ende
 
 .export SAMPLE.0.BRAKE
@@ -133,13 +135,15 @@ PtPlayerSamplePackPointertable:
 .export SAMPLE.0.TURN
 .export SAMPLE.0.OK
 .export SAMPLE.0.SHURIKEN
+.export SAMPLE.0.DRAGON_ROAR
+.export SAMPLE.0.SWORD_CLANK
 
 
 .Section "sample pack 0" superfree
 SamplePack0:
 	.dw (SamplePack0End-SamplePack0)
 SamplePackStart0:
-	.db 6				;number of samples in this pack
+	.db 8				;number of samples in this pack
 
 Sample0Header:
 	.dw (Sample0-SamplePackStart0)	;relative pointer to sample	
@@ -248,6 +252,34 @@ Sample5Header:
 	.db 0
 	.db 0
 
+Sample6Header:
+	.dw (Sample6-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample6-SamplePackStart0)	;relative loop pointer
+	.db $30				;volume l
+	.db $30				;volume r
+	.dw $1000			;pitch
+	.dw $0000			;adsr
+	.db %11111111				;gain
+	.db 0
+	.db 0
+	.db 0
+	.db 0
+	.db 0
+
+Sample7Header:
+	.dw (Sample7-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample7-SamplePackStart0)	;relative loop pointer
+	.db $20				;volume l
+	.db $20				;volume r
+	.dw $1000			;pitch
+	.dw $0000			;adsr
+	.db %11111111				;gain
+	.db 0
+	.db 0
+	.db 0
+	.db 0
+	.db 0
+
 Sample0:
 	.incbin "build/data/sounds/brake.sfx_loop.brr"
 Sample1:
@@ -260,6 +292,10 @@ Sample4:
 	.incbin "build/data/sounds/ok.sfx_normal.brr"	
 Sample5:
 	.incbin "build/data/sounds/shuriken.sfx_normal.brr"	
+Sample6:
+	.incbin "build/data/sounds/dragon_roar.sfx_normal.brr"
+Sample7:
+	.incbin "build/data/sounds/sword_clank.sfx_normal.brr"
 
 SamplePack0End:
 

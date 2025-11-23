@@ -16,3 +16,23 @@ The `.gfx_sprite` files in this folder are compiled animation assets referenced 
 - `bang.gfx_sprite`: Burst effect that appears after extra bonus points trigger.
 
 Use these notes to craft Dragon's Lair–style visual prompts or replacements that match gameplay context.
+
+## Adding New Sprites
+
+To add a new sprite (e.g., `down_arrow`) to the system, you must complete both the **Asset** and **Code** steps. The system does not automatically detect or use new sprites just by their presence in this folder.
+
+### 1. Asset Requirements
+- Create a directory named `<sprite_name>.gfx_sprite` in `data/sprites/`.
+- Place your frame images (PNG, GIF, BMP) inside this directory. They should be sorted alphabetically for the animation order.
+- The build system (Makefile) will automatically compile this folder into a `.animation` file during the build.
+- *Note: The `.txt` files in this directory are for documentation/AI-prompting purposes only and are not used by the build system.*
+
+### 2. Code Requirements
+You must implement the sprite logic and register it in the engine:
+1.  **Implementation**: Create `src/object/sprite/<sprite_name>.65816` (assembly logic) and `src/object/sprite/<sprite_name>.h` (header). You can copy `left_arrow.65816` as a template.
+2.  **Registration**:
+    - Open `src/object/sprite/abstract.Sprite.h`.
+    - Add your sprite to the `SpriteAnimationLUT` table.
+    - Add a `SPRITE_ANIMATION <sprite_name>` macro call.
+
+Once both assets and code are in place, the sprite can be spawned and used in the game.

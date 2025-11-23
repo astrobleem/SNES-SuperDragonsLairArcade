@@ -1,5 +1,0 @@
-Background: Level Complete (Set B)
-Target output filename: levelcomplete.1.gfx_bg.png
-Resolution: 256x224 SNES background, 4bpp with up to 8 palettes; stick to flat shading and avoid dithering beyond 8 palettes.
-Prompt: "Dragon's Lair intermission card, Dirk and Daphne framed by stained glass window, celebratory banner reading 'Quest Advanced', castle interior columns, soft torchlight, 16-bit SNES pixel style, limited color ramps, 256x224." 
-Alignment notes: Keep text near the top center; leave the lower half simple so tiled patterns do not distract from HUD overlays.

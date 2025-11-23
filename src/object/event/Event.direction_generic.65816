@@ -5,6 +5,8 @@
 * direction mask at runtime.
 */
 .include "src/object/event/Event.direction_generic.h"
+.include "src/object/sprite/down_arrow.h"
+.include "src/object/sprite/up_arrow.h"
 
 .section "Event.direction_generic"
 
@@ -35,6 +37,10 @@
   lda this.direction
   cmp #JOY_DIR_LEFT
   beq +
+  cmp #JOY_DIR_DOWN
+  beq ++
+  cmp #JOY_DIR_UP
+  beq +++
         NEW Right_arrow.CLS.PTR this.sprite 160 80
         lda #160
         sta this.scoreX
@@ -42,15 +48,37 @@
         sta this.scoreY
         lda event.endFrame
         CALL Right_arrow.reset.MTD this.sprite this.scoreX this.scoreY
-        bra ++
-  ;default to left arrow assets
+        bra ++++
+  ;left arrow assets
 + NEW Left_arrow.CLS.PTR this.sprite 60 80
   lda #60
   sta this.scoreX
   lda #80
   sta this.scoreY
-+  lda event.endFrame
+  lda event.endFrame
   CALL Left_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+  bra ++++
+
+  ;down arrow assets
+++ NEW Down_arrow.CLS.PTR this.sprite 110 120
+  lda #110
+  sta this.scoreX
+  lda #120
+  sta this.scoreY
+  lda event.endFrame
+  CALL Down_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+  bra ++++
+
+  ;up arrow assets
++++ NEW Up_arrow.CLS.PTR this.sprite 110 40
+  lda #110
+  sta this.scoreX
+  lda #40
+  sta this.scoreY
+  lda event.endFrame
+  CALL Up_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+
+++++
 
   NEW Spc.CLS.PTR this.audio
   lda.w #SAMPLE.0.TURN

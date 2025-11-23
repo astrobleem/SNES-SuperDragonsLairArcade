@@ -64,6 +64,12 @@ All sprite descriptions updated to Dragon's Lair theme:
 
 **Legacy sprites marked:** brake, dashboard, steering wheels, turbo (not used in Dragon's Lair)
 
+### Sound Assets ✅ Audited & Registered
+- **Kept:** `ok`, `shuriken`, `technique`, `turn` (generic/action cues)
+- **New:** `dragon_roar` (ambient/boss), `sword_clank` (impact)
+- **Legacy:** `brake`, `turbo` (marked as unused)
+- **System:** Updated `spcinterface.h` to register new sounds; documentation in `data/sounds/README.md`
+
 ### FMV/Audio ⏳ Awaiting Source Material
 - Chapter scripts exist in `data/events/` (516 chapters)
 - Frame conversion ready (`gracon.py`, `animationWriter.py`)

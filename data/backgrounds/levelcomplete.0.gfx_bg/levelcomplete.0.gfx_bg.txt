@@ -1,5 +1,0 @@
-Background: Level Complete (Set A)
-Target output filename: levelcomplete.0.gfx_bg.png
-Resolution: 256x224 SNES background, 4bpp with up to 8 palettes; keep gradients minimal to respect 16-color-per-palette limits.
-Prompt: "Dragon's Lair victory splash, Dirk the Daring standing triumphant with sword raised, treasure chest at his feet, castle corridor backdrop with warm torches, bold 'Stage Cleared' ribbon, 16-bit SNES pixel art, clean color blocks, 256x224." 
-Alignment notes: Keep the focal art centered; leave lower third relatively calm for score banners and avoid tiny decorative fonts that will blur after tile conversion.
