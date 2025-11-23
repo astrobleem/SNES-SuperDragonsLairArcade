@@ -27,6 +27,32 @@ The test outputs demonstrate:
 
 **Recommendation:** Use `superfamiconv` via `gfx_converter.py` for faster builds.
 
+## Tilemap Format Differences
+
+**superfamiconv** and **gracon.py** produce tilemaps of different sizes:
+
+| Tool | Size | Layout | Notes |
+| --- | --- | --- | --- |
+| superfamiconv | 1792 bytes | 32×28 tiles | Exact screen size for 256×224 |
+| gracon.py | 2048 bytes | 32×32 tiles | Padded to square grid |
+
+### Padding Details
+
+- **Difference:** 256 bytes (4 rows × 32 tiles × 2 bytes per entry)
+- **Content:** gracon adds 4 rows of zero padding at the bottom
+- **Purpose:** Makes tilemaps a consistent 32×32 square grid
+
+### Compatibility
+
+The game engine **supports both formats** via the `tilemap.length` field in the animation structure. However, if you need gracon-compatible padding with superfamiconv's speed:
+
+```bash
+python tools/gfx_converter.py --tool superfamiconv --input image.png \
+  --output-base output_name --bpp 4 --pad-to-32x32
+```
+
+This pads the 1792-byte superfamiconv output to 2048 bytes, matching gracon's format exactly.
+
 ## Quick Start Example
 
 Process a background image for the build system:

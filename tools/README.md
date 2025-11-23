@@ -49,10 +49,16 @@ This folder contains the helper utilities used to prepare assets and builds for 
   python tools/gfx_converter.py --tool superfamiconv --input image.png \
     --output-base output_name --bpp 4
   
+  # Using superfamiconv with gracon-compatible padding
+  python tools/gfx_converter.py --tool superfamiconv --input image.png \
+    --output-base output_name --bpp 4 --pad-to-32x32
+  
   # Using gracon (slower but compatible)
   python tools/gfx_converter.py --tool gracon --input image.png \
     --output-base output_name --bpp 4
   ```
+* **Options:**
+  - `--pad-to-32x32`: Pads superfamiconv tilemaps from 32×28 (1792 bytes) to 32×32 (2048 bytes) for compatibility with code expecting gracon's padded format. Only affects superfamiconv output.
 * **Pipeline:** Use this instead of calling converters directly to allow easy switching between tools.
 * **Note:** `superfamiconv` is ~100x faster than `gracon.py` for most images.
 
