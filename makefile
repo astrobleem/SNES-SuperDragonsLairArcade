@@ -6,14 +6,14 @@ linkdir := $(builddir)/lnk
 romext := sfc
 romfile := $(builddir)/SuperDragonsLairArcade.$(romext)
 
-linker := wlalink
+linker := ./tools/wla-dx-9.5-svn/wlalink/wlalink
 linkflags := -dsr
 linkobjectfile := $(linkdir)/linkobjs.lst
 
-assembler := wla-65816
+assembler := ./tools/wla-dx-9.5-svn/wla-65816
 assemblerflags := -o
 
-spcasm = wla-spc700
+spcasm = ./tools/wla-dx-9.5-svn/wla-spc700
 spcflags = -o
 spclinkflags := -sb
 spclinkobjectfile := $(linkdir)/spclinkobjs.lst
@@ -49,7 +49,7 @@ ifdef USE_SUPERFAMICONV
 animation_converter := ./tools/animationWriter_sfc.py
 endif
 
-sound_converter := snesbrr
+sound_converter := ./tools/snesbrr-2006-12-13/snesbrr.exe
 
 RD := $(RM) -r
 MD := mkdir -p

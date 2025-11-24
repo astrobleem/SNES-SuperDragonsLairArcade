@@ -120,6 +120,8 @@ def quantize_image(input_image, output_image, num_colors):
         # method=1 (MaxCoverage) usually gives good results for pixel art/limited palettes
         # dither=Image.NONE avoids noise
         out = img.quantize(colors=num_colors, method=1, dither=Image.NONE)
+        if 'transparency' in out.info:
+            del out.info['transparency']
         out.save(output_image)
 
 def generate_palette(sfc_path, input_image, output_palette, colors_per_palette):
