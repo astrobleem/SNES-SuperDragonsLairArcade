@@ -196,3 +196,45 @@ Tests are designed to run in CI environments:
 - [ ] Add integration tests for full pipeline (XML → gracon → animationWriter → MSU1)
 - [ ] Add tests for edge cases (empty frames, oversized images, invalid palettes)
 
+## Video Timing Verification
+
+### Manual Test Scripts
+
+The project includes manual test scripts for verifying video/audio timing compatibility:
+
+#### `tools/test_chapter_extraction.sh` / `.bat`
+**Purpose:** Extract a single chapter to verify video timing aligns with XML events before processing all 516 chapters.
+
+**What it tests:**
+- Video frame rate is 23.976 fps (matches XML expectations)
+- Extracts `introduction_castle_exterior` chapter (0:53 to 0:58, ~5.8 seconds)
+- Generates ~140 PNG frames (256×192 RGB8)
+- Generates ~1MB WAV audio file (44.1kHz stereo)
+- Reports frame/audio counts for manual verification
+
+**Why it matters:** Daphne videos are 29.97 fps but DirkSimple XMLs expect 23.976 fps. Without proper conversion, events would be off by ~25% (~10 seconds for a 1-minute scene). This test verifies the timing is correct after FPS conversion.
+
+**Usage:**
+```bash
+# Windows
+tools\test_chapter_extraction.bat
+
+# Linux/WSL
+bash tools/test_chapter_extraction.sh
+```
+
+**Expected Results:**
+- Video frames: ~140 PNG files
+- Audio: ~1MB WAV file (5.75 seconds)
+- Timing: Should match XML timestamps exactly
+
+### xmlsceneparser.py Bug Fix (Nov 2024)
+
+**Issue:** The script extracted the entire 22-minute video (31,573 frames) instead of individual chapter timespans.
+
+**Root Cause:** ffmpeg timing parameters (`-ss` and `-t`) were placed AFTER the output filename, causing them to be ignored.
+
+**Fix:** Moved `-ss` (start time) and `-t` (duration) parameters BEFORE `-i` (input file) in both `extractChapterVideo()` and `extractChapterAudio()` functions.
+
+**Verification:** Test extraction now produces 140 frames (5.8 seconds) instead of 31,573 frames (22 minutes).
+

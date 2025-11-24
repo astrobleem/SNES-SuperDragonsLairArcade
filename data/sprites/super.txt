@@ -1,4 +1,9 @@
 Sprite: "SUPER" Bonus Indicator
-Dragon's Lair "PERFECT!" or "SUPER!" text: Large golden letters with magical sparkle effect, appears for flawless scene completion or exceptional timing.
-Style: Celebratory text banner, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+
+Asset Format: Transparent PNG (use alpha channel, NOT purple/magenta color key)
+Required Size: Variable (original is 136x64, can be optimized)
+Color Depth: 4bpp (16 colors max per palette, up to 2 palettes)
+
+Description: Dragon's Lair "PERFECT!" or "SUPER!" text: Large golden letters with magical sparkle effect, appears for flawless scene completion or exceptional timing.
+Style: Celebratory text banner, 16-bit arcade pixel art, sprite mode.
 Animation: Quick flash-in with sparkles, brief hold, fade out.

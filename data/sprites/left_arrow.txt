@@ -1,4 +1,9 @@
 Sprite: Action Prompt - Left
-Dragon's Lair directional cue: glowing leftward arrow in bright cyan with pulsing glow, indicates player should move/turn left. Medieval fantasy style with subtle sparkle trail.
-Style: Clear directional indicator, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+
+Asset Format: Transparent PNG (use alpha channel, NOT purple/magenta color key)
+Required Size: 32x32 pixels (original RoadBlaster size - valid SNES sprite)
+Color Depth: 4bpp (16 colors max per palette, up to 2 palettes)
+
+Description: Dragon's Lair directional cue: glowing leftward arrow in bright cyan with pulsing glow, indicates player should move/turn left. Medieval fantasy style with subtle sparkle trail.
+Style: Clear directional indicator, 16-bit arcade pixel art, sprite mode.
 Animation: Single frame or gentle pulse effect.

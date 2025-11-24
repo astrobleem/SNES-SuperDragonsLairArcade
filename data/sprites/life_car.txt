@@ -1,4 +1,9 @@
 Sprite: Life Icon
-Dragon's Lair life indicator: small glowing heart or Dirk helmet icon representing player lives. Bright red heart with golden border or silver knight's helmet.
-Style: Small HUD sprite, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+
+Asset Format: Transparent PNG (use alpha channel, NOT purple/magenta color key)
+Required Size: 24x16 pixels (original RoadBlaster size)
+Color Depth: 4bpp (16 colors max per palette, up to 2 palettes)
+
+Description: Dragon's Lair life indicator: small glowing heart or Dirk helmet icon representing player lives. Bright red heart with golden border or silver knight's helmet.
+Style: Small HUD sprite, 16-bit arcade pixel art, sprite mode.
 Animation: 2-frame gentle pulse or shimmer effect.

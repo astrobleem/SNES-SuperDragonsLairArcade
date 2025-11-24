@@ -1,4 +1,9 @@
 Sprite: Life Counter Digit
-Dragon's Lair life counter number: ornate medieval-style numeral (0-9) in golden color with dark outline, displayed alongside life icons to show remaining lives.
-Style: Clear readable digit, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+
+Asset Format: Transparent PNG (use alpha channel, NOT purple/magenta color key)
+Required Size: 16x16 pixels (small HUD digit)
+Color Depth: 4bpp (16 colors max per palette, up to 2 palettes)
+
+Description: Dragon's Lair life counter number: ornate medieval-style numeral (0-9) in golden color with dark outline, displayed alongside life icons to show remaining lives.
+Style: Clear readable digit, 16-bit arcade pixel art, sprite mode.
 Animation: Static or subtle shimmer.

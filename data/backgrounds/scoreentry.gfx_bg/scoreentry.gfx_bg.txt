@@ -1,5 +1,10 @@
 Background: Score Entry
+
+Asset Format: PNG image (NOT transparent - solid background)
+Required Size: 256x224 pixels
+Color Depth: 4bpp with up to 8 palettes (16 colors each, keep totals under 128 colors)
+
 Target output filename: scoreentry.gfx_bg.png
-Resolution: 256x224 SNES background, 4bpp with up to 8 palettes. Keep the central area low-detail for letter input clarity.
+Technical: SNES background using 8x8 tiles. Keep the central area low-detail for letter input clarity.
 Prompt: "Dragon's Lair name entry screen, stone tablet with carved alphabet grid, softly glowing candles on either side, Dirk's helmet resting on the corner, medieval parchment texture, 16-bit SNES pixel art, restrained colors, 256x224." 
 Alignment notes: Leave a wide blank center panel for the name grid; keep decorative elements constrained to the borders to avoid tiling artifacts.

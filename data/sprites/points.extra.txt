@@ -1,4 +1,9 @@
 Sprite: Bonus Points - Extra
-Dragon's Lair bonus score popup: "+5000" or similar high-value text in large glowing golden numbers with sparkle effect, appears when collecting treasure or perfect timing bonus.
-Style: Flashy score indicator, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+
+Asset Format: Transparent PNG (use alpha channel, NOT purple/magenta color key)
+Required Size: 32x8 pixels (original RoadBlaster size)
+Color Depth: 4bpp (16 colors max per palette, up to 2 palettes)
+
+Description: Dragon's Lair bonus score popup: "+5000" or similar high-value text in large glowing golden numbers with sparkle effect, appears when collecting treasure or perfect timing bonus.
+Style: Flashy score indicator, 16-bit arcade pixel art, sprite mode.
 Animation: Brief appearance with sparkle then fade.

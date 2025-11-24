@@ -1,4 +1,9 @@
 Sprite: Bonus Points - Normal
-Dragon's Lair score popup: "+1000" or similar standard value in glowing yellow/gold numbers, appears for successful actions and correct moves.
-Style: Clear score indicator, 16-bit arcade pixel art, sprite mode 4bpp (16 colors).
+
+Asset Format: Transparent PNG (use alpha channel, NOT purple/magenta color key)
+Required Size: 32x8 pixels (original RoadBlaster size)
+Color Depth: 4bpp (16 colors max per palette, up to 2 palettes)
+
+Description: Dragon's Lair score popup: "+1000" or similar standard value in glowing yellow/gold numbers, appears for successful actions and correct moves.
+Style: Clear score indicator, 16-bit arcade pixel art, sprite mode.
 Animation: Brief appearance then fade.

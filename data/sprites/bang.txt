@@ -1,3 +1,8 @@
 Sprite: Bang/Impact Effect
-Dragon's Lair impact burst: bright starburst explosion in gold and white with magical sparkles, used for sword strikes hitting targets, shield blocks, or treasure collection. Quick 5-frame animation expanding then fading with residual twinkles.
-Style: Medieval fantasy sparkle effect, 16-bit arcade pixel art, limited sprite palette (16 colors max).
+
+Asset Format: Transparent PNG (use alpha channel, NOT purple/magenta color key)
+Required Size: 46x40 pixels per frame (5-frame animation, original RoadBlaster size)
+Color Depth: 4bpp (16 colors max per palette, up to 2 palettes)
+
+Description: Dragon's Lair impact burst: bright starburst explosion in gold and white with magical sparkles, used for sword strikes hitting targets, shield blocks, or treasure collection. Quick 5-frame animation expanding then fading with residual twinkles.
+Style: Medieval fantasy sparkle effect, 16-bit arcade pixel art, limited sprite palette.

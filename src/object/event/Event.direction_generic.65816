@@ -60,20 +60,20 @@
   bra ++++
 
   ;down arrow assets
-++ NEW Down_arrow.CLS.PTR this.sprite 110 120
+++ NEW Down_arrow.CLS.PTR this.sprite 110 192
   lda #110
   sta this.scoreX
-  lda #120
+  lda #192
   sta this.scoreY
   lda event.endFrame
   CALL Down_arrow.reset.MTD this.sprite this.scoreX this.scoreY
   bra ++++
 
   ;up arrow assets
-+++ NEW Up_arrow.CLS.PTR this.sprite 110 40
++++ NEW Up_arrow.CLS.PTR this.sprite 110 16
   lda #110
   sta this.scoreX
-  lda #40
+  lda #16
   sta this.scoreY
   lda event.endFrame
   CALL Up_arrow.reset.MTD this.sprite this.scoreX this.scoreY

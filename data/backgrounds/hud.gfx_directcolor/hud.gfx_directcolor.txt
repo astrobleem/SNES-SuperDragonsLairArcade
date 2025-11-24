@@ -1,6 +1,10 @@
 Background: HUD Overlay (Direct Color Mode)
+
+Asset Format: Transparent PNG (use alpha channel for transparent center, NOT purple/magenta color key)
+Required Size: 256x224 pixels
+Color Depth: 8bpp direct color mode (mode 3/4) - allows full 256 colors but no palette effects
+
 Target output filename: hud_xcf.png
-Resolution: 256x224 SNES background, 8bpp direct color mode (mode 3/4); allows full 256 colors but no palette effects.
+Technical: SNES background using 8x8 tiles in direct color mode (8bpp). This bypasses the palette system for full RGB, used for static overlays that won't need palette effects.
 Prompt: "Dragon's Lair HUD overlay elements, ornate medieval border frame with dragon corner decorations, transparent center for gameplay video, decorative panels for lives/score/time indicators, golden filigree details, 16-bit SNES pixel art, rich colors, 256x224." 
-Alignment notes: Keep the central gameplay area completely transparent or solid black (for masking); place all decorative elements along the edges. This uses direct color mode for richer HUD details without palette limitations.
-Technical notes: Direct color mode (8bpp) bypasses palette system for full RGB, used for static overlays that won't need palette effects.
+Alignment notes: Keep the central gameplay area completely transparent (alpha channel); place all decorative elements along the edges. This uses direct color mode for richer HUD details without palette limitations.

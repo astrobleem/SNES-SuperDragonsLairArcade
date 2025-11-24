@@ -9,7 +9,7 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | --- | --- | --- | --- | --- |
 | `animationWriter.py` | Packs ordered frame images into a custom sprite animation file with tiles, tilemaps, and palettes. | Indexed or true-color frame images (`.png`, `.gif`, `.bmp`) in a folder. | Custom binary animation bundle (`SP` header) containing tile/palette chunks. | Sprite cutscenes and in-game animations.
 | `debugLog.py` | Helper to recursively log nested data structures for debugging. | Python data structures. | Text log output. | Shared helper for the legacy Python tools.
-| `gfx_converter.py` | **NEW** Unified wrapper for `superfamiconv` or `gracon.py` with consistent output naming. | Any Pillow-supported image (PNG, GIF, etc.). | `.palette`, `.tiles`, `.tilemap` binary files. | Replacement for direct `gracon.py` calls; allows swapping converters without changing build scripts.
+| `convert_daphne.py` / `.bat` | Converts Daphne CDROM laserdisc files to a single MP4 video. | Daphne framefile (`.TXT`) + `.m2v`/`.ogg` segments. | Single concatenated MP4 file. | One-time conversion of Daphne source to usable video format.\r\n| `convert_video_fps.sh` / `.bat` | Re-encodes video from 29.97 fps (Daphne) to 23.976 fps (DirkSimple XML). | MP4 video file. | Re-encoded MP4 at 23.976 fps. | Ensures video timing matches XML chapter events.\r\n| `test_chapter_extraction.sh` / `.bat` | Tests single chapter extraction to verify video/audio timing alignment. | Chapter XML + video file. | Test folder with extracted frames and audio. | Verification before full 516-chapter extraction.\r\n| `gfx_converter.py` | **NEW** Unified wrapper for `superfamiconv` or `gracon.py` with consistent output naming. | Any Pillow-supported image (PNG, GIF, etc.). | `.palette`, `.tiles`, `.tilemap` binary files. | Replacement for direct `gracon.py` calls; allows swapping converters without changing build scripts.
 | `jpeg_to_png.py` | Converts JPEG images to PNG with optional colorspace normalization and overwrite protection. | `.jpg`, `.jpeg`. | `.png`. | Quick standalone conversion before SNES-specific processing.
 | `gimp-batch-convert-indexed.scm` | GIMP batch script that converts matching images to indexed palettes with Gaussian blur pre-pass. | Any GIMP-loadable images matching a pattern. | In-place indexed images. | Pre-processing art assets before tile conversion when manual palette control is needed.
 | `gracon.py` | Converts images into SNES bitplane graphics, palettes, and tilemaps for backgrounds or sprites with optional deduplication. | Any Pillow-supported image (PNG, GIF, etc.). | Bitplane tile data, palette data, and tilemaps; optional PNG verification. | Core background/sprite converter for RoadBlaster.
@@ -71,19 +71,6 @@ This folder contains the helper utilities used to prepare assets and builds for 
   - `--pad-to-32x32`: Pads superfamiconv tilemaps from 32×28 (1792 bytes) to 32×32 (2048 bytes) for compatibility with code expecting gracon's padded format. Only affects superfamiconv output.
 * **Pipeline:** Use this instead of calling converters directly to allow easy switching between tools.
 * **Note:** `superfamiconv` is ~100x faster than `gracon.py` for most images.
-
-### superfamiconv
-* **Purpose:** High-performance C++ SNES graphics converter supporting tiles, palettes, and tilemaps.
-* **Inputs/Outputs:** PNG images; binary SNES formats.
-* **Location:** `tools/superfamiconv/superfamiconv.exe` (Windows binary included)
-* **Pipeline:** Called via `gfx_converter.py` wrapper; direct usage not recommended.
-* **Performance:** Processes images in < 1s vs ~96s for `gracon.py`.
-
-## Background Graphics Workflow
-
-For processing background images (e.g., `data/backgrounds/hiscore.gfx_bg/`):
-
-1. **Prepare Image** - Use `img_processor.py` to resize and quantize:
    ```bash
    python tools/img_processor.py \
      --input data/backgrounds/name.gfx_bg/source.png \
@@ -181,21 +168,6 @@ For processing background images (e.g., `data/backgrounds/hiscore.gfx_bg/`):
   python3 msu1pcmwriter.py -infile audio/scene1.wav -outfile build/scene1-1.pcm -loopstart 0
   ```
 * **Pipeline:** Produces MSU1-ready audio streams for chapters or background music.
-
-### userOptions.py
-* **Purpose:** Minimal CLI option parser shared by multiple tools; handles type checking and bounds enforcement for `-option value` pairs.
-* **Inputs/Outputs:** Raw CLI arguments; returns sanitized option values.
-* **Pipeline:** Utility dependency for `animationWriter.py`, `gracon.py`, `msu1blockwriter.py`, and others.
-
-### xmlsceneparser.py
-* **Purpose:** Parse Dragon’s Lair iPhone XML descriptors and emit frame/audio listings per chapter, creating output folders for subsequent conversion.
-* **Inputs/Outputs:** XML scene definition and related media paths; writes scene event lists and organizes frame/audio references in folders.
-* **Pipeline:** Early extraction step before running image converters and MSU1 packers.
-
-### lua_scene_exporter.py
-* **Purpose:** Read DirkSimple-style `game.lua` scene tables and write a readable `chapter.script` summary that captures timings, timeouts, actions, and single-frame markers.
-* **Inputs/Outputs:** `game.lua` input; writes `chapter.script` text to the requested destination path.
-* **Tests:** `python -m pytest tests/test_lua_scene_exporter.py`
 
 ### snesbrr-2006-12-13
 * **Purpose:** Standalone SNES BRR encoder/decoder supporting loop points and optional Gaussian filtering.

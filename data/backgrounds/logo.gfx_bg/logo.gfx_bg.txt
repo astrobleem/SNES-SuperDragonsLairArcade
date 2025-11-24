@@ -1,5 +1,10 @@
 Background: Logo Screen
+
+Asset Format: PNG image (NOT transparent - solid background)
+Required Size: 256x224 pixels
+Color Depth: 4bpp with up to 8 palettes (16 colors each, keep totals under 128 colors)
+
 Target output filename: logo.gfx_bg.png
-Resolution: 256x224 SNES background, 4bpp with up to 8 palettes; emphasize large flat panels for clean palette quantization.
-Prompt: "Dragon's Lair arcade logo, ornate golden 'Dragon's Lair' title text with embossed medieval lettering, glowing dragon silhouette coiled behind the text, deep purple backdrop with subtle stone texture, 16-bit SNES pixel art style, limited colors, 256x224." 
+Technical: SNES background using 8x8 tiles. Emphasize large flat panels for clean palette quantization.
+Prompt: "Dragon's Lair arcade logo, ornate golden 'Dragon's Lair' title text with embossed medieval lettering, glowing dragon silhouette coiled behind the text, deep blue backdrop with subtle stone texture, 16-bit SNES pixel art style, limited colors, 256x224." 
 Alignment notes: Center the logo horizontally; keep background elements simple to preserve readability and avoid palette overflow during tile conversion.
