@@ -16,13 +16,6 @@ I managed to snap some photos before he woke up. Check this out before he finds 
 
 ---
 
-## The Secret Lab
-
-![My Room](my_room.jpg)
-
-This is where the magic happens. I hooked it up to my Trinitron. It plays *exactly* like the arcade. No lag, no cut scenes. It's the real deal.
-
----
 
 ## The "Care Package"
 
