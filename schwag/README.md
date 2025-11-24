@@ -1,75 +1,105 @@
-# Super Dragon's Lair Arcade - Schwag & Collectibles
+# TOP SECRET: PROJECT DRAGON
 
-This directory contains all the authentic packaging and promotional materials that would have shipped with Super Dragon's Lair Arcade if it had been released as a physical SNES product in the mid-1990s.
+> [!CAUTION]
+> **CONFIDENTIAL PROPERTY OF NINTENDO OF AMERICA INC.**
+> DO NOT DISTRIBUTE. RETURN TO REDMOND HQ IMMEDIATELY IF FOUND.
 
-## Complete Package
+So... you're not gonna believe this.
 
-![All Items](complete_package.png)
+My dad works at Nintendo. Yeah, seriously. He's a Senior Test Engineer in the "Special Projects" division. He usually doesn't bring work home, but last night he left his briefcase unlocked in the den.
 
-Everything laid out on the table, just like unboxing day!
+I took a peek.
 
-## Individual Items
+Inside was **THIS**. It's a prototype for an arcade-perfect port of *Dragon's Lair* for the Super Nintendo. I know, I know, everyone says the SNES can't handle LaserDisc games. That's what I thought too. But look at this stuff! It uses some new "MSU-1" chip or something? I don't know, but it looks UNREAL.
 
-### User Manual
-
-![User Manual Cover](user_manual_cover.png)
-
-**4-Page Instruction Booklet** featuring:
-- The Legend Begins (Story & Characters)
-- Arcade-Style Controls
-- FMV Cue Guide & Timing Tips
-- Survival Guide with Scene Cheats
-
-*Full text available in [`usermanual.txt`](usermanual.txt)*
+I managed to snap some photos before he woke up. Check this out before he finds out and grounds me for life.
 
 ---
 
-### Holographic Trading Card
+## The Secret Lab
+
+![My Room](my_room.jpg)
+
+This is where the magic happens. I hooked it up to my Trinitron. It plays *exactly* like the arcade. No lag, no cut scenes. It's the real deal.
+
+---
+
+## The "Care Package"
+
+![The Stash](complete_package.png)
+
+The box didn't just have the game. It was full of this premium schwag. They must be planning a huge launch for this.
+
+---
+
+## The Hardware
+
+![System and Game](system_and_game.png)
+
+The cart is heavier than normal. You can feel the power of that extra chip inside. The label art is sick—way better than the box art for the other versions.
+
+---
+
+## The Loot
+
+They included all this bonus stuff for the "Early Reviewers" (aka me, right now).
+
+### Holographic Dirk Card
 
 ![Holographic Card](holographic_card.png)
 
-Premium collectible featuring Dirk the Daring with authentic 90s-era holographic foil finish.
-
----
-
-### Soundtrack CD
-
-![Soundtrack CD](soundtrack_cd.png)
-
-Original arcade audio tracks in CD quality, enhanced with MSU-1 streaming audio technology.
-
----
+This thing is shiny as heck. It's got that thick, premium 90s foil feel. Dirk looks like he's about to jump out of the card.
 
 ### Sticker Sheet
 
-![Sticker Sheet](sticker_sheet.png)
+![Stickers](sticker_sheet.png)
 
-Dragon's Lair themed stickers featuring characters and iconic scenes from the game.
+I'm definitely putting that "Dirk" sticker on my skateboard. Don't tell my dad.
+
+### Cinema Poster
+
+![Poster](poster.png)
+
+Full-size movie poster. It looks like something you'd see in a theater lobby, not a game store.
 
 ---
+
+## The "Official" Docs
+
+### Instruction Manual
+
+![Manual](user_manual_cover.png)
+
+It's not just a booklet; it's a survival guide.
+*Read the full text [here](usermanual.txt) if you want to survive past the first room.*
 
 ### Warranty Card
 
-![Warranty Card](warranty_card.png)
+![Warranty](warranty_card.png)
 
-Official product registration and warranty information card.
-
----
+"Mail to Redmond, WA." Yeah, right. Like I'm sending this back.
 
 ### Upcoming Releases
 
-![Upcoming Titles](upcoming_releases.png)
+![Hype](upcoming_releases.png)
 
-Preview of future releases and other titles in the series.
-
----
-
-## About These Materials
-
-These schwag items were created to evoke the nostalgia of opening a new SNES game in the 1990s. They represent what a hypothetical physical release of this homebrew project might have looked like during the 16-bit era.
-
-All materials are fan-made and created for this open-source project. Dragon's Lair is a registered trademark of Digital Leisure, Inc.
+There's a flyer in here teasing more arcade ports. *Space Ace* on SNES? *Thayer's Quest*? If this tech is real, the 16-bit wars are OVER. Sega is cooked.
 
 ---
 
+## The Soundtrack
+
+![CD](soundtrack_cd.png)
+
+It came with a CD! "Original Arcade Soundtrack - Remastered." I popped it in my Discman. It's crystal clear. None of that muffled 16-bit synth stuff. Real instruments.
+
+---
+
+> [!IMPORTANT]
+> **KEEP THIS QUIET.**
+> If this gets out, my dad is gonna kill me. But you had to see it.
+>
+> *Dragon's Lair Arcade on SNES is REAL.*
+
+---
 *Back to [Main README](../README.md)*
