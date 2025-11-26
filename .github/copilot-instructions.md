@@ -15,7 +15,7 @@ This repository contains a complete SNES ROM project that recreates Dragon's Lai
 
 ### Build System
 - **Platform:** Linux/WSL (Ubuntu) required
-- **Assembler:** WLA-DX 9.5a (included, must be compiled: `./tools/wla-dx-9.5-svn/unix.sh 4`)
+- **Assembler:** WLA-DX 9.5-svn (included, must be compiled: `./tools/wla-dx-9.5-svn/unix.sh 4`)
 - **Primary Build:** `make` or `make clean && make`
 - **Fast Build:** `USE_SUPERFAMICONV=1 make` (100× faster graphics conversion)
 - **Output:** `build/SuperDragonsLairArcade.sfc` (SNES ROM file)
