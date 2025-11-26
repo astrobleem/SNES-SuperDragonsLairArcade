@@ -23,7 +23,7 @@
     lda #1
     bra ++
 +   lda #0
-+  sta this.branchImmediate
+++  sta this.branchImmediate
   stz this.hasTriggered
 
   rts

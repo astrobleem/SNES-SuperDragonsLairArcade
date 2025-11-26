@@ -1,0 +1,11 @@
+Reading config file E:\gh\SNES-SuperDragonsLairArcade\snes9x\snes9x.conf.
+Saving	config file	E:\gh\SNES-SuperDragonsLairArcade\snes9x\snes9x.conf
+No ROM file header found.
+Using msu file E:\gh\SuperRoadBlaster.sfc\SuperRoadBlaster.msu.
+Map_HiROMMap
+"SUPER ROAD BLASTER" (PAL) version 1.2
+ROM+RAM+BAT+MSU-1: HiROM: 2 Mbit, SRAM: 16 Kbit
+ID: _X_, CRC32: 151d8431, Invalid Checksum
+Using msu file E:\gh\SuperRoadBlaster.sfc\SuperRoadBlaster.msu.
+Using msu file E:\gh\SuperRoadBlaster.sfc\SuperRoadBlaster.msu.
+Saving	config file	E:\gh\SNES-SuperDragonsLairArcade\snes9x\snes9x.conf

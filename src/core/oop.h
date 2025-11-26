@@ -138,6 +138,7 @@ OBJID.Event.debris_crash db
 OBJID.Event.wall_crash db
 OBJID.Event.window_crash db
 OBJID.Event.hide_sunscreen db
+
 OBJID.Event.change_dash db
 OBJID.Event.macro_vibrate1 db
 OBJID.Event.macro_vibrate2 db
@@ -146,6 +147,8 @@ OBJID.Event.macro_rockfast db
 ;OBJID.Zero db
 OBJID.Right_arrow db
 OBJID.Left_arrow db
+OBJID.Up_arrow db
+OBJID.Down_arrow db
 OBJID.Turbo_icon db
 OBJID.Brake_icon db
 ;OBJID.Dashboard db
@@ -220,44 +223,46 @@ OopClassLut:
         PTRLONG OopClassLut Event.direction_generic.CLS
         PTRLONG OopClassLut Event.direction_right.CLS
         PTRLONG OopClassLut Event.direction_left.CLS
-	PTRLONG OopClassLut Event.accelerate.CLS
-	PTRLONG OopClassLut Event.brake.CLS
-	PTRLONG OopClassLut Event.shake.CLS
-	PTRLONG OopClassLut Event.player_crash.CLS
-	PTRLONG OopClassLut Event.opponent_crash.CLS
-	PTRLONG OopClassLut Event.terrain_crash.CLS
-	PTRLONG OopClassLut Event.soft_crash.CLS
-	PTRLONG OopClassLut Event.landing_crash.CLS
-	PTRLONG OopClassLut Event.explode_crash.CLS
-	PTRLONG OopClassLut Event.slide_crash.CLS
-	PTRLONG OopClassLut Event.debris_crash.CLS
-	PTRLONG OopClassLut Event.wall_crash.CLS
-	PTRLONG OopClassLut Event.window_crash.CLS
-	PTRLONG OopClassLut Event.hide_sunscreen.CLS
-	PTRLONG OopClassLut Event.change_dash.CLS
-	PTRLONG OopClassLut Event.macro_vibrate1.CLS
-	PTRLONG OopClassLut Event.macro_vibrate2.CLS
-	PTRLONG OopClassLut Event.macro_vibrate3.CLS
-	PTRLONG OopClassLut Event.macro_rockfast.CLS
-	PTRLONG OopClassLut Right_arrow.CLS
-	PTRLONG OopClassLut Left_arrow.CLS
-	PTRLONG OopClassLut Turbo_icon.CLS
-	PTRLONG OopClassLut Brake_icon.CLS
-	PTRLONG OopClassLut VideoMask.CLS
-	PTRLONG OopClassLut SteeringWheel.CLS
-	PTRLONG OopClassLut Background.generic.CLS
-	PTRLONG OopClassLut Brightness.CLS
-	PTRLONG OopClassLut Player.CLS
-	PTRLONG OopClassLut Pause.CLS
-	PTRLONG OopClassLut LogoZoom.CLS
-	PTRLONG OopClassLut Score.CLS
-	PTRLONG OopClassLut Background.textlayer.8x8.CLS
-	PTRLONG OopClassLut Background.textlayer.16x16.CLS
-	PTRLONG OopClassLut Sprite.super.CLS
-	PTRLONG OopClassLut Palette.rotate.CLS
-	PTRLONG OopClassLut Player.nameInput.CLS
-	PTRLONG OopClassLut Background.dashboard.CLS
-	PTRLONG OopClassLut Sprite.life_car.CLS
+        PTRLONG OopClassLut Event.accelerate.CLS
+        PTRLONG OopClassLut Event.brake.CLS
+        PTRLONG OopClassLut Event.shake.CLS
+        PTRLONG OopClassLut Event.player_crash.CLS
+        PTRLONG OopClassLut Event.opponent_crash.CLS
+        PTRLONG OopClassLut Event.terrain_crash.CLS
+        PTRLONG OopClassLut Event.soft_crash.CLS
+        PTRLONG OopClassLut Event.landing_crash.CLS
+        PTRLONG OopClassLut Event.explode_crash.CLS
+        PTRLONG OopClassLut Event.slide_crash.CLS
+        PTRLONG OopClassLut Event.debris_crash.CLS
+        PTRLONG OopClassLut Event.wall_crash.CLS
+        PTRLONG OopClassLut Event.window_crash.CLS
+        PTRLONG OopClassLut Event.hide_sunscreen.CLS
+        PTRLONG OopClassLut Event.change_dash.CLS
+        PTRLONG OopClassLut Event.macro_vibrate1.CLS
+        PTRLONG OopClassLut Event.macro_vibrate2.CLS
+        PTRLONG OopClassLut Event.macro_vibrate3.CLS
+        PTRLONG OopClassLut Event.macro_rockfast.CLS
+        PTRLONG OopClassLut Right_arrow.CLS
+        PTRLONG OopClassLut Left_arrow.CLS
+        PTRLONG OopClassLut Up_arrow.CLS
+        PTRLONG OopClassLut Down_arrow.CLS
+        PTRLONG OopClassLut Turbo_icon.CLS
+        PTRLONG OopClassLut Brake_icon.CLS
+        PTRLONG OopClassLut VideoMask.CLS
+        PTRLONG OopClassLut SteeringWheel.CLS
+        PTRLONG OopClassLut Background.generic.CLS
+        PTRLONG OopClassLut Brightness.CLS
+        PTRLONG OopClassLut Player.CLS
+        PTRLONG OopClassLut Pause.CLS
+        PTRLONG OopClassLut LogoZoom.CLS
+        PTRLONG OopClassLut Score.CLS
+        PTRLONG OopClassLut Background.textlayer.8x8.CLS
+        PTRLONG OopClassLut Background.textlayer.16x16.CLS
+        PTRLONG OopClassLut Sprite.super.CLS
+        PTRLONG OopClassLut Palette.rotate.CLS
+        PTRLONG OopClassLut Player.nameInput.CLS
+        PTRLONG OopClassLut Background.dashboard.CLS
+        PTRLONG OopClassLut Sprite.life_car.CLS
 	PTRLONG OopClassLut Sprite.life_counter.CLS
 	PTRLONG OopClassLut Sprite.score.CLS
 	PTRLONG OopClassLut Sprite.bang.CLS

@@ -1,52 +1,135 @@
+; 1
+; 2
+; 3
+; 4
+; 5
+; 6
+; 7
+; 8
+; 9
+; 10
+; 11
+; 12
+; 13
+; 14
+; 15
+; 16
+; 17
+; 18
+; 19
+; 20
+; 21
+; 22
+; 23
+; 24
+; 25
+; 26
+; 27
+; 28
+; 29
+; 30
+; 31
+; 32
+; 33
+; 34
+; 35
+; 36
+; 37
+; 38
+; 39
+; 40
+; 41
+; 42
+; 43
+; 44
+; 45
+; 46
+; 47
+; 48
+; 49
+; 50
+; 51
+; 52
+; 53
+; 54
+; 55
+; 56
+; 57
+; 58
+; 59
+; 60
+; 61
+; 62
+; 63
+; 64
+; 65
+; 66
+; 67
+; 68
+; 69
+; 70
+; 71
+; 72
+; 73
+; 74
+; 75
+; 76
+; 77
+; 78
+; 79
+; 80
+; 81
+; 82
+; 83
+; 84
+; 85
+; 86
+; 87
+; 88
+; 89
+; 90
+; 91
+; 92
+; 93
+; 94
+; 95
+; 96
+; 97
+; 98
+; 99
+; 100
+.ifndef ABSTRACT_SPRITE_H
+.define ABSTRACT_SPRITE_H
+
+
 .include "src/config/config.inc"
 
-        .def OAM.PALETTE.BITS %
-    1110
+        .def OAM.PALETTE.BITS %1110
 
     ;
-zp - vars, just a reference
-               .enum 0 iterator INSTANCEOF iteratorStruct dimension INSTANCEOF
-                   dimensionStruct animation INSTANCEOF animationStruct zpLen
-                       ds 0 .ende
+.ifndef iterator
+;zp - vars, just a reference
+.enum 0
+  iterator INSTANCEOF iteratorStruct
+  dimension INSTANCEOF dimensionStruct
+  animation INSTANCEOF animationStruct
+  zpLen ds 0
+.ende
+.endif
 
     ;
-object class static flags, default properties and zero page 
+;object class static flags, default properties and zero page 
+.ifndef CLASS.FLAGS
 .define CLASS.FLAGS OBJECT.FLAGS.Present
 .define CLASS.PROPERTIES 0
 .define CLASS.ZP_LENGTH zpLen
 .define CLASS.IMPLEMENTS interface.dimension
+.endif
 
-.base BSL
-.bank 0 slot 0
 
-.Section "SpriteAnimationLUT" superfree
-SpriteAnimationLUT:
-  PTRLONG SpriteAnimationLUT SPRITE.right_arrow
-  PTRLONG SpriteAnimationLUT SPRITE.left_arrow
-  PTRLONG SpriteAnimationLUT SPRITE.down_arrow
-  PTRLONG SpriteAnimationLUT SPRITE.up_arrow
-  PTRLONG SpriteAnimationLUT SPRITE.turbo
-  PTRLONG SpriteAnimationLUT SPRITE.brake
-  PTRLONG SpriteAnimationLUT SPRITE.dashboard
-  PTRLONG SpriteAnimationLUT SPRITE.steering_wheel.normal
-  PTRLONG SpriteAnimationLUT SPRITE.steering_wheel.left
-  PTRLONG SpriteAnimationLUT SPRITE.steering_wheel.right
-  PTRLONG SpriteAnimationLUT SPRITE.super
-  PTRLONG SpriteAnimationLUT SPRITE.life_car
-  PTRLONG SpriteAnimationLUT SPRITE.life_counter
-  PTRLONG SpriteAnimationLUT SPRITE.life_counter
-  PTRLONG SpriteAnimationLUT SPRITE.points.normal
-  PTRLONG SpriteAnimationLUT SPRITE.points.extra
-  PTRLONG SpriteAnimationLUT SPRITE.bang
-
-.ends	
 
   ;
-SPRITE_ANIMATION zero SPRITE_ANIMATION right_arrow SPRITE_ANIMATION left_arrow
-    SPRITE_ANIMATION down_arrow SPRITE_ANIMATION up_arrow SPRITE_ANIMATION turbo
-        SPRITE_ANIMATION brake SPRITE_ANIMATION dashboard SPRITE_ANIMATION
-            steering_wheel.normal SPRITE_ANIMATION
-                steering_wheel.left SPRITE_ANIMATION steering_wheel
-                    .right SPRITE_ANIMATION super SPRITE_ANIMATION life_car
-                        SPRITE_ANIMATION life_counter SPRITE_ANIMATION points
-                    .normal SPRITE_ANIMATION points.extra SPRITE_ANIMATION bang
+  ;SPRITE_ANIMATION zero 
+
+
+.endif

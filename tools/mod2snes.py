@@ -62,12 +62,12 @@ logging.basicConfig( #filename='debug.log',
 
 
 def main():
-    if len( sys.argv ) != 3:
+    if len(sys.argv) != 3 or "-h" in sys.argv or "--help" in sys.argv:
       logging.info( 'Pro tracker MOD to SNES format converter' )
       logging.info( '2011-01-02 d4s matt@dforce3000.de' )
       logging.info( 'Usage:' )
       logging.info( '%s infile outfilebase' % sys.argv[0] )
-      sys.exit(1)
+      sys.exit(0 if "-h" in sys.argv or "--help" in sys.argv else 1)
       
 
     inFileName = sys.argv[1]

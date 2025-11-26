@@ -2,6 +2,7 @@
 * 
 */
 .include "src/object/event/Event.chapter.h"
+.include "src/object/sprite/up_arrow.h"
 .section "Event.chapter"
 
   METHOD init
@@ -30,7 +31,7 @@
   jsr abstract.Iterator.each.byProperties
   bcc +
     lda #0
-    CALL Turbo_icon.reset.MTD iterator.target 0 300
+    CALL Up_arrow.reset.MTD iterator.target 0 300
     bra -
 +  
 

@@ -2,6 +2,24 @@
 * Throne Room hazard/jump state tracker.
 * param1: electrified target id; param2: jump sequence index.
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT throne_room_state 2
+.section "Event.throne_state"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 2
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.throne_state
+.ends

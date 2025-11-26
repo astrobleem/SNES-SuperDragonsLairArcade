@@ -146,7 +146,12 @@ def check_backgrounds():
     
     return issues, missing
 
+import argparse
+
 def main():
+    parser = argparse.ArgumentParser(description="Check asset dimensions and transparency against specifications.")
+    parser.parse_args()
+
     sprite_issues, sprite_missing = check_sprites()
     bg_issues, bg_missing = check_backgrounds()
     

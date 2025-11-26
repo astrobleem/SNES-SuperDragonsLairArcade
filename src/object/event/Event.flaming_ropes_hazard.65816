@@ -2,6 +2,24 @@
 * Flaming Ropes hazard fallbacks (burns, missed landings).
 * param1: hazard id for the triggered cutscene.
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT flaming_ropes_hazard 1
+.section "Event.flame_rope_haz"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 1
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.flame_rope_haz
+.ends

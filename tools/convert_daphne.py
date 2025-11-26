@@ -16,7 +16,7 @@ def parse_framefile(framefile_path):
         lines = f.readlines()
     
     # The first line is usually the relative path to the content
-    content_root_rel = lines[0].strip()
+    content_root_rel = lines[0].strip().replace('\\', '/')
     content_root = os.path.normpath(os.path.join(base_dir, content_root_rel))
     
     print(f"Content root determined as: {content_root}")
@@ -29,7 +29,7 @@ def parse_framefile(framefile_path):
         # Format is usually: FrameNumber  Filename
         parts = line.split(None, 1) # Split on first whitespace
         if len(parts) >= 2:
-            filename = parts[1]
+            filename = parts[1].replace('\\', '/')
             full_path = os.path.join(content_root, filename)
             video_files.append(full_path)
             

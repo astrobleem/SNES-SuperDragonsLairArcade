@@ -97,4 +97,16 @@ interface.dimension.translate:
 ++
   rts
 
+
+/*
+* set pixel size of object
+*/
+interface.dimension.setSize:
+  rep #$31
+  lda OBJECT.CALL.ARG.1,s
+  sta.b _dimension.size.x
+  lda OBJECT.CALL.ARG.2,s
+  sta.b _dimension.size.y
+  rts
+
 .ends

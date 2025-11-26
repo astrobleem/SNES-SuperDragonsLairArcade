@@ -84,6 +84,7 @@ pointer		dw	;pointer to callback routine. $ffff means empty
   endFrame dw
   result dw
   resultTarget dw
+  age dw
   msu1Handler ds 4
   player ds 4
 .endst

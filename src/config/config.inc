@@ -1,3 +1,5 @@
+.ifndef CONFIG_INC
+.define CONFIG_INC
 
 .MEMORYMAP
 DEFAULTSLOT 0
@@ -12,7 +14,7 @@ SLOT 2 16	;zero-page ram. 16=debug value to check if all routines relocate prope
 .ENDME
 
 .ROMBANKSIZE $10000    ; Every ROM bank is 64 KBytes in size, also necessary.
-.ROMBANKS 4           ; 2Mbits -- Tells WLA that you want to use 32 ROM banks.
+.ROMBANKS 16           ; 8Mbits -- Tells WLA that you want to use 16 ROM banks.
 
 
 /*
@@ -68,3 +70,4 @@ IRQBRK EmptyHandler
 
 .include "src/config/globals.inc"
 
+.endif

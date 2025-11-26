@@ -1,3 +1,6 @@
+.ifndef GLOBALS_INC
+.define GLOBALS_INC
+
 .include "src/definition/snes.registers"
 .include "src/definition/msu1.registers"
 .include "src/config/macros.inc"
@@ -193,3 +196,5 @@ WRAM.CLEAR_PATTERN.STRING db
     .dw $2907       ;bg1 tilemap clear
     .dw $2020       ;string buffer
 */
+
+.endif

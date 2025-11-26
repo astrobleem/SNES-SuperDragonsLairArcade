@@ -2,6 +2,24 @@
 * Rolling Balls color/size prompt driven by chapter params.
 * param1: ball color id; param2: sprite scale/size id.
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT rolling_balls_ball 2
+.section "Event.roll_ball_ball"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 2
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.roll_ball_ball
+.ends

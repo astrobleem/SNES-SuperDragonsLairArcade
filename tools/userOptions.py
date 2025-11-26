@@ -30,11 +30,25 @@ class Options:
         self.__options[option]["value"] = value
 
     def __parse_user_arguments(self, args, defaults):
+        if "-h" in args or "--help" in args:
+            self.__print_help(defaults)
+            sys.exit(0)
+
         options = {key: value.copy() for key, value in defaults.items()}
         for index, arg in enumerate(args):
             if arg.startswith("-") and arg[1:] in options and index + 1 < len(args):
                 options[arg[1:]]["value"] = args[index + 1]
         return self.__sanitize_options(options)
+
+    def __print_help(self, defaults):
+        print("Usage: script.py [options]")
+        print("\nOptions:")
+        for key, value in defaults.items():
+            default_val = value.get("value", "")
+            help_text = f"  -{key:<15} Type: {value['type']:<8} Default: {default_val}"
+            if "min" in value and "max" in value:
+                help_text += f" (Range: {value['min']}-{value['max']})"
+            print(help_text)
 
     def __sanitize_options(self, options):
         sanitizer_lookup = self.__get_sanitizer_lookup()

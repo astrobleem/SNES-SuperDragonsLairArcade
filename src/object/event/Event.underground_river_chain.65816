@@ -2,6 +2,24 @@
 * Underground River chain grab/bounce routing.
 * param1: chain target id; param2: fail-state flag.
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT underground_river_chain 2
+.section "Event.under_river_chain"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 2
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.under_river_chain
+.ends

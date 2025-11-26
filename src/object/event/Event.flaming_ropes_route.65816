@@ -2,6 +2,24 @@
 * Flaming Ropes route selection and platform sliding cues.
 * param1: rope index; param2: slide speed/variant flag.
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT flaming_ropes_route 2
+.section "Event.flame_rope_rt"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 2
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.flame_rope_rt
+.ends

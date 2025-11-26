@@ -1,16 +1,5 @@
-
-        SCRIPT logo_intro
-.ACCU 16
-.INDEX 16
-
+  SCRIPT logo_intro
   .def objLogoBg hashPtr.1
-  .def objBrightness hashPtr.2
-
-  NEW Brightness.CLS.PTR objBrightness
-
-  lda #BRIGHTNESS.NONE
-  CALL Brightness.set.MTD objBrightness
-
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers

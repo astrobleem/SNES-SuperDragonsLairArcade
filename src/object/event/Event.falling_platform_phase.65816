@@ -2,6 +2,24 @@
 * Falling Platform phase handler across long/short/vestibule paths.
 * param1: length flag; param2: jump-set or landing variant id.
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT falling_platform_phase 2
+.section "Event.falling_plat_phase"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 2
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.falling_plat_phase
+.ends

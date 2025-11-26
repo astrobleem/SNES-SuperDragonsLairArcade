@@ -4,6 +4,7 @@
 * direction standard over this deprecated event label.
 */
 .include "src/object/event/Event.accelerate.h"
+.include "src/object/sprite/up_arrow.h"
 .section "Event.accelerate"
 
   METHOD init
@@ -12,9 +13,9 @@
   jsr Event.template.initCommon
 
   lda event.endFrame
-  NEW Turbo_icon.CLS.PTR this.sprite 112 80
+  NEW Up_arrow.CLS.PTR this.sprite 112 80
   lda event.endFrame
-  CALL Turbo_icon.reset.MTD this.sprite 112 80
+  CALL Up_arrow.reset.MTD this.sprite 112 80
   
   NEW Spc.CLS.PTR this.audio
   lda.w #SAMPLE.0.TURBO
@@ -40,15 +41,14 @@
 
       jsr core.input.get.trigger
       and.w #JOY_DIR_UP
-      beq +++
-        lda this.age
+      beq +
+        lda event.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT
-        bcs +++
+        bcs +
           lda #PLAYER.BONUS.EXTRA
-          bra ++++
+          bra ++
++         lda #PLAYER.BONUS.DEFAULT
 ++
-          lda #PLAYER.BONUS.DEFAULT
-+++
           NEW Sprite.score.CLS.PTR oopCreateNoPtr 112 80
           CALL Event.confirm.kill.MTD iterator.self
           rts

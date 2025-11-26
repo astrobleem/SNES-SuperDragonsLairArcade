@@ -4,22 +4,14 @@
 .INDEX 16
 
   .def objBackground hashPtr.1
-  .def objLogo hashPtr.2
-  .def objBrightness hashPtr.3
-  .def objSpc hashPtr.4
-  .def objLogoZoom hashPtr.5
-  .def objSuper hashPtr.6
-  .def objText hashPtr.7
+  .def objText hashPtr.2
+  .def objLogo hashPtr.3
+  .def objLogoZoom hashPtr.4
+  .def objSpc hashPtr.5
+  .def objBrightness hashPtr.6
+  .def objPlayer hashPtr.7
   .def objPalRotate hashPtr.8
-  .def objPlayer hashPtr.9
-  .def irq.buffer.x this._tmp
-  .def irq.buffer.y this._tmp + 2
-
-  NEW Brightness.CLS.PTR objBrightness
-
-  lda #BRIGHTNESS.NONE
-  CALL Brightness.set.MTD objBrightness 
-
+  .def objSuper hashPtr.9
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers

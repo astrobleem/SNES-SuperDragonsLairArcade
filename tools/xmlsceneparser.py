@@ -13,6 +13,7 @@ import sys
 import string
 import logging
 import xml.dom.minidom
+import subprocess
 
 
 '''
@@ -127,7 +128,7 @@ def main():
   if not options.get('videofile') == "":
     extractChapterVideo(chapterEvent, options)
       
-    extractChapterAudio(chapterEvent, options)
+    # extractChapterAudio(chapterEvent, options)
 
     optimizeVideoFrames(options)
     if not options.get('convertedoutfolder') == "" and not options.get('convertedframefolder') == "":
@@ -206,11 +207,17 @@ def extractChapterVideo(chapterEvent, options):
     timestart = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.timestart // (60 * 1000)), int((chapterEvent.timestart % (60 * 1000)) // 1000), int(chapterEvent.timestart % (1000)))
     duration = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.duration // (60 * 1000)), int((chapterEvent.duration % (60 * 1000)) // 1000), int(chapterEvent.duration % (1000)))
 
-    returnVal = os.system("ffmpeg -y -ss %s -t %s -i %s -s 256x192 -pix_fmt rgb8 %s/video_%%06d.gfx_video.png" % (timestart, duration, options.get('videofile'), options.get('chapterfolder')))
+    # Use filter_complex to scale and quantize to 120 colors (to fit in 8 palettes of 15+1)
+    # stats_mode=single ensures a new palette is generated for each frame
+    # paletteuse=new=1 ensures the new palette is applied to each frame
+    # IMPORTANT: -ss must be BEFORE -i for fast seeking!
+    cmd = "ffmpeg -y -ss %s -t %s -i \"%s\" -filter_complex \"scale=256:192[s];[s]split[s1][s2];[s1]palettegen=max_colors=120:stats_mode=single[p];[s2][p]paletteuse=new=1:dither=bayer\" -f image2 \"%s/video_%%06d.gfx_video.png\"" % (timestart, duration, options.get('videofile'), options.get('chapterfolder'))
+    
+    returnVal = os.system(cmd)
     if not 0 == returnVal:
       logging.error('Error while ripping chapter video frames, ffmpeg return code: %s.' % returnVal)
       sys.exit(1)
-      
+
 '''
 call ffmpeg to cut out relevant chapter from video file, generate audio tracks
 '''
@@ -228,22 +235,75 @@ def extractChapterAudio(chapterEvent, options):
     if not 0 == returnVal:
       logging.error('Error while ripping chapter audio, ffmpeg return code: %s.' % returnVal)
       sys.exit(1)      
-
 '''
 use gimp script(must be located in "$HOME/.gimp2.6/scripts/, or wherever gimp expects scheme scripts") to post-process video frames(smoothen out and color-reduce)
 '''
 def optimizeVideoFrames(options):
-    '''
-    try:
-      videoFile = open(options.get('gfxoptimizer'), 'r')
-    except IOError:
-      logging.error('unable to find input video file %s.' % options.get('gfxoptimizer'))
-      sys.exit(1)
-    '''
-    returnVal = os.system("gimp -i -b '(batch-convert-indexed \"%s/*.png\" 120)' -b '(gimp-quit 0)'" % options.get('chapterfolder'))
-    if not 0 == returnVal:
-      logging.error('Error while optimizing video frames, gimp return code: %s.' % returnVal)
-      sys.exit(1)
+    logging.info('Optimizing video frames using superfamiconv...')
+    chapterOutDir = "%s/%s" % (options.get('convertedoutfolder'), options.get('chapter'))
+    if not os.path.exists(chapterOutDir):
+        os.makedirs(chapterOutDir)
+
+    # Use gfx_converter.py which wraps superfamiconv
+    # We need to iterate over all extracted PNGs in chapterfolder
+    # Filename format: video_XXXXXX.gfx_video.png
+    
+    chapterFolder = options.get('chapterfolder')
+    png_files = [f for f in os.listdir(chapterFolder) if f.endswith('.gfx_video.png')]
+    
+    if not png_files:
+        logging.warning("No video frames found to optimize in %s" % chapterFolder)
+        return
+
+    # Path to gfx_converter.py
+    # Assuming we are running from project root or tools dir
+    # We need absolute path or relative to CWD
+    # The makefile calls it as ./tools/gfx_converter.py
+    
+    # We will use subprocess to call it
+    gfx_converter = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'gfx_converter.py')
+    
+    for png_file in png_files:
+        full_png_path = os.path.join(chapterFolder, png_file)
+        # Output base: video_XXXXXX.gfx_video (without .png)
+        # But copyConvertedFrames expects them in convertedframefolder?
+        # Wait, copyConvertedFrames copies FROM convertedframefolder TO convertedoutfolder
+        # But extractChapterVideo extracts TO chapterfolder.
+        # So we should convert IN PLACE or to convertedframefolder?
+        
+        # Original code:
+        # extractChapterVideo -> chapterfolder
+        # optimizeVideoFrames -> chapterfolder (in place)
+        # copyConvertedFrames -> copies from convertedframefolder (???)
+        
+        # Wait, copyConvertedFrames (line 162) reads from options.get('convertedframefolder')
+        # But extractChapterVideo writes to options.get('chapterfolder')
+        # This implies convertedframefolder and chapterfolder might be the same?
+        # OR there was a step missing in original code.
+        
+        # Let's assume we want to output to chapterfolder, and copyConvertedFrames is legacy/wrong for this flow.
+        # We will modify copyConvertedFrames too if needed.
+        # For now, let's output the .tiles/.map/.pal to chapterfolder.
+        
+        outfilebase = os.path.splitext(full_png_path)[0] # removes .png
+        
+        cmd = [
+            sys.executable, gfx_converter,
+            '--tool', 'superfamiconv',
+            '--pad-to-32x32',
+            '-palettes', '8',
+            '-infile', full_png_path,
+            '-outfilebase', outfilebase
+        ]
+        
+        # logging.debug("Running: %s" % " ".join(cmd))
+        try:
+            subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except subprocess.CalledProcessError as e:
+            logging.error("Error converting frame %s: %s" % (png_file, e))
+            sys.exit(1)
+            
+    logging.info("Optimized %d frames." % len(png_files))
 
 
 def writeEventFile(events, options):
@@ -366,6 +426,9 @@ class Event():
     self.name = self.__sanitizeName(self.name)
     self.result = self.__sanitizeName(self.result)
     self.resultname = self.__sanitizeName(self.resultname)
+
+    if len(self.type) > 13:
+      logging.warning("WARNING: Event type '%s' exceeds 13 characters! This may cause assembler symbol overflow." % self.type)
         
 
   def __getImmediateChildByTagName(self, domElement, childName):
@@ -419,16 +482,19 @@ class Event():
     if self.type == 'direction' and 'type' in self.parameters:
       direction = self.parameters['type']
       if direction in direction_lut:
-        self.type = 'direction_generic'
+        self.type = 'dir_gen'
         self.arg0 = direction_lut[direction]
     elif self.type in room_transition_lut:
       self.arg0 = room_transition_lut[self.type]
-      self.type = 'room_transition'
+      self.type = 'room_trans'
     elif self.type.startswith('seq') and self.type[3:].isdigit():
       self.arg0 = self.type[3:]
       self.type = 'seq_generic'
     elif self.type == "macro":
       self.type = "%s-%s" % (self.type, self.name)
+    
+    if self.type == 'direction_generic':
+        logging.warning("DEBUG: self.type became direction_generic! Params: %s" % self.parameters)
     
 class UserOptions():
   def __init__( self, args, defaults ):
@@ -446,12 +512,26 @@ class UserOptions():
 
 
   def __parseUserArguments( self, args, defaults ):
+    if "-h" in args or "--help" in args:
+        self.__print_help(defaults)
+        sys.exit(0)
+
     options = defaults
       
     for i in range( len( args ) ):
       if args[i][1:] in defaults:
         options[args[i][1:]]['value'] = args[i+1]
     return self.__sanitizeOptions( options )
+
+  def __print_help(self, defaults):
+      print("Usage: script.py [options]")
+      print("\nOptions:")
+      for key, value in defaults.items():
+          default_val = value.get("value", "")
+          help_text = f"  -{key:<15} Type: {value['type']:<8} Default: {default_val}"
+          if "min" in value and "max" in value:
+              help_text += f" (Range: {value['min']}-{value['max']})"
+          print(help_text)
 
 
   def __sanitizeOptions( self, options ):

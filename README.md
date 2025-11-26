@@ -99,49 +99,6 @@ wsl python3 tests/test_background_assets.py
 
 **See [`BUILD.md`](BUILD.md) for detailed build instructions and troubleshooting.**
 
-## Asset pipeline status
-
-### Graphics Tools ✅ Complete
-- **img_processor.py** - Resize/crop/quantize images to SNES specs (256×224, color limits)
-- **gfx_converter.py** - Unified interface for superfamiconv or gracon.py
-- **superfamiconv** - High-speed C++ converter (~100× faster than gracon)
-- **Workflow documented** - See `tools/README.md` and `data/backgrounds/hiscore.gfx_bg/README.md`
-
-### Background Assets 🔄 In Progress
-| Background | Status | Notes |
-| --- | --- | --- |
-| High Score | ✅ Processed | First complete example with full workflow |
-| Title Screen | 📝 Ready | Description file ready for generation |
-| Score Entry | 📝 Ready | Description file ready for generation |
-| Level Complete (×3) | 📝 Ready | Description files ready for generation |
-| Logo | 📝 Ready | Description file ready for generation |
-| MSU1 Placeholder | 📝 Ready | Description file ready for generation |
-| HUD Overlay | 📝 Ready | Description file ready (8bpp direct color) |
-
-**Process:** Use `img_processor.py` to prepare artwork → build system auto-converts via `animationWriter.py`
-
-### Sprite Assets 📝 Descriptions Ready
-All sprite descriptions updated to Dragon's Lair theme:
-- **Directional arrows** (up/down/left/right) - Glowing cyan fantasy cues
-- **Impact effects** (bang) - Sword strikes, magical sparkles
-- **Life system** (heart/helmet icons, numerals)
-- **Score popups** (normal/extra points with golden glow)
-- **Bonus indicators** ("PERFECT!" celebration text)
-
-**Legacy sprites marked:** brake, dashboard, steering wheels, turbo (not used in Dragon's Lair)
-
-### Sound Assets ✅ Audited & Registered
-- **Kept:** `ok`, `shuriken`, `technique`, `turn` (generic/action cues)
-- **New:** `dragon_roar` (ambient/boss), `sword_clank` (impact)
-- **Legacy:** `brake`, `turbo` (marked as unused)
-- **System:** Updated `spcinterface.h` to register new sounds; documentation in `data/sounds/README.md`
-
-### FMV/Audio ⏳ Awaiting Source Material
-- Chapter scripts exist in `data/events/` (516 chapters)
-- Frame conversion ready (`gracon.py`, `animationWriter.py`)
-- MSU-1 packaging ready (`msu1blockwriter.py`)
-- **Needs:** Dragon's Lair video captures and audio tracks
-
 ## Documentation map
 - `README.md` (this file) – Project overview and status
 - **[`BUILD.md`](BUILD.md)** – **Build instructions, troubleshooting, and validation**
@@ -158,25 +115,6 @@ All sprite descriptions updated to Dragon's Lair theme:
 - NTSC Super Nintendo hardware
 - SD2SNES / FXPAK Pro (MSU-1 required)
 - SNES9x / bsnes for debugging and iteration
-
-## Next steps
-
-### Immediate (Graphics)
-1. **Generate background artwork** from description files in `data/backgrounds/*/`
-2. **Process with img_processor.py** to 256×224, 16 colors
-3. **Run make** - build system handles conversion automatically
-4. **Test in emulator** to verify appearance
-
-### Next Phase (Sprites)
-1. Generate Dragon's Lair themed sprites from updated descriptions
-2. Replace existing RoadBlaster placeholder sprites
-3. Remove legacy sprites (brake, dashboard, steering wheels, turbo)
-
-### Future (FMV/Audio)
-1. Extract Dragon's Lair arcade video frames
-2. Extract and normalize Dragon's Lair audio tracks
-3. Process with `xmlsceneparser.py` → converters → `msu1blockwriter.py`
-4. Package MSU-1 data files for distribution
 
 ## Graphics Workflow Quick Reference
 

@@ -19,7 +19,7 @@ Event.template.initCommon:
   lda OBJECT.CALL.ARG.4,s
   sta.b event.resultTarget
 
-  stz this.age
+  stz event.age
   rts
 
 ; wait until the timeline reaches the event start frame, then tick age
@@ -32,7 +32,7 @@ Event.template.waitTimeline:
     clc
     rts
 +
-  inc this.age
+  inc event.age
   sec
   rts
 

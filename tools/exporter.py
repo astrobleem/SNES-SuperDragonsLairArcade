@@ -17,7 +17,14 @@ import re
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Tuple, Union
 
-
+# Import create_event from the same directory
+try:
+    from create_event import create_event
+except ImportError:
+    # Fallback if running from a different directory context
+    import sys
+    sys.path.append(str(pathlib.Path(__file__).parent))
+    from create_event import create_event
 Number = Union[int, float]
 LuaValue = Union["LuaTable", str, Number, None, bool]
 
@@ -243,7 +250,9 @@ def ms_to_frame(time_ms: Number, fps: float) -> int:
 
 
 def sanitize(name: str) -> str:
-    return re.sub(r"[^A-Za-z0-9_]", "_", name)
+    # Truncate to 29 chars to match create_event limit
+    sanitized = re.sub(r"[^A-Za-z0-9_]", "_", name)
+    return sanitized[:29]
 
 
 @dataclass
@@ -392,6 +401,13 @@ def export_scenes(lua_path: pathlib.Path, output_dir: pathlib.Path, filter_set: 
         logging.info("Exporting scene '%s'", scene_name)
         events = build_events(scene_name, sequences, fps)
         write_chapter_script(output_dir, scene_name, events)
+        
+        # Generate event files for each event type
+        for event in events:
+            if event.type != "chapter":
+                event_name = f"Event.{event.type}"
+                logging.info(f"Ensuring event file exists: {event_name}")
+                create_event(event_name)
 
 
 def parse_args() -> argparse.Namespace:
@@ -439,3 +455,6 @@ def main() -> None:
     args = parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(message)s")
     export_scenes(args.input_path, args.output_dir, set(args.chapters) if args.chapters else None, args.fps)
+
+if __name__ == "__main__":
+    main()

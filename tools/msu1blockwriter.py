@@ -171,11 +171,11 @@ class Chapter:
 
         audioFiles = [audio for root, dirs, files in os.walk(self.path) for audio in sorted(files) if audio.find("sfx_video.pcm") >= 0]
         if len(audioFiles) != 1:
-            logging.error('Chapter folder %s must contain exactly one msu1 pcm audio file, but actually contains %s.' % (chapterDir, len(audioFiles)))
-            sys.exit(1)
-
-        with getInFile('%s%s' % (self.path, audioFiles.pop())) as audioFile:
-            self.audio = audioFile.read()
+            logging.warning('Chapter folder %s does not contain exactly one msu1 pcm audio file. Proceeding without audio.' % chapterDir)
+            self.audio = b''
+        else:
+            with getInFile('%s%s' % (self.path, audioFiles.pop())) as audioFile:
+                self.audio = audioFile.read()
 
 
 class Frame:

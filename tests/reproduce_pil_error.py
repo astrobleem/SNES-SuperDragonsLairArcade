@@ -24,5 +24,12 @@ def quantize_image(input_image, output_image, num_colors):
         import traceback
         traceback.print_exc()
 
+import os
+import pathlib
+
 if __name__ == "__main__":
-    quantize_image("data/sprites/brake.gfx_sprite/0.png", "test_out.png", 16)
+    script_dir = pathlib.Path(__file__).parent.resolve()
+    project_root = script_dir.parent
+    input_path = project_root / "data/sprites/brake.gfx_sprite/0.png"
+    output_path = script_dir / "test_out.png"
+    quantize_image(str(input_path), str(output_path), 16)

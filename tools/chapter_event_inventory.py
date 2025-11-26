@@ -320,7 +320,12 @@ def render_markdown(
     return "\n".join(lines)
 
 
+import argparse
+
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Generate the chapter event inventory markdown file.")
+    parser.parse_args()
+
     implemented_classes = collect_event_classes()
     referenced_events = collect_referenced_events()
     chapter_markers = collect_chapter_markers()

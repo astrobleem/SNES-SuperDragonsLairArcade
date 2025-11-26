@@ -40,7 +40,9 @@
   cmp #JOY_DIR_DOWN
   beq ++
   cmp #JOY_DIR_UP
-  beq +++
+  bne _skip_up_check
+    jmp +++
+_skip_up_check:
         NEW Right_arrow.CLS.PTR this.sprite 160 80
         lda #160
         sta this.scoreX
@@ -48,7 +50,7 @@
         sta this.scoreY
         lda event.endFrame
         CALL Right_arrow.reset.MTD this.sprite this.scoreX this.scoreY
-        bra ++++
+        jmp ++++
   ;left arrow assets
 + NEW Left_arrow.CLS.PTR this.sprite 60 80
   lda #60
@@ -57,7 +59,7 @@
   sta this.scoreY
   lda event.endFrame
   CALL Left_arrow.reset.MTD this.sprite this.scoreX this.scoreY
-  bra ++++
+  jmp ++++
 
   ;down arrow assets
 ++ NEW Down_arrow.CLS.PTR this.sprite 110 192
@@ -67,7 +69,7 @@
   sta this.scoreY
   lda event.endFrame
   CALL Down_arrow.reset.MTD this.sprite this.scoreX this.scoreY
-  bra ++++
+  jmp ++++
 
   ;up arrow assets
 +++ NEW Up_arrow.CLS.PTR this.sprite 110 16
@@ -100,19 +102,19 @@
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.press
   and this.direction
-  beq ++
+  beq _spawn_score
 
       jsr core.input.get.trigger
       and this.direction
-      beq +++
-        lda this.age
+      beq _score_default
+        lda event.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT
-        bcs +++
+        bcs _score_default
           lda #PLAYER.BONUS.EXTRA
-          bra ++++
-+
+          bra _spawn_score
+_score_default:
       lda #PLAYER.BONUS.DEFAULT
-++
+_spawn_score:
         NEW Sprite.score.CLS.PTR oopCreateNoPtr this.scoreX this.scoreY
     CALL Event.confirm.kill.MTD iterator.self
         lda this.branchImmediate

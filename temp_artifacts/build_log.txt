@@ -1,0 +1,54 @@
+Building SNES Super Dragon's Lair Arcade with superfamiconv...
+
+./tools/wla-dx-9.5-svn/wlalink/wlalink -dsr build/lnk/linkobjs.lst build/SuperDragonsLairArcade.sfc
+DISCARD: build/src/object/event/Event.crypt.o:src/object/event/Event.crypt.65816: Section "Event.crypt_creeps" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.attract_mode_attract_movie" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.attract_mode_insert_coins" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.introduction_castle_exterior" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.alice_room_drinks_potion" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.alice_room_burned_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.crypt_creeps_captured_by_ghouls" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.crypt_creeps_overpowered_by_skulls" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.flaming_ropes_burns_hands" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.flaming_ropes_fall_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.flaming_ropes_misses_landing" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.flying_horse_burned_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.giddy_goons_fall_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.rolling_balls_pit_in_ground" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.tentacle_room_squeeze_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.tentacle_room_squeeze_to_death_by_door" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.tilting_room_catches_fire" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.tilting_room_falls_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.tilting_room_wrong_door" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.falling_platform_long_fell_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.falling_platform_short_fell_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.vestibule_fell_to_death" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.vestibule_stagger" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.bower_trapped_in_wall" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.throne_room_on_throne" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.wind_room_sucked_in" was discarded.
+DISCARD: build/src/object/event/Event.cutscene.o:src/object/event/Event.cutscene.65816: Section "Event.the_dragons_lair_endgame" was discarded.
+DISCARD: build/src/object/event/Event.falling_platform_phase.o:src/object/event/Event.falling_platform_phase.65816: Section "Event.falling_plat_phase" was discarded.
+DISCARD: build/src/object/event/Event.flaming_ropes_hazard.o:src/object/event/Event.flaming_ropes_hazard.65816: Section "Event.flame_rope_haz" was discarded.
+DISCARD: build/src/object/event/Event.flaming_ropes_route.o:src/object/event/Event.flaming_ropes_route.65816: Section "Event.flame_rope_rt" was discarded.
+DISCARD: build/src/object/event/Event.flying_horse_collision.o:src/object/event/Event.flying_horse_collision.65816: Section "Event.flying_horse_col" was discarded.
+DISCARD: build/src/object/event/Event.flying_horse_lane.o:src/object/event/Event.flying_horse_lane.65816: Section "Event.fly_horse_lane" was discarded.
+DISCARD: build/src/object/event/Event.giddy_goons_grapple.o:src/object/event/Event.giddy_goons_grapple.65816: Section "Event.gid_goon_grap" was discarded.
+DISCARD: build/src/object/event/Event.giddy_goons_swarm.o:src/object/event/Event.giddy_goons_swarm.65816: Section "Event.gid_goon_swarm" was discarded.
+DISCARD: build/src/object/event/Event.rolling_balls_ball.o:src/object/event/Event.rolling_balls_ball.65816: Section "Event.roll_ball_ball" was discarded.
+DISCARD: build/src/object/event/Event.rolling_balls_crush.o:src/object/event/Event.rolling_balls_crush.65816: Section "Event.roll_ball_crush" was discarded.
+DISCARD: build/src/object/event/Event.tentacle_room_grab.o:src/object/event/Event.tentacle_room_grab.65816: Section "Event.tent_room_grab" was discarded.
+DISCARD: build/src/object/event/Event.tentacle_room_path.o:src/object/event/Event.tentacle_room_path.65816: Section "Event.tent_room_path" was discarded.
+DISCARD: build/src/object/event/Event.throne_room_state.o:src/object/event/Event.throne_room_state.65816: Section "Event.throne_state" was discarded.
+DISCARD: build/src/object/event/Event.tilting_room_navigation.o:src/object/event/Event.tilting_room_navigation.65816: Section "Event.tilting_room_nav" was discarded.
+DISCARD: build/src/object/event/Event.underground_river_chain.o:src/object/event/Event.underground_river_chain.65816: Section "Event.under_river_chain" was discarded.
+DISCARD: build/src/object/event/Event.underground_river_phase.o:src/object/event/Event.underground_river_phase.65816: Section "Event.under_river_phase" was discarded.
+DISCARD: build/src/object/sprite/down_arrow.o:src/object/sprite/down_arrow.65816: Section "down_arrow" was discarded.
+DISCARD: build/src/object/sprite/up_arrow.o:src/object/sprite/up_arrow.65816: Section "up_arrow" was discarded.
+build/src/object/event/abstract.Event.o:src/object/event/abstract.Event.65816:73: FIX_REFERENCES: Reference to an unknown label "game_over".
+make: *** [makefile:150: all] Error 1
+
+========================================
+Build failed with error code 2
+========================================
+Press any key to continue . . . 

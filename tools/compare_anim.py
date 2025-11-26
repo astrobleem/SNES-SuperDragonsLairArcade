@@ -50,5 +50,12 @@ def compare(file1, file2):
             # but Map size should be roughly similar (or exactly same if same number of tiles).
             # If map size is different, it means different number of non-empty tiles were detected.
 
+import argparse
+
 if __name__ == "__main__":
-    compare(sys.argv[1], sys.argv[2])
+    parser = argparse.ArgumentParser(description="Compare two animation files.")
+    parser.add_argument("file1", help="First animation file")
+    parser.add_argument("file2", help="Second animation file")
+    args = parser.parse_args()
+
+    compare(args.file1, args.file2)

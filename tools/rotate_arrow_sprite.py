@@ -81,5 +81,9 @@ def main():
     print(f"  Down arrow: {down_arrow_path}")
 
 
+import argparse
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Rotate arrow sprite PNG files.")
+    parser.parse_args()
     main()

@@ -1,8 +1,6 @@
 .include "src/config/config.inc"
 
-.struct vars
-  ; no additional state
-.endst
+; no additional state
 
 ;zp-vars
 .enum 0

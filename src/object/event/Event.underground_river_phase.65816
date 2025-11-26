@@ -2,6 +2,24 @@
 * Shared Underground River phase handler for rapids/boulders/whirlpools.
 * param1: phase id; param2: hazard variant or crash id.
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT underground_river_phase 2
+.section "Event.under_river_phase"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 2
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.under_river_phase
+.ends

@@ -39,15 +39,14 @@
   beq ++
       jsr core.input.get.trigger
       and.w #JOY_DIR_DOWN
-      beq +++
-        lda this.age
+      beq +
+        lda event.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT
-        bcs +++
+        bcs +
           lda #PLAYER.BONUS.EXTRA
-          bra ++++
+          bra ++
++       lda #PLAYER.BONUS.DEFAULT
 ++
-      lda #PLAYER.BONUS.DEFAULT
-+++
 
         NEW Sprite.score.CLS.PTR oopCreateNoPtr 112 80
         CALL Event.confirm.kill.MTD iterator.self

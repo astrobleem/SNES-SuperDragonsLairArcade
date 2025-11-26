@@ -1,7 +1,0 @@
-/**
-* Crypt Creeps encounter state machine (hands/ghouls/skulls/slime).
-* param1: hazard state id; param2: death cinematic selector.
-*/
-.include "src/object/event/abstract.Event.chapter_template.h"
-
-DEFINE_TIMELINE_EVENT crypt_creeps_encounter 2

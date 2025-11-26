@@ -44,8 +44,49 @@ def pad_tilemap_to_32x32(tilemap_file):
     
     print(f"Padded tilemap from {current_size} to {TARGET_SIZE} bytes (+{padding_needed} bytes)")
 
+    print(f"Padded tilemap from {current_size} to {TARGET_SIZE} bytes (+{padding_needed} bytes)")
+
+def to_windows_path(path):
+    """
+    Convert a path to Windows format if running in WSL.
+    """
+    if not path:
+        return path
+        
+    # Check if running in WSL
+    if 'microsoft' in os.uname().release.lower():
+        try:
+            # If path exists, convert directly
+            if os.path.exists(path):
+                result = subprocess.check_output(['wslpath', '-w', path], text=True).strip()
+                return result
+            else:
+                # If path doesn't exist, convert directory and append filename
+                dirname = os.path.dirname(path)
+                basename = os.path.basename(path)
+                if os.path.exists(dirname):
+                    dir_win = subprocess.check_output(['wslpath', '-w', dirname], text=True).strip()
+                    return f"{dir_win}\\{basename}"
+                else:
+                    # Fallback if directory doesn't exist either
+                    return path
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            return path
+    return path
+
 def convert_superfamiconv(input_file, output_base, bpp, palettes, tools_dir, pad_to_32x32=False):
     exe_path = os.path.join(tools_dir, "superfamiconv", "superfamiconv.exe")
+    
+    print(f"DEBUG: palettes={palettes}, bpp={bpp}")
+    
+    # Convert paths for Windows executable if needed
+    win_input = to_windows_path(os.path.abspath(input_file))
+    win_output_base = to_windows_path(os.path.abspath(output_base))
+    
+    # We need to construct output filenames manually because superfamiconv appends extensions
+    # But we passed the base to superfamiconv, so it will append extensions to the Windows path.
+    # We don't need to convert the output filenames for our python script's logging, 
+    # but we do need to pass the windows base to the tool.
     
     pal_file = f"{output_base}.palette"
     chr_file = f"{output_base}.tiles"
@@ -53,22 +94,25 @@ def convert_superfamiconv(input_file, output_base, bpp, palettes, tools_dir, pad
 
     # 1. Palette
     # Use provided palettes count if available, otherwise guess based on bpp
-    colors = 16 if bpp == 4 else 4
+    colors_per_palette = 16 if bpp == 4 else 4
     if palettes:
-        # superfamiconv -C is colors per palette * number of palettes? 
-        # Actually -C is colors to output. 
-        # For 4bpp, we usually want 16 colors. If palettes > 1, we might want more.
-        # But superfamiconv handles palettes differently.
-        # For now, let's stick to simple 4bpp = 16 colors, 2bpp = 4 colors.
-        pass
+        colors = palettes * colors_per_palette
+    else:
+        colors = colors_per_palette
 
-    run_command([exe_path, "palette", "-i", input_file, "-d", pal_file, "-C", str(colors)])
+    # Note: exe_path is likely /mnt/e/..., which works if we call it directly in WSL?
+    # No, we need to call it as a command.
+    # If it's a Windows exe, we might need to invoke it differently?
+    # subprocess.check_call(['/mnt/e/.../superfamiconv.exe']) works in WSL.
+    # But arguments must be Windows paths.
+    
+    run_command([exe_path, "palette", "-i", win_input, "-d", f"{win_output_base}.palette", "-C", str(colors)])
 
     # 2. Tiles
-    run_command([exe_path, "tiles", "-i", input_file, "-p", pal_file, "-d", chr_file, "-B", str(bpp)])
+    run_command([exe_path, "tiles", "-i", win_input, "-p", f"{win_output_base}.palette", "-d", f"{win_output_base}.tiles", "-B", str(bpp)])
 
     # 3. Map
-    run_command([exe_path, "map", "-i", input_file, "-p", pal_file, "-t", chr_file, "-d", map_file, "-B", str(bpp)])
+    run_command([exe_path, "map", "-i", win_input, "-p", f"{win_output_base}.palette", "-t", f"{win_output_base}.tiles", "-d", f"{win_output_base}.tilemap", "-B", str(bpp)])
 
     # 4. Pad tilemap if requested
     if pad_to_32x32:

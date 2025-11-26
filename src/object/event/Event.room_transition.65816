@@ -6,7 +6,7 @@
 */
 .include "src/object/event/Event.room_transition.h"
 
-.section "Event.room_transition"
+.section "Event.room_trans"
 
 ; transition id is passed as OBJECT.CALL.ARG.5
 ; optional immediate-branch flag is passed as OBJECT.CALL.ARG.6 (non-zero)
@@ -24,7 +24,7 @@
     lda #1
     bra ++
 +   lda #0
-+  sta this.branchImmediate
+++  sta this.branchImmediate
   stz this.hasTriggered
 
   rts
@@ -55,4 +55,3 @@
 
   CLASS Event.room_transition
 .ends
-

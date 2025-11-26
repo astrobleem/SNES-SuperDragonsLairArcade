@@ -5,6 +5,17 @@
 * @param 1<int, 16bit>  y-pos
 */
 .include "src/object/sprite/down_arrow.h"
+
+.struct down_arrow_vars
+  endFrame dw
+.endst
+
+.enum zpLen
+  this INSTANCEOF down_arrow_vars
+.ende
+
+.redefine CLASS.ZP_LENGTH zpLen + _sizeof_down_arrow_vars
+
 .section "down_arrow"
 
   METHOD init

@@ -2,6 +2,24 @@
 * Resolves Rolling Balls crush outcomes.
 * param1: crush scale (big/small/pit variants).
 */
-.include "src/object/event/abstract.Event.chapter_template.h"
+.include "src/object/event/abstract.Event.chapter_template_v3.h"
 
-DEFINE_TIMELINE_EVENT rolling_balls_crush 1
+.section "Event.roll_ball_crush"
+
+  METHOD init
+  rep #$31
+  CHAPTER_EVENT_INIT_PARAMS 1
+  rts
+
+  METHOD play
+  rep #$31
+  jsr Event.template.waitTimeline
+  bcc +
+  jsr abstract.Event.checkResult
++ rts
+
+  METHOD kill
+  jsr Event.template.kill
+
+  CLASS Event.roll_ball_crush
+.ends

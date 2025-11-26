@@ -3,8 +3,9 @@
 */
 .include "src/object/event/Event.cutscene.h"
 
-.macro DEFINE_CUTSCENE_EVENT name
-.section "Event.\\1"
+; Macro manually expanded due to WLA-DX bug
+
+.section "Event.start_alive"
   METHOD init
   rep #$31
 
@@ -30,50 +31,991 @@
   sta 3,s
   rts
 
-  CLASS Event.\\1
+  CLASS Event.start_alive
 .ends
-.endsection
-.endm
+.section "Event.start_dead"
+  METHOD init
+  rep #$31
 
-DEFINE_CUTSCENE_EVENT start_alive
-DEFINE_CUTSCENE_EVENT start_dead
-DEFINE_CUTSCENE_EVENT enter_room
-DEFINE_CUTSCENE_EVENT enter_room_left
-DEFINE_CUTSCENE_EVENT enter_room_right
-DEFINE_CUTSCENE_EVENT enter_room_up
-DEFINE_CUTSCENE_EVENT enter_room_down
-DEFINE_CUTSCENE_EVENT enter_room_upleft
-DEFINE_CUTSCENE_EVENT exit_room
-DEFINE_CUTSCENE_EVENT game_over
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.start_dead
+.ends
+.section "Event.enter_room"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.enter_room
+.ends
+.section "Event.enter_room_left"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.enter_room_left
+.ends
+.section "Event.enter_room_right"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.enter_room_right
+.ends
+.section "Event.enter_room_up"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.enter_room_up
+.ends
+.section "Event.enter_room_down"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.enter_room_down
+.ends
+.section "Event.enter_room_upleft"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.enter_room_upleft
+.ends
+.section "Event.exit_room"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.exit_room
+.ends
+.section "Event.game_over"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.game_over
+.ends
 
 ; Attract mode and chapter intros
-DEFINE_CUTSCENE_EVENT attract_mode_attract_movie
-DEFINE_CUTSCENE_EVENT attract_mode_insert_coins
-DEFINE_CUTSCENE_EVENT introduction_castle_exterior
-DEFINE_CUTSCENE_EVENT alice_room_drinks_potion
+.section "Event.attract_mode_attract_movie"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.attract_mode_attract_movie
+.ends
+.section "Event.attract_mode_insert_coins"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.attract_mode_insert_coins
+.ends
+.section "Event.introduction_castle_exterior"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.introduction_castle_exterior
+.ends
+.section "Event.alice_room_drinks_potion"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.alice_room_drinks_potion
+.ends
 
 ; Shared death / failure cinematics
-DEFINE_CUTSCENE_EVENT alice_room_burned_to_death
-DEFINE_CUTSCENE_EVENT crypt_creeps_captured_by_ghouls
-DEFINE_CUTSCENE_EVENT crypt_creeps_overpowered_by_skulls
-DEFINE_CUTSCENE_EVENT flaming_ropes_burns_hands
-DEFINE_CUTSCENE_EVENT flaming_ropes_fall_to_death
-DEFINE_CUTSCENE_EVENT flaming_ropes_misses_landing
-DEFINE_CUTSCENE_EVENT flying_horse_burned_to_death
-DEFINE_CUTSCENE_EVENT giddy_goons_fall_to_death
-DEFINE_CUTSCENE_EVENT rolling_balls_pit_in_ground
-DEFINE_CUTSCENE_EVENT tentacle_room_squeeze_to_death
-DEFINE_CUTSCENE_EVENT tentacle_room_squeeze_to_death_by_door
-DEFINE_CUTSCENE_EVENT tilting_room_catches_fire
-DEFINE_CUTSCENE_EVENT tilting_room_falls_to_death
-DEFINE_CUTSCENE_EVENT tilting_room_wrong_door
-DEFINE_CUTSCENE_EVENT falling_platform_long_fell_to_death
-DEFINE_CUTSCENE_EVENT falling_platform_short_fell_to_death
-DEFINE_CUTSCENE_EVENT vestibule_fell_to_death
-DEFINE_CUTSCENE_EVENT vestibule_stagger
+.section "Event.alice_room_burned_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.alice_room_burned_to_death
+.ends
+.section "Event.crypt_creeps_captured_by_ghouls"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.crypt_creeps_captured_by_ghouls
+.ends
+.section "Event.crypt_creeps_overpowered_by_skulls"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.crypt_creeps_overpowered_by_skulls
+.ends
+.section "Event.flaming_ropes_burns_hands"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.flaming_ropes_burns_hands
+.ends
+.section "Event.flaming_ropes_fall_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.flaming_ropes_fall_to_death
+.ends
+.section "Event.flaming_ropes_misses_landing"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.flaming_ropes_misses_landing
+.ends
+.section "Event.flying_horse_burned_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.flying_horse_burned_to_death
+.ends
+.section "Event.giddy_goons_fall_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.giddy_goons_fall_to_death
+.ends
+.section "Event.rolling_balls_pit_in_ground"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.rolling_balls_pit_in_ground
+.ends
+.section "Event.tentacle_room_squeeze_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.tentacle_room_squeeze_to_death
+.ends
+.section "Event.tentacle_room_squeeze_to_death_by_door"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.tentacle_room_squeeze_to_death_by_door
+.ends
+.section "Event.tilting_room_catches_fire"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.tilting_room_catches_fire
+.ends
+.section "Event.tilting_room_falls_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.tilting_room_falls_to_death
+.ends
+.section "Event.tilting_room_wrong_door"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.tilting_room_wrong_door
+.ends
+.section "Event.falling_platform_long_fell_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.falling_platform_long_fell_to_death
+.ends
+.section "Event.falling_platform_short_fell_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.falling_platform_short_fell_to_death
+.ends
+.section "Event.vestibule_fell_to_death"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.vestibule_fell_to_death
+.ends
+.section "Event.vestibule_stagger"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.vestibule_stagger
+.ends
 
 ; Chapter progression beats and simple closers
-DEFINE_CUTSCENE_EVENT bower_trapped_in_wall
-DEFINE_CUTSCENE_EVENT throne_room_on_throne
-DEFINE_CUTSCENE_EVENT wind_room_sucked_in
-DEFINE_CUTSCENE_EVENT the_dragons_lair_endgame
+.section "Event.bower_trapped_in_wall"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.bower_trapped_in_wall
+.ends
+.section "Event.throne_room_on_throne"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.throne_room_on_throne
+.ends
+.section "Event.wind_room_sucked_in"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.wind_room_sucked_in
+.ends
+.section "Event.the_dragons_lair_endgame"
+  METHOD init
+  rep #$31
+
+  lda OBJECT.CALL.ARG.1,s
+  sta.b event.startFrame
+  lda OBJECT.CALL.ARG.2,s
+  sta.b event.endFrame
+  lda OBJECT.CALL.ARG.3,s
+  sta.b event.result
+  lda OBJECT.CALL.ARG.4,s
+  sta.b event.resultTarget
+
+  rts
+
+  METHOD play
+  rep #$31
+  jsr abstract.Event.checkResult
+  rts
+
+  METHOD kill
+  rep #$31
+  lda #OBJR_kill
+  sta 3,s
+  rts
+
+  CLASS Event.the_dragons_lair_endgame
+.ends

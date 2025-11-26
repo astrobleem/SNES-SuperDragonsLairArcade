@@ -9,7 +9,12 @@ This folder contains the helper utilities used to prepare assets and builds for 
 | --- | --- | --- | --- | --- |
 | `animationWriter.py` | Packs ordered frame images into a custom sprite animation file with tiles, tilemaps, and palettes. | Indexed or true-color frame images (`.png`, `.gif`, `.bmp`) in a folder. | Custom binary animation bundle (`SP` header) containing tile/palette chunks. | Sprite cutscenes and in-game animations.
 | `debugLog.py` | Helper to recursively log nested data structures for debugging. | Python data structures. | Text log output. | Shared helper for the legacy Python tools.
-| `convert_daphne.py` / `.bat` | Converts Daphne CDROM laserdisc files to a single MP4 video. | Daphne framefile (`.TXT`) + `.m2v`/`.ogg` segments. | Single concatenated MP4 file. | One-time conversion of Daphne source to usable video format.\r\n| `convert_video_fps.sh` / `.bat` | Re-encodes video from 29.97 fps (Daphne) to 23.976 fps (DirkSimple XML). | MP4 video file. | Re-encoded MP4 at 23.976 fps. | Ensures video timing matches XML chapter events.\r\n| `test_chapter_extraction.sh` / `.bat` | Tests single chapter extraction to verify video/audio timing alignment. | Chapter XML + video file. | Test folder with extracted frames and audio. | Verification before full 516-chapter extraction.\r\n| `gfx_converter.py` | **NEW** Unified wrapper for `superfamiconv` or `gracon.py` with consistent output naming. | Any Pillow-supported image (PNG, GIF, etc.). | `.palette`, `.tiles`, `.tilemap` binary files. | Replacement for direct `gracon.py` calls; allows swapping converters without changing build scripts.
+| `convert_daphne.py` / `.bat` | Converts Daphne CDROM laserdisc files to a single MP4 video. | Daphne framefile (`.TXT`) + `.m2v`/`.ogg` segments. | Single concatenated MP4 file. | One-time conversion of Daphne source to usable video format.
+| `convert_video_fps.sh` / `.bat` | Re-encodes video from 29.97 fps (Daphne) to 23.976 fps (DirkSimple XML). | MP4 video file. | Re-encoded MP4 at 23.976 fps. | Ensures video timing matches XML chapter events.
+| `create_event.py` | Generates boilerplate code for new Event classes. | Event name. | `.h` and `.65816` files. | Rapid development of new game events.
+| `remove_event.py` | Deletes Event class files. | Event name. | Deletes files. | Cleanup of unused events.
+| `test_chapter_extraction.sh` / `.bat` | Tests single chapter extraction to verify video/audio timing alignment. | Chapter XML + video file. | Test folder with extracted frames and audio. | Verification before full 516-chapter extraction.
+| `gfx_converter.py` | **NEW** Unified wrapper for `superfamiconv` or `gracon.py` with consistent output naming. | Any Pillow-supported image (PNG, GIF, etc.). | `.palette`, `.tiles`, `.tilemap` binary files. | Replacement for direct `gracon.py` calls; allows swapping converters without changing build scripts.
 | `jpeg_to_png.py` | Converts JPEG images to PNG with optional colorspace normalization and overwrite protection. | `.jpg`, `.jpeg`. | `.png`. | Quick standalone conversion before SNES-specific processing.
 | `gimp-batch-convert-indexed.scm` | GIMP batch script that converts matching images to indexed palettes with Gaussian blur pre-pass. | Any GIMP-loadable images matching a pattern. | In-place indexed images. | Pre-processing art assets before tile conversion when manual palette control is needed.
 | `gracon.py` | Converts images into SNES bitplane graphics, palettes, and tilemaps for backgrounds or sprites with optional deduplication. | Any Pillow-supported image (PNG, GIF, etc.). | Bitplane tile data, palette data, and tilemaps; optional PNG verification. | Core background/sprite converter for RoadBlaster.
@@ -49,6 +54,24 @@ This folder contains the helper utilities used to prepare assets and builds for 
   python tools/jpeg_to_png.py --input photos/frame.jpg --colorspace RGBA
   ```
 * **Pipeline:** Quick prep step when you receive JPEG assets but need lossless PNGs before running `img_processor.py` or `gfx_converter.py`.
+
+### create_event.py
+* **Purpose:** Generates boilerplate code for new Event classes, including the header (.h) and source (.65816) files with standard lifecycle methods (init, play, kill).
+* **Inputs/Outputs:** Event name (e.g., `Event.MyScene`); creates files in `src/object/event/`.
+* **Example:**
+  ```bash
+  python tools/create_event.py Event.IntroScene
+  ```
+* **Pipeline:** Use this when adding new game logic or cutscenes to ensure consistent class structure.
+
+### remove_event.py
+* **Purpose:** Safely removes an Event class (header and source files) created by `create_event.py`.
+* **Inputs/Outputs:** Event name; deletes corresponding files.
+* **Example:**
+  ```bash
+  python tools/remove_event.py Event.IntroScene
+  ```
+* **Pipeline:** Cleanup tool for removing test events or deprecated scenes.
 
 ### gfx_converter.py
 * **Purpose:** Unified wrapper for `superfamiconv` or `gracon.py` providing consistent output naming (`.palette`, `.tiles`, `.tilemap`).

@@ -1,25 +1,10 @@
 
   SCRIPT score_entry
 
-.ACCU 16
-.INDEX 16
-
-  .def objBackground3 hashPtr.1
-  .def objScoreText hashPtr.2
-  .def objFameBrightness hashPtr.3
-  .def objMsu1 hashPtr.4
-  .def objPlayer hashPtr.5
-  .def objNameEntry hashPtr.6
-  .def currentScore this._tmp
-  .def irq.buffer.x this._tmp + 2
-  .def irq.buffer.y this._tmp + 4
-
-
-  NEW Brightness.CLS.PTR objFameBrightness
-
-  lda #BRIGHTNESS.NONE
-  CALL Brightness.set.MTD objFameBrightness 
-
+  .def objMsu1 hashPtr.5
+  .def objScoreText hashPtr.6
+  .def objBackground3 hashPtr.7
+  .def objNameEntry hashPtr.8
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers

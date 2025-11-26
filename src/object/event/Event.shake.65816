@@ -12,7 +12,7 @@
   sta.b event.endFrame
   lda OBJECT.CALL.ARG.3,s
 
-  stz this.age
+  stz event.age
   rts
 
   METHOD play
@@ -23,7 +23,7 @@
     jsr abstract.Iterator.each.byProperties
     bcc +
 
-    lda this.age
+    lda event.age
     tax
     lda.l Event.shake.LUT,x
     and.w #$ff
@@ -37,8 +37,8 @@
     
     bra -
 +
-  inc this.age
-  lda this.age
+  inc event.age
+  lda event.age
   cmp #Event.shake.LUT.end - Event.shake.LUT
   bcs _kill
   

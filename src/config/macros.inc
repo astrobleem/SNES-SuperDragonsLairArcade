@@ -1,3 +1,5 @@
+.ifndef MACROS_INC
+.define MACROS_INC
 
 ;dispatch obj method. parameters: \1 pointer to obj hash \2 method .ptr to execute \3-\9 parameters(optional)
 ;assumes accu 16bit
@@ -115,10 +117,8 @@ pea \5
 pea \4
 .endif
 
-
 .ifdefm \3
 pea \3
-;lda #\3
 .endif
 
 jsr core.object.create
@@ -151,7 +151,88 @@ pla
 pla
 .endif
 
+.endm
 
+;create instance of class. parameters: \1 class pointer \2 pointer to obj hash \3 parameter to pass to class init routine(optional)
+;this version does not pass a pointer to the object hash, but uses the object hash directly
+.macro NEW_NOPTR
+
+.if NARGS < 2
+	.fail
+.endif
+
+ldy #\1
+ldx \2
+
+
+.ifdefm \9
+pea \9
+.endif
+
+.ifdefm \8
+pea \8
+.endif
+
+.ifdefm \7
+pea \7
+.endif
+
+.ifdefm \6
+pea \6
+.endif
+
+.ifdefm \5
+pea \5
+.endif
+
+.ifdefm \4
+pea \4
+.endif
+
+.ifdefm \3
+pea \3
+.endif
+
+jsr core.object.create
+
+.ifdefm \9
+pla
+.endif
+
+.ifdefm \8
+pla
+.endif
+
+.ifdefm \7
+pla
+.endif
+
+.ifdefm \6
+pla
+.endif
+
+.ifdefm \5
+pla
+.endif
+
+.ifdefm \4
+pla
+.endif
+
+.ifdefm \3
+pla
+.endif
+
+.endm
+
+;delete object. parameters: \1 pointer to obj hash
+.macro DELETE
+.if NARGS != 1
+	.fail
+.endif
+
+ldx #\1
+jsr core.object.delete
 .endm
 
 ;terminate script, do some garbage collection aswell
@@ -299,7 +380,7 @@ PtrNorm\1\@:
     \1.CLS:
     relative\1:
 	    .db CLASS.FLAGS
-	    .db OBJID.\1	;object id
+	    .dw OBJID.\1	;object id
 	    .db CLASS.ZP_LENGTH	;zero page ram buffer length
 	    .dw CLASS.PROPERTIES	;default properties, disabled for now.
 	    .db NARGS + 2 + 4
@@ -335,7 +416,27 @@ PtrNorm\1\@:
       .endif
 	    .db T_CLSS_kill_\1-relative\1
 
-	    .define \1.setPosition.MTD 3
+	    .define \1.getDimension.MTD 3
+	    .export \1.getDimension.MTD
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __getDimension
+        .dw interface.dimension.getSize
+      .else
+	      .dw _getDimension
+      .endif
+	    .db T_CLSS_getDimension_\1-relative\1
+
+	    .define \1.setDimension.MTD 4
+	    .export \1.setDimension.MTD
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __setDimension
+        .dw interface.dimension.setSize
+      .else
+	      .dw _setDimension
+      .endif
+	    .db T_CLSS_setDimension_\1-relative\1
+
+	    .define \1.setPosition.MTD 5
 	    .export \1.setPosition.MTD
       ;fall back to default interface routine if not defined in current class scope
       .ifndef __setPosition
@@ -345,7 +446,7 @@ PtrNorm\1\@:
       .endif
 	    .db T_CLSS_setPosition_\1-relative\1
 
-	    .define \1.getPosition.MTD 4
+	    .define \1.getPosition.MTD 6
 	    .export \1.getPosition.MTD
       ;fall back to default interface routine if not defined in current class scope
       .ifndef __getPosition
@@ -354,83 +455,61 @@ PtrNorm\1\@:
 	      .dw _getPosition
       .endif
 	    .db T_CLSS_getPosition_\1-relative\1
-
-	    .define \1.getSize.MTD 5
-	    .export \1.getSize.MTD
-      ;fall back to default interface routine if not defined in current class scope
-      .ifndef __getSize
-        .dw interface.dimension.getSize
-      .else
-	      .dw _getSize
-      .endif
-	    .db T_CLSS_getSize_\1-relative\1
-
-	    .define \1.translate.MTD 6
-	    .export \1.translate.MTD
-      ;fall back to default interface routine if not defined in current class scope
-      .ifndef __translate
+        
+        .define \1.translate.MTD 16
+        .export \1.translate.MTD
         .dw interface.dimension.translate
-      .else
-	      .dw _translate
-      .endif
-	    .db T_CLSS_translate_\1-relative\1
+        .db T_CLSS_translate_\1-relative\1
 
+      ;additional methods
 	    .ifdefm \2
-		    .define \1.\2.MTD 7
-		    .export \1.\2.MTD
-		    .dw _\2
-		    .db T_CLSS_\2_\1-relative\1
+        .define \1.\2.MTD 7
+        .export \1.\2.MTD
+	      .dw _\2
+	      .db T_CLSS_\2_\1-relative\1
 	    .endif
-
 	    .ifdefm \3
-		    .define \1.\3.MTD 8
-		    .export \1.\3.MTD
-		    .dw _\3
-		    .db T_CLSS_\3_\1-relative\1
+        .define \1.\3.MTD 8
+        .export \1.\3.MTD
+	      .dw _\3
+	      .db T_CLSS_\3_\1-relative\1
 	    .endif
-	
 	    .ifdefm \4
-		    .define \1.\4.MTD 9
-		    .export \1.\4.MTD
-		    .dw _\4
-		    .db T_CLSS_\4_\1-relative\1
+        .define \1.\4.MTD 9
+        .export \1.\4.MTD
+	      .dw _\4
+	      .db T_CLSS_\4_\1-relative\1
 	    .endif
-	
 	    .ifdefm \5
-		    .define \1.\5.MTD 10
-		    .export \1.\5.MTD
-		    .dw _\5
-		    .db T_CLSS_\5_\1-relative\1
+        .define \1.\5.MTD 10
+        .export \1.\5.MTD
+	      .dw _\5
+	      .db T_CLSS_\5_\1-relative\1
 	    .endif
-
 	    .ifdefm \6
-		    .define \1.\6.MTD 11
-		    .export \1.\6.MTD
-		    .dw _\6
-		    .db T_CLSS_\6_\1-relative\1
+        .define \1.\6.MTD 11
+        .export \1.\6.MTD
+	      .dw _\6
+	      .db T_CLSS_\6_\1-relative\1
 	    .endif
-
 	    .ifdefm \7
-		    .define \1.\7.MTD 12
-		    .export \1.\7.MTD
-		    .dw _\7
-		    .db T_CLSS_\7_\1-relative\1
+        .define \1.\7.MTD 12
+        .export \1.\7.MTD
+	      .dw _\7
+	      .db T_CLSS_\7_\1-relative\1
 	    .endif
-
 	    .ifdefm \8
-		    .define \1.\8.MTD 13
-		    .export \1.\8.MTD
-		    .dw _\8
-		    .db T_CLSS_\8_\1-relative\1
+        .define \1.\8.MTD 13
+        .export \1.\8.MTD
+	      .dw _\8
+	      .db T_CLSS_\8_\1-relative\1
 	    .endif
-
 	    .ifdefm \9
-		    .define \1.\9.MTD 14
-		    .export \1.\9.MTD
-		    .dw _\9
-		    .db T_CLSS_\9_\1-relative\1
+        .define \1.\9.MTD 14
+        .export \1.\9.MTD
+	      .dw _\9
+	      .db T_CLSS_\9_\1-relative\1
 	    .endif
-
 
     T_CLSS_\1:
 	    .db "\1",0
@@ -444,12 +523,14 @@ PtrNorm\1\@:
     T_CLSS_kill_\1:
 	    .db "kill",0
 
+    T_CLSS_getDimension_\1:
+      .db "getDimension",0
+    T_CLSS_setDimension_\1:
+      .db "setDimension",0
     T_CLSS_setPosition_\1:
       .db "setPosition",0
     T_CLSS_getPosition_\1:
       .db "getPosition",0
-    T_CLSS_getSize_\1:
-      .db "getSize",0
     T_CLSS_translate_\1:
       .db "translate",0
 
@@ -495,154 +576,646 @@ PtrNorm\1\@:
 
     .endif
   .else
-  \1.CLS:
-  relative\1:
-	  .db CLASS.FLAGS
-	  .db OBJID.\1	;object id
-	  .db CLASS.ZP_LENGTH	;zero page ram buffer length
-	  .dw CLASS.PROPERTIES	;default properties, disabled for now.
-	  .db NARGS + 2
-	  .db T_CLSS_\1-relative\1
+    ;default class implementation
+    \1.CLS:
+    relative\1:
+	    .db CLASS.FLAGS
+	    .dw OBJID.\1	;object id
+	    .db CLASS.ZP_LENGTH	;zero page ram buffer length
+	    .dw CLASS.PROPERTIES	;default properties, disabled for now.
+	    .db NARGS + 2
+	    .db T_CLSS_\1-relative\1
 	
-	  .define \1.init.MTD 0
-	  .export \1.init.MTD
-    ;fall back to default interface routine if not defined in current class scope
-    .ifndef __init
-      .dw interface.default.init
-    .else
-	    .dw _init
-    .endif
-	  .db T_CLSS_init_\1-relative\1
+	    .define \1.init.MTD 0
+	    .export \1.init.MTD
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __init
+        .dw interface.default.init
+      .else
+	      .dw _init
+      .endif
+	    .db T_CLSS_init_\1-relative\1
 
-	  .define \1.play.MTD 1
-	  .export \1.play.MTD
-    ;fall back to default interface routine if not defined in current class scope
-    .ifndef __play
-      .dw interface.default.play
-    .else
-	    .dw _play
-    .endif
-	  .db T_CLSS_play_\1-relative\1
+	    .define \1.play.MTD 1
+	    .export \1.play.MTD
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __play
+        .dw interface.default.play
+      .else
+	      .dw _play
+      .endif
+	    .db T_CLSS_play_\1-relative\1
 
-	  .define \1.kill.MTD 2
-	  .export \1.kill.MTD
-    ;fall back to default interface routine if not defined in current class scope
-    .ifndef __kill
-      .dw interface.default.kill
-    .else
-	    .dw _kill
-    .endif
-	  .db T_CLSS_kill_\1-relative\1
+	    .define \1.kill.MTD 2
+	    .export \1.kill.MTD
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __kill
+        .dw interface.default.kill
+      .else
+	      .dw _kill
+      .endif
+	    .db T_CLSS_kill_\1-relative\1
 
-	  .ifdefm \2
-		  .define \1.\2.MTD 3
-		  .export \1.\2.MTD
-		  .dw _\2
-		  .db T_CLSS_\2_\1-relative\1
-	  .endif
+      ;additional methods
+	    .ifdefm \2
+		    .define \1.\2.MTD 3
+		    .export \1.\2.MTD
+		    .dw _\2
+		    .db T_CLSS_\2_\1-relative\1
+	    .endif
 
-	  .ifdefm \3
-		  .define \1.\3.MTD 4
-		  .export \1.\3.MTD
-		  .dw _\3
-		  .db T_CLSS_\3_\1-relative\1
-	  .endif
+	    .ifdefm \3
+		    .define \1.\3.MTD 4
+		    .export \1.\3.MTD
+		    .dw _\3
+		    .db T_CLSS_\3_\1-relative\1
+	    .endif
 	
-	  .ifdefm \4
-		  .define \1.\4.MTD 5
-		  .export \1.\4.MTD
-		  .dw _\4
-		  .db T_CLSS_\4_\1-relative\1
-	  .endif
+	    .ifdefm \4
+		    .define \1.\4.MTD 5
+		    .export \1.\4.MTD
+		    .dw _\4
+		    .db T_CLSS_\4_\1-relative\1
+	    .endif
 	
-	  .ifdefm \5
-		  .define \1.\5.MTD 6
-		  .export \1.\5.MTD
-		  .dw _\5
-		  .db T_CLSS_\5_\1-relative\1
-	  .endif
+	    .ifdefm \5
+		    .define \1.\5.MTD 6
+		    .export \1.\5.MTD
+		    .dw _\5
+		    .db T_CLSS_\5_\1-relative\1
+	    .endif
 
-	  .ifdefm \6
-		  .define \1.\6.MTD 7
-		  .export \1.\6.MTD
-		  .dw _\6
-		  .db T_CLSS_\6_\1-relative\1
-	  .endif
+	    .ifdefm \6
+		    .define \1.\6.MTD 7
+		    .export \1.\6.MTD
+		    .dw _\6
+		    .db T_CLSS_\6_\1-relative\1
+	    .endif
 
-	  .ifdefm \7
-		  .define \1.\7.MTD 8
-		  .export \1.\7.MTD
-		  .dw _\7
-		  .db T_CLSS_\7_\1-relative\1
-	  .endif
+	    .ifdefm \7
+		    .define \1.\7.MTD 8
+		    .export \1.\7.MTD
+		    .dw _\7
+		    .db T_CLSS_\7_\1-relative\1
+	    .endif
 
-	  .ifdefm \8
-		  .define \1.\8.MTD 9
-		  .export \1.\8.MTD
-		  .dw _\8
-		  .db T_CLSS_\8_\1-relative\1
-	  .endif
+	    .ifdefm \8
+		    .define \1.\8.MTD 9
+		    .export \1.\8.MTD
+		    .dw _\8
+		    .db T_CLSS_\8_\1-relative\1
+	    .endif
 
-	  .ifdefm \9
-		  .define \1.\9.MTD 10
-		  .export \1.\9.MTD
-		  .dw _\9
-		  .db T_CLSS_\9_\1-relative\1
-	  .endif
+	    .ifdefm \9
+		    .define \1.\9.MTD 10
+		    .export \1.\9.MTD
+		    .dw _\9
+		    .db T_CLSS_\9_\1-relative\1
+	    .endif
 
 
-  T_CLSS_\1:
-	  .db "\1",0
+    T_CLSS_\1:
+	    .db "\1",0
 
-  T_CLSS_init_\1:
-	  .db "init",0
+    T_CLSS_init_\1:
+	    .db "init",0
 
-  T_CLSS_play_\1:
-	  .db "play",0
+    T_CLSS_play_\1:
+	    .db "play",0
 
-  T_CLSS_kill_\1:
-	  .db "kill",0
+    T_CLSS_kill_\1:
+	    .db "kill",0
 
-	  .ifdefm \2
-  T_CLSS_\2_\1:
-	  .db "\2",0
-	  .endif
+	    .ifdefm \2
+    T_CLSS_\2_\1:
+	    .db "\2",0
+	    .endif
 
-	  .ifdefm \3
-  T_CLSS_\3_\1:
-	  .db "\3",0
-	  .endif
+	    .ifdefm \3
+    T_CLSS_\3_\1:
+	    .db "\3",0
+	    .endif
 
-	  .ifdefm \4
-  T_CLSS_\4_\1:
-	  .db "\4",0
-	  .endif
+	    .ifdefm \4
+    T_CLSS_\4_\1:
+	    .db "\4",0
+	    .endif
 
-	  .ifdefm \5
-  T_CLSS_\5_\1:
-	  .db "\5",0
-	  .endif
+	    .ifdefm \5
+    T_CLSS_\5_\1:
+	    .db "\5",0
+	    .endif
 
-	  .ifdefm \6
-  T_CLSS_\6_\1:
-	  .db "\6",0
-	  .endif
+	    .ifdefm \6
+    T_CLSS_\6_\1:
+	    .db "\6",0
+	    .endif
 
-	  .ifdefm \7
-  T_CLSS_\7_\1:
-	  .db "\7",0
-	  .endif
+	    .ifdefm \7
+    T_CLSS_\7_\1:
+	    .db "\7",0
+	    .endif
 
-	  .ifdefm \8
-  T_CLSS_\8_\1:
-	  .db "\8",0
-	  .endif
+	    .ifdefm \8
+    T_CLSS_\8_\1:
+	    .db "\8",0
+	    .endif
 
-	  .ifdefm \9
-  T_CLSS_\9_\1:
-	  .db "\9",0
-	  .endif
+	    .ifdefm \9
+    T_CLSS_\9_\1:
+	    .db "\9",0
+	    .endif
 
+  .endif
+.endm
+
+;creates oop object class. parameters: 1=class name 2-9: additional routines
+;object id = \1.OBJID
+;this version does not export the method definitions, useful for private classes
+.macro CLASS_NOEXPORT
+	.if NARGS < 1
+		.printt "Fatal error in macro CLASS, not enough arguments for class \n"
+		.fail
+	.endif
+  .ifdef CLASS.IMPLEMENTS
+    .if CLASS.IMPLEMENTS == interface.dimension
+    \1.CLS:
+    relative\1:
+	    .db CLASS.FLAGS
+	    .dw OBJID.\1	;object id
+	    .db CLASS.ZP_LENGTH	;zero page ram buffer length
+	    .dw CLASS.PROPERTIES	;default properties, disabled for now.
+	    .db NARGS + 2 + 4
+	    .db T_CLSS_\1-relative\1
+	
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __init
+        .dw interface.default.init
+      .else
+	      .dw _init
+      .endif
+	    .db T_CLSS_init_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __play
+        .dw interface.default.play
+      .else
+	      .dw _play
+      .endif
+	    .db T_CLSS_play_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __kill
+        .dw interface.default.kill
+      .else
+	      .dw _kill
+      .endif
+	    .db T_CLSS_kill_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __getDimension
+        .dw interface.dimension.getDimension
+      .else
+	      .dw _getDimension
+      .endif
+	    .db T_CLSS_getDimension_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __setDimension
+        .dw interface.dimension.setDimension
+      .else
+	      .dw _setDimension
+      .endif
+	    .db T_CLSS_setDimension_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __setPosition
+        .dw interface.dimension.setPosition
+      .else
+	      .dw _setPosition
+      .endif
+	    .db T_CLSS_setPosition_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __getPosition
+        .dw interface.dimension.getPosition
+      .else
+	      .dw _getPosition
+      .endif
+	    .db T_CLSS_getPosition_\1-relative\1
+
+      ;additional methods
+	    .ifdefm \2
+	      .dw _\2
+	      .db T_CLSS_\2_\1-relative\1
+	    .endif
+	    .ifdefm \3
+	      .dw _\3
+	      .db T_CLSS_\3_\1-relative\1
+	    .endif
+	    .ifdefm \4
+	      .dw _\4
+	      .db T_CLSS_\4_\1-relative\1
+	    .endif
+	    .ifdefm \5
+	      .dw _\5
+	      .db T_CLSS_\5_\1-relative\1
+	    .endif
+	    .ifdefm \6
+	      .dw _\6
+	      .db T_CLSS_\6_\1-relative\1
+	    .endif
+	    .ifdefm \7
+	      .dw _\7
+	      .db T_CLSS_\7_\1-relative\1
+	    .endif
+	    .ifdefm \8
+	      .dw _\8
+	      .db T_CLSS_\8_\1-relative\1
+	    .endif
+	    .ifdefm \9
+	      .dw _\9
+	      .db T_CLSS_\9_\1-relative\1
+	    .endif
+
+    T_CLSS_\1:
+	    .db "\1",0
+
+    T_CLSS_init_\1:
+	    .db "init",0
+
+    T_CLSS_play_\1:
+	    .db "play",0
+
+    T_CLSS_kill_\1:
+	    .db "kill",0
+
+    T_CLSS_getDimension_\1:
+      .db "getDimension",0
+    T_CLSS_setDimension_\1:
+      .db "setDimension",0
+    T_CLSS_setPosition_\1:
+      .db "setPosition",0
+    T_CLSS_getPosition_\1:
+      .db "getPosition",0
+
+	    .ifdefm \2
+    T_CLSS_\2_\1:
+	    .db "\2",0
+	    .endif
+
+	    .ifdefm \3
+    T_CLSS_\3_\1:
+	    .db "\3",0
+	    .endif
+
+	    .ifdefm \4
+    T_CLSS_\4_\1:
+	    .db "\4",0
+	    .endif
+
+	    .ifdefm \5
+    T_CLSS_\5_\1:
+	    .db "\5",0
+	    .endif
+
+	    .ifdefm \6
+    T_CLSS_\6_\1:
+	    .db "\6",0
+	    .endif
+
+	    .ifdefm \7
+    T_CLSS_\7_\1:
+	    .db "\7",0
+	    .endif
+
+	    .ifdefm \8
+    T_CLSS_\8_\1:
+	    .db "\8",0
+	    .endif
+
+	    .ifdefm \9
+    T_CLSS_\9_\1:
+	    .db "\9",0
+	    .endif
+    
+    .endif
+  .else
+    ;default class implementation
+    \1.CLS:
+    relative\1:
+	    .db CLASS.FLAGS
+	    .dw OBJID.\1	;object id
+	    .ifdefm \7
+    T_CLSS_\7_\1:
+	    .db "\7",0
+	    .endif
+
+	    .ifdefm \8
+    T_CLSS_\8_\1:
+	    .db "\8",0
+	    .endif
+
+	    .ifdefm \9
+    T_CLSS_\9_\1:
+	    .db "\9",0
+	    .endif
+
+  .endif
+.endm
+
+;creates oop object class. parameters: 1=class name 2-9: additional routines
+;object id = \1.OBJID
+;this version does not export the method definitions, useful for private classes
+
+;creates oop object class. parameters: 1=class name 2-9: additional routines
+;object id = \1.OBJID
+;this version does not export the method definitions, useful for private classes
+;this version does not generate the class header, useful for classes that are just a collection of methods
+.macro CLASS_NOHEADER
+	.if NARGS < 1
+		.printt "Fatal error in macro CLASS, not enough arguments for class \n"
+		.fail
+	.endif
+  .ifdef CLASS.IMPLEMENTS
+    .if CLASS.IMPLEMENTS == interface.dimension
+    \1.CLS:
+    relative\1:
+	    .db CLASS.FLAGS
+	    .dw OBJID.\1	;object id
+	    .db CLASS.ZP_LENGTH	;zero page ram buffer length
+	    .dw CLASS.PROPERTIES	;default properties, disabled for now.
+	    .db NARGS + 2 + 4
+	    .db T_CLSS_\1-relative\1
+	
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __init
+        .dw interface.default.init
+      .else
+	      .dw _init
+      .endif
+	    .db T_CLSS_init_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __play
+        .dw interface.default.play
+      .else
+	      .dw _play
+      .endif
+	    .db T_CLSS_play_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __kill
+        .dw interface.default.kill
+      .else
+	      .dw _kill
+      .endif
+	    .db T_CLSS_kill_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __getDimension
+        .dw interface.dimension.getDimension
+      .else
+	      .dw _getDimension
+      .endif
+	    .db T_CLSS_getDimension_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __setDimension
+        .dw interface.dimension.setDimension
+      .else
+	      .dw _setDimension
+      .endif
+	    .db T_CLSS_setDimension_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __setPosition
+        .dw interface.dimension.setPosition
+      .else
+	      .dw _setPosition
+      .endif
+	    .db T_CLSS_setPosition_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __getPosition
+        .dw interface.dimension.getPosition
+      .else
+	      .dw _getPosition
+      .endif
+	    .db T_CLSS_getPosition_\1-relative\1
+
+      ;additional methods
+	    .ifdefm \2
+	      .dw _\2
+	      .db T_CLSS_\2_\1-relative\1
+	    .endif
+	    .ifdefm \3
+	      .dw _\3
+	      .db T_CLSS_\3_\1-relative\1
+	    .endif
+	    .ifdefm \4
+	      .dw _\4
+	      .db T_CLSS_\4_\1-relative\1
+	    .endif
+	    .ifdefm \5
+	      .dw _\5
+	      .db T_CLSS_\5_\1-relative\1
+	    .endif
+	    .ifdefm \6
+	      .dw _\6
+	      .db T_CLSS_\6_\1-relative\1
+	    .endif
+	    .ifdefm \7
+	      .dw _\7
+	      .db T_CLSS_\7_\1-relative\1
+	    .endif
+	    .ifdefm \8
+	      .dw _\8
+	      .db T_CLSS_\8_\1-relative\1
+	    .endif
+	    .ifdefm \9
+	      .dw _\9
+	      .db T_CLSS_\9_\1-relative\1
+	    .endif
+
+    T_CLSS_\1:
+	    .db "\1",0
+
+    T_CLSS_init_\1:
+	    .db "init",0
+
+    T_CLSS_play_\1:
+	    .db "play",0
+
+    T_CLSS_kill_\1:
+	    .db "kill",0
+
+    T_CLSS_getDimension_\1:
+      .db "getDimension",0
+    T_CLSS_setDimension_\1:
+      .db "setDimension",0
+    T_CLSS_setPosition_\1:
+      .db "setPosition",0
+    T_CLSS_getPosition_\1:
+      .db "getPosition",0
+
+	    .ifdefm \2
+    T_CLSS_\2_\1:
+	    .db "\2",0
+	    .endif
+
+	    .ifdefm \3
+    T_CLSS_\3_\1:
+	    .db "\3",0
+	    .endif
+
+	    .ifdefm \4
+    T_CLSS_\4_\1:
+	    .db "\4",0
+	    .endif
+
+	    .ifdefm \5
+    T_CLSS_\5_\1:
+	    .db "\5",0
+	    .endif
+
+	    .ifdefm \6
+    T_CLSS_\6_\1:
+	    .db "\6",0
+	    .endif
+
+	    .ifdefm \7
+    T_CLSS_\7_\1:
+	    .db "\7",0
+	    .endif
+
+	    .ifdefm \8
+    T_CLSS_\8_\1:
+	    .db "\8",0
+	    .endif
+
+	    .ifdefm \9
+    T_CLSS_\9_\1:
+	    .db "\9",0
+	    .endif
+    
+    .endif
+  .else
+    ;default class implementation
+    \1.CLS:
+    relative\1:
+	    .db CLASS.FLAGS
+	    .dw OBJID.\1	;object id
+	
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __init
+        .dw interface.default.init
+      .else
+	      .dw _init
+      .endif
+	    .db T_CLSS_init_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __play
+        .dw interface.default.play
+      .else
+	      .dw _play
+      .endif
+	    .db T_CLSS_play_\1-relative\1
+
+      ;fall back to default interface routine if not defined in current class scope
+      .ifndef __kill
+        .dw interface.default.kill
+      .else
+	      .dw _kill
+      .endif
+	    .db T_CLSS_kill_\1-relative\1
+
+      ;additional methods
+	    .ifdefm \2
+	      .dw _\2
+	      .db T_CLSS_\2_\1-relative\1
+	    .endif
+	    .ifdefm \3
+	      .dw _\3
+	      .db T_CLSS_\3_\1-relative\1
+	    .endif
+	    .ifdefm \4
+	      .dw _\4
+	      .db T_CLSS_\4_\1-relative\1
+	    .endif
+	    .ifdefm \5
+	      .dw _\5
+	      .db T_CLSS_\5_\1-relative\1
+	    .endif
+	    .ifdefm \6
+	      .dw _\6
+	      .db T_CLSS_\6_\1-relative\1
+	    .endif
+	    .ifdefm \7
+	      .dw _\7
+	      .db T_CLSS_\7_\1-relative\1
+	    .endif
+	    .ifdefm \8
+	      .dw _\8
+	      .db T_CLSS_\8_\1-relative\1
+	    .endif
+	    .ifdefm \9
+	      .dw _\9
+	      .db T_CLSS_\9_\1-relative\1
+	    .endif
+
+    T_CLSS_\1:
+	    .db "\1",0
+
+    T_CLSS_init_\1:
+	    .db "init",0
+
+    T_CLSS_play_\1:
+	    .db "play",0
+
+    T_CLSS_kill_\1:
+	    .db "kill",0
+
+	    .ifdefm \2
+    T_CLSS_\2_\1:
+	    .db "\2",0
+	    .endif
+
+	    .ifdefm \3
+    T_CLSS_\3_\1:
+	    .db "\3",0
+	    .endif
+
+	    .ifdefm \4
+    T_CLSS_\4_\1:
+	    .db "\4",0
+	    .endif
+
+	    .ifdefm \5
+    T_CLSS_\5_\1:
+	    .db "\5",0
+	    .endif
+
+	    .ifdefm \6
+    T_CLSS_\6_\1:
+	    .db "\6",0
+	    .endif
+
+	    .ifdefm \7
+    T_CLSS_\7_\1:
+	    .db "\7",0
+	    .endif
+
+	    .ifdefm \8
+    T_CLSS_\8_\1:
+	    .db "\8",0
+	    .endif
+
+	    .ifdefm \9
+    T_CLSS_\9_\1:
+	    .db "\9",0
+	    .endif
   .endif
 .endm
 
@@ -741,6 +1314,15 @@ sta.w ((\@*2)~$ff)&$ff,x
   .include "src/object/default.inheritance"
 .endm*/
 
+;script definition
+.macro SCRIPT
+  .if NARGS != 1
+	.fail
+  .endif
+  \1:
+  .dw SCRIPT_MAGIC
+.endm
+
 ;msu1 chapter definition for auto-generated chapter event script files
 ;defines chapter name 
 .macro CHAPTER
@@ -776,25 +1358,8 @@ sta.w ((\@*2)~$ff)&$ff,x
   lda.w #\2
   jsr GLOBAL.checkFrameReachedSavePc
 
-    .if NARGS == 4
-        NEW \1 oopCreateNoPtr \2 \3 \4
-    .endif
-    .if NARGS == 5
-        NEW \1 oopCreateNoPtr \2 \3 \4 \5
-    .endif
-    .if NARGS == 6
-        NEW \1 oopCreateNoPtr \2 \3 \4 \5 \6
-    .endif
-    .if NARGS == 7
-        NEW \1 oopCreateNoPtr \2 \3 \4 \5 \6 \7
-    .endif
-    .if NARGS == 8
-        NEW \1 oopCreateNoPtr \2 \3 \4 \5 \6 \7 \8
-    .endif
-
-
-
 .endm
+
 
 ;helper macros to reduce script boilerplate for common event patterns
 .macro EVENT_ACTION_PRIMARY startframe endframe result target
@@ -817,24 +1382,6 @@ sta.w ((\@*2)~$ff)&$ff,x
 
 .macro EVENT_RESTART_FROM_CHECKPOINT startframe endframe
   EVENT Event.cutscene.start_dead \1 \2 EventResult.lastcheckpoint 0
-.endm
-  ;parameters inside inside instanciated object:
-  ;OBJECT.CALL.ARG.4,s	chapter id (first script parameter)
-  ;OBJECT.CALL.ARG.3,s	result target
-  ;OBJECT.CALL.ARG.2,s	result action
-  ;OBJECT.CALL.ARG.1,s	endframe
-  ;a					startframe
-
-
-.macro SCRIPT
-  .if NARGS != 1
-	  .printt "Invalid parameter count in event macro\n."
-	  .fail
-  .endif
-	\1:
-	.dw SCRIPT_MAGIC
-	.ACCU 16
-	.INDEX 16
 .endm
 
 
@@ -876,3 +1423,5 @@ sta.w ((\@*2)~$ff)&$ff,x
     pea \1
     jsr core.error.trigger
 .endm
+
+.endif
