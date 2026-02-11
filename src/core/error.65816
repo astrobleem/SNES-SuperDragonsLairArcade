@@ -105,6 +105,12 @@ core.error.trigger:
 	lda #DMA_CHANNEL0_ENABLE    			;Initiate the DMA transfer
 	sta MDMAEN
 
+	stz CGADD				;set backdrop color to magenta
+	lda #$1f
+	sta CGDATA
+	lda #$7c
+	sta CGDATA
+
 	rep #$31					;print main exception text
 	
 	jsr SetupCurrentObjectStringPointers

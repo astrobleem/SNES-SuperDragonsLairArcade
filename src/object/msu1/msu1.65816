@@ -16,31 +16,17 @@
   jsr core.nmi.stop
 
   jsr _isMsu1Present
-  bcc _msu1InitGracefulExit
-
-  jsr _isMsu1FilePresent
-  bcc _msu1InitGracefulExit
-
-  bra _msu1InitContinue
-
-_msu1InitGracefulExit:
-    ;msu1 hardware or data file not present, exit gracefully
+  bcs +
     jsr core.nmi.start
-    rep #$31
-    lda #oopCreateNoPtr
-    sta.b this.framebuffer.1.obj + 2
-    sta.b this.framebuffer.2.obj + 2
-    stz.b this.chapterCount
-    stz.b this.currentChapter
-    stz.b this.nextChapter
-    sep #$20
-    stz.b this.nextChapterScheduled
-    stz.b this.videoPlaying
-    stz.b this.frameBusy
-    rep #$31
-    rts
+    TRIGGER_ERROR E_Msu1NotPresent
 
-_msu1InitContinue:
++
+  jsr _isMsu1FilePresent
+  bcs +
+    jsr core.nmi.start
+    TRIGGER_ERROR E_Msu1FileNotPresent
+
++
   jsr _stopAudioTrack
   jsr _setupVideoConfig
 
