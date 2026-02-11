@@ -16,15 +16,31 @@
   jsr core.nmi.stop
 
   jsr _isMsu1Present
-  bcs +
-    TRIGGER_ERROR E_Msu1NotPresent
+  bcc _msu1InitGracefulExit
 
-+
   jsr _isMsu1FilePresent
-  bcs +
-    TRIGGER_ERROR E_Msu1FileNotPresent
+  bcc _msu1InitGracefulExit
 
-+
+  bra _msu1InitContinue
+
+_msu1InitGracefulExit:
+    ;msu1 hardware or data file not present, exit gracefully
+    jsr core.nmi.start
+    rep #$31
+    lda #oopCreateNoPtr
+    sta.b this.framebuffer.1.obj + 2
+    sta.b this.framebuffer.2.obj + 2
+    stz.b this.chapterCount
+    stz.b this.currentChapter
+    stz.b this.nextChapter
+    sep #$20
+    stz.b this.nextChapterScheduled
+    stz.b this.videoPlaying
+    stz.b this.frameBusy
+    rep #$31
+    rts
+
+_msu1InitContinue:
   jsr _stopAudioTrack
   jsr _setupVideoConfig
 
@@ -36,12 +52,11 @@
   jsr core.nmi.start
 
   stz.b this.videoPlaying
+  stz.b this.nextChapterScheduled
   ;stz.w GLOBAL.videoPlaying
   rep #$31
   stz.b this.currentFrame
-  sep #$20
   stz.b this.currentChapter
-  rep #$31  
   stz.w GLOBAL.currentFrame
 
   NEW Background.framebuffer.CLS.PTR this.framebuffer.1.obj PALETTE.BPP.4 BG.LAYER.0 0 MSU1.FRAMEBUFFER.TILESIZE MSU1.FRAMEBUFFER.PALETTESIZE
@@ -49,27 +64,22 @@
 
   CALL Background.framebuffer.makePhysical.MTD this.framebuffer.1.obj
 
-  lda.w #MALLOC.TILEMAP
-  CALL Background.framebuffer.getAllocatedMemory.MTD this.framebuffer.1.obj
+  CALL Background.framebuffer.getAllocatedTilemap.MTD this.framebuffer.1.obj
   stx.b this.framebuffer.1.tilemap
 
-  lda.w #MALLOC.TILES
-  CALL Background.framebuffer.getAllocatedMemory.MTD this.framebuffer.1.obj
+  CALL Background.framebuffer.getAllocatedTiles.MTD this.framebuffer.1.obj
   stx.b this.framebuffer.1.tiles
 
-  lda.w #MALLOC.PALETTE
-  CALL Background.framebuffer.getAllocatedMemory.MTD this.framebuffer.1.obj 
+  CALL Background.framebuffer.getAllocatedPalette.MTD this.framebuffer.1.obj
   stx.b this.framebuffer.1.palette
   stx.b this.framebuffer.2.palette
 
   CALL Background.framebuffer.makePhysical.MTD this.framebuffer.2.obj
 
-  lda.w #MALLOC.TILEMAP
-  CALL Background.framebuffer.getAllocatedMemory.MTD this.framebuffer.2.obj
+  CALL Background.framebuffer.getAllocatedTilemap.MTD this.framebuffer.2.obj
   stx.b this.framebuffer.2.tilemap
 
-  lda.w #MALLOC.TILES
-  CALL Background.framebuffer.getAllocatedMemory.MTD this.framebuffer.2.obj
+  CALL Background.framebuffer.getAllocatedTiles.MTD this.framebuffer.2.obj
   stx.b this.framebuffer.2.tiles
   
   lda.w #V_SCROLL
@@ -86,11 +96,11 @@
   sta.w colorAdditionSelect
   
   lda.w MainScreen
-  and.b #(T_BG1_ENABLE | T_BG2_ENABLE) ~$ff
-  sta.w MainScreen 
+  and.b #(T_BG1_ENABLE | T_BG2_ENABLE | T_BG3_ENABLE | T_BG4_ENABLE) ~$ff
+  sta.w MainScreen
 
   lda.b this.videoMode
-  ;NEW VideoMask.CLS.PTR this.videoMask
+  NEW VideoMask.CLS.PTR this.videoMask
 
   rts
 
@@ -101,8 +111,8 @@
   ;only load new video after current frame cycle has finished
   lda.b this.frameBusy
   bne +
-	lda.b this.nextChapter
-	bpl +
+	lda.b this.nextChapterScheduled
+	beq +
       lda.b this.frameWait
       beq ++
         dec.b this.frameWait
@@ -147,7 +157,7 @@
   rep #$31
   jsr _stop
 
-  ;CALL VideoMask.kill.MTD this.videoMask
+  CALL VideoMask.kill.MTD this.videoMask
   CALL Background.framebuffer.kill.MTD this.framebuffer.1.obj
   CALL Background.framebuffer.kill.MTD this.framebuffer.2.obj
 
@@ -272,6 +282,12 @@ _uploadFirstChunk:
 +
   jsr _msu1SetupFrameLength
 
+  ;pre-read palette data from MSU stream into WRAM buffer.
+  ;this is necessary because tile data in the stream may exceed the VRAM buffer
+  ;(e.g. 768 tiles = $6000 bytes vs $4000 VRAM cap). if we DMA palette directly
+  ;from MSU_DATA, the stream desync causes tile data to be read as palette.
+  jsr _preReadPalette
+
   ;toggle between framebuffers
   lda.b this.framebuffer.current.pointer
   eor.w #this.framebuffer.2.obj - this.framebuffer.1.obj
@@ -343,6 +359,71 @@ _uploadFirstChunk:
     TRIGGER_ERROR E_DmaQueueFull
 
 +
+  rts
+
+/**
+* pre-read palette data from MSU stream into WRAM buffer.
+* seeks to palette position (past tilemap + tiles), reads palette bytes,
+* then seeks back to tilemap position so tile DMA can proceed normally.
+* this ensures correct palette even when tile data exceeds VRAM buffer.
+*/
+_preReadPalette:
+  php
+  rep #$31
+  lda.b this.paletteLength
+  beq _preReadPaletteDone
+
+  ;compute absolute palette position in MSU data file:
+  ;= currentFramePointer + MSU1_FRAME.FRAMEDATA + tilemapLength + tilesLength
+  lda.w #MSU1_FRAME.FRAMEDATA
+  clc
+  adc.b this.tilemapLength
+  clc
+  adc.b this.tilesLength
+  clc
+  adc.b this.currentFramePointer
+  sta.b this.tmp+4
+  lda.b this.currentFramePointer+2
+  adc.w #0
+  sta.b this.tmp+6
+
+  ;seek MSU data pointer to palette position
+  tsx
+  pei (this.tmp+4)
+  pei (this.tmp+6)
+  jsr _msu1SetAdress
+  txs
+
+  ;CPU-read palette bytes from MSU data into WRAM buffer
+  ldx.b this.paletteLength
+  ldy.w #0
+  sep #$20
+_preReadPaletteLoop:
+  lda.l MSU_DATA
+  sta.w msu1PaletteBuffer,y
+  iny
+  dex
+  bne _preReadPaletteLoop
+
+  ;seek back to frame data start (tilemap position)
+  ;= currentFramePointer + MSU1_FRAME.FRAMEDATA
+  rep #$31
+  lda.w #MSU1_FRAME.FRAMEDATA
+  clc
+  adc.b this.currentFramePointer
+  sta.b this.tmp+4
+  lda.b this.currentFramePointer+2
+  adc.w #0
+  sta.b this.tmp+6
+
+  tsx
+  pei (this.tmp+4)
+  pei (this.tmp+6)
+  jsr _msu1SetAdress
+  txs
+
+_preReadPaletteDone:
+  plp
   rts
 
 /**
@@ -429,13 +510,13 @@ _uploadSecondChunk:
 	bcs +
       TRIGGER_ERROR E_DmaQueueFull
 
-+ ;transfer palette
++ ;transfer palette from pre-read WRAM buffer (not MSU_DATA, to avoid stream desync)
   tsx
   sep #$20
-  lda #DMA_TRANSFER.CGRAM | DMA_TRANSFER.OPTION.FIXED_SOURCE		;transfer type
+  lda #DMA_TRANSFER.CGRAM		;sequential read from WRAM buffer (no FIXED_SOURCE)
   pha
-  pea MSU_DATA	;source adress
-  lda #0		;source bank
+  pea msu1PaletteBuffer	;source adress (WRAM)
+  lda #RAM		;source bank ($7e)
   pha
 
   rep #$31
@@ -548,11 +629,8 @@ _msu1SetupFrameLength:
 	dex
 	bne -
 
-  ;this is an error condition, but we won't raise it and swallow the bad frame instead
-  cmp.w #MSU1.FRAMEBUFFER.TILESIZE
-  bcc +
-    lda.w #MSU1.FRAMEBUFFER.TILESIZE
-+
+  ;store uncapped tile length (stream may have more data than VRAM buffer can hold)
+  ;per-chunk DMA already caps at MSU1_MAX_TILE_TRANSFER_LENGTH, so VRAM is safe
   sta.b this.tilesLength
 
   lda.b this.tmp+2
@@ -603,7 +681,6 @@ _msu1SeekToCurrentFramePalette:
 _msu1SeekToChapter:
   php
   rep #$31
-  and.w #$ff
   asl a
   asl a
   clc
@@ -727,17 +804,28 @@ _delay:
   METHOD playVideo
   php
 
-  sep #$20
+  rep #$31
+  pha
+  lda.b this.chapterCount
+  bne +
+    ;msu1 not initialized, ignore playVideo call
+    pla
+    plp
+    rts
+
++ pla
   cmp.b this.chapterCount
   bcc +
     TRIGGER_ERROR E_Msu1InvalidChapterRequested
 
 + ;seek to chapter
-  ora.b #MSU1_NEXT_VIDEO_SCHEDULED
   sta.b this.nextChapter
+  sep #$20
+  lda #TRUE
+  sta.b this.nextChapterScheduled
   lda #MSU1_NEXT_VIDEO_DELAY
   sta.b this.frameWait
-  
+
   rep #$31
   stz.b this.currentFrame
   stz.w GLOBAL.currentFrame
@@ -751,18 +839,21 @@ _startNextVideo:
   sep #$20
   jsr core.nmi.stop
 
+  stz.b this.nextChapterScheduled
+  rep #$20
   lda.b this.nextChapter
-  and.b #MSU1_NEXT_VIDEO_SCHEDULED ~$ff
-  sta.b this.nextChapter
   sta.b this.currentChapter
   jsr _msu1SeekToChapter
-  ;chapter id in msu1 data file must match
+  ;chapter id in msu1 data file must match (low byte only)
+  sep #$20
   lda.l MSU_DATA
   cmp.b this.currentChapter
   beq +
     ;retry once
+    rep #$20
     lda.b this.currentChapter
     jsr _msu1SeekToChapter
+    sep #$20
     lda.l MSU_DATA
     cmp.b this.currentChapter
     beq +
@@ -778,6 +869,7 @@ _startNextVideo:
   lda.b #TRUE
   sta.b this.videoPlaying
 
+  rep #$20
   lda.b this.currentChapter
   jsr _playAudio
 
@@ -787,6 +879,37 @@ _startNextVideo:
 
   lda.b this.currentFrame
   jsr _msu1SeekToFrame
+
+  ;re-apply video display register settings.
+  ;makePhysical is only called during MSU1 init, but other background objects
+  ;(from logo, title screen, etc.) overwrite the BG shadow registers.
+  ;re-apply them here each time a new video chapter starts.
+  CALL Background.framebuffer.makePhysical.MTD this.framebuffer.1.obj
+  rep #$31
+  CALL Background.framebuffer.makePhysical.MTD this.framebuffer.2.obj
+
+  sep #$20
+  lda.b #BGMODE_MODE_1
+  sta.w ScreenMode
+
+  lda.w MainScreen
+  and.b #(T_BG1_ENABLE | T_BG2_ENABLE | T_BG3_ENABLE | T_BG4_ENABLE) ~$ff
+  sta.w MainScreen
+
+  ;re-apply window masking registers for VideoMask HDMA
+  lda #(W12SEL_BG2_W1_ENABLE | W12SEL_BG1_W1_ENABLE)
+  sta.w window12Sel
+  lda #(WOBJSEL_COL_W1_ENABLE | WOBJSEL_COL_W1_ENABLE)
+  sta.w windowObjSel
+  lda #(T_BG2_ENABLE | T_BG1_ENABLE)
+  sta.w windowMainscreen
+  lda #CGWSEL_CLIP_COL_INSIDE
+  sta.w colorAdditionSelect
+
+  rep #$31
+  lda.w #V_SCROLL
+  sta.w yScrollBG1
+  sta.w yScrollBG2
 
   jsr core.nmi.start
 
@@ -958,6 +1081,8 @@ _setupVideoConfig:
 
   lda.l MSU_DATA
   sta.b this.chapterCount
+  lda.l MSU_DATA
+  sta.b this.chapterCount+1
 
   plp
   rts
@@ -989,13 +1114,13 @@ _stopAudioTrack:
 /**
 * play audio track, trigger error if track is non-existant/hardware is not responding. Stops any playing track
 *
-* @param a int,8bit	track to play
+* @param a int,16bit	track to play
 */
   METHOD playAudio
   php
   rep #$31
-  sep #$20
   sta.b this.currentTrack
+  sep #$20
 
   jsr _stopAudioTrack
 
@@ -1006,7 +1131,7 @@ _stopAudioTrack:
   ;set track
   lda.b this.currentTrack
   sta.l MSU_TRACK
-  lda.b #0
+  lda.b this.currentTrack+1
   sta.l MSU_TRACK+1
   jsr _waitAudioBusy
 
@@ -1031,9 +1156,7 @@ _msu1playAudioTimeout:
   rts
 
 _msu1playAudioError:
-  pei (this.currentTrack)
-  TRIGGER_ERROR E_Msu1AudioPlayError
-
+  ;audio track not found, gracefully skip
   plp
   rts
 
@@ -1048,10 +1171,12 @@ _waitAudioBusy:
   ldx.w #MSU1_SEEK_TIMEOUT
 
 -	dex
+	beq +
 	lda.l MSU_STATUS
 	and.b #MSU_STATUS_AUDIO_BUSY
 	bne -
 
++
   plp
   rts
 
@@ -1095,19 +1220,22 @@ GLOBAL.checkFrameReached:
 */
   METHOD resume
   php
-  sep #$20
-  lda.b #TRUE
-  sta.b this.videoPlaying
+  rep #$20
+  lda.b this.chapterCount
+  beq +
+    sep #$20
+    lda.b #TRUE
+    sta.b this.videoPlaying
 
-  ;turn up volume
-  lda.b #MSU_VOLUME_FULL
-  sta.l MSU_VOLUME
+    ;turn up volume
+    lda.b #MSU_VOLUME_FULL
+    sta.l MSU_VOLUME
 
-  ;unpause audio
-  lda.b #MSU_CONTROL_PLAY
-  sta.l MSU_CONTROL
+    ;unpause audio
+    lda.b #MSU_CONTROL_PLAY
+    sta.l MSU_CONTROL
 
-  plp
++ plp
   rts
 
 

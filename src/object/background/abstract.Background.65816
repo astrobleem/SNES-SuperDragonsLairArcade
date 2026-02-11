@@ -27,6 +27,12 @@ abstract.Background.startAnimation:
 
   ;init some vars
   and.w #$ff
+
+  ;bounds check: 9 valid entries in BackgroundAnimationLUT (indices 0-8)
+  cmp.w #9
+  bcc +
+    lda.w #0
++
   sta.b animation.id
   asl a
   adc.b animation.id
@@ -41,8 +47,13 @@ abstract.Background.startAnimation:
   lda.b [animation.pointer], y
   cmp.w #ANIMATION.MAGIC.VALUE
   beq +
-	pei (animation.id)
-    TRIGGER_ERROR E_BadBgAnimation
+    ;non-fatal: fallback to animation 0
+    stz.b animation.id
+    ldx.w #0
+    lda.l BackgroundAnimationLUT,x
+    sta.b animation.pointer
+    lda.l BackgroundAnimationLUT + 1,x
+    sta.b animation.pointer + 1
 
   ;fetch animation config
 + ldy.w #ANIMATION.MAX.TILES
@@ -510,8 +521,9 @@ abstract.Background.allocateMemory:
 
     jsr core.cgram.allocate
     bcs +
-      pei (animation.palette.length)
-      TRIGGER_ERROR E_OutOfCgram
+      ;cgram allocation failed, skip palette storage (non-fatal)
+      ;background will use palette position 0 by default
+      bra ++
 
 
 +   stx.b animation.palette.start

@@ -20,7 +20,7 @@ HEADER_SIZE = 0x20
 CHAPTER_SIZE = 0x4
 POINTER_SIZE = 0x4
 FRAME_SIZE = 0x6
-MAX_CHAPTERS = 0xff
+MAX_CHAPTERS = 0x7ff
 
 TILES = 0
 TILEMAP = 1
@@ -44,7 +44,7 @@ def main():
         sys.exit(1)
 
     chapters = sorted(
-        [Chapter(chapterDir, options) for root, dirs, _ in os.walk(options.get('infilebase')) for chapterDir in dirs],
+        [ch for ch in [Chapter(chapterDir, options) for root, dirs, _ in os.walk(options.get('infilebase')) for chapterDir in dirs] if ch.frames],
         key=lambda chapter: chapter.id,
     )
 
@@ -52,13 +52,14 @@ def main():
         logging.error('No chapter folders are present inside specified chapter base folder %s.' % options.get('infilebase'))
         sys.exit(1)
 
-    if len(chapters) > MAX_CHAPTERS:
-        logging.error('Too many chapters, maximum of %s are allowed, %s are present.' % (MAX_CHAPTERS, len(chapters)))
+    maxChapterId = max(ch.id for ch in chapters)
+    if maxChapterId + 1 > MAX_CHAPTERS:
+        logging.error('Too many chapters, maximum of %s are allowed, %s are present (max id %s).' % (MAX_CHAPTERS, len(chapters), maxChapterId))
         sys.exit(1)
 
     outFile = getOutFile(options.get('outfile'))
     outFile.write(b"S-MSU1")
-    outFile.write(("%-21s" % options.get('title').upper()).encode('ascii'))
+    outFile.write(("%-21.21s" % options.get('title').upper()).encode('ascii'))
     if options.get('bpp') == 2:
         colorDepth = 4
     elif options.get('bpp') == 4:
@@ -71,24 +72,54 @@ def main():
 
     outFile.write(bytes((colorDepth,)))
     outFile.write(bytes((options.get('fps'),)))
-    outFile.write(bytes((len(chapters) & 0xff,)))
+
+    # chapter count as 2 bytes (little-endian), for >255 chapter support
+    totalChapters = max(ch.id for ch in chapters) + 1 if chapters else 0
+    outFile.write(bytes((totalChapters & 0xff,)))
+    outFile.write(bytes(((totalChapters >> 8) & 0xff,)))
 
     for _ in range(HEADER_SIZE - outFile.tell()):
         outFile.write(b"\x00")
 
+    # Build dense chapter map (indexed by chapter ID, entries for all IDs 0..max)
+    chapterById = {ch.id: ch for ch in chapters}
+
+    # Dense pointer table: one entry for every ID from 0 to max
     scenePointerOffset = HEADER_SIZE
-    sceneOffset = scenePointerOffset + (len(chapters) * POINTER_SIZE)
-    frameOffset = sceneOffset
+    sceneOffset = scenePointerOffset + (totalChapters * POINTER_SIZE)
+
+    # Add a dummy chapter entry for empty/missing IDs (0 frames)
+    # Dummy chapter: ID(1) + frameCount(3) = 4 bytes, no frame pointers
+    dummyChapterOffset = sceneOffset
+    dummyChapterSize = CHAPTER_SIZE  # just the header, 0 frames
+
+    # Compute scene data offsets (after dummy chapter)
+    realSceneOffset = dummyChapterOffset + dummyChapterSize
+    frameOffset = realSceneOffset
     for chapter in chapters:
         frameOffset += CHAPTER_SIZE + (len(chapter.frames) * POINTER_SIZE)
 
+    # Write dense pointer table
     outFile.seek(scenePointerOffset)
-    pointer = sceneOffset
-    for chapter in chapters:
-        writePointer(outFile, pointer)
-        pointer += CHAPTER_SIZE + (len(chapter.frames) * POINTER_SIZE)
+    pointer = realSceneOffset
+    for chId in range(totalChapters):
+        if chId in chapterById:
+            writePointer(outFile, pointer)
+            ch = chapterById[chId]
+            pointer += CHAPTER_SIZE + (len(ch.frames) * POINTER_SIZE)
+        else:
+            # Point to dummy chapter entry
+            writePointer(outFile, dummyChapterOffset)
 
-    outFile.seek(sceneOffset)
+    # Write dummy chapter entry (0 frames)
+    outFile.seek(dummyChapterOffset)
+    outFile.write(bytes((0xff,)))  # dummy ID
+    outFile.write(bytes((0,)))     # frameCount low = 0
+    outFile.write(bytes((0,)))     # frameCount mid = 0
+    outFile.write(bytes((0,)))     # frameCount high = 0
+
+    # Write real chapter data
+    outFile.seek(realSceneOffset)
     pointer = frameOffset
     for chapter in chapters:
         logging.debug('Now writing scene %02d (%s) at offset 0x%08x.' % (chapter.id, chapter.name, outFile.tell()))
@@ -157,7 +188,7 @@ class Chapter:
             sys.exit(1)
 
         idFile = idFiles.pop()
-        id_suffix = idFile.split('chapter.id')[-1]
+        id_suffix = idFile.split('chapter.id')[-1].lstrip('.')
         try:
             self.id = int(id_suffix)
         except ValueError:
@@ -166,8 +197,9 @@ class Chapter:
 
         self.frames = [Frame(os.path.splitext(frameBaseFile)[0], self.path, options) for root, dirs, files in os.walk(self.path) for frameBaseFile in sorted(files) if frameBaseFile.find("gfx_video.tiles") >= 0]
 
-        self.frames.append(self.frames[-1])
-        self.frames.append(self.frames[-1])
+        if self.frames:
+            self.frames.append(self.frames[-1])
+            self.frames.append(self.frames[-1])
 
         audioFiles = [audio for root, dirs, files in os.walk(self.path) for audio in sorted(files) if audio.find("sfx_video.pcm") >= 0]
         if len(audioFiles) != 1:

@@ -63,6 +63,10 @@ def main():
     'chapterfolder'        : {
       'value'            : '',
       'type'            : 'str'
+      },
+    'chapterlabel'        : {
+      'value'            : '',
+      'type'            : 'str'
       },      
     'videofile'        : {
       'value'            : '',
@@ -108,6 +112,13 @@ def main():
   
   chapterEvent = [event for event in events if event.type == 'chapter'].pop()
 
+  # Use the XML chapter name attribute for assembly labels (what other chapters reference as resultTarget).
+  # This may differ from the filename-derived name used for folder paths.
+  chapterLabel = chapterEvent.name if chapterEvent.name else options.get('chapter')
+  if chapterLabel != options.get('chapter'):
+    logging.info('Chapter label from XML (%s) differs from filename (%s), using XML name for labels.' % (chapterLabel, options.get('chapter')))
+  options.manualSet('chapterlabel', chapterLabel)
+
   if chapterEvent.frameend - chapterEvent.framestart <= 0:
     logging.warning( 'No frames in chapter %s, creating minimal chapter.' %  chapterEvent.name)
     # Don't exit, just create a minimal chapter file
@@ -118,7 +129,7 @@ def main():
     chapterIdFile.close()
   except IOError:
     logging.error('unable to access chapter id file %s.' % chapterIdFileName)
-    sys.exit(1)  
+    sys.exit(1)
 
   updateChapterIncludeFile(chapterEvent, options)
 
@@ -193,6 +204,17 @@ def updateChapterIncludeFile(chapterEvent, options):
     logging.error('Unable to access chapter ID file %s.' % chapterIdFileName)
     sys.exit(1)
   chapterIdFile.writelines(['.include "%s/chapter.script"\n' % options.get('chapterfolder')])
+  chapterIdFile.close()
+
+  # Also write data include file for superfree event data section
+  chapterDataFileName = "%s/chapter_data.include" % options.get('outfolder')
+  try:
+    chapterDataFile = open(chapterDataFileName, 'a')
+  except IOError:
+    logging.error('Unable to access chapter data file %s.' % chapterDataFileName)
+    sys.exit(1)
+  chapterDataFile.writelines(['.include "%s/chapter.data"\n' % options.get('chapterfolder')])
+  chapterDataFile.close()
 
 '''
 call ffmpeg to cut out relevant chapter from video file, generate single frame images
@@ -207,11 +229,11 @@ def extractChapterVideo(chapterEvent, options):
     timestart = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.timestart // (60 * 1000)), int((chapterEvent.timestart % (60 * 1000)) // 1000), int(chapterEvent.timestart % (1000)))
     duration = "%02d:%02d:%02d.%03d" % (0, int(chapterEvent.duration // (60 * 1000)), int((chapterEvent.duration % (60 * 1000)) // 1000), int(chapterEvent.duration % (1000)))
 
-    # Use filter_complex to scale and quantize to 120 colors (to fit in 8 palettes of 15+1)
+    # Use filter_complex to scale and quantize to 32 colors (2 SNES palettes)
     # stats_mode=single ensures a new palette is generated for each frame
     # paletteuse=new=1 ensures the new palette is applied to each frame
     # IMPORTANT: -ss must be BEFORE -i for fast seeking!
-    cmd = "ffmpeg -y -ss %s -t %s -i \"%s\" -filter_complex \"scale=256:192[s];[s]split[s1][s2];[s1]palettegen=max_colors=120:stats_mode=single[p];[s2][p]paletteuse=new=1:dither=bayer\" -f image2 \"%s/video_%%06d.gfx_video.png\"" % (timestart, duration, options.get('videofile'), options.get('chapterfolder'))
+    cmd = "ffmpeg -y -ss %s -t %s -i \"%s\" -filter_complex \"scale=256:192[s];[s]split[s1][s2];[s1]palettegen=max_colors=32:stats_mode=single[p];[s2][p]paletteuse=new=1:dither=bayer\" -f image2 \"%s/video_%%06d.gfx_video.png\"" % (timestart, duration, options.get('videofile'), options.get('chapterfolder'))
     
     returnVal = os.system(cmd)
     if not 0 == returnVal:
@@ -240,9 +262,9 @@ use gimp script(must be located in "$HOME/.gimp2.6/scripts/, or wherever gimp ex
 '''
 def optimizeVideoFrames(options):
     logging.info('Optimizing video frames using superfamiconv...')
-    chapterOutDir = "%s/%s" % (options.get('convertedoutfolder'), options.get('chapter'))
-    if not os.path.exists(chapterOutDir):
-        os.makedirs(chapterOutDir)
+    # chapterOutDir = "%s/%s" % (options.get('convertedoutfolder'), options.get('chapter'))
+    # if not os.path.exists(chapterOutDir):
+    #     os.makedirs(chapterOutDir)
 
     # Use gfx_converter.py which wraps superfamiconv
     # We need to iterate over all extracted PNGs in chapterfolder
@@ -289,9 +311,9 @@ def optimizeVideoFrames(options):
         
         cmd = [
             sys.executable, gfx_converter,
-            '--tool', 'superfamiconv',
-            '--pad-to-32x32',
-            '-palettes', '8',
+            '--tool', 'gracon',
+            # '--pad-to-32x32', # gracon does this natively
+            '-palettes', '2',
             '-infile', full_png_path,
             '-outfilebase', outfilebase
         ]
@@ -307,23 +329,37 @@ def optimizeVideoFrames(options):
 
 
 def writeEventFile(events, options):
-  eventFileName = "%s/chapter.script" % options.get('chapterfolder')
-  
-  try:
-    eventFile = open(eventFileName, 'w')
-  except IOError:
-    logging.error('unable to access output file %s.' % eventFileName)
-    sys.exit(1)
-
+  chapterLabel = options.get('chapterlabel')
+  chapterFolder = options.get('chapterfolder')
   chapterEvent = [event for event in events if event.type == 'chapter'].pop()
-  
-  eventFile.write("/**\n* this file has been auto-generated.\n*/\n\n")
-  eventFile.write("    CHAPTER %s\n\n" % options.get('chapter'))
+
+  # Write chapter.script (code only - stays in bank 0 scripts section)
+  # Uses chapterLabel (from XML name attribute) for assembly labels
+  try:
+    scriptFile = open("%s/chapter.script" % chapterFolder, 'w')
+  except IOError:
+    logging.error('unable to access output file %s/chapter.script.' % chapterFolder)
+    sys.exit(1)
+  scriptFile.write("/**\n* this file has been auto-generated.\n*/\n\n")
+  scriptFile.write("    CHAPTER %s\n" % chapterLabel)
+  scriptFile.write("    .dw %s.events\n" % chapterLabel)
+  scriptFile.write("    .db :%s.events\n\n" % chapterLabel)
+  scriptFile.write("    DIE\n")
+  scriptFile.close()
+
+  # Write chapter.data (event data - goes in superfree section, any bank)
+  try:
+    dataFile = open("%s/chapter.data" % chapterFolder, 'w')
+  except IOError:
+    logging.error('unable to access output file %s/chapter.data.' % chapterFolder)
+    sys.exit(1)
+  dataFile.write("%s.events:\n" % chapterLabel)
   for event in events:
-    eventFile.write("    EVENT Event.%s.CLS.PTR $%04x $%04x EventResult.%s %s %s %s %s\n\n" % (event.type, max(0, event.framestart - chapterEvent.framestart), max(0, event.frameend - chapterEvent.framestart), event.result, event.resultname, event.arg0, event.arg1, event.arg2))
-    #eventFile.write("    %s\n\n" % event.toString())
-  eventFile.write("    DIE\n")
-  eventFile.close()
+    startframe = min(0xFFFF, max(0, event.framestart - chapterEvent.framestart))
+    endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
+    dataFile.write("    .dw Event.%s.CLS.PTR, $%04x, $%04x, EventResult.%s, %s, %s, %s\n" % (event.type, startframe, endframe, event.result, event.resultname, event.arg0, event.arg1))
+  dataFile.write("    .dw 0\n")
+  dataFile.close()
 
 
 def parseEvents(options):
@@ -479,14 +515,15 @@ class Event():
       'start_dead': 7,
     }
 
-    if self.type == 'direction' and 'type' in self.parameters:
-      direction = self.parameters['type']
-      if direction in direction_lut:
-        self.type = 'dir_gen'
-        self.arg0 = direction_lut[direction]
+    if self.type == 'direction':
+      if 'type' in self.parameters:
+        direction = self.parameters['type']
+        if direction in direction_lut:
+          self.arg0 = direction_lut[direction]
+      self.type = 'direction_generic'
     elif self.type in room_transition_lut:
       self.arg0 = room_transition_lut[self.type]
-      self.type = 'room_trans'
+      self.type = 'room_transition'
     elif self.type.startswith('seq') and self.type[3:].isdigit():
       self.arg0 = self.type[3:]
       self.type = 'seq_generic'

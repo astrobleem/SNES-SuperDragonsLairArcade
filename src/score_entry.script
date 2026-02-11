@@ -32,6 +32,7 @@
   sta.w MainScreen
   rep #$31
 
+  NEW Brightness.CLS.PTR objFameBrightness
   NEW Background.textlayer.16x16.CLS.PTR objScoreText
   NEW Background.generic.CLS.PTR objBackground3 BG.LAYER.0 BG.scoreentry.PTR
 

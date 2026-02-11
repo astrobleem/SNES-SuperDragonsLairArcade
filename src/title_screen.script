@@ -6,10 +6,10 @@
   .def objBackground hashPtr.1
   .def objText hashPtr.2
   .def objLogo hashPtr.3
-  .def objLogoZoom hashPtr.4
-  .def objSpc hashPtr.5
-  .def objBrightness hashPtr.6
-  .def objPlayer hashPtr.7
+  ;objBrightness is predefined at hashPtr.4 (hashPtr+12) in script.h
+  ;objPlayer is predefined at hashPtr.5 (hashPtr+16) in script.h
+  .def objLogoZoom hashPtr.6
+  .def objSpc hashPtr.7
   .def objPalRotate hashPtr.8
   .def objSuper hashPtr.9
   lda.w #OBJECT.PROPERTIES.isChapter
@@ -31,12 +31,26 @@
   sta.w MainScreen
   rep #$31
 
+  NEW Brightness.CLS.PTR objBrightness
   NEW Background.textlayer.8x8.CLS.PTR objText
   NEW Background.generic.CLS.PTR objBackground BG.LAYER.1 BG.titlescreen.PTR
   NEW Background.generic.CLS.PTR objLogo BG.LAYER.0 BG.logo.PTR
   
   NEW LogoZoom.CLS.PTR objLogoZoom BG.LAYER.0
+
+  ;try to reuse existing Spc (engine already uploaded by msu1)
+  jsr abstract.Iterator.reset
+  lda #OBJID.Spc
+  jsr abstract.Iterator.each.byId
+  bcc _title_screen.createSpc
+    lda.b iterator.target
+    sta.b objSpc
+    lda.b iterator.target + 2
+    sta.b objSpc + 2
+    bra _title_screen.spcReady
+_title_screen.createSpc:
   NEW Spc.CLS.PTR objSpc
+_title_screen.spcReady:
 
   lda #T_title.PTR
   CALL Background.textlayer.8x8.print.MTD objText
@@ -66,10 +80,8 @@
 +
 
   CALL Background.generic.getAllocatedPalette.MTD objLogo
-  bcs +
-    TRIGGER_ERROR E_Todo  ;@fixme, need proper error message here if no palette allocated
+  bcc _title_screen.noPalRotate
 
-+
   ;color index to start from, minus transparent color 0
   pea 0
   pea 0
@@ -89,6 +101,7 @@
   pla
   pla
 
+_title_screen.noPalRotate:
   lda.w #SAMPLE.0.SHURIKEN
   CALL Spc.SpcPlaySoundEffect.MTD objSpc
 

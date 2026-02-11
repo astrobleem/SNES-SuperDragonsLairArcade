@@ -54,6 +54,7 @@ EventResult.playchapter:
   pei (event.resultTarget)
   NEW Script.CLS.PTR oopCreateNoPtr
   pla
+  ;self-kill removed: new chapter's Event.chapter.init killOthers already kills this event
   rts
 
 
@@ -62,6 +63,7 @@ EventResult.restartchapter:
   pei (event.chapterId)
   NEW Script.CLS.PTR oopCreateNoPtr
   pla
+  ;self-kill removed: new chapter's Event.chapter.init killOthers already kills this event
   rts
 
 

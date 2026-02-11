@@ -104,7 +104,7 @@ IrqHookUp:
   .db "SUPER DRAGON'S LAIR  "
   .db $31	;mapping
   .db $2	;cartridgetype
-  .db 8	;romsize
+  .db 10	;romsize
   .db 1	;sramsize
   .db 2	;country
   .db $33	;licenseecode

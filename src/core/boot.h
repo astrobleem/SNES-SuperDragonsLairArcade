@@ -3,7 +3,7 @@
 .base REGS
 ;direct page global defines ram $00:0000-$00:1fff
 .ramsection "stack buffr" bank 0 slot 2
-STACK_strt ds $120
+STACK_strt ds $180
 STACK db
 STACK_end dw
 .ends

@@ -1,3 +1,5 @@
   SCRIPT level1
 
-  TRIGGER_ERROR E_Todo
+  NEW Script.CLS.PTR oopCreateNoPtr introduction_start_alive
+
+  DIE

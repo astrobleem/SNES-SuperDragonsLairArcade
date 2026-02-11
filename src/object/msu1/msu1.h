@@ -3,7 +3,6 @@
 .define MSU1_SEEK_TIMEOUT $2000
 .define MSU1_MAX_TILE_TRANSFER_LENGTH $2000
 .define MSU1_CHUNK_DIFFERENCE $380
-.define MSU1_NEXT_VIDEO_SCHEDULED $80
 .define MSU1_FRAME_CYCLE_COUNT $ff
 .define MSU1_VIDEOMODE_THRESHOLD $0400
 .define MSU1_NEXT_VIDEO_DELAY 1 ;make sure msu1 dma transfers are flushed before seeking to new video. increasing this above 1 creates frame number to go apeshit, wtf???
@@ -24,8 +23,8 @@
   TITLE ds 21
   BPP db
   FPS db
-  CHAPTERCOUNT db
-  CHECKSUM ds 2
+  CHAPTERCOUNT dw
+  _padding db
   POINTER ds 4
 .endst
 
@@ -56,10 +55,11 @@
   chapterCount dw
   currentFrame dw
   currentFramePointer ds 4
-  currentChapter db
+  currentChapter dw
   currentChapterPointer ds 4
-  currentTrack db
-  nextChapter db
+  currentTrack dw
+  nextChapter dw
+  nextChapterScheduled db
   videoPlaying db
   paletteLength dw
   tilemapLength dw
@@ -108,6 +108,10 @@ GLOBAL.currentFrame dw
 GLOBAL.videoPlaying db
 
 MSU1.GLOBAL.END ds 0
+.ends
+
+.ramsection "msu1 palette buffer" bank 0 slot 1
+msu1PaletteBuffer ds MSU1.FRAMEBUFFER.PALETTESIZE
 .ends
 
 .base BSL

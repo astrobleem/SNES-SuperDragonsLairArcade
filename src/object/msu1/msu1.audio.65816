@@ -236,9 +236,7 @@ _msu1playAudioTimeout:
   rts
 
 _msu1playAudioError:
-  pei (this.currentTrack)
-  TRIGGER_ERROR E_Msu1AudioPlayError
-
+  ;audio track not found, gracefully skip
   plp
   rts
 

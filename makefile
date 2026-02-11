@@ -148,6 +148,7 @@ builddirs := $(sort $(dir $(objects) $(datafiles)) $(linkdir))
 #link 65816 objects
 all: $(linkobjectfile)
 	$(linker) $(linkflags) $(linkobjectfile) $(romfile)
+	cp $(romfile) "/mnt/e/gh/SuperDragonsLairArcade.sfc/SuperDragonsLairArcade.sfc"
 
 #create necessary directory substructure in build directory
 $(builddirs): $(chapterscripts)

@@ -16,6 +16,7 @@
 
   rep #$31
 
+  NEW Brightness.CLS.PTR objBrightness
   NEW Background.generic.CLS.PTR objLogoBg BG.LAYER.0 BG.logo.PTR
 
   lda #BRIGHTNESS.FULL
@@ -40,7 +41,9 @@
 
   CALL Background.generic.kill.MTD objLogoBg
 
+  jsr core.cgram.clear
+
   NEW Script.CLS.PTR oopCreateNoPtr title_screen
 
-  rts
+  DIE
 

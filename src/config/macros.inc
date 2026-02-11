@@ -383,9 +383,9 @@ PtrNorm\1\@:
 	    .dw OBJID.\1	;object id
 	    .db CLASS.ZP_LENGTH	;zero page ram buffer length
 	    .dw CLASS.PROPERTIES	;default properties, disabled for now.
-	    .db NARGS + 2 + 4
+	    .db NARGS + 2 + 5
 	    .db T_CLSS_\1-relative\1
-	
+
 	    .define \1.init.MTD 0
 	    .export \1.init.MTD
       ;fall back to default interface routine if not defined in current class scope
@@ -456,56 +456,56 @@ PtrNorm\1\@:
       .endif
 	    .db T_CLSS_getPosition_\1-relative\1
         
-        .define \1.translate.MTD 16
+        .define \1.translate.MTD 7
         .export \1.translate.MTD
         .dw interface.dimension.translate
         .db T_CLSS_translate_\1-relative\1
 
       ;additional methods
 	    .ifdefm \2
-        .define \1.\2.MTD 7
+        .define \1.\2.MTD 8
         .export \1.\2.MTD
 	      .dw _\2
 	      .db T_CLSS_\2_\1-relative\1
 	    .endif
 	    .ifdefm \3
-        .define \1.\3.MTD 8
+        .define \1.\3.MTD 9
         .export \1.\3.MTD
 	      .dw _\3
 	      .db T_CLSS_\3_\1-relative\1
 	    .endif
 	    .ifdefm \4
-        .define \1.\4.MTD 9
+        .define \1.\4.MTD 10
         .export \1.\4.MTD
 	      .dw _\4
 	      .db T_CLSS_\4_\1-relative\1
 	    .endif
 	    .ifdefm \5
-        .define \1.\5.MTD 10
+        .define \1.\5.MTD 11
         .export \1.\5.MTD
 	      .dw _\5
 	      .db T_CLSS_\5_\1-relative\1
 	    .endif
 	    .ifdefm \6
-        .define \1.\6.MTD 11
+        .define \1.\6.MTD 12
         .export \1.\6.MTD
 	      .dw _\6
 	      .db T_CLSS_\6_\1-relative\1
 	    .endif
 	    .ifdefm \7
-        .define \1.\7.MTD 12
+        .define \1.\7.MTD 13
         .export \1.\7.MTD
 	      .dw _\7
 	      .db T_CLSS_\7_\1-relative\1
 	    .endif
 	    .ifdefm \8
-        .define \1.\8.MTD 13
+        .define \1.\8.MTD 14
         .export \1.\8.MTD
 	      .dw _\8
 	      .db T_CLSS_\8_\1-relative\1
 	    .endif
 	    .ifdefm \9
-        .define \1.\9.MTD 14
+        .define \1.\9.MTD 15
         .export \1.\9.MTD
 	      .dw _\9
 	      .db T_CLSS_\9_\1-relative\1
@@ -1335,13 +1335,8 @@ sta.w ((\@*2)~$ff)&$ff,x
 	\1:
 	.dw SCRIPT_MAGIC
 
- 
-  lda.w #OBJECT.PROPERTIES.isChapter
-  jsr abstract.Iterator.setProperties
-  ;kill all pending scripts except for the one that instanciated this chapter. maybe do this inside the CHAPTER macro instead?
-  ;lda.w #OBJECT.PROPERTIES.isChapter
-  jsr abstract.Iterator.killOthers
-
+  ;setup + create all events from data table pointed to by inline 24-bit address
+  jsr _CHAPTER.init
 
 .endm
 
@@ -1354,10 +1349,21 @@ sta.w ((\@*2)~$ff)&$ff,x
 ;  result     (OBJECT.CALL.ARG.3,s)
 ;  resultTarget (OBJECT.CALL.ARG.4,s)
 .macro EVENT
-
-  lda.w #\2
-  jsr GLOBAL.checkFrameReachedSavePc
-
+  .dw \1
+  .dw \2
+  .dw \3
+  .dw \4
+  .dw \5
+.ifdefm \6
+  .dw \6
+.else
+  .dw 0
+.endif
+.ifdefm \7
+  .dw \7
+.else
+  .dw 0
+.endif
 .endm
 
 

@@ -148,9 +148,12 @@ core.dma.registerTransfer:
   sta.w GLOBAL.dmaQueue.1.targetAdress,x
   lda 6,s
   bne +
-	;zero length transfer encountered, abort.
-	pha
-    TRIGGER_ERROR E_InvalidDmaTransferLength
+	;zero length transfer encountered, deactivate slot and return failure
+	stz.w GLOBAL.dmaQueue.1.transferType,x
+	plx
+	plp
+	clc
+	rts
 
 
 + sta.w GLOBAL.dmaQueue.1.transferLength,x  

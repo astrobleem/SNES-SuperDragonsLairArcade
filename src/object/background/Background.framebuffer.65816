@@ -78,7 +78,7 @@ _initBadArgs:
   tax
   lda.l TILEMAP.LENGTH.LUT,x
   sta.b this.tilemap.length
-  
+
   lda OBJECT.CALL.ARG.4,s
   sta.b this.tiles.length
 
@@ -182,48 +182,55 @@ _initBadArgs:
 * @return x int	start adress of allocated memory
 * @return y int	length of allocated memory
 */
-  METHOD getAllocatedMemory
+/**
+* return tiles allocation info (no parameters needed)
+* @return c bool  true if memory was allocated
+* @return x int   start address of allocated tiles
+* @return y int   length of allocated tiles
+*/
+  METHOD getAllocatedTiles
   .accu 16
-  cmp.w #MALLOC.MAXTYPES
-  bcc +
-    TRIGGER_ERROR E_BadParameters
-
-+ asl a
-  tax
-  jsr (_getAllocatedMemory.LUT,x)
-  rts
-
-_getAllocatedMemory.LUT:
-  .dw _getAllocatedMemoryTiles
-  .dw _getAllocatedMemoryTilemap
-  .dw _getAllocatedMemoryPalette
-
-_getAllocatedMemoryTiles:
   ldx.b this.tiles.start
   ldy.b this.tiles.length
   lda.b this.tiles.id
   and.w #$ff
-  bra _getAllocatedMemoryReturnCarry
+  clc
+  beq +
+	sec
++ rts
 
-_getAllocatedMemoryTilemap:
+/**
+* return tilemap allocation info (no parameters needed)
+* @return c bool  true if memory was allocated
+* @return x int   start address of allocated tilemap
+* @return y int   length of allocated tilemap
+*/
+  METHOD getAllocatedTilemap
+  .accu 16
   ldx.b this.tilemap.start
   ldy.b this.tilemap.length
   lda.b this.tilemap.id
   and.w #$ff
-  bra _getAllocatedMemoryReturnCarry
+  clc
+  beq +
+	sec
++ rts
 
-_getAllocatedMemoryPalette:
+/**
+* return palette allocation info (no parameters needed)
+* @return c bool  true if memory was allocated
+* @return x int   start address of allocated palette
+* @return y int   length of allocated palette
+*/
+  METHOD getAllocatedPalette
+  .accu 16
   ldx.b this.palette.start
   ldy.b this.palette.length
   lda.b this.palette.id
   and.w #$ff
-
-;return carry clear if no memory allocated
-_getAllocatedMemoryReturnCarry:
   clc
   beq +
 	sec
-
 + rts
 
 /**
@@ -279,6 +286,6 @@ _getAllocatedMemoryReturnCarry:
   plx
   rts
 
-  CLASS Background.framebuffer getAllocatedMemory makePhysical
+  CLASS Background.framebuffer getAllocatedTiles getAllocatedTilemap getAllocatedPalette makePhysical
 .ends	
 	
