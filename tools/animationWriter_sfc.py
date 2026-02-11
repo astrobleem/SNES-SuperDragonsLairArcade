@@ -283,7 +283,14 @@ def main():
             tiles_data = read_file(tiles_file)
             map_data = read_file(map_file)
             palette_data = read_file(palette_file)
-            
+            # Ensure CGRAM[0] (SNES backdrop color) is black, not superfamiconv's
+            # transparent marker. See gracon.py getPaletteWriteStream for rationale.
+            if len(palette_data) >= 2:
+                palette_data = bytearray(palette_data)
+                palette_data[0] = 0x00
+                palette_data[1] = 0x00
+                palette_data = bytes(palette_data)
+
             if frame_idx == 0:
                 first_frame_palette_data = palette_data
                 max_pal_len = len(palette_data)

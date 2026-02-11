@@ -538,6 +538,13 @@ def getPaletteWriteStream(palettes, options):
     for color in [pixel for palette in [palette for palette in palettes if palette['refId'] == None] for pixel in palette['color']]:
         stream.append(color & 0xff)
         stream.append((color & 0xff00) >> 8)
+    # Ensure CGRAM[0] (SNES backdrop color) is black, not the magenta transparency
+    # marker ($7C1F). Color index 0 is hardware-transparent for all sub-palettes, so
+    # this value is never rendered through tiles — it only affects the backdrop shown
+    # when no BG layer is active (e.g. during DMA IRQ window masking).
+    if len(stream) >= 2:
+        stream[0] = 0x00
+        stream[1] = 0x00
     return bytes(stream)
 
 
