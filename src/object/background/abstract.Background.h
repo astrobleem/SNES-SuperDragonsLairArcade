@@ -76,7 +76,8 @@ BackgroundAnimationLUT:
   PTRLONG BackgroundAnimationLUT BG.levelcomplete.0
   PTRLONG BackgroundAnimationLUT BG.levelcomplete.1
   PTRLONG BackgroundAnimationLUT BG.levelcomplete.2
-  
+  PTRLONG BackgroundAnimationLUT BG.losers
+
 .ends
   BG_ANIMATION msu1 gfx_bg
   BG_ANIMATION titlescreen gfx_bg
@@ -87,4 +88,5 @@ BackgroundAnimationLUT:
   BG_ANIMATION levelcomplete.0 gfx_bg
   BG_ANIMATION levelcomplete.1 gfx_bg
   BG_ANIMATION levelcomplete.2 gfx_bg
+  BG_ANIMATION losers gfx_bg
 

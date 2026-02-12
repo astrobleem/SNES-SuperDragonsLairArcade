@@ -109,7 +109,13 @@ excArgs	ds 8
 .ends
 
 .section "exception font pal" superfree
-	FILEINC ExcFontPal "build/data/font/fixed8x8.gfx_font.palette" 8
+ExcFontPal:
+  .db $00,$00   ; color 0: transparent/black
+  .db $18,$63   ; color 1: grey text ($6318 BGR555)
+  .db $00,$00   ; color 2: unused
+  .db $00,$00   ; color 3: unused
+.define ExcFontPal.LEN 8
+.export ExcFontPal.LEN
 .ends
 
 .section "err-msg string LUT" superfree

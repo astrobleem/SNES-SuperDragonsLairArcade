@@ -154,6 +154,7 @@ _CHAPTER.init.done:
 .include "src/title_screen.script"
 .include "src/logo_intro.script"
 .include "src/hall_of_fame.script"
+.include "src/losers.script"
 .include "src/msu1.script"
 .include "src/score_entry.script"
 .include "src/game_over.script"

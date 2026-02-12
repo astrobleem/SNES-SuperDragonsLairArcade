@@ -1,55 +1,54 @@
 
-CC=gcc
-LD=gcc
-
-CFLAGS?= -c -O3 -ansi -pedantic -Wall
-LDFLAGS =
-WLAFLAGS = $(CFLAGS) -DUNIX
+CC = gcc
+CFLAGS = -c -O3 -ansi -pedantic -Wall -DMSDOS
+LD = gcc
+LDFLAGS = 
 
 CFILES = main.c memory.c parse.c files.c check.c analyze.c write.c compute.c discard.c listfile.c
 HFILES = main.h memory.h parse.h files.h check.h analyze.h write.h compute.h discard.h listfile.h defines.h
 OFILES = main.o memory.o parse.o files.o check.o analyze.o write.o compute.o discard.o listfile.o
 
 
-all: $(OFILES) 
-	$(LD) $(OFILES) $(LDFLAGS) -o wlalink ; strip wlalink
+all: $(OFILES) makefile
+	$(LD) $(LDFLAGS) $(OFILES) -o wlalink.exe
 
-main.o: main.c defines.h main.h 
-	$(CC) $(WLAFLAGS) main.c
 
-memory.o: memory.c defines.h memory.h 
-	$(CC) $(WLAFLAGS) memory.c
+main.o: main.c main.h defines.h
+	$(CC) $(CFLAGS) main.c
 
-parse.o: parse.c defines.h parse.h 
-	$(CC) $(WLAFLAGS) parse.c
+memory.o: memory.c memory.h defines.h
+	$(CC) $(CFLAGS) memory.c
 
-files.o: files.c defines.h files.h 
-	$(CC) $(WLAFLAGS) files.c
+parse.o: parse.c parse.h defines.h
+	$(CC) $(CFLAGS) parse.c
 
-check.o: check.c defines.h check.h 
-	$(CC) $(WLAFLAGS) check.c
+files.o: files.c files.h defines.h
+	$(CC) $(CFLAGS) files.c
 
-analyze.o: analyze.c defines.h analyze.h 
-	$(CC) $(WLAFLAGS) analyze.c
+check.o: check.c check.h defines.h
+	$(CC) $(CFLAGS) check.c
 
-write.o: write.c defines.h write.h 
-	$(CC) $(WLAFLAGS) write.c
+analyze.o: analyze.c analyze.h defines.h
+	$(CC) $(CFLAGS) analyze.c
 
-compute.o: compute.c defines.h compute.h 
-	$(CC) $(WLAFLAGS) compute.c
+write.o: write.c write.h defines.h
+	$(CC) $(CFLAGS) write.c
 
-discard.o: discard.c defines.h discard.h 
-	$(CC) $(WLAFLAGS) discard.c
+compute.o: compute.c compute.h defines.h
+	$(CC) $(CFLAGS) compute.c
 
-listfile.o: listfile.c defines.h listfile.h 
-	$(CC) $(WLAFLAGS) listfile.c
+discard.o: discard.c discard.h defines.h
+	$(CC) $(CFLAGS) discard.c
+
+listfile.o: listfile.c listfile.h defines.h
+	$(CC) $(CFLAGS) listfile.c
 
 
 $(OFILES): $(HFILES)
 
 
 clean:
-	rm -f $(OFILES) core *~ wlalink
+	rm -f $(OFILES) *~ wlalink.exe
 
 install:
-	cp wlalink /usr/local/bin
+	make ; cp wlalink.exe /usr/local/bin

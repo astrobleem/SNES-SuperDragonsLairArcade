@@ -26,19 +26,26 @@
   sta this.wrongMask
 
   lda OBJECT.CALL.ARG.6,s
-  beq +
+  beq _branchImm_zero
     lda #1
-    bra ++
-+   lda #0
-+  sta this.branchImmediate
+    bra _branchImm_store
+_branchImm_zero:
+    lda #0
+_branchImm_store:
+  sta this.branchImmediate
   stz this.hasTriggered
 
   ;choose assets and positioning based on direction mask
   lda this.direction
+  bne _direction_hasDir
+    jmp ++++                  ;skip arrow creation if direction=0 (attract mode)
+_direction_hasDir:
   cmp #JOY_DIR_LEFT
   beq +
   cmp #JOY_DIR_DOWN
-  beq ++
+  bne _notDown
+    jmp ++
+_notDown:
   cmp #JOY_DIR_UP
   bne _skip_up_check
     jmp +++

@@ -28,8 +28,8 @@ abstract.Background.startAnimation:
   ;init some vars
   and.w #$ff
 
-  ;bounds check: 9 valid entries in BackgroundAnimationLUT (indices 0-8)
-  cmp.w #9
+  ;bounds check: 10 valid entries in BackgroundAnimationLUT (indices 0-9)
+  cmp.w #10
   bcc +
     lda.w #0
 +

@@ -1,3 +1,4 @@
+  SCRIPT hall_of_fame
 
   .def objMsu1 hashPtr.5
   lda.w #OBJECT.PROPERTIES.isChapter
@@ -23,6 +24,7 @@
   sta.w MainScreen
   rep #$31
 
+  NEW Brightness.CLS.PTR objFameBrightness
   NEW Background.textlayer.16x16.CLS.PTR objFameText
   NEW Background.generic.CLS.PTR objBackground2 BG.LAYER.0 BG.hiscore.PTR
 

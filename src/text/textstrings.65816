@@ -705,8 +705,10 @@ T_highScore:
 T_title:
 	.db TC_pos
 	.dw $306
-	.db "(C)1983 Cinematronics",TC_brk
-	.db "ported by d4s in 2012",TC_end
+	.db "(C)1983 Cinematronics"
+	.db TC_pos
+	.dw $324
+	.db "ported by astrobleem 2026",TC_end
 
 T_schleck:
     .db TC_pos
@@ -795,42 +797,43 @@ T_EXCP_E_SramBad:
 
 T_menu_main:
     .db TC_pos
-    .dw $246
+    .dw $286
     .db " START GAME",TC_brk
-    .db " OPTIONS",TC_brk
-    .db " ATTRACT MODE",TC_end
+    .db " OPTIONS",TC_end
 
 T_menu_options:
     .db TC_pos
-    .dw $246
+    .dw $286
+    .db " HIGH SCORES",TC_brk
+    .db " ATTRACT MODE",TC_brk
     .db " SOUND TEST",TC_brk
     .db " SCENE SELECT",TC_brk
     .db " BACK",TC_end
 
 T_menu_soundtest:
     .db TC_pos
-    .dw $249
+    .dw $289
     .db "SOUND TEST"
     .db TC_pos
-    .dw $289
+    .dw $2C9
     .db "SAMPLE: ",TC_dToS
     .dw GLOBAL.CORE.STRING.argument.0
     .db GLOBAL.CORE.STRING.argument.0>>16,1
     .db TC_pos
-    .dw $2C9
+    .dw $309
     .db "A:PLAY  B:BACK",TC_end
 
 T_menu_levelselect:
     .db TC_pos
-    .dw $248
+    .dw $288
     .db "SCENE SELECT"
     .db TC_pos
-    .dw $289
+    .dw $2C9
     .db "SCENE: ",TC_dToS
     .dw GLOBAL.CORE.STRING.argument.0
     .db GLOBAL.CORE.STRING.argument.0>>16,1
     .db TC_pos
-    .dw $2C9
+    .dw $309
     .db "A:START  B:BACK",TC_end
 
 ;used to check maximum valid string id

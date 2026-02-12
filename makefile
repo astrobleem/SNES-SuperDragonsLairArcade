@@ -30,7 +30,7 @@ verify := -verify on
 gfx_font_flags := $(verify) -optimize off -palettes 1 -bpp 2 -mode bg
 gfx_font4bpp_flags := $(verify) -optimize off -palettes 1 -bpp 4 -mode bg
 
-gfx_bg_flags := $(verify) -optimize on -tilethreshold 15 -palettes 8 -bpp 4 -mode bg
+gfx_bg_flags := $(verify) -optimize on -tilethreshold 15 -palettes 3 -bpp 4 -mode bg
 gfx_directcolor_flags := $(verify) -optimize on -directcolor on -tilethreshold 10 -palettes 1 -bpp 8 -mode bg
 gfx_video_flags := $(verify) -optimize on -tilethreshold 13 -maxtiles 512 -palettes 8 -bpp 4 -mode bg
 gfx_sprite_flags := $(verify) -optimize on -tilethreshold 10 -palettes 2 -bpp 4 -mode sprite

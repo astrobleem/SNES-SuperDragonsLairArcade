@@ -125,12 +125,16 @@ def quantize_image(input_image, output_image, num_colors):
         out.save(output_image)
 
 def generate_palette(sfc_path, input_image, output_palette, colors_per_palette):
-    # superfamiconv palette -i input.png -d output.palette -C colors
+    # superfamiconv palette -i input.png -d output.palette -C colors -P 1
+    # Force 1 sub-palette: PIL already quantizes to colors_per_palette colors,
+    # so all colors fit in a single sub-palette. Without -P 1, superfamiconv
+    # needlessly splits colors across 4-7 sub-palettes, exceeding CGRAM limits.
     cmd = [
         sfc_path, "palette",
         "-i", to_windows_path(input_image),
         "-d", to_windows_path(output_palette),
-        "-C", str(colors_per_palette)
+        "-C", str(colors_per_palette),
+        "-P", "1"
     ]
     run_command(cmd)
 

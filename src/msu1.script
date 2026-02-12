@@ -88,7 +88,7 @@
 
     jsr core.cgram.clear
 
-	NEW Script.CLS.PTR oopCreateNoPtr logo_intro
+	NEW Script.CLS.PTR oopCreateNoPtr losers
 
     
     DIE

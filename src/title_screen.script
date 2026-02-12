@@ -178,8 +178,11 @@ _title_screen.cursorSection:
       dec a
       bra _title_screen.cursorMoved
 _title_screen.upWrap:
-    lda #2
-    bra _title_screen.cursorMoved
+    lda #4                        ;options: 5 items (0-4)
+    ldx.b menu.state
+    bne +
+      lda #1                      ;main menu: 2 items (0-1)
++   bra _title_screen.cursorMoved
 
 _title_screen.noUp:
   ;--- DOWN ---
@@ -187,7 +190,13 @@ _title_screen.noUp:
   and.w #JOY_DIR_DOWN
   beq _title_screen.noDown
     lda.b menu.cursor
-    cmp #2
+    ldx.b menu.state
+    beq _title_screen.downMainMax
+      cmp #4                      ;options: wrap at 4
+      bra _title_screen.downCheckWrap
+_title_screen.downMainMax:
+      cmp #1                      ;main menu: wrap at 1
+_title_screen.downCheckWrap:
     bcc _title_screen.downNoWrap
       lda #$ffff
 _title_screen.downNoWrap:
@@ -211,12 +220,8 @@ _title_screen.noDown:
   ;main menu selection
   lda.b menu.cursor
   beq _title_screen.selectStartGame
-  cmp #1
-  beq _title_screen.selectOptions
-  ;cursor 2: attract mode
-  lda.w #attract_mode_start_alive
-  sta.b menu.target
-  jmp _title_screen.startTransition
+  ;cursor 1: options
+  bra _title_screen.selectOptions
 
 _title_screen.selectStartGame:
   lda.w #level1
@@ -235,16 +240,30 @@ _title_screen.cursorDone:
 
 _title_screen.optionsSelect:
   lda.b menu.cursor
-  beq _title_screen.selectSoundTest
+  beq _title_screen.selectHighScores
   cmp #1
+  beq _title_screen.selectAttractMode
+  cmp #2
+  beq _title_screen.selectSoundTest
+  cmp #3
   beq _title_screen.selectLevelSelect
-  ;cursor 2: back to main
+  ;cursor 4: back to main
   stz.b menu.state
   stz.b menu.cursor
   lda.w #SAMPLE.0.OK
   CALL Spc.SpcPlaySoundEffect.MTD objSpc
   jsr _title_screen.drawMenu
   rts
+
+_title_screen.selectHighScores:
+  lda.w #hall_of_fame
+  sta.b menu.target
+  jmp _title_screen.startTransition
+
+_title_screen.selectAttractMode:
+  lda.w #attract_mode_start_alive
+  sta.b menu.target
+  jmp _title_screen.startTransition
 
 _title_screen.selectSoundTest:
   lda #2
@@ -425,7 +444,7 @@ _title_screen.drawSoundTest:
 
 _title_screen.drawCursor:
   ;write '>' at cursor position in string buffer
-  ;offset = $246 + cursor * 32
+  ;offset = $286 + cursor * 32
   lda.b menu.cursor
   asl a
   asl a
@@ -433,7 +452,7 @@ _title_screen.drawCursor:
   asl a
   asl a
   clc
-  adc.w #$246
+  adc.w #$286
   tax
   sep #$20
   lda #$3E
