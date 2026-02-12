@@ -5,55 +5,47 @@
 ```bash
 # 1. Install WSL dependencies
 wsl sudo apt-get update
-wsl sudo apt-get install -y python3 python3-pip python3-pil make build-essential
+wsl sudo apt-get install -y python3 python3-pip python3-pil make
 
-# 2. Build WLA-DX assembler
-wsl bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade/tools/wla-dx-9.5-svn && chmod +x unix.sh && ./unix.sh 4"
+# 2. Install Python dependencies
+wsl pip install -r requirements.txt
 
-# 3. (Optional) Install video tools
-wsl sudo apt-get install -y ffmpeg gimp
+# 3. (Optional) Install video tools for MSU-1 generation
+wsl sudo apt-get install -y ffmpeg
 ```
+
+> **Note:** WLA-DX 9.3 pre-built binaries are included in `tools/wla-dx-9.5-svn/` — no compilation needed.
 
 ## Common Build Commands
 
 ```bash
-# Fast build (recommended)
-build_with_superfamiconv.bat
+# Standard build (clean + build, ~2-3 min)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"
 
-# Standard build
-wsl bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"
+# Fast rebuild (skip clean, ~30 sec if only assembly changed)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"
 
-# Clean build artifacts
-wsl bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean"
+# Clean build artifacts only
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean"
 ```
 
-## Video Processing
+> **Warning:** `make clean` deletes `data/chapters/` — wipes all extracted video frames!
+
+## MSU-1 Video Data Generation
 
 ```bash
-# 1. Convert Daphne to MP4
-tools\convert_daphne.bat
+# Generate .msu from existing PNG frames (~23 min with 8 workers)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --workers 8"
 
-# 2. Fix frame rate (29.97 → 23.976 fps)
-tools\convert_video_fps.bat
-
-# 3. Test one chapter
-tools\test_chapter_extraction.bat
-
-# 4. Extract all chapters (uncomment makefile line 413 first)
-wsl bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"
+# Full pipeline: extract frames + convert + package (~1hr+ first time)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --workers 8"
 ```
 
-## Testing
+## Emulator Testing
 
-```bash
-# Quick dimension check (1 second)
-wsl python3 tests/check_image_dimensions.py
-
-# Full asset validation (~5 minutes)
-wsl python3 tests/test_background_assets.py
-
-# Run all tests
-wsl python3 -m pytest tests/ -v
+```bat
+:: Mesen 2 testrunner (from Windows)
+cmd.exe /c "cd /d E:\gh\SNES-SuperDragonsLairArcade\mesen && Mesen.exe --testrunner ..\build\SuperDragonsLairArcade.sfc script.lua > out.txt 2>&1"
 ```
 
 ## Troubleshooting
@@ -62,28 +54,31 @@ wsl python3 -m pytest tests/ -v
 # Check video frame rate
 wsl ffprobe data/videos/dl_arcade.mp4
 
-# Find what's processing
-wsl ps aux | grep gracon
-
-# Verify WLA-DX installed
+# Verify WLA-DX version (should be 9.3)
 wsl tools/wla-dx-9.5-svn/wla-65816 -h
+
+# Check ROM size (should be 1048576 = 1MB)
+wsl bash -c "stat -c '%s' build/SuperDragonsLairArcade.sfc"
 ```
 
 ## File Locations
 
 - **ROM Output**: `build/SuperDragonsLairArcade.sfc`
+- **MSU-1 Data**: `build/SuperDragonsLairArcade.msu`
+- **Symbol Table**: `build/SuperDragonsLairArcade.sym`
 - **Source Video**: `data/videos/dl_arcade.mp4`
 - **Chapter XMLs**: `data/events/*.xml`
 - **Extracted Chapters**: `data/chapters/*/`
-- **Build Logs**: Check terminal output
 
 ## Disk Space
 
-- ROM build only: ~150MB
-- With video extraction: ~16GB
+- ROM build only: ~150 MB
+- With MSU-1 video data: ~600 MB (.msu file)
+- With extracted video frames: ~16 GB
 
 ## Build Times
 
-- Fast build (superfamiconv): ~2 minutes
-- Standard build (gracon): ~15 minutes
-- Full video extraction: ~2-8 hours
+- Fast rebuild (assembly only): ~30 seconds
+- Clean build (assets + assembly): ~2-3 minutes
+- MSU-1 video generation (from PNGs): ~23 minutes (8 workers)
+- Full MSU-1 pipeline (frame extraction + conversion): ~1 hour+

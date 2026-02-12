@@ -1,23 +1,33 @@
-# Background assets audit
+# Background Assets
 
-The following background sources live under `data/backgrounds/`:
+The following background assets live under `data/backgrounds/`:
 
-- `hiscore.gfx_bg/Screenshot-RoadBlaster.mp4-39.gfx_bg.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*
-- `hud.gfx_directcolor/hud_xcf.png`
-- `final_rescue.gfx_bg/final_rescue.gfx_bg.txt` *(Dragon's Lair victory screen description)*
-- `logo.gfx_bg/logo.gfx_bg.png`
-- `msu1.gfx_bg/msu1.gfx_bg.png`
-- `scoreentry.gfx_bg/Screenshot-RoadBlaster.mp4-25.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*
-- `titlescreen.gfx_bg/Screenshot-RoadBlaster.mp4-24.png` *(RoadBlaster capture, needs Dragon's Lair replacement)*
+| Directory | Status | Description |
+|-----------|--------|-------------|
+| `hiscore.gfx_bg/` | Dragon's Lair art | High score / hall of fame screen |
+| `logo.gfx_bg/` | Dragon's Lair art | Logo screen shown during boot intro |
+| `losers.gfx_bg/` | Dragon's Lair art | Credits/losers screen |
+| `msu1.gfx_bg/` | Dragon's Lair art | MSU-1 splash/init screen |
+| `titlescreen.gfx_bg/` | Dragon's Lair art | Title screen background (behind menu) |
+| `scoreentry.gfx_bg/` | Needs replacement | Score/name entry screen (still RoadBlaster capture) |
+| `hud.gfx_directcolor/` | Custom | HUD overlay (8bpp direct color, transparent center) |
+| `levelcomplete.0.gfx_bg/` | Dragon's Lair art | Level complete screen variant 0 |
+| `levelcomplete.1.gfx_bg/` | Dragon's Lair art | Level complete screen variant 1 |
+| `levelcomplete.2.gfx_bg/` | Dragon's Lair art | Level complete screen variant 2 |
 
-RoadBlaster-derived captures must be replaced with Dragon's Lair visuals. Prompts and SNES-ready constraints for each scene live in the per-directory `.gfx_bg.txt` files.
+## Recreation Workflow
 
-Recreation workflow:
-- Pull a matching Dragon's Lair arcade frame as composition reference, then feed the paired prompt into your image generator to produce a 256x224 output.
-- Quantize to 4bpp with no more than 8 palettes (16 colors each, <=128 colors total) and verify the art stays tile-friendly before running `make` so the converter emits `.animation` data.
+To create or replace a background:
+1. Prepare a 256x224 image with no more than 16 colors (4bpp, single palette):
+   ```bash
+   python tools/img_processor.py --input source.png \
+     --output data/backgrounds/name.gfx_bg/name.gfx_bg.png \
+     --width 256 --height 224 --mode cover --colors 16
+   ```
+2. Run `make` — the build system converts `*.gfx_bg` folders automatically via `animationWriter_sfc.py`.
 
-Spot-check guidance once new art is produced:
-- Verify palette alignment with the SNES 4bpp/8-palette limits and ensure 8x8 tile seams are not visible after conversion.
-- Title and logo backgrounds display immediately at boot; confirm gradients remain banded cleanly.
-- High score and score entry backgrounds host text overlays—confirm readability and that the parchment center tiles without seams.
-- Level complete sets are referenced by the level completion script; confirm banners sit above HUD-safe regions and that palette cycling or tiling stays stable across transitions.
+## Quality Checks
+- Verify palette alignment with SNES 4bpp limits and ensure 8x8 tile seams are not visible after conversion.
+- Title and logo backgrounds display at boot — confirm gradients band cleanly.
+- High score and score entry backgrounds host text overlays — confirm readability.
+- Level complete sets are referenced by the level completion script — confirm banners sit above HUD-safe regions.

@@ -9,81 +9,66 @@ This repository contains a complete SNES ROM project that recreates Dragon's Lai
 - SPC700 assembly for audio processor
 - Python-based asset processing pipeline
 - MSU-1 video/audio packaging tools
-- Comprehensive build system using Make and WLA-DX assembler
+- Build system using Make and WLA-DX 9.3 assembler
 
 ## Critical Context
 
 ### Build System
 - **Platform:** Linux/WSL (Ubuntu) required
-- **Assembler:** WLA-DX 9.5-svn (included, must be compiled: `./tools/wla-dx-9.5-svn/unix.sh 4`)
-- **Primary Build:** `make` or `make clean && make`
-- **Fast Build:** `USE_SUPERFAMICONV=1 make` (100× faster graphics conversion)
-- **Output:** `build/SuperDragonsLairArcade.sfc` (SNES ROM file)
-- **Pre-build validation:** `python3 tests/check_image_dimensions.py` (1 second check)
+- **Assembler:** WLA-DX 9.3 (pre-built binaries in `tools/wla-dx-9.5-svn/` — despite the directory name, the actual version is 9.3; v9.4+ breaks the build)
+- **Primary Build:** `wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"`
+- **Fast Rebuild:** `wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"` (skip clean if only assembly files changed)
+- **Output:** `build/SuperDragonsLairArcade.sfc` (1 MB SNES ROM, 16 banks, HiROM+FastROM)
+- **Warning:** `make clean` deletes `data/chapters/` — wipes all extracted video frames
 
 ### Python Toolchain (Python 3.10+)
 All Python scripts are **Python 3 compatible**. Key tools:
-- `tools/animationWriter.py` - Converts graphics to SNES animation format (SP format)
-- `tools/animationWriter_sfc.py` - Version optimized for superfamiconv workflow
-- `tools/gracon.py` - Python-based graphics converter (legacy, slow but reliable)
+- `tools/generate_msu_data.py` - **MSU-1 video pipeline orchestrator** (ffmpeg → superfamiconv → tile reduction → .msu)
+- `tools/animationWriter_sfc.py` - Default graphics animation converter (uses superfamiconv)
+- `tools/animationWriter.py` - Legacy animation converter (uses gracon.py)
+- `tools/gracon.py` - Legacy Python graphics converter (slower, functional)
 - `tools/gfx_converter.py` - Unified wrapper for superfamiconv or gracon
 - `tools/img_processor.py` - Image resizing/quantization to SNES specs
 - `tools/mod2snes.py` - MOD music to SPC700 format converter
 - `tools/msu1blockwriter.py` - Packages MSU-1 data files
 - `tools/msu1pcmwriter.py` - Converts WAV to MSU-1 PCM format
-- `tools/xmlsceneparser.py` - Chapter/event XML processor
+- `tools/xmlsceneparser.py` - DirkSimple XML chapter/event processor
 
-Install dependencies: `pip install -r requirements.txt` (primarily Pillow for image processing)
+Install dependencies: `pip install -r requirements.txt` (Pillow, NumPy)
 
 ### Asset Pipeline
 
 #### Graphics (SNES native format)
-1. **Backgrounds:** 256×224 pixels, 16 colors (4bpp), processed via `img_processor.py`
+1. **Backgrounds:** 256x224 pixels, 16 colors (4bpp), processed via `img_processor.py`
 2. **Sprites:** 4bpp with 2 palettes, optimized for OAM
 3. **Direct Color:** 8bpp mode for HUD overlays
-4. **Conversion:** Build system auto-converts `.png` files using `animationWriter.py`
-5. **Performance:** superfamiconv is ~100× faster than gracon.py (1s vs 96s per image)
+4. **Conversion:** Build system auto-converts `.png` files using `animationWriter_sfc.py`
+5. **Performance:** superfamiconv is ~100x faster than gracon.py
 
 #### Audio
-- **SPC700:** MOD format songs converted via `mod2snes.py`
-- **BRR:** Sound effects in `.brr` format (SNES ADPCM), converted from WAV
+- **SPC700:** 6 active sound effects in BRR format (~42 KB of 57.5 KB sample budget)
 - **MSU-1:** CD-quality PCM audio for video tracks
 - **Registration:** All sounds must be registered in `src/object/audio/spcinterface.h`
 
 #### Video (MSU-1)
-- Chapters defined in `data/events/*.xml` (516 total chapters)
-- Frame conversion pipeline: ffmpeg → gracon.py → animationWriter.py → msu1blockwriter.py
-- MSU-1 data files packaged with ROM for SD2SNES/FXPAK Pro
-- **Video timing:** Must be 23.976 fps (not 29.97 fps from Daphne sources)
+- 516 chapters defined in `data/events/*.xml` (DirkSimple game data format)
+- Pipeline: `generate_msu_data.py` orchestrates ffmpeg → superfamiconv → tile reduction → msu1blockwriter.py
+- Output: ~568 MB `.msu` file with 256x192 frames, 16 colors, 512 tiles per frame
+- Video timing: 23.976 fps (source video at `data/videos/dl_arcade.mp4`)
 
 ### File Structure
 ```
 src/           - 65816 assembly source code
 data/
-  backgrounds/ - PNG images for title/score screens (9 backgrounds)
+  backgrounds/ - PNG images for screens (9+ backgrounds)
   sprites/     - PNG sprites for arrows/effects (16 sprite types)
-  sounds/      - WAV/BRR audio files
-  chapters/    - Chapter definitions and event markers
-  events/      - XML chapter scripts (516 files)
+  sounds/      - WAV/BRR audio files (11 WAVs, 6 active in SPC build)
+  chapters/    - Generated chapter scripts and data (from xmlsceneparser.py)
+  events/      - XML chapter scripts (516 files, DirkSimple game data)
 tools/         - Python asset converters and build utilities
-tests/         - Test suite (pytest)
-  fixtures/    - Test data (dirk_standin.png, etc.)
-build/         - Generated output (ROM, intermediate files)
+build/         - Generated output (ROM, .msu, intermediate files)
 schwag/        - Marketing materials and documentation
 ```
-
-### Testing Strategy
-- **Framework:** pytest for Python tools
-- **Coverage:** Test files in `tests/` directory
-- **Key tests:**
-  - `tests/check_image_dimensions.py` - Asset validation (fast, 1 second)
-  - `tests/test_background_assets.py` - Full conversion test (slow, ~5 minutes)
-  - `tests/test_tools.py` - Tool integration tests (animationWriter, MSU1 tools)
-  - `tests/test_tools_smoke.py` - Basic --help functionality
-  - `tests/test_gracon_conversion.py` - End-to-end gracon test
-  - `tests/test_lua_scene_exporter.py` - Lua scene conversion
-- **Run tests:** `pytest` or `python3 -m pytest`
-- **Timeout protection:** Tests include 30s timeouts to prevent hanging
 
 ### Code Style and Conventions
 
@@ -92,98 +77,64 @@ schwag/        - Marketing materials and documentation
 - Use `.65816` extension for SNES CPU code
 - Use `.spc700` extension for audio processor code
 - Include files use `.inc` extension
-- Respect existing memory map and register usage
-- When adding sprites: Create both asset directory and code files (`src/object/sprite/<name>.65816` and `.h`)
-- Register sprites in `src/object/sprite/abstract.Sprite.h` in the `SpriteAnimationLUT`
+- Labels starting with `_` are LOCAL to compilation unit — cannot cross `.o` file boundaries
+- `.def` cannot redefine — second `.def X Z` after `.def X Y` is silently ignored; use `.redefine`
+- Anonymous labels `+`, `++`, `+++` are distinct tiers — `bra ++` targets next `++`, not second `+`
+- Use named labels over anonymous when macro expansions (NEW, CALL) appear between branch and target
+- For long forward branches: `bne _skip / jmp far_target / _skip:` pattern
 
 #### Python
 - **Python 3.10+ only** (all tools migrated from Python 2)
 - Follow PEP 8 style guidelines
-- Use `black` for formatting, `flake8` for linting
-- Add docstrings for public functions
 - Handle binary/text properly (bytes vs strings)
-- No silent try/except wrappers - fix root causes
-
-#### Common Pitfalls
-- **TabError:** Scripts were normalized, but verify with `python -m tabnanny <file>`
-- **Integer division:** Use `//` not `/` for integer division
-- **Bytes/strings:** Python 3 requires explicit encoding/decoding
-- **Image processing:** Pillow methods may return different types (RGB vs indexed)
-- **Video timing:** Daphne videos are 29.97 fps but XMLs expect 23.976 fps (requires conversion)
-- **ffmpeg parameters:** `-ss` and `-t` must come BEFORE `-i` for proper chapter extraction
-
-### Documentation Structure
-- `README.md` - Project overview, status, quick start
-- `BUILD.md` - Detailed build instructions and troubleshooting
-- `AGENTS.md` - Repository-wide agent guidance and historical log
-- `CONTRIBUTING.md` - Contribution guidelines
-- `tools/README.md` - Complete graphics tools documentation
-- `tools/gfx_converter_tests/README.md` - Graphics converter comparison and testing
-- `tests/README.md` - Complete test documentation with coverage details
-- `data/backgrounds/README.md` - Background asset status
-- `data/sprites/README.md` - Sprite inventory and system integration
-- `data/sounds/README.md` - Sound system and asset documentation
-- `data/events/README.md` - Chapter XML reference
-- `data/chapter_event_inventory.md` - Event coverage tracking (516 chapters, 0 unmapped)
-- `src/README.md` - Code flow documentation
-- `schwag/README.md` - Marketing materials documentation
+- No silent try/except wrappers — fix root causes
 
 ### Current Project Status
 
-#### Completed ✅
-- WLA-DX assembler built and working
-- Superfamiconv integration (100× faster builds)
+#### Completed
+- Full MSU-1 video pipeline (516 chapters, ~568 MB .msu file)
+- All 29 scenes playable across 9 levels
+- Title screen with menu system (Start Game, Options, Sound Test, Scene Select)
+- Attract mode and losers screen
+- Chapter/event system with data table architecture (36+ event classes)
+- SPC700 audio system (6 sound effects)
+- Dragon's Lair themed backgrounds, sprites, and UI
+- WLA-DX 9.3 build system working
 - Python 3 migration complete for all tools
-- Graphics pipeline modernized (img_processor.py, gfx_converter.py)
-- Asset descriptions updated to Dragon's Lair theme
-- Sound system audited and registered
-- Chapter event inventory complete (516 chapters, 0 unmapped)
-- Comprehensive test suite with real data validation
-- Video timing verification tools and bug fixes
 
-#### In Progress 🔄
-- Background artwork generation (9 backgrounds described, 1 processed)
-- Sprite artwork generation (16 sprites described, placeholders in use)
-
-#### Future Work ⏳
-- Dragon's Lair video capture and processing
-- Dragon's Lair audio extraction and MSU-1 packaging
-- Complete FMV/audio integration
+#### Remaining Work
+- Replace remaining RoadBlaster placeholder backgrounds
+- Register Dragon's Lair sound effects in SPC build (dl_accept, dl_buzz, dl_credit)
+- Assign unique OBJIDs to ~65 event classes (currently default to $ffff)
 
 ### Important Constraints
 
-1. **No commercial assets included** - Users must provide Dragon's Lair video/audio
+1. **No commercial assets included** — Users must provide Dragon's Lair video/audio
 2. **SNES hardware limits:**
-   - 256×224 resolution (NTSC)
+   - 256x224 resolution (NTSC)
    - 4bpp (16 colors) or 8bpp (256 colors) modes
-   - 512 tiles maximum per frame for video
-   - BRR audio format for SPC700
-   - 64KB SPC700 RAM for all audio code, music, and samples
+   - 512 tiles maximum per frame for MSU-1 video
+   - 64 KB SPC700 RAM (~57.5 KB for samples after engine code)
 3. **MSU-1 requirements:**
    - SD2SNES or FXPAK Pro hardware
-   - PCM audio files alongside ROM
-   - MSU data files for video streaming
+   - `.msu` data file alongside ROM
+   - MSU title must exactly match ROM header title (`SUPER DRAGON'S LAIR`)
 
 ### Working with This Repository
 
 #### Making Changes
 1. **Test existing build first:** `make clean && make` to establish baseline
-2. **Validate assets:** Run `python3 tests/check_image_dimensions.py` before building
-3. **Use fast builds:** Set `USE_SUPERFAMICONV=1` for development iteration
-4. **Run tests:** `pytest` after Python tool changes
-5. **Check for regressions:** Build and test ROM in emulator (snes9x/bsnes)
+2. **Use fast rebuilds:** `make` without clean for iterative development
+3. **Check for regressions:** Build and test ROM in emulator (Mesen 2, snes9x, bsnes)
 
 #### Adding New Assets
 
 **Backgrounds:**
 ```bash
-# Step 1: Process with img_processor.py
 python tools/img_processor.py \
   --input source_artwork.png \
   --output data/backgrounds/name.gfx_bg/name.gfx_bg.png \
   --width 256 --height 224 --mode cover --colors 16
-
-# Step 2: Build handles the rest
 make
 ```
 
@@ -195,43 +146,23 @@ make
 5. Build with `make`
 
 **Sounds:**
-1. Add WAV file to `data/sounds/` (use naming: `name.sfx_normal.wav` or `name.sfx_loop.wav`)
-2. Register in `src/object/audio/spcinterface.h`:
-   - Add enum entry to `SAMPLE.0.*`
-   - Add export statement
-   - Create sample header (volume, pitch, ADSR, gain)
-   - Add `.incbin` line in `SamplePack0`
-3. Build with `make`
+1. Add WAV file to `data/sounds/` (naming: `name.sfx_normal.wav` or `name.sfx_loop.wav`)
+2. Check total BRR size stays under ~57.5 KB
+3. Register in `src/object/audio/spcinterface.h`
+4. Build with `make`
 
-#### Debugging
-- **Build failures:** Check WLA-DX output for assembly errors
-- **Graphics issues:** Verify dimensions (256×224), color count (≤16), and file format (PNG)
-- **Python errors:** Check Python 3 compatibility (bytes/strings, integer division)
-- **Asset validation:** Run `tests/check_image_dimensions.py` for quick diagnosis
-- **Video timing:** Use `tools/test_chapter_extraction.sh` to verify frame extraction
-
-### Animation Format Details
-
-The `animationWriter.py` tool produces binary files in "SP" format:
-- **Header:** Magic bytes `b'SP'` followed by 7-byte metadata
-- **Structure:** Frame count, max tile size, max palette size, bpp
-- **Frame pointers:** 2 bytes per frame pointing to frame data
-- **Validation:** Tests check header integrity and data presence
-
-### Tilemap Format Compatibility
-
-**superfamiconv** and **gracon.py** produce different tilemap sizes:
-- superfamiconv: 1792 bytes (32×28 tiles, exact screen size)
-- gracon.py: 2048 bytes (32×32 tiles, padded)
-
-The engine supports both via `tilemap.length` field. Use `--pad-to-32x32` flag with gfx_converter.py for gracon-compatible output.
-
-### References
-- **Main README:** `/README.md` - Start here for project overview
-- **Build guide:** `/BUILD.md` - Detailed build instructions
-- **Agent log:** `/AGENTS.md` - Historical notes and lessons learned
-- **Tools guide:** `/tools/README.md` - Complete asset pipeline documentation
-- **Test guide:** `/tests/README.md` - Complete test documentation
+### Documentation Structure
+- `README.md` — Project overview and current status
+- `BUILD.md` — Detailed build instructions and troubleshooting
+- `QUICKREF.md` — Quick reference card for common commands
+- `CONTRIBUTING.md` — Contribution guidelines
+- `tools/README.md` — Asset pipeline and MSU-1 video generation tools
+- `data/backgrounds/README.md` — Background asset status
+- `data/sprites/README.md` — Sprite inventory
+- `data/sounds/README.md` — Sound system documentation
+- `data/events/README.md` — Chapter XML reference
+- `data/chapter_event_inventory.md` — Event coverage tracking (516 chapters)
+- `src/README.md` — Code flow and architecture
 
 ### Notes for AI Assistants
 - Always reference existing documentation before making changes
@@ -239,9 +170,6 @@ The engine supports both via `tilemap.length` field. Use `--pad-to-32x32` flag w
 - Maintain compatibility with NTSC SNES hardware constraints
 - Test changes in both emulator and consider real hardware behavior
 - Keep the legacy RoadBlaster engine intact while swapping assets
-- Update the Agent Log in AGENTS.md when completing significant work
 - When adding sprites or sounds, remember BOTH asset and code registration are required
-- Video timing is critical: verify 23.976 fps conversion for chapter extraction
-- Use real test data (from data/ directory) in tests, not just synthetic data
-- Include timeouts in tests to prevent hanging during CI runs
+- Video timing is critical: verify 23.976 fps for chapter extraction
 - Legacy sounds/sprites (brake, turbo, steering wheels) are marked but retained for reference

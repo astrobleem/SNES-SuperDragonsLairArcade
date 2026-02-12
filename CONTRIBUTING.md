@@ -1,26 +1,26 @@
-# Contributing to SNES Super Dragons Lair Arcade
+# Contributing to SNES Super Dragon's Lair Arcade
 
-Thank you for your interest in contributing to **SNES‑SuperDragonsLairArcade**! 🎉
+Thank you for your interest in contributing to **SNES-SuperDragonsLairArcade**!
 
 ## How to Get Started
 1. **Fork the repository** on GitHub.
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/<your‑username>/SNES-SuperDragonsLairArcade.git
+   git clone https://github.com/<your-username>/SNES-SuperDragonsLairArcade.git
    cd SNES-SuperDragonsLairArcade
    ```
 3. **Create a new branch** for your work:
    ```bash
-   git checkout -b <feature-or‑bugfix‑name>
+   git checkout -b <feature-or-bugfix-name>
    ```
-4. Make your changes, ensuring the existing test suite passes.
+4. Make your changes, verify the ROM builds successfully.
 5. **Commit** with a clear message and **push** to your fork.
 6. Open a **Pull Request** against the `main` branch.
 
 ## Code Style & Guidelines
-- Follow the existing Python coding style (PEP 8). Use `black` and `flake8` for formatting and linting.
-- Keep functions small and well‑documented. Add docstrings for public APIs.
-- Update or add tests for any new functionality. The project uses `pytest` – run `pytest` locally before submitting.
+- Follow the existing Python coding style (PEP 8). Use `black` and `flake8` for formatting and linting.
+- Keep functions small and well-documented. Add docstrings for public APIs.
+- For assembly code, follow WLA-DX syntax conventions documented in `BUILD.md`.
 
 ## Reporting Issues
 - Search existing issues before opening a new one.
@@ -28,11 +28,11 @@ Thank you for your interest in contributing to **SNES‑SuperDragonsLairArcade**
 
 ## Pull Request Checklist
 - [ ] Runs on the latest Python 3 version.
-- [ ] All existing tests pass (`pytest`).
-- [ ] New code includes tests and documentation where appropriate.
+- [ ] ROM builds successfully (`make clean && make`).
+- [ ] New code includes documentation where appropriate.
 - [ ] Follows the project's coding style.
 
-## Adding New Scenes/Events (Space Ace & Dragon's Lair)
+## Adding New Scenes/Events (Dragon's Lair)
 > [!TIP]
 > Use the helper script to generate boilerplate code and avoid common errors:
 > `python tools/create_event.py Event.my_new_scene`
@@ -97,5 +97,7 @@ Sprites often share similar pitfalls with events but have specific requirements 
 *   **"Redefinition Error":** Check for missing include guards or conflicting struct names (like `vars`) in headers.
 *   **"Too Large Distance":** Replace long conditional branches (`beq target`) with `bne + / jmp target / +`.
 *   **"Symbol Not Found (this.endFrame)":** Ensure you have mapped `this` to a struct that actually contains `endFrame` in the scope where you are using it.
+*   **`.def` cannot redefine:** A second `.def X Z` after `.def X Y` is silently ignored. Use `.redefine` instead.
+*   **`_` prefix = local:** Labels starting with `_` are local to the compilation unit and cannot be referenced from other `.o` files.
 
 Feel free to ask for clarification in the issue or PR comments. We appreciate your contributions and look forward to collaborating with you!

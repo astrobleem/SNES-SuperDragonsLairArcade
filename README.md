@@ -21,100 +21,74 @@ Your complete Super Dragon's Lair Arcade package includes:
 > [!NOTE]
 > All schwag materials are available in the [`schwag/`](schwag) directory for your enjoyment and nostalgia.
 
-## Recent milestones
-- **Build System Enhanced (Nov 2024):**
-  - ✅ **WLA-DX Assembler Built** - Successfully compiled wla-65816, wla-spc700, and wlalink for WSL
-  - ✅ **Superfamiconv Integration** - ~100× faster builds via `USE_SUPERFAMICONV=1` environment variable
-  - ✅ **Pre-Build Validation** - `check_image_dimensions.py` catches asset errors in 1 second
-  - ✅ **Enhanced Make Clean** - Now removes Python cache; `clean-all` target for deep cleaning
-  - ✅ **Build Documentation** - Comprehensive `BUILD.md` with troubleshooting guide
-- **Graphics Pipeline Modernized:**
-  - Created `img_processor.py` for image resizing/quantization to SNES resolutions (256×224, color reduction)
-  - Created `gfx_converter.py` unified wrapper for `superfamiconv` and `gracon.py` with consistent output naming
-  - Integrated `superfamiconv` (~100× faster than gracon.py) for rapid asset conversion
-  - Processed first Dragon's Lair background (high score screen) with full documentation
-  - All background and sprite description files converted to Dragon's Lair theme
-- **Asset Documentation Complete:**
-  - All 9 background folders now have Dragon's Lair themed `.txt` description files
-  - All 16 sprite descriptions updated to medieval fantasy theme
-  - Legacy RoadBlaster sprites clearly marked (brake, dashboard, steering wheels, turbo)
-  - Created workflow guides for future asset processing
-- **Python 3 Compatibility:** All tools modernized; `gracon.py` performance issues resolved
-- **Script Flow Documentation:** Boot/title/score/MSU1 flow documented in `src/README.md`
-- **Chapter Coverage:** 516 chapters tracked; 0 markers unmapped (captured in `data/chapter_event_inventory.md`)
+## Current Status
 
-## Scope and goals
+- **MSU-1 Video Pipeline Complete** — All 516 chapters converted to SNES tile data (~568 MB `.msu` file) with RGB-space tile reduction (768 tiles merged to 512 per frame)
+- **All 29 Scenes Playable** — 9 levels spanning introduction through the dragon's lair, with full chapter-to-chapter transitions driven by player input
+- **Title Screen with Full Menu System** — Start Game, Options submenu (High Scores, Attract Mode, Sound Test, Scene Select)
+- **Scene Select** — Jump to any of the 29 scenes directly from the title screen
+- **Attract Mode** — Automated demo playback of game chapters
+- **Chapter/Event System** — Data-table architecture with 36+ event classes, `xmlsceneparser.py` generates assembly from 516 XML chapter definitions
+- **Complete Boot Sequence** — Boot → MSU-1 init → losers screen → logo intro → title screen → gameplay
+- **SPC700 Audio** — 6 sound effects in BRR format within the 57.5 KB sample RAM budget
+- **Dragon's Lair Themed Assets** — Backgrounds, sprites, and UI elements themed for the arcade experience
+
+## Scope and Goals
 - Recreate the Dragon's Lair arcade experience on the SNES while retaining the RoadBlaster MSU-1 FMV engine
 - Replace all RoadBlaster assets with Dragon's Lair equivalents (video, audio, sprites, UI, prompts) while preserving arcade timings and cues
-- Produce a fully playable SNES ROM plus MSU-1 PCM/data set for real hardware
+- Produce a fully playable SNES ROM plus MSU-1 data set for real hardware
 
-## Build at a glance
+## Build at a Glance
 
 ### Requirements
 - **OS:** Linux/WSL (Ubuntu) or Windows with WSL
-- **Build Tools:** `make`, `gcc` (for WLA-DX, pre-built binaries included)
-- **Python:** Python 3.10+ with Pillow
+- **Assembler:** WLA-DX 9.3 (pre-built binaries included in `tools/wla-dx-9.5-svn/`)
+- **Python:** Python 3.10+ with Pillow and NumPy
   ```bash
-  # WSL/Ubuntu
-  sudo apt-get install python3-pip python3-pil
-  
-  # Or via pip
   pip install -r requirements.txt
   ```
 
-### Quick Build (Standard)
+### Build Commands
 ```bash
-# From Windows PowerShell with WSL
-wsl bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"
+# Standard build (clean + build, ~2-3 min)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"
 
-# Or from WSL directly
-make clean
-make
+# Fast rebuild (skip clean if only .65816/.script files changed)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"
 ```
 
-### Fast Build (Superfamiconv - Recommended)
+> [!WARNING]
+> `make clean` deletes `data/chapters/` — this wipes all extracted video frames. Use `make` without `clean` if you need to preserve them.
+
+**Output:** ROM binary at `build/SuperDragonsLairArcade.sfc` (1 MB, 16 banks, HiROM+FastROM)
+
+### MSU-1 Video Data Generation
 ```bash
-# Windows: Use the batch file
-build_with_superfamiconv.bat
+# Generate .msu video data (~23 min with 8 workers, requires existing PNG frames)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --workers 8"
 
-# WSL: Set environment variable
-USE_SUPERFAMICONV=1 make
+# Full pipeline including frame extraction (~1hr+ first time, uses ffmpeg CUDA)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --workers 8"
 ```
-**Speed:** ~100× faster graphics conversion (1 sec vs 96 sec per large image)
-
-### Pre-Build Validation (Recommended)
-Catch asset errors before building:
-```bash
-# Quick dimension check (1 second)
-wsl python3 tests/check_image_dimensions.py
-
-# Full validation with conversion test (~5 minutes)
-wsl python3 tests/test_background_assets.py
-```
-
-**Output:** ROM binary at `build/SuperDragonsLairArcade.sfc`
-
-> [!NOTE]
-> MSU-1 PCM/data files are not generated by default; they require Dragon's Lair video/audio captures.
 
 **See [`BUILD.md`](BUILD.md) for detailed build instructions and troubleshooting.**
 
-## Documentation map
-- `README.md` (this file) – Project overview and status
-- **[`BUILD.md`](BUILD.md)** – **Build instructions, troubleshooting, and validation**
-- `src/README.md` – Boot/title/score/MSU1 script flow and theming
-- `tools/README.md` – Complete graphics tools documentation and workflows
-- `data/backgrounds/*/README.md` – Background-specific guides (see hiscore.gfx_bg)
-- `data/backgrounds/README.md` – Background asset status
-- `data/sprites/README.md` – Sprite inventory and descriptions
-- `data/sounds/README.md` – Sound system and asset documentation
-- `data/events/README.md` – Chapter XML reference
-- `data/chapter_event_inventory.md` – Event coverage tracking
+## Documentation Map
+- `README.md` (this file) — Project overview and status
+- **[`BUILD.md`](BUILD.md)** — Build instructions, troubleshooting, and ROM bank reference
+- **[`QUICKREF.md`](QUICKREF.md)** — Quick reference card for common commands
+- `src/README.md` — Boot/title/score/MSU1 script flow and architecture
+- `tools/README.md` — Asset pipeline tools and MSU-1 video generation
+- `data/backgrounds/README.md` — Background asset status
+- `data/sprites/README.md` — Sprite inventory and descriptions
+- `data/sounds/README.md` — Sound system and asset documentation
+- `data/events/README.md` — Chapter XML reference
+- `data/chapter_event_inventory.md` — Event coverage tracking (516 chapters)
 
-## Hardware targets
+## Hardware Targets
 - NTSC Super Nintendo hardware
-- SD2SNES / FXPAK Pro (MSU-1 required)
-- SNES9x / bsnes for debugging and iteration
+- SD2SNES / FXPAK Pro (MSU-1 required for video playback)
+- Mesen 2, SNES9x, bsnes for debugging and iteration
 
 ## Graphics Workflow Quick Reference
 

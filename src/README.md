@@ -1,21 +1,45 @@
-# Source scripts overview
+# Source Scripts Overview
 
 This directory holds the engine- and flow-control scripts that wire the core states of the Super Dragon's Lair arcade project. The scripts are written in the project's custom assembler-style DSL and typically create objects, configure rendering layers, and transition between chapters or levels.
 
-## File guide
-- `main.script` bootstraps MSU1 state, loads persisted scores, and spawns the MSU1 management script for later scenes.
-- `msu1.script` uploads the MSU1 sample pack, shows the MSU1 splash background, and transitions to `logo_intro` when the player continues.
-- `logo_intro.script` handles the post-MSU1 splash transition by briefly showing the logo background, fading back to black, and spawning the title sequence.
-- `title_screen.script` builds the title presentation (logo zoom, palette rotation, intro sound effects) and hands off to `level1` after user input and cleanup.
-- `hall_of_fame.script` renders the high-score list, plays the attract-track audio, and waits for user dismissal before returning to the MSU1 intro.
-- `level_complete.script` shows chapter completion text, displays the player's score, and branches to the next level script after user confirmation.
-- `score_entry.script` runs the post-game name entry sequence, persists the high-score table, and returns to the MSU1 intro sequence.
-- `none.script` is a placeholder that currently errors if invoked.
+## Game Flow
 
-## Theming and canonical content review
-- The title screen currently triggers sound effects named `SAMPLE.0.SHURIKEN` and `SAMPLE.0.TECHNIQUE`, which evoke martial-arts imagery rather than a "lair" fantasy theme. Consider swapping these for cues like a dragon roar or sword clash to reinforce the setting.
-- No other out-of-theme elements (e.g., steering wheels, turbo boosts, racetrack references) are present in the root scripts; if future scans reveal unused assets tied to such concepts, mark them as deprecated and remove references.
+```
+boot.65816 → main.script → msu1.script → losers.script → logo_intro.script
+  → title_screen.script → level1.script → [chapter gameplay] → ... → level9.script
+```
 
-## Conventions for downstream directories
-- Keep new scripts focused on lair-appropriate imagery (dragons, dungeon traps, medieval weapons, arcane effects) and avoid modern racing or vehicular motifs.
-- When adding new assets or identifiers, prefer descriptive names that match the fantasy tone, and document any temporary placeholders so they can be replaced later.
+## File Guide
+- `main.script` — Bootstraps MSU-1 state, loads persisted scores, resets hardware, and spawns the MSU-1 management script.
+- `msu1.script` — Uploads the MSU-1 sample pack, shows the MSU-1 splash background, and transitions to the losers screen.
+- `losers.script` — Credits/losers screen shown after MSU-1 init; transitions to logo intro.
+- `logo_intro.script` — Post-splash transition: briefly shows the logo background, fades to black, and spawns the title screen.
+- `title_screen.script` — Full menu system with Start Game, Options (High Scores, Attract Mode, Sound Test, Scene Select). Handles player navigation, fades, and transitions to gameplay.
+- `level1.script` through `level9.script` — Level entry points. Each creates a starting chapter Script and dies. Example: `level1.script` spawns `introduction_start_alive`.
+- `hall_of_fame.script` — Renders the high-score list, plays attract-track audio, waits for user dismissal.
+- `level_complete.script` — Shows chapter completion text, displays score, branches to next level.
+- `score_entry.script` — Post-game name entry sequence, persists high-score table.
+- `none.script` — Placeholder that errors if invoked.
+
+## Chapter System
+
+Each level is composed of **chapters** — short video segments with timed events. Chapters are defined by XML files in `data/events/` and converted to assembly by `tools/xmlsceneparser.py`.
+
+- **29 scenes** across 9 levels (selectable from Scene Select menu)
+- **516 total chapters** with events for direction prompts, checkpoints, room transitions, sequences, and more
+- **36+ event classes** handle gameplay: `direction_generic`, `checkpoint`, `room_transition`, `seq_generic`, `cutscene`, etc.
+
+Chapter transitions happen via `EventResult.playchapter` — when a player input succeeds or an event timeout triggers, the current chapter creates the next chapter Script, which kills the old chapter via `killOthers(isChapter)`.
+
+## Title Screen Menu
+
+The title screen provides:
+- **Main menu** (state 0): START GAME, OPTIONS
+- **Options submenu** (state 1): HIGH SCORES, ATTRACT MODE, SOUND TEST, SCENE SELECT, BACK
+- **Sound test** (state 2): L/R selects sample 0-5, A plays it
+- **Scene select** (state 3): L/R selects scene 1-29, A launches it
+
+## Asset Theming Notes
+- Dragon's Lair themed sound effects (`dl_accept`, `dl_buzz`, `dl_credit`) exist in `data/sounds/` as WAVs but are not yet registered in the SPC build due to sample RAM constraints.
+- Legacy RoadBlaster identifiers remain in some code (`SAMPLE.0.SHURIKEN`, `SAMPLE.0.TECHNIQUE`) — these are functional placeholders.
+- Legacy sprites (brake, dashboard, steering wheels, turbo) are unused by Dragon's Lair scenes; keep unreferenced.
