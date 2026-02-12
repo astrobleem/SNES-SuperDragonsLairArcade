@@ -6,6 +6,9 @@ Pipeline:
 1. Parse chapter XMLs for timing info
 2. Extract video frames from MP4 per chapter (ffmpeg with CUDA GPU accel)
 3. Convert frames to SNES tiles/tilemap/palette (superfamiconv)
+   - Each 256x192 frame produces up to 768 unique 8x8 tiles, but SNES VRAM
+     only holds 512 at 4BPP. reduce_tiles() merges the 256 most visually
+     similar pairs using RGB-space L2 distance with a global greedy algorithm.
 4. Package into .msu file (msu1blockwriter.py)
 
 Usage (from project root, in WSL or Windows):
@@ -14,6 +17,16 @@ Usage (from project root, in WSL or Windows):
 
 import os
 import sys
+
+# CRITICAL: Set BLAS to single-threaded BEFORE importing numpy.
+# reduce_tiles() uses numpy matrix multiplication (pixels @ pixels.T) which calls
+# multi-threaded BLAS internally. When multiple Python threads in ThreadPoolExecutor
+# call BLAS concurrently, the shared BLAS thread pool corrupts results. This caused
+# 63% of video frames to have scrambled tilemaps.
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS'] = '1'
+
 import xml.dom.minidom
 import subprocess
 import concurrent.futures
@@ -21,6 +34,8 @@ import time
 import glob
 import argparse
 import shutil
+import struct
+import numpy as np
 
 # ---------- Configuration ----------
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -169,6 +184,156 @@ def pad_tilemap(tilemap_file):
             f.write(data)
             f.write(b'\x00' * (TILEMAP_TARGET_SIZE - len(data)))
 
+def read_snes_palette(palette_file):
+    """Read SNES BGR555 palette file and return (16, 3) float32 RGB array.
+
+    SNES color format: 0BBBBBGG GGGRRRRR (little-endian 16-bit)
+    Returns RGB values scaled to 0.0-255.0 for distance computation.
+    """
+    with open(palette_file, 'rb') as f:
+        data = f.read()
+    num_colors = len(data) // 2
+    palette = np.zeros((max(16, num_colors), 3), dtype=np.float32)
+    for i in range(num_colors):
+        bgr555 = struct.unpack_from('<H', data, i * 2)[0]
+        palette[i, 0] = (bgr555 & 0x1F) * (255.0 / 31.0)         # R
+        palette[i, 1] = ((bgr555 >> 5) & 0x1F) * (255.0 / 31.0)  # G
+        palette[i, 2] = ((bgr555 >> 10) & 0x1F) * (255.0 / 31.0) # B
+    return palette
+
+
+def decode_tiles_4bpp_rgb(tiles_raw, palette_rgb):
+    """Decode SNES 4BPP tiles to RGB values using the frame's actual palette.
+
+    tiles_raw: (N, 32) uint8 array of raw SNES 4BPP tile data
+    palette_rgb: (16, 3) float32 array of RGB values for the palette
+    Returns: (N, 192) float32 array (64 pixels x 3 RGB channels)
+
+    Comparing tiles in RGB color space (rather than palette index space) is
+    critical because palette indices have no inherent ordering — index 3 and
+    14 might be nearly identical colors while 0 and 1 are completely different.
+
+    SNES 4BPP tile format (32 bytes per 8x8 tile):
+      Bytes  0-15: bitplanes 0,1 interleaved by row (2 bytes/row x 8 rows)
+      Bytes 16-31: bitplanes 2,3 interleaved by row (2 bytes/row x 8 rows)
+    Each pixel's 4-bit color index = bp0 | (bp1<<1) | (bp2<<2) | (bp3<<3)
+    """
+    N = tiles_raw.shape[0]
+    pixel_indices = np.zeros((N, 8, 8), dtype=np.uint8)
+    for row in range(8):
+        # Bitplanes 0,1 are in bytes 0-15 (interleaved per row)
+        bp0 = tiles_raw[:, 2 * row].astype(np.uint16)
+        bp1 = tiles_raw[:, 2 * row + 1].astype(np.uint16)
+        # Bitplanes 2,3 are in bytes 16-31 (interleaved per row)
+        bp2 = tiles_raw[:, 16 + 2 * row].astype(np.uint16)
+        bp3 = tiles_raw[:, 16 + 2 * row + 1].astype(np.uint16)
+        for px in range(8):
+            bit = 7 - px  # MSB = leftmost pixel
+            pixel_indices[:, row, px] = (
+                ((bp0 >> bit) & 1) |
+                (((bp1 >> bit) & 1) << 1) |
+                (((bp2 >> bit) & 1) << 2) |
+                (((bp3 >> bit) & 1) << 3)
+            ).astype(np.uint8)
+    # Map palette indices to RGB colors: (N, 64) indices -> (N, 64, 3) RGB
+    flat_indices = pixel_indices.reshape(N, 64)
+    rgb = palette_rgb[flat_indices]  # numpy fancy indexing: (N, 64, 3)
+    return rgb.reshape(N, 192)
+
+
+def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
+    """Reduce tile count to max_tiles using global greedy merge in RGB color space.
+
+    SNES VRAM buffer is $4000 bytes = 512 tiles at 4BPP. Video frames at
+    256x192 can have up to 768 unique tiles. This function finds the most
+    similar tile pairs across the ENTIRE image and merges them, distributing
+    quality loss evenly rather than concentrating it in the bottom rows.
+
+    Uses L2 distance on actual RGB color values (decoded through the frame's
+    palette) for accurate visual similarity matching. This is critical because
+    palette indices have no inherent ordering — two indices that are numerically
+    far apart may map to nearly identical colors.
+    """
+    bytes_per_tile = 8 * BPP  # 32 for 4BPP
+
+    with open(tile_file, 'rb') as f:
+        tile_data = f.read()
+    num_tiles = len(tile_data) // bytes_per_tile
+    if num_tiles <= max_tiles:
+        return  # nothing to do
+
+    tiles = np.frombuffer(tile_data, dtype=np.uint8).reshape(num_tiles, bytes_per_tile)
+
+    # Decode tiles to RGB color space using the frame's actual palette
+    palette_rgb = read_snes_palette(palette_file)
+    pixels = decode_tiles_4bpp_rgb(tiles, palette_rgb)  # (N, 192) float32
+
+    # Compute pairwise L2 squared distance matrix using dot product trick:
+    # ||A-B||^2 = ||A||^2 + ||B||^2 - 2*A·B
+    sq_norms = np.sum(pixels * pixels, axis=1)  # (N,)
+    dot_products = pixels @ pixels.T             # (N, N) via BLAS
+    dist = sq_norms[:, None] + sq_norms[None, :] - 2 * dot_products
+
+    # Get all unique pairs (i < j) sorted by distance
+    rows_idx, cols_idx = np.triu_indices(num_tiles, k=1)
+    pair_dists = dist[rows_idx, cols_idx]
+    sort_order = np.argsort(pair_dists)
+
+    # Greedy merge: iterate through closest pairs, merge when both alive
+    to_remove = num_tiles - max_tiles
+    alive = set(range(num_tiles))
+    merge_target = list(range(num_tiles))  # merge_target[i] = tile that i maps to
+    removed = 0
+
+    for idx in sort_order:
+        if removed >= to_remove:
+            break
+        i = int(rows_idx[idx])
+        j = int(cols_idx[idx])
+        if i not in alive or j not in alive:
+            continue
+        # Remove the higher-indexed tile, keep the lower
+        alive.discard(j)
+        merge_target[j] = i
+        removed += 1
+
+    # Resolve transitive merges (j→i, but i may also have been merged later)
+    for idx in range(num_tiles):
+        target = merge_target[idx]
+        while merge_target[target] != target:
+            target = merge_target[target]
+        merge_target[idx] = target
+
+    # Re-index surviving tiles to contiguous 0..(max_tiles-1)
+    alive_sorted = sorted(alive)
+    reindex = {}
+    for new_i, old_i in enumerate(alive_sorted):
+        reindex[old_i] = new_i
+
+    # Build final remap: old tile index → new contiguous index
+    final_remap = np.array([reindex[merge_target[i]] for i in range(num_tiles)],
+                           dtype=np.uint16)
+
+    # Update tilemap
+    with open(tilemap_file, 'rb') as f:
+        tilemap_raw = f.read()
+    tilemap = np.frombuffer(tilemap_raw, dtype=np.uint16).copy()
+    tile_indices = tilemap & 0x3ff
+    flags = tilemap & 0xfc00
+
+    # Vectorized remap of all tilemap indices
+    new_indices = final_remap[tile_indices]
+    tilemap = flags | new_indices
+
+    # Write reduced tiles (only surviving tiles, in original order)
+    new_tile_data = tiles[alive_sorted].tobytes()
+    with open(tile_file, 'wb') as f:
+        f.write(new_tile_data)
+
+    # Write updated tilemap
+    with open(tilemap_file, 'wb') as f:
+        f.write(tilemap.tobytes())
+
 def convert_frame_superfamiconv(png_path):
     """Convert one PNG frame to SNES tiles/tilemap/palette using superfamiconv."""
     base = png_path[:-4]  # Remove .png
@@ -191,19 +356,20 @@ def convert_frame_superfamiconv(png_path):
     if r.returncode != 0:
         return False, f"palette: {r.stderr.strip()}"
 
-    # 2. Tile conversion (limit to MAX_TILES to fit in VRAM buffer)
-    r = subprocess.run([sfc, 'tiles', '-i', rel_png, '-p', rel_pal, '-d', rel_tile, '-B', str(BPP),
-                        '-T', str(MAX_TILES)], **run_kw)
+    # 2. Tile conversion (no tile limit — post-process to reduce)
+    r = subprocess.run([sfc, 'tiles', '-i', rel_png, '-p', rel_pal, '-d', rel_tile, '-B', str(BPP)], **run_kw)
     if r.returncode != 0:
         return False, f"tiles: {r.stderr.strip()}"
 
-    # 3. Tilemap generation (same tile limit for consistent mapping)
-    r = subprocess.run([sfc, 'map', '-i', rel_png, '-p', rel_pal, '-t', rel_tile, '-d', rel_map, '-B', str(BPP),
-                        '-T', str(MAX_TILES)], **run_kw)
+    # 3. Tilemap generation
+    r = subprocess.run([sfc, 'map', '-i', rel_png, '-p', rel_pal, '-t', rel_tile, '-d', rel_map, '-B', str(BPP)], **run_kw)
     if r.returncode != 0:
         return False, f"map: {r.stderr.strip()}"
 
-    # 4. Pad tilemap to 32x32
+    # 4. Reduce tiles to fit in VRAM buffer (512 max at 4BPP)
+    reduce_tiles(tile_file, map_file, pal_file)
+
+    # 5. Pad tilemap to 32x32
     pad_tilemap(map_file)
 
     return True, ""
@@ -367,7 +533,7 @@ def main():
             '-fps', str(FPS),
         ]
         print(f"Running: {' '.join(cmd)}")
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
         if result.returncode == 0:
             msu_size = os.path.getsize(OUTPUT_MSU) if os.path.exists(OUTPUT_MSU) else 0
             print(f"Success! MSU file: {OUTPUT_MSU} ({msu_size / 1024 / 1024:.1f} MB)")

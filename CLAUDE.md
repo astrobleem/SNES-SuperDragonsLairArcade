@@ -25,8 +25,6 @@ wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"
 **Build warnings that are normal:**
 - `DIRECTIVE_ERROR` about redefined `__init`/`__play`/`__kill` — from CLASS macro in event files
 - `DISCARD` messages — unused event sections stripped by `-d` linker flag
- pytest tests/ -v               # All tests
-```
 
 **Emulator testing with Mesen 2:**
 ```bat
@@ -94,6 +92,33 @@ All chapter scripts are aggregated in `data/chapters/chapter.include`, all data 
 
 40+ event classes for gameplay triggers. Create new events with `python tools/create_event.py Event.myname`.
 
+### MSU-1 Video Data Pipeline
+
+Video frames from `data/videos/dl_arcade.mp4` are converted to SNES tile data and packaged into a `.msu` file for MSU-1 hardware playback.
+
+```bash
+# Generate .msu video data (~23 min with 8 workers, requires existing PNG frames)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --workers 8"
+
+# Full pipeline including frame extraction (~1hr+ first time, uses ffmpeg CUDA)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --workers 8"
+
+# Output: build/SuperDragonsLairArcade.msu (~568 MB)
+# Also copied to: E:\gh\SuperDragonsLairArcade.sfc\SuperDragonsLairArcade.msu
+```
+
+**Pipeline steps** (per frame):
+1. ffmpeg extracts 256x192 PNG frames (16-color palette, CUDA GPU accelerated)
+2. superfamiconv converts each PNG to SNES palette/tiles/tilemap
+3. `reduce_tiles()` merges 768 unique tiles down to 512 (VRAM limit) using global greedy merge with RGB-space L2 distance
+4. msu1blockwriter.py packages all chapters into a single `.msu` file
+
+**Key constraints:**
+- VRAM tile buffer = $4000 bytes = 512 tiles at 4BPP. Each 256x192 frame has up to 768 unique tiles, requiring lossy tile reduction.
+- MSU title in `.msu` file must exactly match ROM header title (`SUPER DRAGON'S LAIR`) or `_isMsu1FilePresent` rejects it.
+- `make clean` DELETES `data/chapters/` — wipes all extracted video frames. Run MSU generation AFTER final build, or use `make` without `clean`.
+- BLAS thread safety: `OPENBLAS_NUM_THREADS=1` must be set before `import numpy` in generate_msu_data.py — multi-threaded BLAS corrupts results when called from concurrent Python threads.
+
 ## Critical Pitfalls
 
 ### wla-dx `.def` Cannot Redefine
@@ -138,4 +163,6 @@ Every class has a `.h` (header) and `.65816` (implementation). The header define
 | `src/object/script/chapter_data.65816` | All chapter event data tables (one superfree section) |
 | `tools/xmlsceneparser.py` | XML chapter events → assembly `.script` + `.data` files |
 | `tools/create_event.py` | Generate boilerplate for new Event classes |
+| `tools/generate_msu_data.py` | Full MSU-1 video pipeline: ffmpeg → superfamiconv → tile reduction → .msu |
+| `tools/msu1blockwriter.py` | Packages tile/tilemap/palette data into .msu file format |
 | `build/SuperDragonsLairArcade.sym` | Symbol table — look up addresses here after each build |

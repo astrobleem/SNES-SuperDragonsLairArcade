@@ -13,7 +13,7 @@
 .define VRAM_TILES	$2000
 .define CGRAM_PALETTE	0
 
-.define V_SCROLL    0
+.define V_SCROLL    240
 
 
 
