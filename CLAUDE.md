@@ -77,7 +77,7 @@ Scripts are 65816 code that runs synchronously during init (via `bra _play`) unt
 
 ### Game Flow
 ```
-boot.65816 → main.script → msu1.script → logo_intro.script → title_screen.script → level1.script → ...
+boot.65816 → main.script → msu1.script → losers.script → logo_intro.script → title_screen.script → level1.script → ...
 ```
 Each script creates the next via `NEW Script.CLS.PTR oopCreateNoPtr nextScript` then `DIE`.
 
@@ -167,10 +167,12 @@ All chapter scripts are aggregated in `data/chapters/chapter.include`, all data 
 ### Title Screen Menu and Scene Select
 
 The title screen (`src/title_screen.script`) has a full menu system:
-- **Main menu**: START GAME, OPTIONS, ATTRACT MODE
-- **Options submenu**: SOUND TEST, SCENE SELECT, BACK
+- **Main menu**: START GAME, OPTIONS
+- **Options submenu**: HIGH SCORES, ATTRACT MODE, SOUND TEST, SCENE SELECT, BACK
 - **Sound test**: L/R selects sample 0-5, A plays it
 - **Scene select**: L/R selects scene 1-29, A launches it via `_title_screen.sceneTable`
+
+Menu items start at tilemap position `$286` (row 20, col 6). Copyright text at `$306`/`$324` (rows 24-25). Cursor drawn at `$286 + cursor * 32`.
 
 **Transition pattern** (must use dedicated SavePC): After fadeTo black, a `jsr SavePC` creates a new resume point. Each frame polls `Brightness.isDone`; when done, cleanup kills objects, clears VRAM/CGRAM, creates target Script, and DIEs. The inline SavePC replaces the menu's SavePC — menu input stops during transition.
 
@@ -216,13 +218,16 @@ Used as null pointer for the hash system. `CALL` with hash pntr=$FFFF dispatches
 SPC700 has 64KB RAM total. Engine code ~6.5KB, leaving ~57.5KB for BRR samples. Adding samples requires checking total BRR size stays under this limit.
 
 ### CGRAM (Palette) Limits
-SNES has 8 BG palettes max for 4BPP mode ($100 bytes). The `animationWriter_sfc.py` ignores the `-palettes` flag (line 259 commented out), so backgrounds may use more sub-palettes than intended. CGRAM allocation failure in `abstract.Background.65816` is non-fatal (falls back to palette position 0).
+SNES has 8 BG palettes max for 4BPP mode ($100 bytes). `animationWriter_sfc.py` now forces `-P 1` (single sub-palette) in superfamiconv palette generation to prevent CGRAM overflow. CGRAM allocation failure in `abstract.Background.65816` is non-fatal (falls back to palette position 0). Default BG palettes in makefile reduced from 8 to 3.
 
 ### wla-dx `_` Prefix = Local Labels
 Labels starting with `_` are LOCAL to the compilation unit (.o file). They cannot be referenced from other .o files — causes FIX_REFERENCES at link time. Use labels without `_` prefix for cross-file references.
 
 ### wla-dx Section Limit Per File
 wla-dx has a maximum of ~512 sections per compilation unit. Exceeding this gives "Out of section numbers. Please start a new file." — solved by combining data into fewer, larger sections.
+
+### wla-dx Anonymous Label Pitfalls
+`+`, `++`, `+++` etc. are DISTINCT label tiers in wla-dx — `+` only matches `+`, `++` only matches `++`. A `bra ++` does NOT mean "second `+` forward" — it means "next `++` label forward". Long macro expansions (NEW, CALL) generate many bytes; branches over them easily exceed the 8-bit 127-byte limit. Use named labels or `jmp` for long forward references. The `bne label / jmp target / label:` pattern replaces a too-far `beq target`.
 
 ### Class File Pattern
 Every class has a `.h` (header) and `.65816` (implementation). The header defines the ZP struct layout, `CLASS.FLAGS`, `CLASS.PROPERTIES`, `CLASS.ZP_LENGTH`, and optionally `CLASS.IMPLEMENTS`. The `.65816` file includes the `.h`, opens a `.section`, uses `METHOD init`/`play`/`kill` to define methods, and ends with `CLASS ClassName [extraMethods]` + `.ends`.
@@ -236,7 +241,7 @@ Every class has a `.h` (header) and `.65816` (implementation). The header define
 | `src/config/structs.inc` | Data structures: iteratorStruct, animationStruct, eventStruct |
 | `src/core/oop.65816` | Object creation, singleton handling, method dispatch |
 | `src/core/oop.h` | OBJID enum, OopClassLut (class registration) |
-| `src/core/error.h` | Error code enum (E_ObjLstFull through E_SramBad) |
+| `src/core/error.h` | Error code enum, hardcoded grey font palette ($6318 BGR555) |
 | `src/core/boot.65816` | Entry point, main loop, interrupt vectors |
 | `src/object/script/script.h` | Script class definition, hash pointer defaults |
 | `src/object/brightness/brightness.65816` | Screen fade control (singleton) |
@@ -248,6 +253,7 @@ Every class has a `.h` (header) and `.65816` (implementation). The header define
 | `data/events/*.xml` | 516+ XML scene definitions (from DirkSimple game data) |
 | `data/chapters/chapter.include` | Aggregates all generated chapter.script files |
 | `data/chapters/chapter_data.include` | Aggregates all generated chapter.data files |
+| `src/losers.script` | Credits/losers screen (shown after MSU-1 init) |
 | `src/level1.script` – `src/level9.script` | Level entry points (each creates a starting chapter) |
 | `src/title_screen.script` | Title screen with menu system and scene select |
 | `tools/generate_msu_data.py` | Full MSU-1 video pipeline: ffmpeg → superfamiconv → tile reduction → .msu |
