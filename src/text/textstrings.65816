@@ -793,6 +793,46 @@ T_EXCP_E_SramBad:
 
 
 
+T_menu_main:
+    .db TC_pos
+    .dw $246
+    .db " START GAME",TC_brk
+    .db " OPTIONS",TC_brk
+    .db " ATTRACT MODE",TC_end
+
+T_menu_options:
+    .db TC_pos
+    .dw $246
+    .db " SOUND TEST",TC_brk
+    .db " SCENE SELECT",TC_brk
+    .db " BACK",TC_end
+
+T_menu_soundtest:
+    .db TC_pos
+    .dw $249
+    .db "SOUND TEST"
+    .db TC_pos
+    .dw $289
+    .db "SAMPLE: ",TC_dToS
+    .dw GLOBAL.CORE.STRING.argument.0
+    .db GLOBAL.CORE.STRING.argument.0>>16,1
+    .db TC_pos
+    .dw $2C9
+    .db "A:PLAY  B:BACK",TC_end
+
+T_menu_levelselect:
+    .db TC_pos
+    .dw $248
+    .db "SCENE SELECT"
+    .db TC_pos
+    .dw $289
+    .db "SCENE: ",TC_dToS
+    .dw GLOBAL.CORE.STRING.argument.0
+    .db GLOBAL.CORE.STRING.argument.0>>16,1
+    .db TC_pos
+    .dw $2C9
+    .db "A:START  B:BACK",TC_end
+
 ;used to check maximum valid string id
 T_max:
 	.db "Max string id.",TC_end

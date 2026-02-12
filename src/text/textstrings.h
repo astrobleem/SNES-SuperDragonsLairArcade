@@ -99,6 +99,10 @@ TextstringLUT:
     PTRLONG TextstringLUT T_EXCP_E_BadIrqCallback
     PTRLONG TextstringLUT T_levelComplete
     PTRLONG TextstringLUT T_EXCP_E_SramBad
+    PTRLONG TextstringLUT T_menu_main
+    PTRLONG TextstringLUT T_menu_options
+    PTRLONG TextstringLUT T_menu_soundtest
+    PTRLONG TextstringLUT T_menu_levelselect
 	PTRLONG TextstringLUT T_max
 	
 .ends

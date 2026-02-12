@@ -81,16 +81,98 @@ boot.65816 → main.script → msu1.script → logo_intro.script → title_scree
 ```
 Each script creates the next via `NEW Script.CLS.PTR oopCreateNoPtr nextScript` then `DIE`.
 
-### Event/Chapter Data Pipeline
-Events are defined in XML (`data/events/*.xml`) and converted by `tools/xmlsceneparser.py` into:
-- `data/chapters/<name>/chapter.script` — code (~10 bytes, uses `CHAPTER` macro + `jsr _CHAPTER.init`)
-- `data/chapters/<name>/chapter.data` — event data table (7 words per event, terminated by `.dw 0`)
+### Scene/Chapter System
 
-Event data format per entry: classPtr, startFrame, endFrame, result, resultTarget, arg0, arg1. `_CHAPTER.init` (in `script.h`) reads a 24-bit inline pointer, loops through the data creating objects via `core.object.create`.
+The game is divided into 29 scenes (rooms), each containing multiple chapters (short video segments with events). Chapters chain together via EventResult handlers based on player input.
+
+**Scene flow**: `title_screen` → `level1.script` → `introduction_start_alive` (chapter) → player input triggers → next chapter → ... → scene complete → next scene
+
+**Level scripts** (`src/level1.script` through `src/level9.script`) are minimal entry points:
+```asm
+SCRIPT level1
+NEW Script.CLS.PTR oopCreateNoPtr introduction_start_alive
+DIE
+```
+
+**29 scenes** (selectable from title screen's scene select menu):
+introduction, vestibule, snake_room, bower, fire_room, throne_room, tilting_room, tentacle_room, wind_room, giddy_goons, catwalk_bats, mudmen, rolling_balls, underground_river, flaming_ropes, flying_horse, bubbling_cauldron, giant_bat, crypt_creeps, alice_room, robot_knight, smithee, smithee_reversed, grim_reaper, yellow_brick_road, black_knight, lizard_king, the_dragons_lair, attract_mode
+
+### XML Event Files and Conversion Pipeline
+
+**Source**: XML files in `data/events/*.xml` (516+ files, generated from DirkSimple game data)
+
+Each XML defines one chapter with a timeline and events:
+```xml
+<chapter name="black_knight_seq2">
+  <timeline><timestart min="17" sec="38" ms="768"/><timeend min="17" sec="42" ms="307"/></timeline>
+  <events>
+    <event type="direction" automacro="direction">
+      <timeline><timestart min="17" sec="39" ms="372"/><timeend min="17" sec="41" ms="703"/></timeline>
+      <params><str key="type" value="left"/></params>
+      <result><playchapter name="black_knight_seq3"/></result>
+    </event>
+    <!-- more events -->
+  </events>
+  <result><playchapter name="black_knight_seq7"/></result>  <!-- default if no input -->
+</chapter>
+```
+
+**Conversion tool**: `tools/xmlsceneparser.py` converts each XML into two assembly files:
+```bash
+python3 tools/xmlsceneparser.py data/events/black_knight_seq2.xml
+```
+
+**Output per chapter** (in `data/chapters/<name>/`):
+- **`chapter.script`** — code (~10 bytes): `CHAPTER` macro + 24-bit pointer to event data + `DIE`
+- **`chapter.data`** — event data table: 7 words per event (14 bytes), terminated by `.dw 0`
+
+**Event data format** (per entry, 14 bytes):
+```
++0: .dw Event.{TYPE}.CLS.PTR    (class pointer for event object)
++2: .dw STARTFRAME              (chapter-relative, 16-bit)
++4: .dw ENDFRAME                (chapter-relative, 16-bit)
++6: .dw EventResult.{RESULT}    (result handler: playchapter, restartchapter, lastcheckpoint, none)
++8: .dw {RESULT_TARGET}         (target chapter label, or 'none')
++10: .dw {ARG0}                 (event-specific: direction mask, sequence number, etc.)
++12: .dw {ARG1}                 (event-specific)
+```
+
+**Type normalization** by xmlsceneparser.py:
+- `direction` + `type="left"` → `Event.direction_generic` with arg0=`JOY_DIR_LEFT`
+- `direction` + `type="right"` → arg0=`JOY_DIR_RIGHT`, etc.
+- `seq2`, `seq3` → `Event.seq_generic` with arg0=sequence number
+- `room_transition` subtypes (enter_room, start_alive, start_dead) → encoded arg0 (0-7)
+- Hyphens in chapter names → underscores (e.g., `alice-room` → `alice_room`)
+
+**Frame timing**: XML uses min/sec/ms, converted to frame numbers at 23.9777 fps. Startframe/endframe are chapter-relative (event frame - chapter start frame), clamped to 16-bit.
+
+### Chapter Initialization and Event Results
+
+**`_CHAPTER.init`** (`src/object/script/script.h`): Sets properties to `isChapter`, kills other chapters (only one active at a time), kills all events, reads 24-bit inline pointer to event data, loops creating event objects from the data table via `core.object.create`.
+
+**EventResult handlers** (`src/object/event/abstract.Event.65816`):
+- **`EventResult.none`** — kill self, no further action
+- **`EventResult.playchapter`** — create new chapter Script from resultTarget label (the primary scene transition mechanism)
+- **`EventResult.restartchapter`** — restart current chapter from last checkpoint
+- **`EventResult.lastcheckpoint`** — player loses a life; if game over → `game_over` script; else restart from checkpoint
+
+**Scene transitions**: When an event's endframe is reached (or player input triggers it), `abstract.Event.checkResult` calls the EventResult handler. `EventResult.playchapter` creates a new Script with the target chapter label, which kills the old chapter via `killOthers(isChapter)`.
+
+### Event/Chapter File Aggregation
 
 All chapter scripts are aggregated in `data/chapters/chapter.include`, all data in `data/chapters/chapter_data.include`. Chapter data goes in ONE `superfree` section in `chapter_data.65816` (wla-dx has a ~512 section-per-file limit).
 
-40+ event classes for gameplay triggers. Create new events with `python tools/create_event.py Event.myname`.
+**36+ event classes** for gameplay: `direction_generic`, `direction_left/right`, `chapter`, `checkpoint`, `room_transition`, `seq_generic`, `cutscene`, `accelerate`, `brake`, `shake`, `touch`, `target`, `confirm`, plus scene-specific events (rolling_balls, flying_horse, tentacle_room, etc.). Create new events with `python tools/create_event.py Event.myname`.
+
+### Title Screen Menu and Scene Select
+
+The title screen (`src/title_screen.script`) has a full menu system:
+- **Main menu**: START GAME, OPTIONS, ATTRACT MODE
+- **Options submenu**: SOUND TEST, SCENE SELECT, BACK
+- **Sound test**: L/R selects sample 0-5, A plays it
+- **Scene select**: L/R selects scene 1-29, A launches it via `_title_screen.sceneTable`
+
+**Transition pattern** (must use dedicated SavePC): After fadeTo black, a `jsr SavePC` creates a new resume point. Each frame polls `Brightness.isDone`; when done, cleanup kills objects, clears VRAM/CGRAM, creates target Script, and DIEs. The inline SavePC replaces the menu's SavePC — menu input stops during transition.
 
 ### MSU-1 Video Data Pipeline
 
@@ -163,6 +245,11 @@ Every class has a `.h` (header) and `.65816` (implementation). The header define
 | `src/object/script/chapter_data.65816` | All chapter event data tables (one superfree section) |
 | `tools/xmlsceneparser.py` | XML chapter events → assembly `.script` + `.data` files |
 | `tools/create_event.py` | Generate boilerplate for new Event classes |
+| `data/events/*.xml` | 516+ XML scene definitions (from DirkSimple game data) |
+| `data/chapters/chapter.include` | Aggregates all generated chapter.script files |
+| `data/chapters/chapter_data.include` | Aggregates all generated chapter.data files |
+| `src/level1.script` – `src/level9.script` | Level entry points (each creates a starting chapter) |
+| `src/title_screen.script` | Title screen with menu system and scene select |
 | `tools/generate_msu_data.py` | Full MSU-1 video pipeline: ffmpeg → superfamiconv → tile reduction → .msu |
 | `tools/msu1blockwriter.py` | Packages tile/tilemap/palette data into .msu file format |
 | `build/SuperDragonsLairArcade.sym` | Symbol table — look up addresses here after each build |

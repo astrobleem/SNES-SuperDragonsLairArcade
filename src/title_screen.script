@@ -107,63 +107,372 @@ _title_screen.noPalRotate:
 
   NEW Sprite.super.CLS.PTR objSuper 0 0
 
-  jsr SavePC
-  ldx #INPUT.DEVICE.ID.0
-  jsr core.input.get.trigger
-  and.w #(JOY_BUTTON_A | JOY_BUTTON_START)
-  beq +
-	rts
-+
+  ;--- Menu system ---
+  .def menu.state  this._tmp+8
+  .def menu.cursor this._tmp+10
+  .def menu.param  this._tmp+12
+  .def menu.target this._tmp+14
 
+  ;initialize menu state
+  stz.b menu.state
+  stz.b menu.cursor
+  lda #1
+  sta.b menu.param
+  jsr _title_screen.drawMenu
+
+_title_screen.menuLoop:
   jsr SavePC
+
+_title_screen.menuInput:
+  ;read trigger input
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.trigger
-  and.w #(JOY_BUTTON_A | JOY_BUTTON_START)
-  bne +
+  tax  ;plp in get.trigger restores caller Z flag; tax sets Z from A
+  beq +
+    sta.b currentLevel
+    bra _title_screen.handleInput
++ rts
+
+_title_screen.handleInput:
+  ;--- B button: back navigation ---
+  lda.b currentLevel
+  and.w #JOY_BUTTON_B
+  beq _title_screen.noB
+    lda.b menu.state
+    beq _title_screen.bDone         ;no back from main menu
+    cmp #1
+    beq _title_screen.backToMain
+    ;states 2,3: back to options
+    lda #1
+    sta.b menu.state
+    stz.b menu.cursor
+    lda.w #SAMPLE.0.OK
+    CALL Spc.SpcPlaySoundEffect.MTD objSpc
+    jsr _title_screen.drawMenu
+_title_screen.bDone:
     rts
 
-+
+_title_screen.backToMain:
+    stz.b menu.state
+    stz.b menu.cursor
+    lda.w #SAMPLE.0.OK
+    CALL Spc.SpcPlaySoundEffect.MTD objSpc
+    jsr _title_screen.drawMenu
+    rts
+
+_title_screen.noB:
+  ;dispatch cursor input (states 0,1) vs param input (states 2,3)
+  lda.b menu.state
+  cmp #2
+  bcc _title_screen.cursorSection
+    jmp _title_screen.paramSection
+
+  ;=== CURSOR INPUT (states 0,1) ===
+_title_screen.cursorSection:
+  ;--- UP ---
+  lda.b currentLevel
+  and.w #JOY_DIR_UP
+  beq _title_screen.noUp
+    lda.b menu.cursor
+    beq _title_screen.upWrap
+      dec a
+      bra _title_screen.cursorMoved
+_title_screen.upWrap:
+    lda #2
+    bra _title_screen.cursorMoved
+
+_title_screen.noUp:
+  ;--- DOWN ---
+  lda.b currentLevel
+  and.w #JOY_DIR_DOWN
+  beq _title_screen.noDown
+    lda.b menu.cursor
+    cmp #2
+    bcc _title_screen.downNoWrap
+      lda #$ffff
+_title_screen.downNoWrap:
+    inc a
+_title_screen.cursorMoved:
+    sta.b menu.cursor
+    lda.w #SAMPLE.0.OK
+    CALL Spc.SpcPlaySoundEffect.MTD objSpc
+    jsr _title_screen.drawMenu
+    rts
+
+_title_screen.noDown:
+  ;--- A/START: select item ---
+  lda.b currentLevel
+  and.w #(JOY_BUTTON_A | JOY_BUTTON_START)
+  beq _title_screen.cursorDone
+
+  lda.b menu.state
+  bne _title_screen.optionsSelect
+
+  ;main menu selection
+  lda.b menu.cursor
+  beq _title_screen.selectStartGame
+  cmp #1
+  beq _title_screen.selectOptions
+  ;cursor 2: attract mode
+  lda.w #attract_mode_start_alive
+  sta.b menu.target
+  jmp _title_screen.startTransition
+
+_title_screen.selectStartGame:
+  lda.w #level1
+  sta.b menu.target
+  jmp _title_screen.startTransition
+
+_title_screen.selectOptions:
+  lda #1
+  sta.b menu.state
+  stz.b menu.cursor
+  lda.w #SAMPLE.0.OK
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
+  jsr _title_screen.drawMenu
+_title_screen.cursorDone:
+  rts
+
+_title_screen.optionsSelect:
+  lda.b menu.cursor
+  beq _title_screen.selectSoundTest
+  cmp #1
+  beq _title_screen.selectLevelSelect
+  ;cursor 2: back to main
+  stz.b menu.state
+  stz.b menu.cursor
+  lda.w #SAMPLE.0.OK
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
+  jsr _title_screen.drawMenu
+  rts
+
+_title_screen.selectSoundTest:
+  lda #2
+  sta.b menu.state
+  stz.b menu.param
+  lda.w #SAMPLE.0.OK
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
+  jsr _title_screen.drawMenu
+  rts
+
+_title_screen.selectLevelSelect:
+  lda #3
+  sta.b menu.state
+  lda #1
+  sta.b menu.param
+  lda.w #SAMPLE.0.OK
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
+  jsr _title_screen.drawMenu
+  rts
+
+  ;=== PARAM INPUT (states 2,3) ===
+_title_screen.paramSection:
+  ;--- LEFT ---
+  lda.b currentLevel
+  and.w #JOY_DIR_LEFT
+  beq _title_screen.noLeft
+    lda.b menu.state
+    cmp #3
+    beq _title_screen.leftLevel
+    ;sound test: decrement 0-5
+    lda.b menu.param
+    beq _title_screen.leftSoundWrap
+      dec a
+      bra _title_screen.paramMoved
+_title_screen.leftSoundWrap:
+    lda #5
+    bra _title_screen.paramMoved
+
+_title_screen.leftLevel:
+    lda.b menu.param
+    cmp #2
+    bcs _title_screen.leftLevelOk
+      lda #30		;wrap: 1 -> 29
+_title_screen.leftLevelOk:
+    dec a
+    bra _title_screen.paramMoved
+
+_title_screen.noLeft:
+  ;--- RIGHT ---
+  lda.b currentLevel
+  and.w #JOY_DIR_RIGHT
+  beq _title_screen.noRight
+    lda.b menu.state
+    cmp #3
+    beq _title_screen.rightLevel
+    ;sound test: increment 0-5
+    lda.b menu.param
+    cmp #5
+    bcc _title_screen.rightSoundOk
+      lda #$ffff
+_title_screen.rightSoundOk:
+    inc a
+    bra _title_screen.paramMoved
+
+_title_screen.rightLevel:
+    lda.b menu.param
+    cmp #29
+    bcc _title_screen.rightLevelOk
+      lda #0		;wrap: 29 -> 1
+_title_screen.rightLevelOk:
+    inc a
+_title_screen.paramMoved:
+    sta.b menu.param
+    lda.w #SAMPLE.0.OK
+    CALL Spc.SpcPlaySoundEffect.MTD objSpc
+    jsr _title_screen.drawMenu
+    rts
+
+_title_screen.noRight:
+  ;--- A: play sample or start level ---
+  lda.b currentLevel
+  and.w #(JOY_BUTTON_A | JOY_BUTTON_START)
+  beq _title_screen.paramDone
+
+  lda.b menu.state
+  cmp #3
+  beq _title_screen.levelSelectGo
+  ;sound test: play selected sample
+  lda.b menu.param
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
+_title_screen.paramDone:
+  rts
+
+_title_screen.levelSelectGo:
+  lda.b menu.param
+  dec a
+  asl a
+  tax
+  lda.l _title_screen.sceneTable,x
+  sta.b menu.target
+  ;fall through to startTransition
+
+;--- Start transition: confirm sound + fade to black ---
+_title_screen.startTransition:
   lda.w #SAMPLE.0.TECHNIQUE
   CALL Spc.SpcPlaySoundEffect.MTD objSpc
-
   NEW Pause.CLS.PTR oopCreateNoPtr
-
   lda #BRIGHTNESS.NONE
   CALL Brightness.fadeTo.MTD objBrightness
 
   jsr SavePC
   CALL Brightness.isDone.MTD objBrightness
-
-  bcs +++
+  bcs +
     rts
++
 
-+++
+;--- Cleanup and launch target script ---
+_title_screen.doCleanup:
   CALL Sprite.super.kill.MTD objSuper
   CALL Background.generic.kill.MTD objBackground
   CALL Background.generic.kill.MTD objLogo
-
   CALL Background.textlayer.8x8.kill.MTD objText
   ldx #objPalRotate
   jsr oop.object.exists
-  bcc ++
+  bcc _title_screen.noPalKill
     CALL Palette.rotate.kill.MTD objPalRotate
-
-++
-  ;debug, extremely bad hack!!! whats the real reason vram cant be assigned when logo sprite has been created?
+_title_screen.noPalKill:
   jsr core.vram.init
-
   lda.w #OBJECT.PROPERTIES.isHdma
   jsr abstract.Iterator.kill.byProperties
-
   ldx irq.buffer.x
   ldy irq.buffer.y
   jsr core.irq.position.set
-
   jsr core.cgram.clear
-
-  NEW Script.CLS.PTR oopCreateNoPtr level1
-
-;  rts
+  lda.b menu.target
+  pha
+  NEW Script.CLS.PTR oopCreateNoPtr
+  pla
   DIE
 
+;--- Draw the current menu screen ---
+_title_screen.drawMenu:
+  CALL Background.textlayer.8x8.clear.MTD objText
+  lda #T_title.PTR
+  CALL Background.textlayer.8x8.print.MTD objText
+
+  ;select menu string based on state
+  lda.b menu.state
+  beq _title_screen.drawMain
+  cmp #1
+  beq _title_screen.drawOptions
+  cmp #2
+  beq _title_screen.drawSoundTest
+
+  ;state 3: scene select
+  lda #T_menu_levelselect.PTR
+  pei (menu.param)
+  CALL Background.textlayer.8x8.print.MTD objText
+  pla
+  bra _title_screen.drawFlush
+
+_title_screen.drawMain:
+  lda #T_menu_main.PTR
+  CALL Background.textlayer.8x8.print.MTD objText
+  bra _title_screen.drawCursor
+
+_title_screen.drawOptions:
+  lda #T_menu_options.PTR
+  CALL Background.textlayer.8x8.print.MTD objText
+  bra _title_screen.drawCursor
+
+_title_screen.drawSoundTest:
+  lda #T_menu_soundtest.PTR
+  pei (menu.param)
+  CALL Background.textlayer.8x8.print.MTD objText
+  pla
+  bra _title_screen.drawFlush
+
+_title_screen.drawCursor:
+  ;write '>' at cursor position in string buffer
+  ;offset = $246 + cursor * 32
+  lda.b menu.cursor
+  asl a
+  asl a
+  asl a
+  asl a
+  asl a
+  clc
+  adc.w #$246
+  tax
+  sep #$20
+  lda #$3E
+  sta.w GLOBAL.CORE.STRING.buffer,x
+  rep #$20
+
+_title_screen.drawFlush:
+  CALL Background.textlayer.8x8.flush.MTD objText
+  rts
+
+;--- Scene lookup table (29 scenes, each launches the _start_alive chapter) ---
+_title_screen.sceneTable:
+  .dw introduction_start_alive		;1
+  .dw vestibule_start_alive		;2
+  .dw snake_room_start_alive		;3
+  .dw bower_start_alive			;4
+  .dw fire_room_start_alive		;5
+  .dw throne_room_start_alive		;6
+  .dw tilting_room_start_alive		;7
+  .dw tentacle_room_start_alive		;8
+  .dw wind_room_start_alive		;9
+  .dw giddy_goons_start_alive		;10
+  .dw catwalk_bats_start_alive		;11
+  .dw mudmen_start_alive		;12
+  .dw rolling_balls_start_alive		;13
+  .dw underground_river_start_alive	;14
+  .dw flaming_ropes_start_alive		;15
+  .dw flying_horse_start_alive		;16
+  .dw bubbling_cauldron_start_alive	;17
+  .dw giant_bat_start_alive		;18
+  .dw crypt_creeps_start_alive		;19
+  .dw alice_room_start_alive		;20
+  .dw robot_knight_start_alive		;21
+  .dw smithee_start_alive		;22
+  .dw smithee_reversed_start_alive	;23
+  .dw grim_reaper_start_alive		;24
+  .dw yellow_brick_road_start_alive	;25
+  .dw black_knight_start_alive		;26
+  .dw lizard_king_start_alive		;27
+  .dw the_dragons_lair_start_alive	;28
+  .dw attract_mode_start_alive		;29
 
