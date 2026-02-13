@@ -6,11 +6,12 @@ Outstanding issues, stubs, and incomplete work. Organized by priority.
 
 ## Category 1: Game Flow — Crash-on-Reach Stubs (CRITICAL)
 
-| Item | File | Issue |
-|------|------|-------|
-| level2 through level9 are stubs | `src/level2.script` – `src/level9.script` | Each is 2 lines: `SCRIPT levelN` + `TRIGGER_ERROR E_Todo`. Completing level 1 or using scene select for scenes in levels 2-9 crashes. Need to follow `level1.script` pattern: `NEW Script.CLS.PTR oopCreateNoPtr <starting_chapter>` + `DIE`. |
-| game_over.script is a stub | `src/game_over.script` | `TRIGGER_ERROR E_Todo`. Losing all lives crashes instead of showing game over / high score flow. |
-| none.script is a stub | `src/none.script` | `TRIGGER_ERROR E_Todo`. Referenced as a fallback; should either be implemented or all references removed. |
+| Item | File | Status |
+|------|------|--------|
+| ~~level2 through level9 are stubs~~ | ~~`src/level2.script` – `src/level9.script`~~ | **RESOLVED** — Deleted. Level system replaced by direct cross-scene transitions in chapter data via `data/scene_transitions.json`. |
+| ~~game_over.script is a stub~~ | ~~`src/game_over.script`~~ | **RESOLVED** — Implemented: kills chapters/events/dash/HDMA/Msu1, resets screen mode, clears VRAM/CGRAM, launches title_screen. |
+| none.script is a stub | `src/none.script` | `TRIGGER_ERROR E_Todo`. Referenced as a fallback; should either be implemented or all references removed. Left as diagnostic. |
+| ~~Cross-scene transitions missing~~ | `data/scene_transitions.json` | **RESOLVED** — 30 terminal chapters now auto-transition to the next scene via `EventResult.playchapter`. Covers all 15 exit_room chapters + 14 traced success-path terminals + the_dragons_lair_endgame. `xmlsceneparser.py` reads `-scene_transitions` JSON to override `Event.chapter` results. |
 
 ## Category 2: Event Class Issues (MODERATE)
 

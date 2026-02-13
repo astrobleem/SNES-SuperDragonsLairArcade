@@ -158,16 +158,7 @@ _CHAPTER.init.done:
 .include "src/msu1.script"
 .include "src/score_entry.script"
 .include "src/game_over.script"
-.include "src/level_complete.script"
 .include "data/chapters/chapter.include"
 .include "src/level1.script"
-.include "src/level2.script"
-.include "src/level3.script"
-.include "src/level4.script"
-.include "src/level5.script"
-.include "src/level6.script"
-.include "src/level7.script"
-.include "src/level8.script"
-.include "src/level9.script"
 
 .ends

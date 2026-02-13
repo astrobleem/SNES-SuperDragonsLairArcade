@@ -77,20 +77,31 @@ def main():
       'type'            : 'float',
       'min'                : 1.00,
       'max'                : 30.00
-      },  
+      },
+    'scene_transitions'        : {
+      'value'            : '',
+      'type'            : 'str'
+      },
   })
 
   logging.debug('xml parse start')
   if not os.path.exists(options.get('outfolder')):
     os.makedirs(options.get('outfolder'))
 
-  #files = os.listdir(options.get('outfolder'))
-  existingChapters = [folder for root, dirs, names in os.walk(options.get('outfolder')) for folder in dirs if folder]
-  #debugLogExit(files, 'files')
-
-  #enumerate chapters
+  #enumerate chapters — determine chapternumber from alphabetical position among all event XMLs
+  # This matches generate_msu_data.py's sorted(os.listdir()) ordering for MSU-1 chapter IDs
+  import glob
   options.manualSet('chapter', os.path.basename(options.get('infile')).split('.')[0].replace('-', '_'))
-  options.manualSet('chapternumber', len(existingChapters))
+  events_dir = os.path.dirname(options.get('infile'))
+  all_xmls = sorted(glob.glob(os.path.join(events_dir, '*.xml')))
+  all_chapter_names = [os.path.basename(f).split('.')[0].replace('-', '_') for f in all_xmls]
+  current_chapter = options.get('chapter')
+  if current_chapter in all_chapter_names:
+    options.manualSet('chapternumber', all_chapter_names.index(current_chapter))
+  else:
+    logging.warning('Chapter %s not found in events dir, using fallback numbering' % current_chapter)
+    existingChapters = [folder for root, dirs, names in os.walk(options.get('outfolder')) for folder in dirs if folder]
+    options.manualSet('chapternumber', len(existingChapters))
   #options.manualSet('enumchapter', '%02d-%s' % (options.get('chapternumber'), os.path.basename(options.get('infile')).split('.')[0]))
   options.manualSet('chapterfolder', "%s/%s" % (options.get('outfolder'), options.get('chapter')))
 
@@ -333,6 +344,14 @@ def writeEventFile(events, options):
   chapterFolder = options.get('chapterfolder')
   chapterEvent = [event for event in events if event.type == 'chapter'].pop()
 
+  # Load scene transitions config (if provided)
+  scene_transitions = {}
+  transitions_file = options.get('scene_transitions')
+  if transitions_file and os.path.exists(transitions_file):
+    import json
+    with open(transitions_file, 'r') as f:
+      scene_transitions = json.load(f)
+
   # Write chapter.script (code only - stays in bank 0 scripts section)
   # Uses chapterLabel (from XML name attribute) for assembly labels
   try:
@@ -355,9 +374,16 @@ def writeEventFile(events, options):
     sys.exit(1)
   dataFile.write("%s.events:\n" % chapterLabel)
   for event in events:
+    result = event.result
+    resultname = event.resultname
+    # Override terminal chapter's Event.chapter result with scene transition
+    if event.type == 'chapter' and chapterLabel in scene_transitions:
+      result = 'playchapter'
+      resultname = scene_transitions[chapterLabel]
+      logging.info('Scene transition: %s -> %s' % (chapterLabel, resultname))
     startframe = min(0xFFFF, max(0, event.framestart - chapterEvent.framestart))
     endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
-    dataFile.write("    .dw Event.%s.CLS.PTR, $%04x, $%04x, EventResult.%s, %s, %s, %s\n" % (event.type, startframe, endframe, event.result, event.resultname, event.arg0, event.arg1))
+    dataFile.write("    .dw Event.%s.CLS.PTR, $%04x, $%04x, EventResult.%s, %s, %s, %s\n" % (event.type, startframe, endframe, result, resultname, event.arg0, event.arg1))
   dataFile.write("    .dw 0\n")
   dataFile.close()
 
@@ -530,8 +556,6 @@ class Event():
     elif self.type == "macro":
       self.type = "%s-%s" % (self.type, self.name)
     
-    if self.type == 'direction_generic':
-        logging.warning("DEBUG: self.type became direction_generic! Params: %s" % self.parameters)
     
 class UserOptions():
   def __init__( self, args, defaults ):

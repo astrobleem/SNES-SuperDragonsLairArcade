@@ -126,10 +126,11 @@
 .define CLASS.IMPLEMENTS interface.dimension
 .endif
 
-
+.base BSL
+.bank 0 slot 0
 
   ;
-  ;SPRITE_ANIMATION zero 
+  ;SPRITE_ANIMATION zero
 
 
 .endif
