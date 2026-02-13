@@ -24,37 +24,33 @@
   rep #$31
 
   jsr Event.template.waitTimeline
-  bcc +
-
-  lda #JOY_DIR_LEFT
-  jsr Event.template.triggerOnWrongInput
-  bcs +
+  bcc _right_done
 
   ;kill self if player pressed appropriate button
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.press
   and.w #JOY_DIR_RIGHT
-  beq ++
+  bne _right_correctPress
+  jmp _right_done
+_right_correctPress:
 
       jsr core.input.get.trigger
       and.w #JOY_DIR_RIGHT
-      beq +
+      beq _right_score_default
         lda event.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT
-        bcs +
+        bcs _right_score_default
           lda #PLAYER.BONUS.EXTRA
-          bra ++
-+       lda #PLAYER.BONUS.DEFAULT
-++
+          bra _right_spawn_score
+_right_score_default:
+      lda #PLAYER.BONUS.DEFAULT
+_right_spawn_score:
         NEW Sprite.score.CLS.PTR oopCreateNoPtr 160 80
-    CALL Event.confirm.kill.MTD iterator.self
+    jsr abstract.Event.triggerResult
         rts
 
-+
-
-  jsr abstract.Event.checkResult
-
-+  rts
+_right_done:
+  rts
 
   METHOD kill
   jsr Event.template.kill

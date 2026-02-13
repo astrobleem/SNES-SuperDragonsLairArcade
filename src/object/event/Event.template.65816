@@ -7,16 +7,19 @@
 .section "Event.template"
 
 ; copy common call arguments into the event struct and reset age counter
+; NOTE: called via jsr from init methods, so +2 compensates for the extra
+;       return address on the stack vs OBJECT.CALL.ARG offsets which assume
+;       the reader is the direct callee of OopHandlerExecute's jsr (0,x).
 Event.template.initCommon:
   rep #$31
 
-  lda OBJECT.CALL.ARG.1,s
+  lda OBJECT.CALL.ARG.1+2,s
   sta.b event.startFrame
-  lda OBJECT.CALL.ARG.2,s
+  lda OBJECT.CALL.ARG.2+2,s
   sta.b event.endFrame
-  lda OBJECT.CALL.ARG.3,s
+  lda OBJECT.CALL.ARG.3+2,s
   sta.b event.result
-  lda OBJECT.CALL.ARG.4,s
+  lda OBJECT.CALL.ARG.4+2,s
   sta.b event.resultTarget
 
   stz event.age

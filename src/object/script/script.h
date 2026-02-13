@@ -29,7 +29,7 @@
 
 .def objFameText hashPtr+8
 .def objBackground2 hashPtr+4
-.def objFameBrightness hashPtr+12
+.def objFameBrightness hashPtr+20
 .def objPlayer hashPtr+16
 .def objBrightness hashPtr+12
 .def irq.buffer.x this._tmp
@@ -58,6 +58,10 @@
 ;event data table (in superfree section): 7 words per event, terminated by .dw 0
 _CHAPTER.init:
   rep #$31
+
+  ;kill all events from previous chapter
+  lda.w #OBJECT.PROPERTIES.isEvent
+  jsr abstract.Iterator.kill.byProperties
 
   ;set chapter properties and kill other chapter scripts
   lda.w #OBJECT.PROPERTIES.isChapter

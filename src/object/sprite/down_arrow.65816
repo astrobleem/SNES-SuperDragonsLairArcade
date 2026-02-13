@@ -15,6 +15,8 @@
 .ende
 
 .redefine CLASS.ZP_LENGTH zpLen + _sizeof_down_arrow_vars
+.redefine CLASS.FLAGS (OBJECT.FLAGS.Present | OBJECT.FLAGS.Singleton)
+.redefine CLASS.PROPERTIES (OBJECT.PROPERTIES.isSprite | OBJECT.PROPERTIES.isHud)
 
 .section "down_arrow"
 

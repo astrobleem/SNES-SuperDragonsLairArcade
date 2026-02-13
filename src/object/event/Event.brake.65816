@@ -26,36 +26,32 @@
   rep #$31
 
   jsr Event.template.waitTimeline
-  bcc +
-
-  lda #JOY_DIR_UP
-  jsr Event.template.triggerOnWrongInput
-  bcs +
+  bcc _brake_done
 
   ;kill self if player pressed appropriate button
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.press
   and.w #JOY_DIR_DOWN
-  beq ++
+  bne _brake_correctPress
+  jmp _brake_done
+_brake_correctPress:
+
       jsr core.input.get.trigger
       and.w #JOY_DIR_DOWN
-      beq +
+      beq _brake_score_default
         lda event.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT
-        bcs +
+        bcs _brake_score_default
           lda #PLAYER.BONUS.EXTRA
-          bra ++
-+       lda #PLAYER.BONUS.DEFAULT
-++
-
+          bra _brake_spawn_score
+_brake_score_default:
+      lda #PLAYER.BONUS.DEFAULT
+_brake_spawn_score:
         NEW Sprite.score.CLS.PTR oopCreateNoPtr 112 80
-        CALL Event.confirm.kill.MTD iterator.self
+    jsr abstract.Event.triggerResult
         rts
 
-+
-
-  jsr abstract.Event.checkResult
-
+_brake_done:
   rts
 
   METHOD kill

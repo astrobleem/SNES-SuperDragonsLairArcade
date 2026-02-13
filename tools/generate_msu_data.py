@@ -61,6 +61,9 @@ MAX_TILES = 512  # VRAM tile buffer is $4000 bytes = 512 tiles at 4BPP (32 bytes
 FRAME_WIDTH = 256
 FRAME_HEIGHT = 192
 TILEMAP_TARGET_SIZE = 2048  # 32x32 tiles * 2 bytes per entry
+AUDIO_SAMPLE_RATE = 44100
+AUDIO_CHANNELS = 2
+MSU1_AUDIO_HEADER = b"MSU1" + struct.pack('<I', 0)  # "MSU1" + loop point (0 = no loop)
 
 OUTPUT_MSU = os.path.join(PROJECT_DIR, 'build', 'SuperDragonsLairArcade.msu')
 FINAL_MSU_PATH = os.path.join(PROJECT_DIR, '..', 'SuperDragonsLairArcade.sfc', 'SuperDragonsLairArcade.msu')
@@ -173,6 +176,68 @@ def extract_chapter_frames(chapter_info, chapter_dir, use_gpu=True):
         return -1
 
     return len(glob.glob(os.path.join(chapter_dir, "video_*.gfx_video.png")))
+
+# ---------- Audio Extraction ----------
+def extract_chapter_audio(chapter_info, chapter_dir):
+    """Extract audio for one chapter as MSU-1 PCM format.
+
+    Output: sfx_video.pcm in chapter_dir with MSU-1 header (8 bytes) +
+    raw PCM data (44100 Hz, 16-bit signed, stereo, little-endian).
+    """
+    if chapter_info['duration_ms'] <= 0:
+        return False
+
+    ts = format_time(chapter_info['timestart_ms'])
+    dur = format_time(chapter_info['duration_ms'])
+
+    ffmpeg_path, needs_win_paths, has_cuda = get_ffmpeg()
+
+    if needs_win_paths:
+        video_path = to_win_path(VIDEO_FILE)
+    else:
+        video_path = VIDEO_FILE
+
+    # Extract raw PCM audio to a temp file, then prepend MSU-1 header
+    raw_audio_path = os.path.join(chapter_dir, "sfx_video.raw")
+    pcm_output_path = os.path.join(chapter_dir, "sfx_video.pcm")
+
+    if needs_win_paths:
+        raw_out = to_win_path(raw_audio_path)
+    else:
+        raw_out = raw_audio_path
+
+    cmd = [
+        ffmpeg_path, '-y',
+        '-ss', ts,
+        '-t', dur,
+        '-i', video_path,
+        '-vn',  # no video
+        '-ar', str(AUDIO_SAMPLE_RATE),
+        '-ac', str(AUDIO_CHANNELS),
+        '-f', 's16le',
+        '-acodec', 'pcm_s16le',
+        raw_out
+    ]
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        if result.returncode != 0:
+            return False
+    except subprocess.TimeoutExpired:
+        return False
+
+    # Read raw PCM and write with MSU-1 header
+    try:
+        with open(raw_audio_path, 'rb') as f:
+            raw_pcm = f.read()
+        with open(pcm_output_path, 'wb') as f:
+            f.write(MSU1_AUDIO_HEADER)
+            f.write(raw_pcm)
+        # Clean up temp raw file
+        os.remove(raw_audio_path)
+        return True
+    except IOError:
+        return False
 
 # ---------- Tile Conversion ----------
 def pad_tilemap(tilemap_file):
@@ -408,6 +473,8 @@ def main():
                         help='Skip tile conversion (use existing tiles)')
     parser.add_argument('--skip-package', action='store_true',
                         help='Skip .msu packaging step')
+    parser.add_argument('--skip-audio', action='store_true',
+                        help='Skip audio extraction')
     parser.add_argument('--clean', action='store_true',
                         help='Remove existing video frames before extraction')
     args = parser.parse_args()
@@ -488,6 +555,79 @@ def main():
             total_frames += len(glob.glob(os.path.join(cdir, "*.gfx_video.png")))
         print(f"Skipping extraction. {total_frames} existing PNG frames found.\n")
 
+    # Phase 1b: Extract audio per chapter
+    total_audio = 0
+    audio_errors = 0
+    if not args.skip_audio:
+        print("--- Phase 1b: Extracting audio per chapter (ffmpeg) ---")
+        audio_start = time.time()
+
+        for i, (name, cdir, xml) in enumerate(chapters):
+            info = parse_chapter_xml(xml)
+            if info['duration_ms'] <= 0:
+                continue
+
+            pcm_path = os.path.join(cdir, "sfx_video.pcm")
+            if os.path.exists(pcm_path) and not args.clean:
+                total_audio += 1
+                if (i + 1) % 50 == 0 or i == len(chapters) - 1:
+                    print(f"[{i+1:3d}/{len(chapters)}] {name}: audio (cached)")
+                continue
+
+            if extract_chapter_audio(info, cdir):
+                total_audio += 1
+                if (i + 1) % 50 == 0 or i == len(chapters) - 1:
+                    print(f"[{i+1:3d}/{len(chapters)}] {name}: audio extracted")
+            else:
+                audio_errors += 1
+                if audio_errors <= 5:
+                    print(f"[{i+1:3d}/{len(chapters)}] {name}: AUDIO ERROR")
+
+        audio_elapsed = time.time() - audio_start
+        print(f"\nAudio extraction done: {total_audio} chapters in {audio_elapsed:.1f}s "
+              f"({audio_errors} errors)\n")
+    else:
+        for name, cdir, xml in chapters:
+            if os.path.exists(os.path.join(cdir, "sfx_video.pcm")):
+                total_audio += 1
+        print(f"Skipping audio extraction. {total_audio} existing PCM files found.\n")
+
+    # Phase 1c: Copy PCM files to numbered output files (SuperDragonsLairArcade-{chapterID}.pcm)
+    pcm_copied = 0
+    if total_audio > 0:
+        print("--- Phase 1c: Copying PCM files to numbered output ---")
+        build_dir = os.path.dirname(OUTPUT_MSU)
+        os.makedirs(build_dir, exist_ok=True)
+        final_dir = os.path.normpath(os.path.join(PROJECT_DIR, '..', 'SuperDragonsLairArcade.sfc'))
+        base_name = os.path.splitext(os.path.basename(OUTPUT_MSU))[0]
+
+        for name, cdir, xml in chapters:
+            pcm_path = os.path.join(cdir, "sfx_video.pcm")
+            if not os.path.exists(pcm_path):
+                continue
+
+            # Read chapter ID from chapter.id.NNN file
+            id_files = [f for f in os.listdir(cdir) if f.startswith('chapter.id')]
+            if not id_files:
+                continue
+            try:
+                chapter_id = int(id_files[0].split('chapter.id')[-1].lstrip('.'))
+            except ValueError:
+                continue
+
+            out_name = f"{base_name}-{chapter_id}.pcm"
+            build_pcm = os.path.join(build_dir, out_name)
+            shutil.copy2(pcm_path, build_pcm)
+            pcm_copied += 1
+
+            if os.path.isdir(final_dir):
+                shutil.copy2(pcm_path, os.path.join(final_dir, out_name))
+
+        print(f"Copied {pcm_copied} PCM files to {build_dir}")
+        if os.path.isdir(final_dir):
+            print(f"Also copied to {final_dir}")
+        print()
+
     # Phase 2: Convert frames to SNES tiles
     total_converted = 0
     if not args.skip_convert:
@@ -557,6 +697,7 @@ def main():
     print("\n" + "=" * 60)
     print("Done!")
     print(f"  Frames extracted: {total_frames}")
+    print(f"  Audio extracted:  {total_audio}")
     print(f"  Tiles converted:  {total_converted}")
     if os.path.exists(OUTPUT_MSU):
         print(f"  MSU file size:    {os.path.getsize(OUTPUT_MSU) / 1024 / 1024:.1f} MB")

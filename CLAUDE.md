@@ -148,7 +148,7 @@ python3 tools/xmlsceneparser.py data/events/black_knight_seq2.xml
 
 ### Chapter Initialization and Event Results
 
-**`_CHAPTER.init`** (`src/object/script/script.h`): Sets properties to `isChapter`, kills other chapters (only one active at a time), kills all events, reads 24-bit inline pointer to event data, loops creating event objects from the data table via `core.object.create`.
+**`_CHAPTER.init`** (`src/object/script/script.h`): First kills all events from the previous chapter via `kill.byProperties(isEvent)`, then sets properties to `isChapter` and kills other chapter scripts via `killOthers`. Reads 24-bit inline pointer to event data, loops creating event objects from the data table via `core.object.create`.
 
 **EventResult handlers** (`src/object/event/abstract.Event.65816`):
 - **`EventResult.none`** — kill self, no further action
@@ -156,7 +156,7 @@ python3 tools/xmlsceneparser.py data/events/black_knight_seq2.xml
 - **`EventResult.restartchapter`** — restart current chapter from last checkpoint
 - **`EventResult.lastcheckpoint`** — player loses a life; if game over → `game_over` script; else restart from checkpoint
 
-**Scene transitions**: When an event's endframe is reached (or player input triggers it), `abstract.Event.checkResult` calls the EventResult handler. `EventResult.playchapter` creates a new Script with the target chapter label, which kills the old chapter via `killOthers(isChapter)`.
+**Scene transitions**: When a player presses the correct input during a direction event's active window, `abstract.Event.triggerResult` calls the EventResult handler. `EventResult.playchapter` creates a new chapter Script, whose `_CHAPTER.init` kills all old events and the old chapter. If no input is given, `Event.chapter` fires its default result (usually death/restart) when the chapter's endframe is reached.
 
 ### Event/Chapter File Aggregation
 
@@ -190,6 +190,17 @@ wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/genera
 # Output: build/SuperDragonsLairArcade.msu (~568 MB)
 # Also copied to: E:\gh\SuperDragonsLairArcade.sfc\SuperDragonsLairArcade.msu
 ```
+
+```bash
+# Audio-only extraction + PCM file numbering (~30s, no video processing needed)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --skip-convert --skip-package --workers 8"
+# Output: build/SuperDragonsLairArcade-{chapterID}.pcm (476 files)
+# Also copied to: E:\gh\SuperDragonsLairArcade.sfc\
+```
+
+**MSU-1 audio track numbering**: PCM files are named `SuperDragonsLairArcade-{chapterID}.pcm` where chapterID matches the chapter's index in the .msu pointer table (from `chapter.id.NNN` files in each chapter directory). The ROM passes `this.currentChapter` as the audio track number to MSU-1 hardware. `msu1blockwriter.py` also writes PCM files during .msu packaging (Phase 3). `generate_msu_data.py` Phase 1c copies them to build/ and sfc/ directories.
+
+**manifest.xml**: Required by some emulators (bsnes/higan) to map MSU-1 PCM tracks. Located at `E:\gh\SuperDragonsLairArcade.sfc\manifest.xml`. Must list only tracks that have corresponding PCM files. Regenerate after any MSU data change by scanning actual PCM files in the sfc directory.
 
 **Pipeline steps** (per frame):
 1. ffmpeg extracts 256x192 PNG frames (16-color palette, CUDA GPU accelerated)
@@ -232,6 +243,12 @@ wla-dx has a maximum of ~512 sections per compilation unit. Exceeding this gives
 ### Class File Pattern
 Every class has a `.h` (header) and `.65816` (implementation). The header defines the ZP struct layout, `CLASS.FLAGS`, `CLASS.PROPERTIES`, `CLASS.ZP_LENGTH`, and optionally `CLASS.IMPLEMENTS`. The `.65816` file includes the `.h`, opens a `.section`, uses `METHOD init`/`play`/`kill` to define methods, and ends with `CLASS ClassName [extraMethods]` + `.ends`.
 
+### Stack-Relative Addressing in Subroutines
+When reading `OBJECT.CALL.ARG.N,s` from a subroutine called via `jsr` from an init/play method, add +2 to compensate for the extra return address on the stack. `OBJECT.CALL.ARG` offsets assume the reader is the DIRECT callee of `OopHandlerExecute`'s `jsr (0,x)`. `Event.template.initCommon` uses `OBJECT.CALL.ARG.N+2,s` for this reason. Event classes that read args directly in their init method (Event.chapter, Event.cutscene) do NOT need the +2.
+
+### 16-bit `lda` on `db` (byte) Fields
+In 16-bit accumulator mode (`rep #$20`), `lda zp_offset` reads 2 bytes. If a `db` field is at the end of the ZP allocation (offset = zpLen - 1), the second byte reads into the adjacent object's ZP, producing a garbage high byte. Always mask with `and #$00FF` after reading, or use `sep #$20` to switch to 8-bit mode. Similarly, use `sep #$20` / `lda #value` / `sta field` / `rep #$20` when writing byte fields.
+
 ## Key Files
 
 | File | Purpose |
@@ -259,3 +276,4 @@ Every class has a `.h` (header) and `.65816` (implementation). The header define
 | `tools/generate_msu_data.py` | Full MSU-1 video pipeline: ffmpeg → superfamiconv → tile reduction → .msu |
 | `tools/msu1blockwriter.py` | Packages tile/tilemap/palette data into .msu file format |
 | `build/SuperDragonsLairArcade.sym` | Symbol table — look up addresses here after each build |
+| `E:\gh\SuperDragonsLairArcade.sfc\manifest.xml` | MSU-1 track manifest for emulators (lists PCM files by chapter ID) |

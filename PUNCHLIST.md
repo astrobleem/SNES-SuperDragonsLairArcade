@@ -62,6 +62,7 @@ Discarded classes: `attract_mode_attract_movie`, `attract_mode_insert_coins`, `i
 
 | Item | File | Issue |
 |------|------|-------|
+| ~~MSU-1 PCM track numbering wrong~~ | `tools/generate_msu_data.py` | **RESOLVED** — PCM files were numbered 1-205 (old Daphne framefile ordering). ROM requests tracks by chapter ID (0-515). Fixed: added Phase 1c to `generate_msu_data.py` that copies `sfx_video.pcm` to `SuperDragonsLairArcade-{chapterID}.pcm`. Now 476 correctly-numbered PCM files. `manifest.xml` updated to match. |
 | SPC sample overflow | `src/object/audio/spcinterface.h` | Only 6 of 11 WAVs are in the build (~42 KB of 57.5 KB budget). `dragon_roar` + `sword_clank` overflow. `dl_accept`, `dl_buzz`, `dl_credit` not registered. Need to either swap legacy samples (brake/turbo) for DL-themed ones, or find smaller BRR encodings. |
 | Legacy sample names | `src/object/audio/spcinterface.h` | Enum names still `SAMPLE.0.SHURIKEN`, `SAMPLE.0.TECHNIQUE` — should be renamed to Dragon's Lair equivalents. |
 | SpcPlaySoundEffectObjectXPos stub | `src/object/audio/spcinterface.65816:1013` | Panning sound effect method is `TRIGGER_ERROR E_Todo`. Not currently called, but would crash if used. |
@@ -80,7 +81,7 @@ Discarded classes: `attract_mode_attract_movie`, `attract_mode_insert_coins`, `i
 |------|------|-------|
 | Hardcoded user paths in generate_msu_data.py | `tools/generate_msu_data.py:50-51` | FFmpeg paths hardcoded to `C:\Users\chad\...`. Non-portable. |
 | Hardcoded paths in batch_convert_msu.py | `tools/batch_convert_msu.py:17-19` | All paths hardcoded to `/mnt/e/gh/` and chad's user directory. |
-| Hardcoded paths in generate_manifest.py | `tools/generate_manifest.py:22` | Output path hardcoded; track count hardcoded to 206. |
+| ~~Hardcoded paths in generate_manifest.py~~ | `tools/generate_manifest.py:22` | **OBSOLETE** — `manifest.xml` is now generated dynamically by scanning actual PCM files. `generate_manifest.py` with hardcoded track count 206 is superseded. |
 | Makefile commented-out code | `Makefile:94,144,223` | Unused `convertedframefolder` var, MSU excluded from datafiles, commented-out chapter processing. Unclear "hack" comments at lines 92, 220. Note: `temp_artifacts/build.log` references Makefile lines 341-407, but current Makefile is only 236 lines — that log is stale (from an older Makefile with duplicate rule definitions). The ~312 "overriding recipe" warnings it contains likely no longer occur. |
 | animationWriter_sfc.py disabled multi-palette | `tools/animationWriter_sfc.py:263-264` | Multi-palette color calculation commented out. Feature incomplete or intentionally disabled without documentation. |
 | xmlsceneparser.py leftover DEBUG log | `tools/xmlsceneparser.py:534` | `logging.warning("DEBUG: self.type became direction_generic!...")` — development artifact producing log spam. |
@@ -94,3 +95,23 @@ Discarded classes: `attract_mode_attract_movie`, `attract_mode_insert_coins`, `i
 |------|----------|-------|
 | Legacy sprites still present | `data/sprites/` | dashboard, steering_wheel (3 variants), turbo, brake sprites are unused but still compiled into the ROM. Could save ROM space by excluding. |
 | ROM header checksums hardcoded | `src/core/boot.65816:112-113` | `.dw $F9D8` and `.dw $0627` — "Invalid Checksum" in emulators. Known limitation of wla-dx `.snesheader` workaround. |
+
+## Category 7: Missing Gameplay Events
+
+| Item | Scene | Issue |
+|------|-------|-------|
+| Introduction/drawbridge has zero direction events | `introduction` (chapters: `introduction_start_alive`, `introduction_enter_room`, `introduction_exit_room`) | The DirkSimple XML data contains no direction or action events for the introduction/drawbridge scene — all 3 chapters are pure auto-advance cutscenes with only `Event.chapter` and `Event.room_transition` entries. The arcade game expects the player to press SWORD then UP to cross the drawbridge. Fixing this requires adding manual event entries to the XML files (or directly to the chapter data) with correct frame timing windows for SWORD and UP inputs. |
+
+## Category 8: Gameplay Path Alignment (MODERATE)
+
+The core input detection and event triggering system is now verified working (vestibule pass/fail tests pass). However, the overall gameplay experience has chapter misalignment issues where correct button presses don't always lead to the expected next scene, or the success/death chapter chains don't match the arcade original.
+
+**Root causes to investigate:**
+
+| Item | Likely Cause | Suggested Fix |
+|------|-------------|---------------|
+| Chapter success paths don't match arcade | `data/scene_transitions.json` tracer algorithm followed attract-mode events (arg0=0) as canonical path, but some scenes have multiple valid success paths or the attract-mode path differs from the player-input path | Compare DirkSimple XML event data against an arcade playthrough video. Validate each scene's success chain manually. May need per-scene corrections in `scene_transitions.json`. |
+| `Event.chapter` default result fires unexpectedly | The XML `<result>` on the `<chapter>` element (not events) controls what happens when the chapter timeline expires with no event input. If this points to the wrong chapter, the default death/timeout path is wrong. | Audit the `EventResult` and `resultTarget` in `chapter.data` files for each scene's chapters. Cross-reference with DirkSimple game logic. |
+| `Event.seq_generic` ordering | Sequence events (seq2, seq3, etc.) must fire in the correct order for multi-input scenes. If `xmlsceneparser.py` generates wrong sequence numbers, the player's button presses don't match the expected sequence. | Verify `arg0` (sequence number) in generated chapter data matches the XML `<params>` values. |
+| `Event.touch` stub (sword input) | 5 event classes are stubs that self-kill (see Cat 2a). Scenes requiring sword/touch input have no working input handler — the chapter always falls through to its default result. | Implement `Event.touch` to detect SNES button A/B as sword input and call `triggerResult`. Model after `Event.direction_generic` but check `JOY_BUTTON_A` or `JOY_BUTTON_Y` instead of D-pad. |
+| `Event.target` stub | Scenes with target-tracking events (flying horse, etc.) have no working input handler. | Implement `Event.target` — likely similar to `Event.touch` but may need positional tracking. |

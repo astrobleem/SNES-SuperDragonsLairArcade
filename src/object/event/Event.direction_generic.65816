@@ -99,17 +99,18 @@ _skip_up_check:
   rep #$31
 
   jsr Event.template.waitTimeline
-  bcc +
+  bcc _direction_done
 
-  lda this.wrongMask
-  jsr Event.template.triggerOnWrongInput
-  bcs +
-
-  ;kill self if player pressed appropriate button
+  ;check if player pressed the expected direction
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.press
   and this.direction
-  beq _spawn_score
+  bne _direction_correctPress
+  jmp _direction_done
+_direction_correctPress:
+      lda this.hasTriggered
+      and #$00FF                ;hasTriggered is db, mask off stale high byte
+      bne _direction_done
 
       jsr core.input.get.trigger
       and this.direction
@@ -123,21 +124,15 @@ _score_default:
       lda #PLAYER.BONUS.DEFAULT
 _spawn_score:
         NEW Sprite.score.CLS.PTR oopCreateNoPtr this.scoreX this.scoreY
-    CALL Event.confirm.kill.MTD iterator.self
-        lda this.branchImmediate
-        beq +
-        lda this.hasTriggered
-        bne +
-          jsr abstract.Event.triggerResult
-          lda #1
-          sta this.hasTriggered
+        jsr abstract.Event.triggerResult
+        sep #$20
+        lda #1
+        sta this.hasTriggered
+        rep #$20
         rts
 
-+
-
-  jsr abstract.Event.checkResult
-
-+  rts
+_direction_done:
+  rts
 
   METHOD kill
   jsr Event.template.kill
