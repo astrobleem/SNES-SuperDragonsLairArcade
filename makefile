@@ -218,8 +218,8 @@ $(converted_bg_animations): $(builddir)/%.$(spriteanimation): % | $(builddirs)
 
 
 #hack used for initial script/chapter building, not really part of the actual build process
-$(chapterscripts): $(chapterfolder)%/chapter.$(chapterscript):$(eventfolder)%.$(scripteventxml) $(datadir)/scene_transitions.json
-	$(xmlchapterconverter) -infile $< -outfolder $(chapterfolder) -scene_transitions $(datadir)/scene_transitions.json
+$(chapterscripts): $(chapterfolder)%/chapter.$(chapterscript):$(eventfolder)%.$(scripteventxml)
+	$(xmlchapterconverter) -infile $< -outfolder $(chapterfolder)
 #	$(xmlchapterconverter) -infile $< -outfolder $(chapterfolder) -videofile $(videofile) -convertedframefolder $(convertedframefolder) -convertedoutfolder $(builddir)/$(chapterfolder)
 
 clean:
