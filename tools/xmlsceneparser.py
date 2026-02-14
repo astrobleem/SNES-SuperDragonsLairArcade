@@ -528,6 +528,7 @@ class Event():
       'right': 'JOY_DIR_RIGHT',
       'up': 'JOY_DIR_UP',
       'down': 'JOY_DIR_DOWN',
+      'action': 'JOY_BUTTON_A',
     }
 
     room_transition_lut = {

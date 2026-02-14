@@ -214,13 +214,13 @@ OopClassLut:
     PTRLONG OopClassLut Event.game_over.CLS
     PTRLONG OopClassLut Event.room_transition.CLS
     PTRLONG OopClassLut Event.seq_generic.CLS
+    PTRLONG OopClassLut Event.direction_generic.CLS
     PTRLONG OopClassLut Event.hide_dash.CLS
     PTRLONG OopClassLut Event.touch.CLS
     PTRLONG OopClassLut Event.target.CLS
     PTRLONG OopClassLut Event.checkpoint.CLS
         PTRLONG OopClassLut Event.confirm.CLS
         PTRLONG OopClassLut Event.show_help.CLS
-        PTRLONG OopClassLut Event.direction_generic.CLS
         PTRLONG OopClassLut Event.direction_right.CLS
         PTRLONG OopClassLut Event.direction_left.CLS
         PTRLONG OopClassLut Event.accelerate.CLS

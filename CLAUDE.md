@@ -41,6 +41,8 @@ cmd.exe /c "cd /d E:\gh\SNES-SuperDragonsLairArcade\mesen && Mesen.exe --testrun
 - `io.open` does not work in testrunner mode; use `print()` with output redirect
 - MSU-1 requires ROM in same folder as .msu/.pcm files. Debug scripts in `mesen/` directory.
 
+**CRITICAL: ROM addresses shift on EVERY code change.** Any change to `.65816`, `.script`, or `.h` files (even adding a comment) can shift all symbol addresses in `build/SuperDragonsLairArcade.sym`. WRAM addresses (`$7E****`) are stable, but ROM code addresses are NOT. After every build, you MUST re-read the sym file to update Mesen Lua test scripts. Hardcoded addresses in test scripts will silently break (callbacks never fire, tests appear to hang or produce no output). This is the #1 cause of "inconclusive" test results.
+
 ## Architecture
 
 ### Memory Map
@@ -240,6 +242,9 @@ wla-dx has a maximum of ~512 sections per compilation unit. Exceeding this gives
 ### wla-dx Anonymous Label Pitfalls
 `+`, `++`, `+++` etc. are DISTINCT label tiers in wla-dx — `+` only matches `+`, `++` only matches `++`. A `bra ++` does NOT mean "second `+` forward" — it means "next `++` label forward". Long macro expansions (NEW, CALL) generate many bytes; branches over them easily exceed the 8-bit 127-byte limit. Use named labels or `jmp` for long forward references. The `bne label / jmp target / label:` pattern replaces a too-far `beq target`.
 
+### Event kill Methods Must Use `jmp`, Not `jsr`
+Event kill methods that delegate to `Event.template.kill` MUST use `jmp`, not `jsr`. `Event.template.kill` uses `sta 3,s` to write `OBJR_kill` to the stack. With `jsr`, the extra return address shifts the stack so `OBJR_kill` overwrites the wrong location, then `rts` returns to the call site and falls through into CLASS macro binary data, hitting `$00` = BRK → E_Brk crash. Correct pattern: `METHOD kill / jmp Event.template.kill`.
+
 ### Class File Pattern
 Every class has a `.h` (header) and `.65816` (implementation). The header defines the ZP struct layout, `CLASS.FLAGS`, `CLASS.PROPERTIES`, `CLASS.ZP_LENGTH`, and optionally `CLASS.IMPLEMENTS`. The `.65816` file includes the `.h`, opens a `.section`, uses `METHOD init`/`play`/`kill` to define methods, and ends with `CLASS ClassName [extraMethods]` + `.ends`.
 
@@ -277,3 +282,113 @@ In 16-bit accumulator mode (`rep #$20`), `lda zp_offset` reads 2 bytes. If a `db
 | `tools/msu1blockwriter.py` | Packages tile/tilemap/palette data into .msu file format |
 | `build/SuperDragonsLairArcade.sym` | Symbol table — look up addresses here after each build |
 | `E:\gh\SuperDragonsLairArcade.sfc\manifest.xml` | MSU-1 track manifest for emulators (lists PCM files by chapter ID) |
+
+## Mesen Lua Test Runner — MANDATORY
+
+**Mesen path**: `E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe`
+
+**Run command** (ROM MUST load from the sfc directory where .msu/.pcm files live, NOT from build/):
+```bat
+cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc test_myscript.lua > out.txt 2>&1"
+```
+Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm files there). Copy test scripts to `E:\gh\SuperDragonsLairArcade.sfc\` before running. Output via `print()` only (`io.open` is broken in testrunner mode).
+
+**Stable WRAM addresses** (do NOT change between builds):
+- `$7E6C46` — inputDevice.press (current buttons)
+- `$7E6C48` — inputDevice.trigger (newly pressed this frame)
+- `$7E6C4C` — inputDevice.old (previous frame)
+- `$7E6388` — OopStack base
+- `$7E6C62` — GLOBAL.currentFrame
+
+**Addresses that CHANGE every rebuild** — look up in `build/SuperDragonsLairArcade.sym`:
+- `core.error.trigger` — hook for fatal error detection
+- `_checkInputDevice` — entry point; the RTS is at a fixed offset from entry (currently +$1E bytes)
+- `abstract.Event.triggerResult` — hook to watch chapter transitions
+- `EventResult.lastcheckpoint` — hook for death path monitoring
+- `core.object.create` — hook for object creation tracking
+- `_playVideo` — MSU-1 video entry point
+- `_initScriptNotInvalid` — hook for Script.init validation
+- Chapter labels (`introduction_castle_exterior`, `vestibule_start_alive`, `game_over`, etc.)
+
+**CRITICAL: Address update procedure after EVERY build:**
+1. Grep the sym file for each address used in your test script
+2. For `_checkInputDevice`, add +$1E to the entry address to get the RTS address
+3. Add `$C0` bank prefix to all ROM addresses (e.g. sym `$7412` → `0xC07412`)
+4. Update ALL address constants in the Lua test script before running
+5. If a test produces no output or "INCONCLUSIVE", stale addresses are the most likely cause
+
+**CRITICAL mistakes to avoid:**
+1. **`emu.write()` is SINGLE BYTE.** Joypad values are 16-bit (e.g. `JOY_START=0x1000`). You MUST write two bytes with a `writeWord()` helper — see template below.
+2. **Hook at the RTS, not the entry point.** `_checkInputDevice`'s body reads hardware JOY1L and overwrites WRAM. If you hook the entry, the function body runs AFTER your write and clobbers it. Hook the `rts` at the END of the function.
+3. **Exec callbacks need `$C0xxxx` bank.** Sym shows `$7412` → use `0xC07412`. Without `$C0` prefix the callback never fires.
+4. **Use `emu.memType.snesMemory`**, not `cpuDebug` or `workRam`, for WRAM reads/writes.
+5. **Use `state["ppu.frameCount"]`** for timing, not a manual counter. Mesen's `emu.getState()` returns flat string-keyed tables: `state["cpu.a"]` not `state.cpu.a`.
+6. **Stale addresses = silent failure.** ROM code addresses shift on every build. Test scripts with old addresses produce "INCONCLUSIVE" results (callbacks never fire). Always re-read the sym file after building.
+
+**Standard test script template:**
+```lua
+-- ============ ADDRESSES (MUST update after every build from .sym file) ============
+local ADDR_ERROR_TRIGGER   = 0xC05905  -- grep 'core.error.trigger' build/*.sym
+local ADDR_CHECK_INPUT_RTS = 0xC07412  -- _checkInputDevice entry + $1E
+local ADDR_TRIGGER_RESULT  = 0xC06638  -- abstract.Event.triggerResult
+local ADDR_INPUT_PRESS     = 0x7E6C46
+local ADDR_INPUT_TRIGGER   = 0x7E6C48
+local ADDR_INPUT_OLD       = 0x7E6C4C
+
+local JOY_START = 0x1000; local JOY_A = 0x0080
+local JOY_DOWN = 0x0400;  local JOY_RIGHT = 0x0100
+local JOY_LEFT = 0x0200;  local JOY_UP = 0x0800
+local MAX_FRAMES = 6000
+
+local function readWord(addr)
+    return emu.read(addr, emu.memType.snesMemory)
+         + emu.read(addr + 1, emu.memType.snesMemory) * 256
+end
+local function writeWord(addr, val)
+    emu.write(addr, val & 0xFF, emu.memType.snesMemory)
+    emu.write(addr + 1, (val >> 8) & 0xFF, emu.memType.snesMemory)
+end
+
+local injectButton = 0
+local errorHit = false
+
+-- Input injection at _checkInputDevice RTS
+emu.addMemoryCallback(function()
+    if injectButton ~= 0 then
+        writeWord(ADDR_INPUT_PRESS, injectButton)
+        writeWord(ADDR_INPUT_TRIGGER, injectButton)
+        writeWord(ADDR_INPUT_OLD, 0)
+    end
+end, emu.callbackType.exec, ADDR_CHECK_INPUT_RTS)
+
+-- Error detection
+emu.addMemoryCallback(function()
+    if errorHit then return end; errorHit = true
+    local state = emu.getState()
+    local sp = state["cpu.sp"]
+    local errCode = readWord(sp + 3)
+    print(string.format("FAIL: error code=%d frame=%d", errCode, state["ppu.frameCount"]))
+    emu.stop()
+end, emu.callbackType.exec, ADDR_ERROR_TRIGGER)
+
+-- Scene select navigation: START x6, DOWN, A, DOWN x3, A, RIGHT x N, A
+local navSchedule = {
+    {100,102,JOY_START},{150,152,JOY_START},{200,202,JOY_START},
+    {300,302,JOY_START},{400,402,JOY_START},{500,502,JOY_START},
+    {800,802,JOY_DOWN},{860,862,JOY_A},
+    {920,922,JOY_DOWN},{980,982,JOY_DOWN},{1040,1042,JOY_DOWN},
+    {1100,1102,JOY_A},
+    -- RIGHT x N for scene N+1 (omit for scene 1 = introduction)
+    {1160,1162,JOY_RIGHT},  -- scene 2 = vestibule
+    {1220,1222,JOY_A},      -- launch
+}
+
+emu.addEventCallback(function()
+    local frame = emu.getState()["ppu.frameCount"]
+    injectButton = 0
+    for _, s in ipairs(navSchedule) do
+        if frame >= s[1] and frame <= s[2] then injectButton = s[3]; break end
+    end
+    if frame >= MAX_FRAMES then print("TIMEOUT"); emu.stop() end
+end, emu.eventType.endFrame)
+```

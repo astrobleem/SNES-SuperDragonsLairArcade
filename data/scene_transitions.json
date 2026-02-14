@@ -1,5 +1,4 @@
 {
-  "introduction_exit_room": "vestibule_start_alive",
   "vestibule_exit_room": "snake_room_start_alive",
   "snake_room_seq5": "bower_start_alive",
   "bower_exit_room": "fire_room_start_alive",

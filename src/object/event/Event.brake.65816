@@ -55,7 +55,7 @@ _brake_done:
   rts
 
   METHOD kill
-  jsr Event.template.kill
+  jmp Event.template.kill
 
   CLASS Event.brake
 

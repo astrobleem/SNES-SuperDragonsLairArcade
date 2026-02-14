@@ -9,7 +9,7 @@ Outstanding issues, stubs, and incomplete work. Organized by priority.
 | Item | File | Status |
 |------|------|--------|
 | ~~level2 through level9 are stubs~~ | ~~`src/level2.script` – `src/level9.script`~~ | **RESOLVED** — Deleted. Level system replaced by direct cross-scene transitions in chapter data via `data/scene_transitions.json`. |
-| ~~game_over.script is a stub~~ | ~~`src/game_over.script`~~ | **RESOLVED** — Implemented: kills chapters/events/dash/HDMA/Msu1, resets screen mode, clears VRAM/CGRAM, launches title_screen. |
+| ~~game_over.script is a stub~~ | ~~`src/game_over.script`~~ | **RESOLVED** — Simplified to just `NEW title_screen; DIE`. title_screen handles all cleanup (killOthers, kill events, kill Msu1, screen mode, VRAM/CGRAM clear). Full death path verified: lastcheckpoint x6 → game_over → title_screen (no crash). |
 | none.script is a stub | `src/none.script` | `TRIGGER_ERROR E_Todo`. Referenced as a fallback; should either be implemented or all references removed. Left as diagnostic. |
 | ~~Cross-scene transitions missing~~ | `data/scene_transitions.json` | **RESOLVED** — 30 terminal chapters now auto-transition to the next scene via `EventResult.playchapter`. Covers all 15 exit_room chapters + 14 traced success-path terminals + the_dragons_lair_endgame. `xmlsceneparser.py` reads `-scene_transitions` JSON to override `Event.chapter` results. |
 
@@ -100,7 +100,14 @@ Discarded classes: `attract_mode_attract_movie`, `attract_mode_insert_coins`, `i
 
 | Item | Scene | Issue |
 |------|-------|-------|
-| Introduction/drawbridge has zero direction events | `introduction` (chapters: `introduction_start_alive`, `introduction_enter_room`, `introduction_exit_room`) | The DirkSimple XML data contains no direction or action events for the introduction/drawbridge scene — all 3 chapters are pure auto-advance cutscenes with only `Event.chapter` and `Event.room_transition` entries. The arcade game expects the player to press SWORD then UP to cross the drawbridge. Fixing this requires adding manual event entries to the XML files (or directly to the chapter data) with correct frame timing windows for SWORD and UP inputs. |
+| ~~Introduction/drawbridge has zero direction events~~ | ~~`introduction`~~ | **RESOLVED** — Added SWORD (action) event to `introduction_castle_exterior.xml` and UP event to `introduction_exit_room.xml`. Added `'action': 'JOY_BUTTON_A'` to `direction_lut` in `xmlsceneparser.py` (fixes all 68 XML files with `value="action"` events across the game). Removed `introduction_exit_room` from `scene_transitions.json` (transition now handled by UP event result). Verified: success path (sword → UP → vestibule) and fail path (no input → lastcheckpoint → game_over) both tested. |
+
+## Category 7b: Resolved Event Bugs
+
+| Item | Files | Resolution |
+|------|-------|------------|
+| ~~Event.template.kill stack corruption~~ | 21 event `.65816` files | **RESOLVED** — `jsr Event.template.kill` in kill methods caused E_Brk crash. `jsr` pushes extra return address, making `sta 3,s` target wrong stack slot. Fixed: changed to `jmp Event.template.kill` in all 21 files (direction_generic, brake, accelerate, direction_right/left, underground_river_phase/chain, tilting_room_navigation, throne_room_state, tentacle_room_path/grab, rolling_balls_crush/ball, giddy_goons_swarm/grapple, flying_horse_lane/collision, flaming_ropes_route/hazard, falling_platform_phase, crypt). |
+| ~~E_ObjNotFound during game_over~~ | `src/game_over.script` | **RESOLVED** — game_over's cleanup code (killOthers, CALL Brightness.set, etc.) crashed because objects were already dead from the lastcheckpoint cascade. Simplified game_over to just create title_screen and die. |
 
 ## Category 8: Gameplay Path Alignment (MODERATE)
 

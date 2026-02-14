@@ -11,8 +11,20 @@
 				<timestart min="0" second="53" ms="96" />
 			</timeline>
 		</event>
+		<event type="direction" automacro="action" label="sword-1">
+			<timeline>
+				<timestart min="0" second="54" ms="500" />
+				<timeend min="0" second="58" ms="500" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result value="0">
+				<playchapter name="introduction_exit_room" />
+			</result>
+		</event>
 	</events>
 	<result>
-		<playchapter name="introduction_exit_room" />
+		<lastcheckpoint />
 	</result>
 </chapter>

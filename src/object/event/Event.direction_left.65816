@@ -53,7 +53,7 @@ _left_done:
   rts
 
   METHOD kill
-  jsr Event.template.kill
+  jmp Event.template.kill
 
   CLASS Event.direction_left
 .ends
