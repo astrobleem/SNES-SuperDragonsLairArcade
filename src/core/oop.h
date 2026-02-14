@@ -122,8 +122,6 @@ OBJID.Event.target db
 OBJID.Event.checkpoint db
 OBJID.Event.confirm db
 OBJID.Event.show_help db
-OBJID.Event.direction_right db
-OBJID.Event.direction_left db
 OBJID.Event.accelerate db
 OBJID.Event.brake db
 OBJID.Event.shake db
@@ -221,8 +219,6 @@ OopClassLut:
     PTRLONG OopClassLut Event.checkpoint.CLS
         PTRLONG OopClassLut Event.confirm.CLS
         PTRLONG OopClassLut Event.show_help.CLS
-        PTRLONG OopClassLut Event.direction_right.CLS
-        PTRLONG OopClassLut Event.direction_left.CLS
         PTRLONG OopClassLut Event.accelerate.CLS
         PTRLONG OopClassLut Event.brake.CLS
         PTRLONG OopClassLut Event.shake.CLS

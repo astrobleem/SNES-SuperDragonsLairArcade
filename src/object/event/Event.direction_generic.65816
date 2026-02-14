@@ -1,8 +1,7 @@
 /**
-* Directional prompt that can be configured for left/right inputs.
-* Shares the input and bonus timing logic with Event.direction_left/right
-* and Event.accelerate while allowing callers to specify the expected
-* direction mask at runtime.
+* Directional prompt that can be configured for any input direction or action.
+* Handles left/right/up/down arrows and A-button (sword/action) with the
+* appropriate sprite indicator. Direction mask is passed at runtime.
 */
 .include "src/object/event/Event.direction_generic.h"
 .include "src/object/sprite/down_arrow.h"
@@ -40,6 +39,18 @@ _branchImm_store:
   bne _direction_hasDir
     jmp ++++                  ;skip arrow creation if direction=0 (attract mode)
 _direction_hasDir:
+  cmp #JOY_BUTTON_A
+  bne _not_action
+    ;action/sword — show turbo icon centered on screen
+    NEW Turbo_icon.CLS.PTR this.sprite 120 80
+    lda #120
+    sta this.scoreX
+    lda #80
+    sta this.scoreY
+    lda event.endFrame
+    CALL Turbo_icon.reset.MTD this.sprite this.scoreX this.scoreY
+    jmp ++++
+_not_action:
   cmp #JOY_DIR_LEFT
   beq +
   cmp #JOY_DIR_DOWN

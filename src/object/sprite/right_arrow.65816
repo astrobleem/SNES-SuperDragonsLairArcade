@@ -20,10 +20,10 @@
 
   jsr abstract.Iterator.reset
 
-  lda.w #OBJID.Left_arrow
+  lda.w #OBJID.Right_arrow
   jsr abstract.Iterator.each.byId
   bcc +
-    CALL Left_arrow.getAllocatedPalette.MTD iterator.target
+    CALL Right_arrow.getAllocatedPalette.MTD iterator.target
     sep #$20
     stx.b animation.palette.start
     sta.b animation.palette.id
