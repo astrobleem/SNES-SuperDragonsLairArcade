@@ -1,0 +1,56 @@
+<chapter name="rkr_seq2">
+	<timeline>
+		<timestart min="14" second="38" ms="421" />
+		<timeend min="14" second="42" ms="812" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="38" ms="421" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="14" second="41" ms="894" />
+				<timeend min="14" second="42" ms="779" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="rkr_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="14" second="41" ms="894" />
+				<timeend min="14" second="46" ms="187" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="rkr_seq11" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="14" second="41" ms="894" />
+				<timeend min="14" second="42" ms="779" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="rkr_seq11" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="14" second="41" ms="894" />
+				<timeend min="14" second="42" ms="779" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="rkr_seq11" /></result>
+		</event>
+	</events>
+	<result><playchapter name="rkr_seq11" /></result>
+</chapter>

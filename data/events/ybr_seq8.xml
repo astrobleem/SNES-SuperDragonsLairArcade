@@ -1,0 +1,46 @@
+<chapter name="ybr_seq8">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="3" ms="244" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="2" ms="490" />
+				<timeend min="0" second="3" ms="211" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="ybr_seq9" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="3" ms="244" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="ybr_seq14" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="0" second="2" ms="490" />
+				<timeend min="0" second="3" ms="211" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="ybr_seq17" /></result>
+		</event>
+	</events>
+	<result><playchapter name="ybr_seq17" /></result>
+</chapter>

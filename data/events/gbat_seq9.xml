@@ -1,0 +1,16 @@
+<chapter name="gbat_seq9">
+	<timeline>
+		<timestart min="10" second="5" ms="106" />
+		<timeend min="10" second="5" ms="860" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="5" ms="106" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="gbat_seq10" /></result>
+</chapter>

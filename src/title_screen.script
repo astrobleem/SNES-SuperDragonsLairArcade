@@ -261,7 +261,7 @@ _title_screen.selectHighScores:
   jmp _title_screen.startTransition
 
 _title_screen.selectAttractMode:
-  lda.w #attract_mode_start_alive
+  lda.w #atmd_start_alive
   sta.b menu.target
   jmp _title_screen.startTransition
 
@@ -465,33 +465,33 @@ _title_screen.drawFlush:
 
 ;--- Scene lookup table (29 scenes, each launches the _start_alive chapter) ---
 _title_screen.sceneTable:
-  .dw introduction_start_alive		;1
-  .dw vestibule_start_alive		;2
-  .dw snake_room_start_alive		;3
-  .dw bower_start_alive			;4
-  .dw fire_room_start_alive		;5
-  .dw throne_room_start_alive		;6
-  .dw tilting_room_start_alive		;7
-  .dw tentacle_room_start_alive		;8
-  .dw wind_room_start_alive		;9
-  .dw giddy_goons_start_alive		;10
-  .dw catwalk_bats_start_alive		;11
-  .dw mudmen_start_alive		;12
-  .dw rolling_balls_start_alive		;13
-  .dw underground_river_start_alive	;14
-  .dw flaming_ropes_start_alive		;15
-  .dw flying_horse_start_alive		;16
-  .dw bubbling_cauldron_start_alive	;17
-  .dw giant_bat_start_alive		;18
-  .dw crypt_creeps_start_alive		;19
-  .dw alice_room_start_alive		;20
-  .dw robot_knight_start_alive		;21
-  .dw smithee_start_alive		;22
-  .dw smithee_reversed_start_alive	;23
-  .dw grim_reaper_start_alive		;24
-  .dw yellow_brick_road_start_alive	;25
-  .dw black_knight_start_alive		;26
-  .dw lizard_king_start_alive		;27
-  .dw the_dragons_lair_start_alive	;28
-  .dw attract_mode_start_alive		;29
+  .dw intr_start_alive		;1  introduction
+  .dw vest_start_alive		;2  vestibule
+  .dw snkr_start_alive		;3  snake_room
+  .dw bowr_start_alive		;4  bower
+  .dw firm_start_alive		;5  fire_room
+  .dw thrn_start_alive		;6  throne_room
+  .dw tltr_start_alive		;7  tilting_room
+  .dw tntr_start_alive		;8  tentacle_room
+  .dw wndr_start_alive		;9  wind_room
+  .dw gg_start_alive		;10 giddy_goons
+  .dw cwbt_start_alive		;11 catwalk_bats
+  .dw mudm_start_alive		;12 mudmen
+  .dw rbal_start_alive		;13 rolling_balls
+  .dw ugr_start_alive		;14 underground_river
+  .dw flrp_start_alive		;15 flaming_ropes
+  .dw fh_start_alive		;16 flying_horse
+  .dw bcld_start_alive		;17 bubbling_cauldron
+  .dw gbat_start_alive		;18 giant_bat
+  .dw cc_start_alive		;19 crypt_creeps
+  .dw alrm_start_alive		;20 alice_room
+  .dw rk_start_alive		;21 robot_knight
+  .dw sm_start_alive		;22 smithee
+  .dw smr_start_alive		;23 smithee_reversed
+  .dw gr_start_alive		;24 grim_reaper
+  .dw ybr_start_alive		;25 yellow_brick_road
+  .dw bknt_start_alive		;26 black_knight
+  .dw lzkg_start_alive		;27 lizard_king
+  .dw tdl_start_alive		;28 the_dragons_lair
+  .dw atmd_start_alive		;29 attract_mode
 

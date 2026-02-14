@@ -1,0 +1,16 @@
+<chapter name="firm_start_dead">
+	<timeline>
+		<timestart min="6" second="28" ms="806" />
+		<timeend min="6" second="30" ms="973" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="28" ms="806" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="firm_seq2" /></result>
+</chapter>

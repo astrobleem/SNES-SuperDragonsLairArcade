@@ -1,0 +1,26 @@
+<chapter name="rk_seq6">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="2" ms="130" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="0" second="1" ms="212" />
+				<timeend min="0" second="2" ms="97" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="rk_seq7" /></result>
+		</event>
+	</events>
+	<result><playchapter name="rk_seq11" /></result>
+</chapter>

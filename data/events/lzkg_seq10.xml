@@ -1,0 +1,36 @@
+<chapter name="lzkg_seq10">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="0" ms="950" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="328" />
+				<timeend min="0" second="0" ms="950" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="lzkg_seq11" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="0" ms="328" />
+				<timeend min="0" second="0" ms="950" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="lzkg_seq11" /></result>
+		</event>
+	</events>
+	<result><playchapter name="lzkg_seq11" /></result>
+</chapter>

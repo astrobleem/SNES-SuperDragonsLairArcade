@@ -1,0 +1,16 @@
+<chapter name="fps_start_dead">
+	<timeline>
+		<timestart min="10" second="10" ms="612" />
+		<timeend min="10" second="12" ms="988" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="10" ms="612" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="fps_enter_room" /></result>
+</chapter>

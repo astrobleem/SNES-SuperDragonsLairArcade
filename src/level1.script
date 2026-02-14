@@ -1,5 +1,5 @@
   SCRIPT level1
 
-  NEW Script.CLS.PTR oopCreateNoPtr introduction_start_alive
+  NEW Script.CLS.PTR oopCreateNoPtr intr_start_alive
 
   DIE

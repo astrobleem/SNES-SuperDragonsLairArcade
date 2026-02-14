@@ -1,0 +1,56 @@
+<chapter name="alrm_enter_room">
+	<timeline>
+		<timestart min="12" second="36" ms="257" />
+		<timeend min="12" second="38" ms="280" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="12" second="36" ms="257" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="12" second="36" ms="257" />
+				<timeend min="12" second="38" ms="321" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="alrm_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="12" second="36" ms="257" />
+				<timeend min="12" second="38" ms="321" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="alrm_drinks_potion" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="12" second="37" ms="388" />
+				<timeend min="12" second="38" ms="289" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="alrm_burned_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="12" second="37" ms="388" />
+				<timeend min="12" second="38" ms="289" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="alrm_burned_to_death" /></result>
+		</event>
+	</events>
+	<result><playchapter name="alrm_burned_to_death" /></result>
+</chapter>

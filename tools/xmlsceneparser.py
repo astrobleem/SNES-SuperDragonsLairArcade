@@ -78,10 +78,6 @@ def main():
       'min'                : 1.00,
       'max'                : 30.00
       },
-    'scene_transitions'        : {
-      'value'            : '',
-      'type'            : 'str'
-      },
   })
 
   logging.debug('xml parse start')
@@ -344,14 +340,6 @@ def writeEventFile(events, options):
   chapterFolder = options.get('chapterfolder')
   chapterEvent = [event for event in events if event.type == 'chapter'].pop()
 
-  # Load scene transitions config (if provided)
-  scene_transitions = {}
-  transitions_file = options.get('scene_transitions')
-  if transitions_file and os.path.exists(transitions_file):
-    import json
-    with open(transitions_file, 'r') as f:
-      scene_transitions = json.load(f)
-
   # Write chapter.script (code only - stays in bank 0 scripts section)
   # Uses chapterLabel (from XML name attribute) for assembly labels
   try:
@@ -376,11 +364,6 @@ def writeEventFile(events, options):
   for event in events:
     result = event.result
     resultname = event.resultname
-    # Override terminal chapter's Event.chapter result with scene transition
-    if event.type == 'chapter' and chapterLabel in scene_transitions:
-      result = 'playchapter'
-      resultname = scene_transitions[chapterLabel]
-      logging.info('Scene transition: %s -> %s' % (chapterLabel, resultname))
     startframe = min(0xFFFF, max(0, event.framestart - chapterEvent.framestart))
     endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
     dataFile.write("    .dw Event.%s.CLS.PTR, $%04x, $%04x, EventResult.%s, %s, %s, %s\n" % (event.type, startframe, endframe, result, resultname, event.arg0, event.arg1))

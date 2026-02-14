@@ -1,0 +1,46 @@
+<chapter name="ugr_first_boulders">
+	<timeline>
+		<timestart min="15" second="50" ms="326" />
+		<timeend min="15" second="51" ms="342" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+				<timeend min="15" second="51" ms="342" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="ugr_second_boulders" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+				<timeend min="15" second="51" ms="342" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="ugr_boulders_crash" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="15" second="50" ms="326" />
+				<timeend min="15" second="51" ms="342" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="ugr_boulders_crash" /></result>
+		</event>
+	</events>
+	<result><playchapter name="ugr_boulders_crash" /></result>
+</chapter>

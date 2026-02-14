@@ -1,0 +1,18 @@
+<chapter name="smr_seq10">
+	<timeline>
+		<timestart min="11" second="9" ms="712" />
+		<timeend min="11" second="11" ms="254" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="9" ms="712" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

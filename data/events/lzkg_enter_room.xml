@@ -1,0 +1,56 @@
+<chapter name="lzkg_enter_room">
+	<timeline>
+		<timestart min="11" second="53" ms="756" />
+		<timeend min="11" second="55" ms="919" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="53" ms="756" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="11" second="54" ms="215" />
+				<timeend min="11" second="55" ms="886" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="lzkg_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="11" second="54" ms="215" />
+				<timeend min="11" second="55" ms="886" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="lzkg_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="11" second="54" ms="215" />
+				<timeend min="11" second="55" ms="886" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="lzkg_seq17" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="11" second="53" ms="756" />
+				<timeend min="11" second="55" ms="919" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="lzkg_seq16" /></result>
+		</event>
+	</events>
+	<result><playchapter name="lzkg_seq15" /></result>
+</chapter>

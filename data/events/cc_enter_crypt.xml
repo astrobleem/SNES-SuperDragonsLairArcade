@@ -1,0 +1,66 @@
+<chapter name="cc_enter_crypt">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="835" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="688" />
+				<timeend min="0" second="1" ms="835" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="cc_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="1" ms="81" />
+				<timeend min="0" second="1" ms="835" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="cc_ghoul_capture" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="0" second="0" ms="688" />
+				<timeend min="0" second="1" ms="835" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="cc_ghoul_capture" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="0" second="1" ms="81" />
+				<timeend min="0" second="1" ms="835" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="cc_ghoul_capture" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="0" second="1" ms="81" />
+				<timeend min="0" second="1" ms="835" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="cc_ghoul_capture" /></result>
+		</event>
+	</events>
+	<result><playchapter name="cc_ghoul_capture" /></result>
+</chapter>

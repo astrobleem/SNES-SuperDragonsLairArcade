@@ -1,0 +1,16 @@
+<chapter name="bknt_start_dead">
+	<timeline>
+		<timestart min="17" second="36" ms="432" />
+		<timeend min="17" second="38" ms="474" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="17" second="36" ms="432" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="bknt_seq2" /></result>
+</chapter>

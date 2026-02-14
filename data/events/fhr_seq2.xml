@@ -1,0 +1,66 @@
+<chapter name="fhr_seq2">
+	<timeline>
+		<timestart min="11" second="23" ms="726" />
+		<timeend min="11" second="28" ms="248" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="11" second="23" ms="726" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="11" second="27" ms="167" />
+				<timeend min="11" second="27" ms="494" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="fhr_seq9" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="11" second="27" ms="494" />
+				<timeend min="11" second="28" ms="215" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="fhr_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="11" second="27" ms="527" />
+				<timeend min="11" second="28" ms="215" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="fhr_seq9" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="11" second="27" ms="167" />
+				<timeend min="11" second="27" ms="494" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fhr_seq9" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="11" second="27" ms="494" />
+				<timeend min="11" second="28" ms="182" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fhr_seq11" /></result>
+		</event>
+	</events>
+	<result><playchapter name="fhr_seq9" /></result>
+</chapter>

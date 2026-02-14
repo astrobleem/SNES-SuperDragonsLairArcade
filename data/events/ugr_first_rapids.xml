@@ -1,0 +1,66 @@
+<chapter name="ugr_first_rapids">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="5" ms="210" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="0" second="3" ms="932" />
+				<timeend min="0" second="4" ms="522" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="ugr_rapids_crash" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="4" ms="522" />
+				<timeend min="0" second="5" ms="145" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="ugr_second_rapids" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="0" second="3" ms="736" />
+				<timeend min="0" second="4" ms="555" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="ugr_second_rapids" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="0" second="4" ms="555" />
+				<timeend min="0" second="5" ms="145" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="ugr_rapids_crash" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="0" second="4" ms="391" />
+				<timeend min="0" second="5" ms="177" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="ugr_rapids_crash" /></result>
+		</event>
+	</events>
+	<result><playchapter name="ugr_rapids_crash" /></result>
+</chapter>

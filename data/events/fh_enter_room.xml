@@ -1,0 +1,46 @@
+<chapter name="fh_enter_room">
+	<timeline>
+		<timestart min="6" second="51" ms="704" />
+		<timeend min="6" second="56" ms="226" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="51" ms="704" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="6" second="55" ms="505" />
+				<timeend min="6" second="56" ms="226" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fh_second_fire" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="6" second="55" ms="505" />
+				<timeend min="6" second="56" ms="226" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="fh_hit_pillar" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="6" second="55" ms="505" />
+				<timeend min="6" second="56" ms="226" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="fh_burned_to_death" /></result>
+		</event>
+	</events>
+	<result><playchapter name="fh_hit_pillar" /></result>
+</chapter>

@@ -1,0 +1,26 @@
+<chapter name="tdl_enter_room">
+	<timeline>
+		<timestart min="20" second="0" ms="660" />
+		<timeend min="20" second="5" ms="542" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="20" second="0" ms="660" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="20" second="4" ms="592" />
+				<timeend min="20" second="5" ms="510" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="tdl_seq3" /></result>
+		</event>
+	</events>
+	<result><playchapter name="tdl_seq19" /></result>
+</chapter>

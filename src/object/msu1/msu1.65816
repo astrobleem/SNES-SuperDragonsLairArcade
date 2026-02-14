@@ -826,6 +826,7 @@ _startNextVideo:
   jsr core.nmi.stop
 
   stz.b this.nextChapterScheduled
+  stz.b this.frameCycle
   rep #$20
   lda.b this.nextChapter
   sta.b this.currentChapter

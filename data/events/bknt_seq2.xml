@@ -1,0 +1,46 @@
+<chapter name="bknt_seq2">
+	<timeline>
+		<timestart min="17" second="38" ms="768" />
+		<timeend min="17" second="42" ms="307" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="17" second="38" ms="768" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="17" second="41" ms="455" />
+				<timeend min="17" second="42" ms="274" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="bknt_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="17" second="41" ms="914" />
+				<timeend min="17" second="42" ms="307" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="bknt_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="17" second="41" ms="455" />
+				<timeend min="17" second="42" ms="340" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="bknt_seq7" /></result>
+		</event>
+	</events>
+	<result><playchapter name="bknt_seq7" /></result>
+</chapter>

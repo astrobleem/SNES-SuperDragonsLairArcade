@@ -1,0 +1,16 @@
+<chapter name="rkr_game_over">
+	<timeline>
+		<timestart min="15" second="3" ms="780" />
+		<timeend min="15" second="7" ms="283" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="3" ms="780" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

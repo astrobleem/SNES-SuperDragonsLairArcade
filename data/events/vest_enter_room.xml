@@ -1,0 +1,56 @@
+<chapter name="vest_enter_room">
+	<timeline>
+		<timestart min="1" second="12" ms="407" />
+		<timeend min="1" second="16" ms="405" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="12" ms="407" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="1" second="14" ms="373" />
+				<timeend min="1" second="16" ms="405" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="vest_stagger" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="1" second="14" ms="373" />
+				<timeend min="1" second="16" ms="405" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="vest_stagger" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="1" second="14" ms="373" />
+				<timeend min="1" second="16" ms="405" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="vest_fell_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="1" second="14" ms="897" />
+				<timeend min="1" second="16" ms="372" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="vest_fell_to_death" /></result>
+		</event>
+	</events>
+	<result><playchapter name="vest_fell_to_death" /></result>
+</chapter>

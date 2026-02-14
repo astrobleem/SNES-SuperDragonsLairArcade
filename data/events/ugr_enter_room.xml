@@ -1,0 +1,16 @@
+<chapter name="ugr_enter_room">
+	<timeline>
+		<timestart min="15" second="42" ms="68" />
+		<timeend min="15" second="44" ms="722" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="15" second="42" ms="68" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="ugr_first_boulders" /></result>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="gg_fight_b4_swarm">
+	<timeline>
+		<timestart min="4" second="1" ms="743" />
+		<timeend min="4" second="5" ms="287" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="1" ms="743" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

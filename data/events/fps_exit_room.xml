@@ -1,0 +1,16 @@
+<chapter name="fps_exit_room">
+	<timeline>
+		<timestart min="10" second="34" ms="594" />
+		<timeend min="10" second="39" ms="597" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="10" second="34" ms="594" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="vest_start_alive" /></result>
+</chapter>

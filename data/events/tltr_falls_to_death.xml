@@ -1,0 +1,18 @@
+<chapter name="tltr_falls_to_death">
+	<timeline>
+		<timestart min="14" second="8" ms="141" />
+		<timeend min="14" second="10" ms="142" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="8" ms="141" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

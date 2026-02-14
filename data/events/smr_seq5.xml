@@ -1,0 +1,76 @@
+<chapter name="smr_seq5">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="802" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="0" ms="229" />
+				<timeend min="0" second="0" ms="983" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="smr_seq12" /></result>
+		</event>
+		<event type="direction" automacro="action" label="action-2">
+			<timeline>
+				<timestart min="0" second="0" ms="983" />
+				<timeend min="0" second="1" ms="802" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="smr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="0" second="1" ms="49" />
+				<timeend min="0" second="1" ms="868" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="smr_seq12" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="0" second="1" ms="49" />
+				<timeend min="0" second="1" ms="868" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="smr_seq12" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="0" second="1" ms="49" />
+				<timeend min="0" second="1" ms="868" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="smr_seq12" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-6">
+			<timeline>
+				<timestart min="0" second="1" ms="49" />
+				<timeend min="0" second="1" ms="868" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="smr_seq12" /></result>
+		</event>
+	</events>
+	<result><playchapter name="smr_seq12" /></result>
+</chapter>

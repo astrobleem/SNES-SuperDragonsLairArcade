@@ -1,0 +1,66 @@
+<chapter name="sm_enter_room">
+	<timeline>
+		<timestart min="4" second="45" ms="411" />
+		<timeend min="4" second="48" ms="524" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="4" second="47" ms="639" />
+				<timeend min="4" second="48" ms="491" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="sm_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+				<timeend min="4" second="48" ms="524" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="sm_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+				<timeend min="4" second="48" ms="524" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="sm_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="4" second="46" ms="918" />
+				<timeend min="4" second="48" ms="589" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="sm_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="4" second="45" ms="411" />
+				<timeend min="4" second="48" ms="65" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="sm_seq8" /></result>
+		</event>
+	</events>
+	<result><playchapter name="sm_seq9" /></result>
+</chapter>

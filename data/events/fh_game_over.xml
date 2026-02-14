@@ -1,0 +1,16 @@
+<chapter name="fh_game_over">
+	<timeline>
+		<timestart min="7" second="15" ms="812" />
+		<timeend min="7" second="19" ms="315" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="15" ms="812" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

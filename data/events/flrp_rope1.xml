@@ -1,0 +1,66 @@
+<chapter name="flrp_rope1">
+	<timeline>
+		<timestart min="2" second="27" ms="732" />
+		<timeend min="2" second="29" ms="960" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="27" ms="732" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="2" second="27" ms="732" />
+				<timeend min="2" second="28" ms="813" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="flrp_fall_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="2" second="28" ms="813" />
+				<timeend min="2" second="29" ms="567" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="flrp_rope2" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="2" second="27" ms="732" />
+				<timeend min="2" second="29" ms="567" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="flrp_fall_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="2" second="27" ms="732" />
+				<timeend min="2" second="29" ms="567" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="flrp_fall_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="2" second="27" ms="732" />
+				<timeend min="2" second="29" ms="567" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="flrp_fall_to_death" /></result>
+		</event>
+	</events>
+	<result><playchapter name="flrp_burns_hands" /></result>
+</chapter>

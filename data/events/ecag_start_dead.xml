@@ -1,0 +1,16 @@
+<chapter name="ecag_start_dead">
+	<timeline>
+		<timestart min="18" second="28" ms="276" />
+		<timeend min="18" second="30" ms="568" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="18" second="28" ms="276" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="ecag_seq2" /></result>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="cc_eaten_by_slime">
+	<timeline>
+		<timestart min="8" second="11" ms="701" />
+		<timeend min="8" second="13" ms="76" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="11" ms="701" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

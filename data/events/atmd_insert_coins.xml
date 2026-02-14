@@ -1,0 +1,26 @@
+<chapter name="atmd_insert_coins">
+	<timeline>
+		<timestart min="0" second="6" ms="200" />
+		<timeend min="0" second="11" ms="200" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="6" ms="200" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="start" label="start-1">
+			<timeline>
+				<timestart min="0" second="6" ms="200" />
+				<timeend min="1" second="6" ms="200" />
+			</timeline>
+			<params>
+				<str key="type" value="start" />
+			</params>
+			<result><playchapter name="title_screen" /></result>
+		</event>
+	</events>
+	<result><playchapter name="atmd_attract_movie" /></result>
+</chapter>

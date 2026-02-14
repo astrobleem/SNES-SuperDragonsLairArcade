@@ -1,0 +1,46 @@
+<chapter name="tdl_seq5">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="22" ms="872" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="0" second="22" ms="20" />
+				<timeend min="0" second="22" ms="807" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="tdl_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="22" ms="20" />
+				<timeend min="0" second="22" ms="807" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="tdl_seq6" /></result>
+		</event>
+		<event type="direction" automacro="action" label="action-3">
+			<timeline>
+				<timestart min="0" second="22" ms="20" />
+				<timeend min="0" second="22" ms="807" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="tdl_seq14" /></result>
+		</event>
+	</events>
+	<result><playchapter name="tdl_seq14" /></result>
+</chapter>

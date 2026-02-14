@@ -1,0 +1,26 @@
+<chapter name="bowr_enter_room">
+	<timeline>
+		<timestart min="6" second="16" ms="2" />
+		<timeend min="6" second="17" ms="775" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="16" ms="2" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="6" second="16" ms="2" />
+				<timeend min="6" second="18" ms="37" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="bowr_exit_room" /></result>
+		</event>
+	</events>
+	<result><playchapter name="bowr_trapped_in_wall" /></result>
+</chapter>

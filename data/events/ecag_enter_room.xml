@@ -1,0 +1,56 @@
+<chapter name="ecag_enter_room">
+	<timeline>
+		<timestart min="18" second="30" ms="570" />
+		<timeend min="18" second="33" ms="486" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="18" second="30" ms="570" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="18" second="31" ms="127" />
+				<timeend min="18" second="33" ms="486" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="ecag_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="18" second="33" ms="60" />
+				<timeend min="18" second="33" ms="486" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="ecag_seq7" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="18" second="32" ms="897" />
+				<timeend min="18" second="33" ms="486" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="ecag_seq7" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="18" second="32" ms="897" />
+				<timeend min="18" second="33" ms="486" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="ecag_seq7" /></result>
+		</event>
+	</events>
+	<result><playchapter name="ecag_seq7" /></result>
+</chapter>

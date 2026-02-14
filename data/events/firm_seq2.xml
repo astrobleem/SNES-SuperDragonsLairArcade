@@ -1,0 +1,36 @@
+<chapter name="firm_seq2">
+	<timeline>
+		<timestart min="6" second="31" ms="142" />
+		<timeend min="6" second="34" ms="681" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="6" second="31" ms="142" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="6" second="34" ms="26" />
+				<timeend min="6" second="34" ms="648" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="firm_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="6" second="34" ms="26" />
+				<timeend min="6" second="34" ms="615" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="firm_seq8" /></result>
+		</event>
+	</events>
+	<result><playchapter name="firm_seq8" /></result>
+</chapter>

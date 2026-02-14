@@ -1,0 +1,16 @@
+<chapter name="tltr_game_over">
+	<timeline>
+		<timestart min="14" second="10" ms="184" />
+		<timeend min="14" second="13" ms="687" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="14" second="10" ms="184" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

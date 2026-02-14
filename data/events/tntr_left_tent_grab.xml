@@ -1,0 +1,18 @@
+<chapter name="tntr_left_tent_grab">
+	<timeline>
+		<timestart min="1" second="47" ms="525" />
+		<timeend min="1" second="50" ms="443" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="47" ms="525" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

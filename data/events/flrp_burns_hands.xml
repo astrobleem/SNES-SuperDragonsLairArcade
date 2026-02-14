@@ -1,0 +1,16 @@
+<chapter name="flrp_burns_hands">
+	<timeline>
+		<timestart min="2" second="37" ms="408" />
+		<timeend min="2" second="38" ms="991" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="37" ms="408" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="flrp_fall_to_death" /></result>
+</chapter>

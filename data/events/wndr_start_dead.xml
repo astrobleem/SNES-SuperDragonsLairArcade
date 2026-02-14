@@ -1,0 +1,16 @@
+<chapter name="wndr_start_dead">
+	<timeline>
+		<timestart min="5" second="54" ms="606" />
+		<timeend min="5" second="56" ms="982" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="5" second="54" ms="606" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="wndr_enter_room" /></result>
+</chapter>

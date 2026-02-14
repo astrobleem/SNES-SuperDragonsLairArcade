@@ -1,0 +1,36 @@
+<chapter name="wndr_enter_room">
+	<timeline>
+		<timestart min="5" second="56" ms="941" />
+		<timeend min="6" second="5" ms="100" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="5" second="56" ms="941" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="6" second="4" ms="347" />
+				<timeend min="6" second="5" ms="67" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="wndr_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="6" second="2" ms="905" />
+				<timeend min="6" second="5" ms="67" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="wndr_sucked_in" /></result>
+		</event>
+	</events>
+	<result><playchapter name="wndr_sucked_in" /></result>
+</chapter>

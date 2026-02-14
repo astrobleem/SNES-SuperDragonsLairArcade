@@ -1,0 +1,16 @@
+<chapter name="cc_exit_room">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="4" ms="257" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="ccr_start_alive" /></result>
+</chapter>

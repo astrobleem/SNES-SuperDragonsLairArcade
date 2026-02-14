@@ -1,0 +1,18 @@
+<chapter name="tdl_seq16">
+	<timeline>
+		<timestart min="21" second="41" ms="427" />
+		<timeend min="21" second="43" ms="10" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="21" second="41" ms="427" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

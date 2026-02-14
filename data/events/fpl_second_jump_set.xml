@@ -1,0 +1,106 @@
+<chapter name="fpl_second_jump_set">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="4" ms="293" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="458" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fpl_fell_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="2" ms="458" />
+				<timeend min="0" second="2" ms="785" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fpl_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="0" second="2" ms="785" />
+				<timeend min="0" second="3" ms="113" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fpl_missed_jump" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="0" second="3" ms="146" />
+				<timeend min="0" second="3" ms="473" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fpl_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="0" second="3" ms="473" />
+				<timeend min="0" second="3" ms="801" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fpl_missed_jump" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-6">
+			<timeline>
+				<timestart min="0" second="3" ms="801" />
+				<timeend min="0" second="4" ms="129" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fpl_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-7">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="4" ms="293" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="fpl_fell_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-8">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="4" ms="293" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="fpl_fell_to_death" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-9">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="4" ms="293" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="fpl_fell_to_death" /></result>
+		</event>
+	</events>
+	<result><playchapter name="fpl_third_jump_set" /></result>
+</chapter>

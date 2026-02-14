@@ -1,0 +1,76 @@
+<chapter name="mudm_enter_room">
+	<timeline>
+		<timestart min="16" second="50" ms="470" />
+		<timeend min="16" second="56" ms="434" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="16" second="50" ms="470" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="16" second="54" ms="435" />
+				<timeend min="16" second="56" ms="401" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="mudm_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="16" second="54" ms="730" />
+				<timeend min="16" second="56" ms="401" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="mudm_seq13" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="16" second="54" ms="9" />
+				<timeend min="16" second="56" ms="303" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="mudm_seq14" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="16" second="56" ms="303" />
+				<timeend min="16" second="56" ms="401" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="mudm_seq15" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="16" second="54" ms="435" />
+				<timeend min="16" second="56" ms="401" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="mudm_seq15" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-6">
+			<timeline>
+				<timestart min="16" second="54" ms="435" />
+				<timeend min="16" second="56" ms="401" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="mudm_seq15" /></result>
+		</event>
+	</events>
+	<result><playchapter name="mudm_seq15" /></result>
+</chapter>

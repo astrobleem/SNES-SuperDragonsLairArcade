@@ -1,0 +1,16 @@
+<chapter name="rbal_game_over">
+	<timeline>
+		<timestart min="18" second="24" ms="731" />
+		<timeend min="18" second="28" ms="234" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="18" second="24" ms="731" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

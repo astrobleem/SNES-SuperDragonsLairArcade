@@ -1,0 +1,16 @@
+<chapter name="sm_start_dead">
+	<timeline>
+		<timestart min="4" second="41" ms="950" />
+		<timeend min="4" second="44" ms="326" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="4" second="41" ms="950" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="sm_seq2" /></result>
+</chapter>

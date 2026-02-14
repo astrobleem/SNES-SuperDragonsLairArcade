@@ -1,0 +1,186 @@
+<chapter name="fplr_seq4">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="5" ms="702" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="523" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="2" ms="523" />
+				<timeend min="0" second="2" ms="851" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq7" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="0" second="2" ms="851" />
+				<timeend min="0" second="3" ms="178" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="0" second="3" ms="211" />
+				<timeend min="0" second="3" ms="539" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq7" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="0" second="3" ms="539" />
+				<timeend min="0" second="3" ms="867" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-6">
+			<timeline>
+				<timestart min="0" second="3" ms="867" />
+				<timeend min="0" second="4" ms="194" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq7" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-7">
+			<timeline>
+				<timestart min="0" second="4" ms="227" />
+				<timeend min="0" second="4" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-8">
+			<timeline>
+				<timestart min="0" second="4" ms="719" />
+				<timeend min="0" second="5" ms="669" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-9">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="949" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-10">
+			<timeline>
+				<timestart min="0" second="2" ms="949" />
+				<timeend min="0" second="4" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="fplr_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-11">
+			<timeline>
+				<timestart min="0" second="4" ms="719" />
+				<timeend min="0" second="5" ms="636" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-12">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="949" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-13">
+			<timeline>
+				<timestart min="0" second="2" ms="949" />
+				<timeend min="0" second="4" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="fplr_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-14">
+			<timeline>
+				<timestart min="0" second="4" ms="719" />
+				<timeend min="0" second="5" ms="636" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-15">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="2" ms="949" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-16">
+			<timeline>
+				<timestart min="0" second="2" ms="949" />
+				<timeend min="0" second="4" ms="719" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="fplr_seq8" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-17">
+			<timeline>
+				<timestart min="0" second="4" ms="719" />
+				<timeend min="0" second="5" ms="636" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="fplr_seq6" /></result>
+		</event>
+	</events>
+	<result><playchapter name="fplr_seq5" /></result>
+</chapter>

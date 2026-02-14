@@ -1,0 +1,56 @@
+<chapter name="gg_kill_upper_goons">
+	<timeline>
+		<timestart min="0" second="0" ms="0" />
+		<timeend min="0" second="1" ms="606" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="0" second="0" ms="852" />
+				<timeend min="0" second="1" ms="540" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="gg_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="0" second="0" ms="852" />
+				<timeend min="0" second="1" ms="540" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="gg_exit_room" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="0" second="1" ms="606" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="gg_fight_b4_swarm" /></result>
+		</event>
+		<event type="direction" automacro="action" label="action-4">
+			<timeline>
+				<timestart min="0" second="0" ms="786" />
+				<timeend min="0" second="1" ms="573" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="gg_fight_b4_swarm" /></result>
+		</event>
+	</events>
+	<result><playchapter name="gg_exit_room" /></result>
+</chapter>

@@ -1,0 +1,36 @@
+<chapter name="snkr_seq2">
+	<timeline>
+		<timestart min="2" second="2" ms="874" />
+		<timeend min="2" second="5" ms="594" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="2" second="2" ms="874" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="2" second="4" ms="840" />
+				<timeend min="2" second="5" ms="561" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="snkr_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="2" second="4" ms="840" />
+				<timeend min="2" second="5" ms="561" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="snkr_seq7" /></result>
+		</event>
+	</events>
+	<result><playchapter name="snkr_seq7" /></result>
+</chapter>

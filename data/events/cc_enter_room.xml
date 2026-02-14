@@ -1,0 +1,66 @@
+<chapter name="cc_enter_room">
+	<timeline>
+		<timestart min="7" second="52" ms="891" />
+		<timeend min="7" second="56" ms="135" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="7" second="52" ms="891" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="135" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="cc_jumped_skulls" /></result>
+		</event>
+		<event type="direction" automacro="action" label="action-2">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="cc_skull_overpower" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="cc_eaten_by_skulls" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-4">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="cc_eaten_by_skulls" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-5">
+			<timeline>
+				<timestart min="7" second="55" ms="119" />
+				<timeend min="7" second="56" ms="69" />
+			</timeline>
+			<params>
+				<str key="type" value="left" />
+			</params>
+			<result><playchapter name="cc_eaten_by_skulls" /></result>
+		</event>
+	</events>
+	<result><playchapter name="cc_eaten_by_skulls" /></result>
+</chapter>

@@ -1,0 +1,18 @@
+<chapter name="tntr_sq_death_door">
+	<timeline>
+		<timestart min="1" second="56" ms="34" />
+		<timeend min="1" second="56" ms="908" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="56" ms="34" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

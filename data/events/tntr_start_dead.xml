@@ -1,0 +1,16 @@
+<chapter name="tntr_start_dead">
+	<timeline>
+		<timestart min="1" second="29" ms="507" />
+		<timeend min="1" second="31" ms="591" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="29" ms="507" />
+			</timeline>
+		</event>
+	</events>
+	<result><playchapter name="tntr_enter_room" /></result>
+</chapter>

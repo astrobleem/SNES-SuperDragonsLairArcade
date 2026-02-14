@@ -1,0 +1,46 @@
+<chapter name="cwbt_enter_room">
+	<timeline>
+		<timestart min="8" second="22" ms="128" />
+		<timeend min="8" second="24" ms="815" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="22" ms="128" />
+			</timeline>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="8" second="22" ms="128" />
+				<timeend min="8" second="24" ms="815" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="cwbt_seq3" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-2">
+			<timeline>
+				<timestart min="8" second="24" ms="192" />
+				<timeend min="8" second="24" ms="815" />
+			</timeline>
+			<params>
+				<str key="type" value="down" />
+			</params>
+			<result><playchapter name="cwbt_seq9" /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-3">
+			<timeline>
+				<timestart min="8" second="22" ms="128" />
+				<timeend min="8" second="24" ms="815" />
+			</timeline>
+			<params>
+				<str key="type" value="right" />
+			</params>
+			<result><playchapter name="cwbt_seq9" /></result>
+		</event>
+	</events>
+	<result><playchapter name="cwbt_seq9" /></result>
+</chapter>

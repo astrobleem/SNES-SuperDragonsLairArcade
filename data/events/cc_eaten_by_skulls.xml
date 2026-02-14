@@ -1,0 +1,18 @@
+<chapter name="cc_eaten_by_skulls">
+	<timeline>
+		<timestart min="8" second="10" ms="199" />
+		<timeend min="8" second="10" ms="741" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="8" second="10" ms="199" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>
