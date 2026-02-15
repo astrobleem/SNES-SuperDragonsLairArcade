@@ -15,10 +15,8 @@ The following sound files live in this directory (`data/sounds/`). The build sys
 | `dl_accept.sfx_normal.wav` | WAV only | Dragon's Lair accept/confirm cue (not yet registered in SPC build). |
 | `dl_buzz.sfx_normal.wav` | WAV only | Dragon's Lair error/buzz cue (not yet registered in SPC build). |
 | `dl_credit.sfx_normal.wav` | WAV only | Dragon's Lair credit insert cue (not yet registered in SPC build). |
-| `dragon_roar.sfx_normal.wav` | WAV only | Dragon roar — removed from SPC build due to sample RAM overflow. |
-| `sword_clank.sfx_normal.wav` | WAV only | Sword clank — removed from SPC build due to sample RAM overflow. |
 
-> **Note:** The SPC700 has only 64 KB RAM total (~57.5 KB available for samples after engine code). The 6 active samples use ~42 KB of BRR data. Adding `dragon_roar` + `sword_clank` pushed total sample size to ~65 KB, overflowing SPC RAM. The `dl_accept`, `dl_buzz`, and `dl_credit` sounds are candidates for future integration if space allows.
+> **Note:** The SPC700 has only 64 KB RAM total (~57.5 KB available for samples after engine code). The 6 active samples use ~42 KB of BRR data. `dragon_roar` + `sword_clank` WAVs were deleted because they overflowed SPC RAM (~65 KB total). The `dl_accept`, `dl_buzz`, and `dl_credit` sounds are candidates for future integration if space allows.
 
 ## How the Sound System Works
 

@@ -63,7 +63,7 @@ Discarded classes: `attract_mode_attract_movie`, `attract_mode_insert_coins`, `i
 | Item | File | Issue |
 |------|------|-------|
 | ~~MSU-1 PCM track numbering wrong~~ | `tools/generate_msu_data.py` | **RESOLVED** — PCM files were numbered 1-205 (old Daphne framefile ordering). ROM requests tracks by chapter ID (0-515). Fixed: added Phase 1c to `generate_msu_data.py` that copies `sfx_video.pcm` to `SuperDragonsLairArcade-{chapterID}.pcm`. Now 476 correctly-numbered PCM files. `manifest.xml` updated to match. |
-| SPC sample overflow | `src/object/audio/spcinterface.h` | Only 6 of 11 WAVs are in the build (~42 KB of 57.5 KB budget). `dragon_roar` + `sword_clank` overflow. `dl_accept`, `dl_buzz`, `dl_credit` not registered. Need to either swap legacy samples (brake/turbo) for DL-themed ones, or find smaller BRR encodings. |
+| ~~SPC sample overflow~~ | `src/object/audio/spcinterface.h` | **RESOLVED** — Deleted `dragon_roar.sfx_normal.wav` and `sword_clank.sfx_normal.wav` (overflowed 57.5 KB SPC RAM budget). 6 active samples remain (~42 KB). `dl_accept`, `dl_buzz`, `dl_credit` are candidates if space allows. |
 | Legacy sample names | `src/object/audio/spcinterface.h` | Enum names still `SAMPLE.0.SHURIKEN`, `SAMPLE.0.TECHNIQUE` — should be renamed to Dragon's Lair equivalents. |
 | SpcPlaySoundEffectObjectXPos stub | `src/object/audio/spcinterface.65816:1013` | Panning sound effect method is `TRIGGER_ERROR E_Todo`. Not currently called, but would crash if used. |
 | Brightness.fadeTo range guard | `src/object/brightness/brightness.65816:46` | Out-of-range brightness value triggers `E_Todo` instead of clamping. Defensive code that crashes on invalid input. |
