@@ -1,20 +1,20 @@
 <chapter name="ccr_seq3">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="0" ms="918" />
+		<timestart min="13" second="0" ms="811" frame="18721" />
+		<timeend min="13" second="1" ms="729" frame="18743" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="13" second="0" ms="811" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="0" ms="918" />
+				<timestart min="13" second="1" ms="303" />
+				<timeend min="13" second="1" ms="729" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="557" />
-				<timeend min="0" second="0" ms="918" />
+				<timestart min="13" second="1" ms="368" />
+				<timeend min="13" second="1" ms="729" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="278" />
+				<timestart min="13" second="0" ms="811" />
+				<timeend min="13" second="2" ms="89" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="0" ms="918" />
+				<timestart min="13" second="1" ms="303" />
+				<timeend min="13" second="1" ms="729" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

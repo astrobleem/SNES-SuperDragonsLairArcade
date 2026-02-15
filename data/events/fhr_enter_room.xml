@@ -1,20 +1,20 @@
 <chapter name="fhr_enter_room">
 	<timeline>
-		<timestart min="11" second="23" ms="726" />
-		<timeend min="11" second="28" ms="248" />
+		<timestart min="11" second="30" ms="39" frame="16544" />
+		<timeend min="11" second="34" ms="561" frame="16652" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="11" second="23" ms="726" />
+				<timestart min="11" second="30" ms="39" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="11" second="27" ms="167" />
-				<timeend min="11" second="27" ms="494" />
+				<timestart min="11" second="33" ms="480" />
+				<timeend min="11" second="33" ms="807" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="11" second="27" ms="494" />
-				<timeend min="11" second="28" ms="215" />
+				<timestart min="11" second="33" ms="807" />
+				<timeend min="11" second="34" ms="528" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="11" second="27" ms="527" />
-				<timeend min="11" second="28" ms="215" />
+				<timestart min="11" second="33" ms="840" />
+				<timeend min="11" second="34" ms="528" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="11" second="27" ms="167" />
-				<timeend min="11" second="27" ms="494" />
+				<timestart min="11" second="33" ms="480" />
+				<timeend min="11" second="33" ms="807" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
-				<timestart min="11" second="27" ms="494" />
-				<timeend min="11" second="28" ms="182" />
+				<timestart min="11" second="33" ms="807" />
+				<timeend min="11" second="34" ms="495" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

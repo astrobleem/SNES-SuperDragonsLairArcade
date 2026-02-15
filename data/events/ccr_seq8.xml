@@ -1,14 +1,14 @@
 <chapter name="ccr_seq8">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="4" ms="453" />
+		<timestart min="13" second="4" ms="384" frame="18807" />
+		<timeend min="13" second="8" ms="837" frame="18914" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="13" second="4" ms="384" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="rk_game_over">
 	<timeline>
-		<timestart min="7" second="46" ms="676" />
-		<timeend min="7" second="50" ms="179" />
+		<timestart min="7" second="39" ms="217" frame="11340" />
+		<timeend min="7" second="42" ms="720" frame="11424" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="7" second="46" ms="676" />
+				<timestart min="7" second="39" ms="217" />
 			</timeline>
 		</event>
 	</events>

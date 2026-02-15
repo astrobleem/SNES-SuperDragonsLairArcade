@@ -1,14 +1,14 @@
 <chapter name="thrn_game_over">
 	<timeline>
-		<timestart min="14" second="32" ms="624" />
-		<timeend min="14" second="36" ms="127" />
+		<timestart min="14" second="38" ms="553" frame="21073" />
+		<timeend min="14" second="42" ms="56" frame="21157" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="14" second="32" ms="624" />
+				<timestart min="14" second="38" ms="553" />
 			</timeline>
 		</event>
 	</events>

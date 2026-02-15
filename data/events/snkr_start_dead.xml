@@ -1,14 +1,14 @@
 <chapter name="snkr_start_dead">
 	<timeline>
-		<timestart min="2" second="0" ms="538" />
-		<timeend min="2" second="2" ms="914" />
+		<timestart min="1" second="53" ms="380" frame="3041" />
+		<timeend min="1" second="55" ms="756" frame="3098" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="0" ms="538" />
+				<timestart min="1" second="53" ms="380" />
 			</timeline>
 		</event>
 	</events>

@@ -1,20 +1,20 @@
 <chapter name="firm_seq2">
 	<timeline>
-		<timestart min="6" second="31" ms="142" />
-		<timeend min="6" second="34" ms="681" />
+		<timestart min="6" second="23" ms="767" frame="9529" />
+		<timeend min="6" second="27" ms="306" frame="9614" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="31" ms="142" />
+				<timestart min="6" second="23" ms="767" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="6" second="34" ms="26" />
-				<timeend min="6" second="34" ms="648" />
+				<timestart min="6" second="26" ms="651" />
+				<timeend min="6" second="27" ms="273" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="6" second="34" ms="26" />
-				<timeend min="6" second="34" ms="615" />
+				<timestart min="6" second="26" ms="651" />
+				<timeend min="6" second="27" ms="240" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

@@ -1,20 +1,20 @@
 <chapter name="cwbt_seq2">
 	<timeline>
-		<timestart min="8" second="22" ms="128" />
-		<timeend min="8" second="24" ms="815" />
+		<timestart min="8" second="14" ms="711" frame="12190" />
+		<timeend min="8" second="17" ms="398" frame="12254" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="8" second="22" ms="128" />
+				<timestart min="8" second="14" ms="711" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="8" second="22" ms="128" />
-				<timeend min="8" second="24" ms="815" />
+				<timestart min="8" second="14" ms="711" />
+				<timeend min="8" second="17" ms="398" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="8" second="24" ms="192" />
-				<timeend min="8" second="24" ms="815" />
+				<timestart min="8" second="16" ms="775" />
+				<timeend min="8" second="17" ms="398" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="8" second="22" ms="128" />
-				<timeend min="8" second="24" ms="815" />
+				<timestart min="8" second="14" ms="711" />
+				<timeend min="8" second="17" ms="398" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

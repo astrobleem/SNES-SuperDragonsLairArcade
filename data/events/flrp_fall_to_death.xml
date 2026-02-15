@@ -1,7 +1,7 @@
 <chapter name="flrp_fall_to_death">
 	<timeline>
-		<timestart min="2" second="38" ms="993" />
-		<timeend min="2" second="40" ms="410" />
+		<timestart min="2" second="31" ms="668" frame="3963" />
+		<timeend min="2" second="33" ms="85" frame="3997" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="38" ms="993" />
+				<timestart min="2" second="31" ms="668" />
 			</timeline>
 		</event>
 	</events>

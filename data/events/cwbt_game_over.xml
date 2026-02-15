@@ -1,14 +1,14 @@
 <chapter name="cwbt_game_over">
 	<timeline>
-		<timestart min="8" second="38" ms="645" />
-		<timeend min="8" second="42" ms="148" />
+		<timestart min="8" second="31" ms="186" frame="12586" />
+		<timeend min="8" second="34" ms="689" frame="12670" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="8" second="38" ms="645" />
+				<timestart min="8" second="31" ms="186" />
 			</timeline>
 		</event>
 	</events>

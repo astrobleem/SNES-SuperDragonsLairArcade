@@ -1,7 +1,7 @@
 <chapter name="mudm_seq13">
 	<timeline>
-		<timestart min="17" second="20" ms="500" />
-		<timeend min="17" second="21" ms="374" />
+		<timestart min="17" second="26" ms="312" frame="25098" />
+		<timeend min="17" second="27" ms="186" frame="25119" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="17" second="20" ms="500" />
+				<timestart min="17" second="26" ms="312" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="firm_game_over">
 	<timeline>
-		<timestart min="6" second="45" ms="782" />
-		<timeend min="6" second="49" ms="285" />
+		<timestart min="6" second="38" ms="323" frame="9880" />
+		<timeend min="6" second="41" ms="826" frame="9964" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="45" ms="782" />
+				<timestart min="6" second="38" ms="323" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="ccr_start_dead">
 	<timeline>
-		<timestart min="12" second="49" ms="729" />
-		<timeend min="12" second="52" ms="63" />
+		<timestart min="12" second="56" ms="17" frame="18606" />
+		<timeend min="12" second="58" ms="351" frame="18662" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="12" second="49" ms="729" />
+				<timestart min="12" second="56" ms="17" />
 			</timeline>
 		</event>
 	</events>

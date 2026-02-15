@@ -1,20 +1,20 @@
 <chapter name="thrn_on_throne">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="4" ms="293" />
+		<timestart min="14" second="24" ms="175" frame="20725" />
+		<timeend min="14" second="28" ms="468" frame="20828" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="14" second="24" ms="175" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="3" ms="408" />
-				<timeend min="0" second="4" ms="358" />
+				<timestart min="14" second="27" ms="583" />
+				<timeend min="14" second="28" ms="533" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="3" ms="408" />
-				<timeend min="0" second="4" ms="358" />
+				<timestart min="14" second="27" ms="583" />
+				<timeend min="14" second="28" ms="533" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="3" ms="408" />
-				<timeend min="0" second="4" ms="96" />
+				<timestart min="14" second="27" ms="583" />
+				<timeend min="14" second="28" ms="271" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

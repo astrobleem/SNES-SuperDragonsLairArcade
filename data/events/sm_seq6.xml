@@ -1,20 +1,20 @@
 <chapter name="sm_seq6">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="6" ms="259" />
+		<timestart min="4" second="44" ms="280" frame="7141" />
+		<timeend min="4" second="50" ms="539" frame="7291" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="4" second="44" ms="280" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="5" ms="210" />
-				<timeend min="0" second="6" ms="259" />
+				<timestart min="4" second="49" ms="490" />
+				<timeend min="4" second="50" ms="539" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="5" ms="210" />
-				<timeend min="0" second="6" ms="259" />
+				<timestart min="4" second="49" ms="490" />
+				<timeend min="4" second="50" ms="539" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

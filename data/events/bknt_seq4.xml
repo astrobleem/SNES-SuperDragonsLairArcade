@@ -1,20 +1,20 @@
 <chapter name="bknt_seq4">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="3" ms="244" />
+		<timestart min="17" second="50" ms="372" frame="25675" />
+		<timeend min="17" second="53" ms="616" frame="25753" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="17" second="50" ms="372" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="2" ms="458" />
-				<timeend min="0" second="3" ms="211" />
+				<timestart min="17" second="52" ms="830" />
+				<timeend min="17" second="53" ms="583" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="2" ms="458" />
-				<timeend min="0" second="3" ms="178" />
+				<timestart min="17" second="52" ms="830" />
+				<timeend min="17" second="53" ms="550" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="2" ms="458" />
-				<timeend min="0" second="3" ms="178" />
+				<timestart min="17" second="52" ms="830" />
+				<timeend min="17" second="53" ms="550" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="1" ms="966" />
-				<timeend min="0" second="2" ms="687" />
+				<timestart min="17" second="52" ms="338" />
+				<timeend min="17" second="53" ms="59" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />

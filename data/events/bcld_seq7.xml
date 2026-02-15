@@ -1,14 +1,14 @@
 <chapter name="bcld_seq7">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="140" />
+		<timestart min="3" second="26" ms="701" frame="5281" />
+		<timeend min="3" second="27" ms="841" frame="5308" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="3" second="26" ms="701" />
 			</timeline>
 		</event>
 	</events>

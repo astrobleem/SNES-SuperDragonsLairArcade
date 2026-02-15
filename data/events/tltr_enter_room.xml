@@ -1,20 +1,20 @@
 <chapter name="tltr_enter_room">
 	<timeline>
-		<timestart min="13" second="55" ms="670" />
-		<timeend min="14" second="0" ms="126" />
+		<timestart min="14" second="1" ms="749" frame="20187" />
+		<timeend min="14" second="6" ms="205" frame="20294" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="13" second="55" ms="670" />
+				<timestart min="14" second="1" ms="749" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="13" second="59" ms="438" />
-				<timeend min="14" second="0" ms="159" />
+				<timestart min="14" second="5" ms="517" />
+				<timeend min="14" second="6" ms="238" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="13" second="58" ms="455" />
-				<timeend min="14" second="0" ms="159" />
+				<timestart min="14" second="4" ms="534" />
+				<timeend min="14" second="6" ms="238" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="13" second="59" ms="438" />
-				<timeend min="14" second="0" ms="159" />
+				<timestart min="14" second="5" ms="517" />
+				<timeend min="14" second="6" ms="238" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

@@ -1,20 +1,20 @@
 <chapter name="alrm_enter_room">
 	<timeline>
-		<timestart min="12" second="36" ms="257" />
-		<timeend min="12" second="38" ms="280" />
+		<timestart min="12" second="42" ms="587" frame="18283" />
+		<timeend min="12" second="44" ms="609" frame="18331" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="12" second="36" ms="257" />
+				<timestart min="12" second="42" ms="587" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="12" second="36" ms="257" />
-				<timeend min="12" second="38" ms="321" />
+				<timestart min="12" second="42" ms="587" />
+				<timeend min="12" second="44" ms="651" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="12" second="36" ms="257" />
-				<timeend min="12" second="38" ms="321" />
+				<timestart min="12" second="42" ms="587" />
+				<timeend min="12" second="44" ms="651" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="12" second="37" ms="388" />
-				<timeend min="12" second="38" ms="289" />
+				<timestart min="12" second="43" ms="718" />
+				<timeend min="12" second="44" ms="619" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="12" second="37" ms="388" />
-				<timeend min="12" second="38" ms="289" />
+				<timestart min="12" second="43" ms="718" />
+				<timeend min="12" second="44" ms="619" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

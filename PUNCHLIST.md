@@ -122,3 +122,19 @@ The core input detection and event triggering system is now verified working (ve
 | `Event.seq_generic` ordering | Sequence events (seq2, seq3, etc.) must fire in the correct order for multi-input scenes. If `xmlsceneparser.py` generates wrong sequence numbers, the player's button presses don't match the expected sequence. | Verify `arg0` (sequence number) in generated chapter data matches the XML `<params>` values. |
 | `Event.touch` stub (sword input) | 5 event classes are stubs that self-kill (see Cat 2a). Scenes requiring sword/touch input have no working input handler — the chapter always falls through to its default result. | Implement `Event.touch` to detect SNES button A/B as sword input and call `triggerResult`. Model after `Event.direction_generic` but check `JOY_BUTTON_A` or `JOY_BUTTON_Y` instead of D-pad. |
 | `Event.target` stub | Scenes with target-tracking events (flying horse, etc.) have no working input handler. | Implement `Event.target` — likely similar to `Event.touch` but may need positional tracking. |
+
+## Category 9: MSU-1 Video Frame Alignment (ACTIVE)
+
+Video frames extracted from Daphne .m2v segments still show visible misalignment — the displayed video content doesn't precisely match the expected laserdisc frame for some chapters.
+
+| Item | Status | Details |
+|------|--------|---------|
+| Video frame misalignment persists | **OPEN** | Extraction pipeline was rewritten (2026-02-15) to use Daphne .m2v segments directly instead of intermediate MP4, with CPU-only decode and `yadif→fps→trim→setpts` filter chain. Frame extraction produces correct frame counts, but visual inspection shows content offset from expected laserdisc frames in some chapters. |
+| ~~MP4 intermediate extraction~~ | **RESOLVED** | Removed MP4 fallback entirely. All frames now extracted directly from .m2v segments via Daphne framefile. |
+| ~~229 chapters missing frame attributes~~ | **RESOLVED** | Added action predecessor resolution to `lua_scene_exporter.py`. Now 473/516 chapters have frame attributes (remaining 43 are zero-duration `start_alive` routing nodes). |
+
+**Possible remaining causes:**
+- `fps=24000/1001` filter converts 29.97i → 23.976p before `trim` — the frame-to-time mapping may have an off-by-one or rounding error at segment boundaries
+- `generate_segment_timing.py` cumulative durations could drift across the 204 segments
+- DirkSimple frame numbers may not map 1:1 to Daphne segment internal frame positions (different assumptions about first-frame numbering)
+- `yadif` field order assumption (top-field-first vs bottom-field-first) could shift frames by half a field

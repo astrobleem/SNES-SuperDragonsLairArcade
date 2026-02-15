@@ -1,20 +1,20 @@
 <chapter name="ugr_fourth_whirlpools">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="720" />
+		<timestart min="16" second="16" ms="79" frame="23412" />
+		<timeend min="16" second="18" ms="799" frame="23477" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="16" second="16" ms="79" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="1" ms="442" />
-				<timeend min="0" second="2" ms="720" />
+				<timestart min="16" second="17" ms="521" />
+				<timeend min="16" second="18" ms="799" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="1" ms="442" />
-				<timeend min="0" second="2" ms="720" />
+				<timestart min="16" second="17" ms="521" />
+				<timeend min="16" second="18" ms="799" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="1" ms="442" />
-				<timeend min="0" second="2" ms="720" />
+				<timestart min="16" second="17" ms="521" />
+				<timeend min="16" second="18" ms="799" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

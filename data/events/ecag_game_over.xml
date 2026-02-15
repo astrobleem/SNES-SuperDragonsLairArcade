@@ -1,14 +1,14 @@
 <chapter name="ecag_game_over">
 	<timeline>
-		<timestart min="18" second="46" ms="419" />
-		<timeend min="18" second="49" ms="922" />
+		<timestart min="18" second="52" ms="64" frame="27158" />
+		<timeend min="18" second="55" ms="567" frame="27242" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="18" second="46" ms="419" />
+				<timestart min="18" second="52" ms="64" />
 			</timeline>
 		</event>
 	</events>

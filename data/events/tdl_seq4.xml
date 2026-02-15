@@ -1,20 +1,20 @@
 <chapter name="tdl_seq4">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="8" ms="618" />
+		<timestart min="20" second="20" ms="905" frame="29286" />
+		<timeend min="20" second="29" ms="523" frame="29493" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="20" second="20" ms="905" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="6" ms="980" />
-				<timeend min="0" second="8" ms="585" />
+				<timestart min="20" second="27" ms="885" />
+				<timeend min="20" second="29" ms="490" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

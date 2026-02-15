@@ -1,14 +1,14 @@
 <chapter name="gbat_seq9">
 	<timeline>
-		<timestart min="10" second="5" ms="106" />
-		<timeend min="10" second="5" ms="860" />
+		<timestart min="10" second="11" ms="478" frame="14659" />
+		<timeend min="10" second="12" ms="232" frame="14677" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="5" ms="106" />
+				<timestart min="10" second="11" ms="478" />
 			</timeline>
 		</event>
 	</events>

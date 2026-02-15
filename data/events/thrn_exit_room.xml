@@ -1,14 +1,14 @@
 <chapter name="thrn_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="932" />
+		<timestart min="14" second="27" ms="583" frame="20807" />
+		<timeend min="14" second="29" ms="515" frame="20853" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="14" second="27" ms="583" />
 			</timeline>
 		</event>
 	</events>

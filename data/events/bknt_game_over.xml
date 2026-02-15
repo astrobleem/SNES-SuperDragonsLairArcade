@@ -1,14 +1,14 @@
 <chapter name="bknt_game_over">
 	<timeline>
-		<timestart min="17" second="56" ms="286" />
-		<timeend min="17" second="59" ms="789" />
+		<timestart min="18" second="1" ms="998" frame="25956" />
+		<timeend min="18" second="5" ms="501" frame="26040" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="17" second="56" ms="286" />
+				<timestart min="18" second="1" ms="998" />
 			</timeline>
 		</event>
 	</events>

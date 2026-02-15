@@ -1,14 +1,14 @@
 <chapter name="alrm_start_dead">
 	<timeline>
-		<timestart min="12" second="33" ms="880" />
-		<timeend min="12" second="36" ms="214" />
+		<timestart min="12" second="40" ms="209" frame="18226" />
+		<timeend min="12" second="42" ms="543" frame="18282" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="12" second="33" ms="880" />
+				<timestart min="12" second="40" ms="209" />
 			</timeline>
 		</event>
 	</events>

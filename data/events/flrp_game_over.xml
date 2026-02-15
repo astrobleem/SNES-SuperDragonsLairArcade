@@ -1,14 +1,14 @@
 <chapter name="flrp_game_over">
 	<timeline>
-		<timestart min="2" second="40" ms="495" />
-		<timeend min="2" second="43" ms="998" />
+		<timestart min="2" second="33" ms="120" frame="3999" />
+		<timeend min="2" second="36" ms="623" frame="4083" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="40" ms="495" />
+				<timestart min="2" second="33" ms="120" />
 			</timeline>
 		</event>
 	</events>

@@ -1,20 +1,20 @@
 <chapter name="gg_enter_room">
 	<timeline>
-		<timestart min="3" second="50" ms="732" />
-		<timeend min="3" second="53" ms="878" />
+		<timestart min="3" second="43" ms="440" frame="5683" />
+		<timeend min="3" second="46" ms="586" frame="5758" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="3" second="50" ms="732" />
+				<timestart min="3" second="43" ms="440" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="3" second="53" ms="124" />
-				<timeend min="3" second="53" ms="845" />
+				<timestart min="3" second="45" ms="832" />
+				<timeend min="3" second="46" ms="553" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="3" second="52" ms="239" />
-				<timeend min="3" second="53" ms="124" />
+				<timestart min="3" second="44" ms="947" />
+				<timeend min="3" second="45" ms="832" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="3" second="53" ms="124" />
-				<timeend min="3" second="53" ms="845" />
+				<timestart min="3" second="45" ms="832" />
+				<timeend min="3" second="46" ms="553" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="3" second="53" ms="124" />
-				<timeend min="3" second="53" ms="845" />
+				<timestart min="3" second="45" ms="832" />
+				<timeend min="3" second="46" ms="553" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

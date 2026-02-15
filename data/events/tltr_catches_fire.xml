@@ -1,7 +1,7 @@
 <chapter name="tltr_catches_fire">
 	<timeline>
-		<timestart min="14" second="6" ms="639" />
-		<timeend min="14" second="8" ms="139" />
+		<timestart min="14" second="12" ms="652" frame="20450" />
+		<timeend min="14" second="14" ms="152" frame="20486" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="14" second="6" ms="639" />
+				<timestart min="14" second="12" ms="652" />
 			</timeline>
 		</event>
 	</events>

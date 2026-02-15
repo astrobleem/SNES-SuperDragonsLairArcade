@@ -1,14 +1,14 @@
 <chapter name="cwbt_seq7">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="958" />
+		<timestart min="8" second="17" ms="693" frame="12262" />
+		<timeend min="8" second="20" ms="651" frame="12333" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="8" second="17" ms="693" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="thrn_start_dead">
 	<timeline>
-		<timestart min="14" second="13" ms="646" />
-		<timeend min="14" second="15" ms="980" />
+		<timestart min="14" second="19" ms="701" frame="20618" />
+		<timeend min="14" second="22" ms="35" frame="20674" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="14" second="13" ms="646" />
+				<timestart min="14" second="19" ms="701" />
 			</timeline>
 		</event>
 	</events>

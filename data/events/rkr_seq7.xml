@@ -1,20 +1,20 @@
 <chapter name="rkr_seq7">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="49" />
+		<timestart min="14" second="51" ms="829" frame="21390" />
+		<timeend min="14" second="52" ms="878" frame="21415" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="14" second="51" ms="829" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="393" />
-				<timeend min="0" second="1" ms="16" />
+				<timestart min="14" second="52" ms="222" />
+				<timeend min="14" second="52" ms="845" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="393" />
-				<timeend min="0" second="1" ms="16" />
+				<timestart min="14" second="52" ms="222" />
+				<timeend min="14" second="52" ms="845" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="393" />
-				<timeend min="0" second="1" ms="16" />
+				<timestart min="14" second="52" ms="222" />
+				<timeend min="14" second="52" ms="845" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="393" />
-				<timeend min="0" second="1" ms="16" />
+				<timestart min="14" second="52" ms="222" />
+				<timeend min="14" second="52" ms="845" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

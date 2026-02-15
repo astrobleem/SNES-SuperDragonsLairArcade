@@ -1,14 +1,14 @@
 <chapter name="tntr_start_dead">
 	<timeline>
-		<timestart min="1" second="29" ms="507" />
-		<timeend min="1" second="31" ms="591" />
+		<timestart min="1" second="22" ms="349" frame="2297" />
+		<timeend min="1" second="24" ms="433" frame="2347" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="1" second="29" ms="507" />
+				<timestart min="1" second="22" ms="349" />
 			</timeline>
 		</event>
 	</events>

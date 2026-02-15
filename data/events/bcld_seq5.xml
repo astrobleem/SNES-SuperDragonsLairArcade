@@ -1,20 +1,20 @@
 <chapter name="bcld_seq5">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="737" />
+		<timestart min="3" second="24" ms="244" frame="5222" />
+		<timeend min="3" second="25" ms="981" frame="5264" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="3" second="24" ms="244" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="0" ms="655" />
-				<timeend min="0" second="1" ms="737" />
+				<timestart min="3" second="24" ms="899" />
+				<timeend min="3" second="25" ms="981" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="655" />
-				<timeend min="0" second="1" ms="737" />
+				<timestart min="3" second="24" ms="899" />
+				<timeend min="3" second="25" ms="981" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="0" ms="262" />
+				<timestart min="3" second="24" ms="244" />
+				<timeend min="3" second="24" ms="506" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="737" />
+				<timestart min="3" second="24" ms="244" />
+				<timeend min="3" second="25" ms="981" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

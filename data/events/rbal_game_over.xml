@@ -1,14 +1,14 @@
 <chapter name="rbal_game_over">
 	<timeline>
-		<timestart min="18" second="24" ms="731" />
-		<timeend min="18" second="28" ms="234" />
+		<timestart min="18" second="30" ms="484" frame="26638" />
+		<timeend min="18" second="33" ms="987" frame="26722" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="18" second="24" ms="731" />
+				<timestart min="18" second="30" ms="484" />
 			</timeline>
 		</event>
 	</events>

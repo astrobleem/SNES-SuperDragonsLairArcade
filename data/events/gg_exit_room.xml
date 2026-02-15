@@ -1,14 +1,14 @@
 <chapter name="gg_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="842" />
+		<timestart min="3" second="50" ms="27" frame="5841" />
+		<timeend min="3" second="51" ms="869" frame="5885" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="3" second="50" ms="27" />
 			</timeline>
 		</event>
 	</events>

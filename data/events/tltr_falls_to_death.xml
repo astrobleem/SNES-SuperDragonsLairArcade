@@ -1,7 +1,7 @@
 <chapter name="tltr_falls_to_death">
 	<timeline>
-		<timestart min="14" second="8" ms="141" />
-		<timeend min="14" second="10" ms="142" />
+		<timestart min="14" second="14" ms="153" frame="20486" />
+		<timeend min="14" second="16" ms="154" frame="20534" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="14" second="8" ms="141" />
+				<timestart min="14" second="14" ms="153" />
 			</timeline>
 		</event>
 	</events>

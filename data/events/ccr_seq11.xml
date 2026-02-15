@@ -1,7 +1,7 @@
 <chapter name="ccr_seq11">
 	<timeline>
-		<timestart min="13" second="9" ms="916" />
-		<timeend min="13" second="10" ms="498" />
+		<timestart min="13" second="16" ms="162" frame="19090" />
+		<timeend min="13" second="16" ms="744" frame="19104" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="13" second="9" ms="916" />
+				<timestart min="13" second="16" ms="162" />
 			</timeline>
 		</event>
 	</events>

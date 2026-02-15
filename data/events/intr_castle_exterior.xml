@@ -1,14 +1,14 @@
 <chapter name="intr_castle_exterior">
 	<timeline>
-		<timestart min="0" second="53" ms="96" />
-		<timeend min="0" second="58" ms="863" />
+		<timestart min="0" second="45" ms="963" frame="1424" />
+		<timeend min="0" second="51" ms="730" frame="1562" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="53" ms="96" />
+				<timestart min="0" second="45" ms="963" />
 			</timeline>
 		</event>
 	</events>

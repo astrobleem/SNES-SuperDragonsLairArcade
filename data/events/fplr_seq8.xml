@@ -1,7 +1,7 @@
 <chapter name="fplr_seq8">
 	<timeline>
-		<timestart min="15" second="28" ms="721" />
-		<timeend min="15" second="29" ms="762" />
+		<timestart min="15" second="34" ms="534" frame="22418" />
+		<timeend min="15" second="35" ms="575" frame="22443" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="15" second="28" ms="721" />
+				<timestart min="15" second="34" ms="534" />
 			</timeline>
 		</event>
 	</events>

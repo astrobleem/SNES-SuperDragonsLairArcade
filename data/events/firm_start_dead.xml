@@ -1,14 +1,14 @@
 <chapter name="firm_start_dead">
 	<timeline>
-		<timestart min="6" second="28" ms="806" />
-		<timeend min="6" second="30" ms="973" />
+		<timestart min="6" second="21" ms="431" frame="9473" />
+		<timeend min="6" second="23" ms="598" frame="9525" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="28" ms="806" />
+				<timestart min="6" second="21" ms="431" />
 			</timeline>
 		</event>
 	</events>

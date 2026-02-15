@@ -1,14 +1,14 @@
 <chapter name="fh_game_over">
 	<timeline>
-		<timestart min="7" second="15" ms="812" />
-		<timeend min="7" second="19" ms="315" />
+		<timestart min="7" second="8" ms="353" frame="10600" />
+		<timeend min="7" second="11" ms="856" frame="10684" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="7" second="15" ms="812" />
+				<timestart min="7" second="8" ms="353" />
 			</timeline>
 		</event>
 	</events>

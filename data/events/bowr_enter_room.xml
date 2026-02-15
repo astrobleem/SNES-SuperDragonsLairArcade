@@ -1,20 +1,20 @@
 <chapter name="bowr_enter_room">
 	<timeline>
-		<timestart min="6" second="16" ms="2" />
-		<timeend min="6" second="17" ms="775" />
+		<timestart min="6" second="8" ms="627" frame="9166" />
+		<timeend min="6" second="10" ms="399" frame="9209" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="16" ms="2" />
+				<timestart min="6" second="8" ms="627" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="6" second="16" ms="2" />
-				<timeend min="6" second="18" ms="37" />
+				<timestart min="6" second="8" ms="627" />
+				<timeend min="6" second="10" ms="661" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />

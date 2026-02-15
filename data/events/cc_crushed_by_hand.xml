@@ -1,7 +1,7 @@
 <chapter name="cc_crushed_by_hand">
 	<timeline>
-		<timestart min="8" second="10" ms="742" />
-		<timeend min="8" second="11" ms="616" />
+		<timestart min="8" second="3" ms="283" frame="11917" />
+		<timeend min="8" second="4" ms="157" frame="11938" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="8" second="10" ms="742" />
+				<timestart min="8" second="3" ms="283" />
 			</timeline>
 		</event>
 	</events>

@@ -1,7 +1,7 @@
 <chapter name="ugr_miss_chain">
 	<timeline>
-		<timestart min="16" second="42" ms="503" />
-		<timeend min="16" second="44" ms="504" />
+		<timestart min="16" second="48" ms="316" frame="24187" />
+		<timeend min="16" second="50" ms="317" frame="24235" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="16" second="42" ms="503" />
+				<timestart min="16" second="48" ms="316" />
 			</timeline>
 		</event>
 	</events>

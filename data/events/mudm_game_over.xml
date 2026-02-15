@@ -1,14 +1,14 @@
 <chapter name="mudm_game_over">
 	<timeline>
-		<timestart min="17" second="32" ms="929" />
-		<timeend min="17" second="36" ms="432" />
+		<timestart min="17" second="38" ms="758" frame="25396" />
+		<timeend min="17" second="42" ms="261" frame="25480" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="17" second="32" ms="929" />
+				<timestart min="17" second="38" ms="758" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="smr_game_over">
 	<timeline>
-		<timestart min="11" second="17" ms="929" />
-		<timeend min="11" second="21" ms="432" />
+		<timestart min="11" second="24" ms="158" frame="16405" />
+		<timeend min="11" second="27" ms="661" frame="16489" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="11" second="17" ms="929" />
+				<timestart min="11" second="24" ms="158" />
 			</timeline>
 		</event>
 	</events>

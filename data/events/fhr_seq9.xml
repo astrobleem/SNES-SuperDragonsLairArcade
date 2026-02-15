@@ -1,7 +1,7 @@
 <chapter name="fhr_seq9">
 	<timeline>
-		<timestart min="11" second="41" ms="744" />
-		<timeend min="11" second="43" ms="578" />
+		<timestart min="11" second="47" ms="974" frame="16976" />
+		<timeend min="11" second="49" ms="808" frame="17020" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="11" second="41" ms="744" />
+				<timestart min="11" second="47" ms="974" />
 			</timeline>
 		</event>
 	</events>

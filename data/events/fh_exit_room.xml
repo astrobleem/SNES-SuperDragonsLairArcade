@@ -1,14 +1,14 @@
 <chapter name="fh_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="5" ms="41" />
+		<timestart min="6" second="53" ms="364" frame="10238" />
+		<timeend min="6" second="58" ms="405" frame="10359" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="6" second="53" ms="364" />
 			</timeline>
 		</event>
 	</events>

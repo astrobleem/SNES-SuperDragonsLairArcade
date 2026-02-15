@@ -26,7 +26,48 @@ The project uses a standard `make` based build system that orchestrates several 
     *   `xmlsceneparser.py`: Converts DirkSimple XML scenes to assembly event scripts.
     *   `msu1blockwriter.py`: Packages video tile data for MSU-1.
 4.  **MSU-1 Video Pipeline:**
-    *   `generate_msu_data.py`: Orchestrates the full video conversion pipeline (ffmpeg → superfamiconv → tile reduction → msu1blockwriter.py). Produces the ~568 MB `.msu` file.
+    *   `generate_msu_data.py`: Orchestrates the full video conversion pipeline. Source video is Daphne `.m2v` segments (interlaced MPEG-2) mapped via the framefile `data/laserdisc/dl_lair.txt`. **No intermediate MP4 or CUDA acceleration** — CPU-only ffmpeg decode with `yadif→fps→trim→setpts` filter chain for frame-accurate extraction from interlaced source.
+    *   `lua_scene_exporter.py`: Exports DirkSimple game.lua scene data to XML events. Resolves frame timing for noseek sequences via timeout + action predecessor chains.
+    *   `generate_segment_timing.py`: One-time tool to generate `data/segment_timing.json` from the Daphne framefile + ffprobe.
+    *   `msu1blockwriter.py`: Packages tile/tilemap/palette data into the ~516 MB `.msu` file + per-chapter `.pcm` audio files.
+
+## Daphne Video Source & MSU-1 Generation
+
+The game's FMV comes from **Daphne laserdisc emulator** rip files — 204 `.m2v` video segments and paired `.ogg` audio segments. These are mapped by a framefile (`data/laserdisc/dl_lair.txt`) that associates laserdisc frame ranges with segment files.
+
+### Prerequisites
+- Daphne `.m2v` and `.ogg` segment files in the path configured in `generate_msu_data.py`
+- Daphne framefile at `data/laserdisc/dl_lair.txt`
+- Segment timing data at `data/segment_timing.json` (generate once: `python3 tools/generate_segment_timing.py`)
+- ffmpeg (CPU, no CUDA needed), superfamiconv.exe
+
+### Full Regeneration Pipeline
+```bash
+# 1. Export DirkSimple game.lua → XML events (resolves frame timing)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/lua_scene_exporter.py"
+
+# 2. Build ROM (converts XMLs → assembly, compiles)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"
+
+# 3. Generate MSU-1 data (extracts .m2v frames, converts tiles, packages .msu + .pcm)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --clean --workers 8"
+```
+
+> [!IMPORTANT]
+> Step 2 (`make clean`) deletes `data/chapters/` which contains extracted video frames. Always run MSU generation (step 3) AFTER the final build, or use `make` without `clean`.
+
+### Frame Extraction Details
+Each `.m2v` segment is decoded with this ffmpeg filter chain (no seeking, no CUDA):
+```
+yadif,fps=24000/1001,trim=start=X:duration=Y,setpts=PTS-STARTPTS,scale=256:192
+```
+- **yadif**: Deinterlaces 29.97fps interlaced MPEG-2
+- **fps=24000/1001**: Converts to 23.976fps (laserdisc rate) before trimming
+- **trim**: Selects exact frame range (no `-ss` seeking for accuracy)
+- Output: 16-color paletted 256x192 PNGs
+
+### Frame Inspection
+After extraction, frames are copied to `data/videos/frames/{chapter_name}/` for per-chapter visual debugging.
 
 ## The Makefile Explained
 

@@ -1,7 +1,7 @@
 <chapter name="ybr_seq16">
 	<timeline>
-		<timestart min="3" second="15" ms="530" />
-		<timeend min="3" second="16" ms="613" />
+		<timestart min="3" second="8" ms="155" frame="4839" />
+		<timeend min="3" second="9" ms="238" frame="4865" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="3" second="15" ms="530" />
+				<timestart min="3" second="8" ms="155" />
 			</timeline>
 		</event>
 	</events>

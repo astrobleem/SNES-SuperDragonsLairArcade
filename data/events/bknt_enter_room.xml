@@ -1,20 +1,20 @@
 <chapter name="bknt_enter_room">
 	<timeline>
-		<timestart min="17" second="38" ms="768" />
-		<timeend min="17" second="42" ms="307" />
+		<timestart min="17" second="44" ms="572" frame="25536" />
+		<timeend min="17" second="48" ms="111" frame="25621" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="17" second="38" ms="768" />
+				<timestart min="17" second="44" ms="572" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="17" second="41" ms="455" />
-				<timeend min="17" second="42" ms="274" />
+				<timestart min="17" second="47" ms="259" />
+				<timeend min="17" second="48" ms="78" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="17" second="41" ms="914" />
-				<timeend min="17" second="42" ms="307" />
+				<timestart min="17" second="47" ms="718" />
+				<timeend min="17" second="48" ms="111" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="17" second="41" ms="455" />
-				<timeend min="17" second="42" ms="340" />
+				<timestart min="17" second="47" ms="259" />
+				<timeend min="17" second="48" ms="144" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />

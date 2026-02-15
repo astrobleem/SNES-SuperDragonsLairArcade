@@ -1,20 +1,20 @@
 <chapter name="lzkg_seq12">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="0" ms="918" />
+		<timestart min="12" second="16" ms="453" frame="17658" />
+		<timeend min="12" second="17" ms="371" frame="17680" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="12" second="16" ms="453" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="0" ms="918" />
+				<timestart min="12" second="16" ms="945" />
+				<timeend min="12" second="17" ms="371" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="0" ms="918" />
+				<timestart min="12" second="16" ms="453" />
+				<timeend min="12" second="17" ms="371" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="0" ms="918" />
+				<timestart min="12" second="16" ms="945" />
+				<timeend min="12" second="17" ms="371" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="0" ms="918" />
+				<timestart min="12" second="16" ms="945" />
+				<timeend min="12" second="17" ms="371" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

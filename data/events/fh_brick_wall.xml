@@ -1,20 +1,20 @@
 <chapter name="fh_brick_wall">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="868" />
+		<timestart min="6" second="51" ms="332" frame="10190" />
+		<timeend min="6" second="53" ms="200" frame="10235" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="6" second="51" ms="332" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="1" ms="311" />
-				<timeend min="0" second="1" ms="868" />
+				<timestart min="6" second="52" ms="643" />
+				<timeend min="6" second="53" ms="200" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="950" />
-				<timeend min="0" second="1" ms="835" />
+				<timestart min="6" second="52" ms="282" />
+				<timeend min="6" second="53" ms="167" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="950" />
-				<timeend min="0" second="1" ms="835" />
+				<timestart min="6" second="52" ms="282" />
+				<timeend min="6" second="53" ms="167" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

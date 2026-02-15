@@ -1,14 +1,14 @@
 <chapter name="fstc_seq6">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="14" />
+		<timestart min="4" second="19" ms="282" frame="6542" />
+		<timeend min="4" second="21" ms="296" frame="6590" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="4" second="19" ms="282" />
 			</timeline>
 		</event>
 	</events>

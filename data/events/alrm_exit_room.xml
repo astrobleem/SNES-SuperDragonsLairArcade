@@ -1,14 +1,14 @@
 <chapter name="alrm_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="943" />
+		<timestart min="12" second="42" ms="587" frame="18283" />
+		<timeend min="12" second="44" ms="529" frame="18330" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="12" second="42" ms="587" />
 			</timeline>
 		</event>
 	</events>

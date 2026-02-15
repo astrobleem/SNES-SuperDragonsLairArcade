@@ -1,14 +1,14 @@
 <chapter name="smr_start_dead">
 	<timeline>
-		<timestart min="10" second="43" ms="102" />
-		<timeend min="10" second="45" ms="186" />
+		<timestart min="10" second="49" ms="424" frame="15570" />
+		<timeend min="10" second="51" ms="508" frame="15620" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="43" ms="102" />
+				<timestart min="10" second="49" ms="424" />
 			</timeline>
 		</event>
 	</events>

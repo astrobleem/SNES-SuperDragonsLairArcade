@@ -1,7 +1,7 @@
 <chapter name="flrp_misses_landing">
 	<timeline>
-		<timestart min="2" second="35" ms="490" />
-		<timeend min="2" second="37" ms="407" />
+		<timestart min="2" second="27" ms="998" frame="3879" />
+		<timeend min="2" second="29" ms="915" frame="3925" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="35" ms="490" />
+				<timestart min="2" second="27" ms="998" />
 			</timeline>
 		</event>
 	</events>

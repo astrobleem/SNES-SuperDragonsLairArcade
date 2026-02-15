@@ -1,20 +1,20 @@
 <chapter name="rbal_green_ball">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="966" />
+		<timestart min="18" second="15" ms="483" frame="26277" />
+		<timeend min="18" second="17" ms="449" frame="26324" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="18" second="15" ms="483" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="885" />
-				<timeend min="0" second="1" ms="147" />
+				<timestart min="18" second="16" ms="368" />
+				<timeend min="18" second="16" ms="630" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="1" ms="147" />
-				<timeend min="0" second="1" ms="933" />
+				<timestart min="18" second="16" ms="630" />
+				<timeend min="18" second="17" ms="416" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="966" />
+				<timestart min="18" second="15" ms="483" />
+				<timeend min="18" second="17" ms="449" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />

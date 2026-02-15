@@ -1,7 +1,7 @@
 <chapter name="ugr_rapids_crash">
 	<timeline>
-		<timestart min="16" second="36" ms="122" />
-		<timeend min="16" second="38" ms="498" />
+		<timestart min="16" second="41" ms="934" frame="24034" />
+		<timeend min="16" second="44" ms="310" frame="24091" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="16" second="36" ms="122" />
+				<timestart min="16" second="41" ms="934" />
 			</timeline>
 		</event>
 	</events>

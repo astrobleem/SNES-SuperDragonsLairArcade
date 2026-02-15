@@ -1,20 +1,20 @@
 <chapter name="ccr_seq2">
 	<timeline>
-		<timestart min="12" second="52" ms="65" />
-		<timeend min="12" second="55" ms="538" />
+		<timestart min="12" second="58" ms="353" frame="18662" />
+		<timeend min="13" second="1" ms="826" frame="18745" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="12" second="52" ms="65" />
+				<timestart min="12" second="58" ms="353" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="12" second="54" ms="523" />
-				<timeend min="12" second="55" ms="538" />
+				<timestart min="13" second="0" ms="811" />
+				<timeend min="13" second="1" ms="826" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="action" label="action-2">
 			<timeline>
-				<timestart min="12" second="54" ms="523" />
-				<timeend min="12" second="55" ms="473" />
+				<timestart min="13" second="0" ms="811" />
+				<timeend min="13" second="1" ms="761" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="12" second="54" ms="523" />
-				<timeend min="12" second="55" ms="473" />
+				<timestart min="13" second="0" ms="811" />
+				<timeend min="13" second="1" ms="761" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="12" second="54" ms="523" />
-				<timeend min="12" second="55" ms="473" />
+				<timestart min="13" second="0" ms="811" />
+				<timeend min="13" second="1" ms="761" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
-				<timestart min="12" second="54" ms="523" />
-				<timeend min="12" second="55" ms="473" />
+				<timestart min="13" second="0" ms="811" />
+				<timeend min="13" second="1" ms="761" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

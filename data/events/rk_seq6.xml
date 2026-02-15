@@ -1,20 +1,20 @@
 <chapter name="rk_seq6">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="130" />
+		<timestart min="7" second="19" ms="683" frame="10871" />
+		<timeend min="7" second="21" ms="813" frame="10922" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="7" second="19" ms="683" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="1" ms="212" />
-				<timeend min="0" second="2" ms="97" />
+				<timestart min="7" second="20" ms="895" />
+				<timeend min="7" second="21" ms="780" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

@@ -1,20 +1,20 @@
 <chapter name="tntr_jump_to_door">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="442" />
+		<timestart min="1" second="29" ms="961" frame="2479" />
+		<timeend min="1" second="31" ms="403" frame="2514" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="1" second="29" ms="961" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="1" ms="409" />
+				<timestart min="1" second="30" ms="453" />
+				<timeend min="1" second="31" ms="370" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="1" ms="409" />
+				<timestart min="1" second="30" ms="453" />
+				<timeend min="1" second="31" ms="370" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="492" />
-				<timeend min="0" second="1" ms="409" />
+				<timestart min="1" second="30" ms="453" />
+				<timeend min="1" second="31" ms="370" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="442" />
+				<timestart min="1" second="29" ms="961" />
+				<timeend min="1" second="31" ms="403" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="action" label="action-5">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="475" />
+				<timestart min="1" second="29" ms="961" />
+				<timeend min="1" second="31" ms="436" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />

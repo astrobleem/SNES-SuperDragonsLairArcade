@@ -1,20 +1,20 @@
 <chapter name="gr_seq3">
 	<timeline>
-		<timestart min="5" second="33" ms="668" />
-		<timeend min="5" second="37" ms="272" />
+		<timestart min="5" second="26" ms="351" frame="8151" />
+		<timeend min="5" second="29" ms="955" frame="8237" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="5" second="33" ms="668" />
+				<timestart min="5" second="26" ms="351" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="5" second="36" ms="650" />
-				<timeend min="5" second="37" ms="240" />
+				<timestart min="5" second="29" ms="333" />
+				<timeend min="5" second="29" ms="923" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="5" second="33" ms="668" />
-				<timeend min="5" second="37" ms="240" />
+				<timestart min="5" second="26" ms="351" />
+				<timeend min="5" second="29" ms="923" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="5" second="33" ms="668" />
-				<timeend min="5" second="37" ms="141" />
+				<timestart min="5" second="26" ms="351" />
+				<timeend min="5" second="29" ms="824" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="5" second="36" ms="912" />
-				<timeend min="5" second="37" ms="272" />
+				<timestart min="5" second="29" ms="595" />
+				<timeend min="5" second="29" ms="955" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />

@@ -1,14 +1,14 @@
 <chapter name="wndr_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="0" ms="557" />
+		<timestart min="5" second="56" ms="930" frame="8887" />
+		<timeend min="5" second="57" ms="487" frame="8900" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="5" second="56" ms="930" />
 			</timeline>
 		</event>
 	</events>

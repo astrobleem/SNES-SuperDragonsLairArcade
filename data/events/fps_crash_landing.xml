@@ -1,7 +1,7 @@
 <chapter name="fps_crash_landing">
 	<timeline>
-		<timestart min="10" second="28" ms="755" />
-		<timeend min="10" second="32" ms="90" />
+		<timestart min="10" second="35" ms="185" frame="15226" />
+		<timeend min="10" second="38" ms="520" frame="15306" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="28" ms="755" />
+				<timestart min="10" second="35" ms="185" />
 			</timeline>
 		</event>
 	</events>

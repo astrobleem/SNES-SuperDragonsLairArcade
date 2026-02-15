@@ -1,14 +1,14 @@
 <chapter name="rk_start_dead">
 	<timeline>
-		<timestart min="7" second="19" ms="357" />
-		<timeend min="7" second="21" ms="524" />
+		<timestart min="7" second="11" ms="940" frame="10685" />
+		<timeend min="7" second="14" ms="107" frame="10737" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="7" second="19" ms="357" />
+				<timestart min="7" second="11" ms="940" />
 			</timeline>
 		</event>
 	</events>

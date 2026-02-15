@@ -1,14 +1,14 @@
 <chapter name="mudm_seq11">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="3" ms="421" />
+		<timestart min="17" second="12" ms="716" frame="24770" />
+		<timeend min="17" second="16" ms="137" frame="24852" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="17" second="12" ms="716" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="bknt_start_dead">
 	<timeline>
-		<timestart min="17" second="36" ms="432" />
-		<timeend min="17" second="38" ms="474" />
+		<timestart min="17" second="42" ms="236" frame="25480" />
+		<timeend min="17" second="44" ms="278" frame="25529" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="17" second="36" ms="432" />
+				<timestart min="17" second="42" ms="236" />
 			</timeline>
 		</event>
 	</events>

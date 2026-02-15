@@ -1,14 +1,14 @@
 <chapter name="fstc_start_dead">
 	<timeline>
-		<timestart min="4" second="15" ms="757" />
-		<timeend min="4" second="18" ms="91" />
+		<timestart min="4" second="8" ms="465" frame="6283" />
+		<timeend min="4" second="10" ms="799" frame="6339" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="4" second="15" ms="757" />
+				<timestart min="4" second="8" ms="465" />
 			</timeline>
 		</event>
 	</events>

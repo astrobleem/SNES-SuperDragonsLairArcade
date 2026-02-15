@@ -1,14 +1,14 @@
 <chapter name="rbal_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="320" />
+		<timestart min="18" second="18" ms="891" frame="26360" />
+		<timeend min="18" second="21" ms="211" frame="26416" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="18" second="18" ms="891" />
 			</timeline>
 		</event>
 	</events>

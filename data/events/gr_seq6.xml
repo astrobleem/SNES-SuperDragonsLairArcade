@@ -1,14 +1,14 @@
 <chapter name="gr_seq6">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="0" ms="673" />
+		<timestart min="5" second="32" ms="381" frame="8295" />
+		<timeend min="5" second="33" ms="54" frame="8311" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="5" second="32" ms="381" />
 			</timeline>
 		</event>
 	</events>

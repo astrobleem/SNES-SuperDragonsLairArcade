@@ -1,14 +1,14 @@
 <chapter name="fpl_exit_room">
 	<timeline>
-		<timestart min="10" second="34" ms="594" />
-		<timeend min="10" second="39" ms="664" />
+		<timestart min="10" second="40" ms="915" frame="15366" />
+		<timeend min="10" second="45" ms="985" frame="15488" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="34" ms="594" />
+				<timestart min="10" second="40" ms="915" />
 			</timeline>
 		</event>
 	</events>

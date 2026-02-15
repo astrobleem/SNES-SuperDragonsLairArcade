@@ -1,7 +1,7 @@
 <chapter name="tntr_two_front_war">
 	<timeline>
-		<timestart min="1" second="52" ms="530" />
-		<timeend min="1" second="55" ms="532" />
+		<timestart min="1" second="45" ms="372" frame="2849" />
+		<timeend min="1" second="48" ms="374" frame="2921" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="1" second="52" ms="530" />
+				<timestart min="1" second="45" ms="372" />
 			</timeline>
 		</event>
 	</events>

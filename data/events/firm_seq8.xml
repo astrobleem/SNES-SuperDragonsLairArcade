@@ -1,7 +1,7 @@
 <chapter name="firm_seq8">
 	<timeline>
-		<timestart min="6" second="44" ms="822" />
-		<timeend min="6" second="45" ms="822" />
+		<timestart min="6" second="37" ms="364" frame="9857" />
+		<timeend min="6" second="38" ms="364" frame="9881" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="44" ms="822" />
+				<timestart min="6" second="37" ms="364" />
 			</timeline>
 		</event>
 	</events>

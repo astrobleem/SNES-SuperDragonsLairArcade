@@ -1,7 +1,7 @@
 <chapter name="tdl_seq15">
 	<timeline>
-		<timestart min="21" second="39" ms="92" />
-		<timeend min="21" second="41" ms="93" />
+		<timestart min="21" second="44" ms="737" frame="31298" />
+		<timeend min="21" second="46" ms="738" frame="31346" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="21" second="39" ms="92" />
+				<timestart min="21" second="44" ms="737" />
 			</timeline>
 		</event>
 	</events>

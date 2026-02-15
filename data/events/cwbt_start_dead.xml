@@ -1,14 +1,14 @@
 <chapter name="cwbt_start_dead">
 	<timeline>
-		<timestart min="8" second="19" ms="751" />
-		<timeend min="8" second="21" ms="793" />
+		<timestart min="8" second="12" ms="334" frame="12133" />
+		<timeend min="8" second="14" ms="376" frame="12182" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="8" second="19" ms="751" />
+				<timestart min="8" second="12" ms="334" />
 			</timeline>
 		</event>
 	</events>

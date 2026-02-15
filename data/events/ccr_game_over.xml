@@ -1,14 +1,14 @@
 <chapter name="ccr_game_over">
 	<timeline>
-		<timestart min="13" second="15" ms="463" />
-		<timeend min="13" second="18" ms="966" />
+		<timestart min="13" second="21" ms="643" frame="19223" />
+		<timeend min="13" second="25" ms="146" frame="19307" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="13" second="15" ms="463" />
+				<timestart min="13" second="21" ms="643" />
 			</timeline>
 		</event>
 	</events>

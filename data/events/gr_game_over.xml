@@ -1,14 +1,14 @@
 <chapter name="gr_game_over">
 	<timeline>
-		<timestart min="5" second="51" ms="102" />
-		<timeend min="5" second="54" ms="605" />
+		<timestart min="5" second="43" ms="643" frame="8569" />
+		<timeend min="5" second="47" ms="146" frame="8653" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="5" second="51" ms="102" />
+				<timestart min="5" second="43" ms="643" />
 			</timeline>
 		</event>
 	</events>

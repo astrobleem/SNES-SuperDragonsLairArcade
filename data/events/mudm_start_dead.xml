@@ -1,14 +1,14 @@
 <chapter name="mudm_start_dead">
 	<timeline>
-		<timestart min="16" second="48" ms="134" />
-		<timeend min="16" second="50" ms="468" />
+		<timestart min="16" second="54" ms="30" frame="24322" />
+		<timeend min="16" second="56" ms="364" frame="24378" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="16" second="48" ms="134" />
+				<timestart min="16" second="54" ms="30" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="ugr_game_over">
 	<timeline>
-		<timestart min="16" second="44" ms="672" />
-		<timeend min="16" second="48" ms="175" />
+		<timestart min="16" second="50" ms="484" frame="24239" />
+		<timeend min="16" second="53" ms="987" frame="24323" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="16" second="44" ms="672" />
+				<timestart min="16" second="50" ms="484" />
 			</timeline>
 		</event>
 	</events>

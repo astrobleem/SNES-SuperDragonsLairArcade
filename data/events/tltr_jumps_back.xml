@@ -1,20 +1,20 @@
 <chapter name="tltr_jumps_back">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="573" />
+		<timestart min="14" second="5" ms="517" frame="20277" />
+		<timeend min="14" second="7" ms="90" frame="20315" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="14" second="5" ms="517" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="328" />
-				<timeend min="0" second="0" ms="885" />
+				<timestart min="14" second="5" ms="845" />
+				<timeend min="14" second="6" ms="402" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="885" />
-				<timeend min="0" second="1" ms="540" />
+				<timestart min="14" second="6" ms="402" />
+				<timeend min="14" second="7" ms="57" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="328" />
-				<timeend min="0" second="1" ms="573" />
+				<timestart min="14" second="5" ms="845" />
+				<timeend min="14" second="7" ms="90" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="328" />
-				<timeend min="0" second="1" ms="573" />
+				<timestart min="14" second="5" ms="845" />
+				<timeend min="14" second="7" ms="90" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />

@@ -41,7 +41,6 @@ import numpy as np
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EVENTS_DIR = os.path.join(PROJECT_DIR, 'data', 'events')
 CHAPTERS_DIR = os.path.join(PROJECT_DIR, 'data', 'chapters')
-VIDEO_FILE = os.path.join(PROJECT_DIR, 'data', 'videos', 'dl_arcade.mp4')
 TOOLS_DIR = os.path.join(PROJECT_DIR, 'tools')
 SUPERFAMICONV = os.path.join(TOOLS_DIR, 'superfamiconv', 'superfamiconv.exe')
 MSU_WRITER = os.path.join(TOOLS_DIR, 'msu1blockwriter.py')
@@ -68,6 +67,10 @@ MSU1_AUDIO_HEADER = b"MSU1" + struct.pack('<I', 0)  # "MSU1" + loop point (0 = n
 OUTPUT_MSU = os.path.join(PROJECT_DIR, 'build', 'SuperDragonsLairArcade.msu')
 FINAL_MSU_PATH = os.path.join(PROJECT_DIR, '..', 'SuperDragonsLairArcade.sfc', 'SuperDragonsLairArcade.msu')
 
+# Daphne source paths (computed relative to project parent directory)
+DEFAULT_FRAMEFILE = os.path.join(os.path.dirname(PROJECT_DIR), 'DaphneCDROM', 'framefile', 'dlcdrom.TXT')
+DEFAULT_CONTENT_ROOT = os.path.join(os.path.dirname(PROJECT_DIR), 'DaphneCDROM', 'DLCDROM')
+
 # ---------- Path conversion ----------
 _is_wsl = None
 def is_wsl():
@@ -92,6 +95,68 @@ def to_win_path(path):
         return drive + ':' + rest.replace('/', '\\')
     return path
 
+# ---------- Daphne Framefile ----------
+def parse_framefile(framefile_path, content_root=None):
+    """Parse Daphne framefile into sorted list of segment entries.
+
+    Each entry: {frame, m2v_path, ogg_path, filename}
+    The framefile format is: first line = relative content dir, then frame<tab>filename per line.
+    """
+    segments = []
+    with open(framefile_path) as f:
+        lines = f.readlines()
+
+    if not content_root:
+        # First line is relative path to content directory (may use backslashes)
+        framefile_dir = os.path.dirname(os.path.abspath(framefile_path))
+        relative_dir = lines[0].strip().replace('\\', '/')
+        content_root = os.path.normpath(os.path.join(framefile_dir, relative_dir))
+
+    for line in lines[1:]:
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split(None, 1)
+        if len(parts) != 2:
+            continue
+        frame = int(parts[0])
+        filename = parts[1].strip()
+
+        m2v_path = os.path.join(content_root, filename)
+        ogg_path = m2v_path.replace('.m2v', '.ogg')
+
+        segments.append({
+            'frame': frame,
+            'm2v_path': m2v_path,
+            'ogg_path': ogg_path,
+            'filename': filename,
+        })
+
+    return sorted(segments, key=lambda s: s['frame'])
+
+
+def find_segment(segments, target_frame):
+    """Find the segment containing target_frame via binary search.
+
+    Returns (segment_dict, offset_seconds) or (None, 0).
+    offset_seconds is the time offset from the segment's start frame.
+    """
+    lo, hi = 0, len(segments) - 1
+    result = None
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if segments[mid]['frame'] <= target_frame:
+            result = mid
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    if result is not None:
+        seg = segments[result]
+        offset_seconds = (target_frame - seg['frame']) / 23.976
+        return seg, offset_seconds
+    return None, 0
+
+
 # ---------- XML Parsing ----------
 def parse_time(element):
     return (int(element.getAttribute('min')) * 60 * 1000 +
@@ -105,13 +170,21 @@ def parse_chapter_xml(xml_path):
     # Get the chapter's own timeline (not nested event timelines)
     timeline = [t for t in chapter.getElementsByTagName('timeline')
                 if t.parentNode == chapter][0]
-    timestart = parse_time(timeline.getElementsByTagName('timestart')[0])
+    timestart_el = timeline.getElementsByTagName('timestart')[0]
+    timestart = parse_time(timestart_el)
     timeend = parse_time(timeline.getElementsByTagName('timeend')[0])
+
+    # Read optional laserdisc frame attribute
+    start_frame = None
+    if timestart_el.hasAttribute('frame'):
+        start_frame = int(timestart_el.getAttribute('frame'))
+
     return {
         'name': chapter.getAttribute('name'),
         'timestart_ms': timestart,
         'timeend_ms': timeend,
         'duration_ms': max(0, timeend - timestart),
+        'start_frame': start_frame,
     }
 
 # ---------- Frame Extraction ----------
@@ -128,37 +201,55 @@ def get_ffmpeg():
     # Fallback: system ffmpeg (no CUDA in WSL typically)
     return SYSTEM_FFMPEG, False, False
 
-def extract_chapter_frames(chapter_info, chapter_dir, use_gpu=True):
-    """Extract video frames for one chapter using ffmpeg."""
+def extract_chapter_frames_from_segment(chapter_info, chapter_dir, segments):
+    """Extract video frames directly from a Daphne .m2v segment.
+
+    Uses CPU-only decode with yadif deinterlace, fps conversion via filter,
+    and trim filter for frame-accurate extraction (no -ss seeking).
+
+    Returns frame count on success, 0 if skipped, or -1 on error.
+    """
     if chapter_info['duration_ms'] <= 0:
         return 0
 
-    ts = format_time(chapter_info['timestart_ms'])
-    dur = format_time(chapter_info['duration_ms'])
+    start_frame = chapter_info.get('start_frame')
+    if start_frame is None:
+        return 0  # No frame info, skip
 
-    ffmpeg_path, needs_win_paths, has_cuda = get_ffmpeg()
+    seg, offset_seconds = find_segment(segments, start_frame)
+    if seg is None:
+        return 0
+
+    m2v_path = seg['m2v_path']
+    if not os.path.exists(m2v_path):
+        return 0
+
+    duration_s = chapter_info['duration_ms'] / 1000.0
+
+    ffmpeg_path, needs_win_paths, _ = get_ffmpeg()
 
     if needs_win_paths:
-        # Windows ffmpeg needs Windows paths
         out_pattern = to_win_path(os.path.join(chapter_dir, "video_%06d.gfx_video.png"))
-        video_path = to_win_path(VIDEO_FILE)
+        video_path = to_win_path(m2v_path)
     else:
         out_pattern = os.path.join(chapter_dir, "video_%06d.gfx_video.png")
-        video_path = VIDEO_FILE
+        video_path = m2v_path
 
+    # Filter chain: yadif deinterlace (29.97i -> progressive) -> fps conversion
+    # to 23.976 -> trim to target range -> reset PTS -> scale -> palette
+    # No CUDA, no -ss seeking — CPU decode from start, trim handles offset
     filter_str = (
+        f'yadif,fps=24000/1001,'
+        f'trim=start={offset_seconds:.6f}:duration={duration_s:.6f},'
+        f'setpts=PTS-STARTPTS,'
         f'scale={FRAME_WIDTH}:{FRAME_HEIGHT}[s];'
         f'[s]split[s1][s2];'
         f'[s1]palettegen=max_colors={MAX_COLORS}:stats_mode=single[p];'
         f'[s2][p]paletteuse=new=1:dither=bayer'
     )
 
-    cmd = [ffmpeg_path, '-y']
-    if use_gpu and has_cuda:
-        cmd += ['-hwaccel', 'cuda']
-    cmd += [
-        '-ss', ts,
-        '-t', dur,
+    cmd = [
+        ffmpeg_path, '-y',
         '-i', video_path,
         '-filter_complex', filter_str,
         '-f', 'image2',
@@ -168,36 +259,44 @@ def extract_chapter_frames(chapter_info, chapter_dir, use_gpu=True):
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
         if result.returncode != 0:
-            if use_gpu:
-                # Fallback to CPU
-                return extract_chapter_frames(chapter_info, chapter_dir, use_gpu=False)
+            print(f"    ffmpeg error: {result.stderr[-200:] if result.stderr else 'unknown'}")
             return -1
     except subprocess.TimeoutExpired:
         return -1
 
     return len(glob.glob(os.path.join(chapter_dir, "video_*.gfx_video.png")))
 
-# ---------- Audio Extraction ----------
-def extract_chapter_audio(chapter_info, chapter_dir):
-    """Extract audio for one chapter as MSU-1 PCM format.
 
-    Output: sfx_video.pcm in chapter_dir with MSU-1 header (8 bytes) +
-    raw PCM data (44100 Hz, 16-bit signed, stereo, little-endian).
+# ---------- Audio Extraction ----------
+def extract_chapter_audio_from_segment(chapter_info, chapter_dir, segments):
+    """Extract audio from a Daphne .ogg segment.
+
+    Returns True on success, or False on error/skip.
     """
     if chapter_info['duration_ms'] <= 0:
         return False
 
-    ts = format_time(chapter_info['timestart_ms'])
+    start_frame = chapter_info.get('start_frame')
+    if start_frame is None:
+        return False
+
+    seg, offset_seconds = find_segment(segments, start_frame)
+    if seg is None:
+        return False
+
+    ogg_path = seg['ogg_path']
+    if not os.path.exists(ogg_path):
+        return False
+
     dur = format_time(chapter_info['duration_ms'])
 
-    ffmpeg_path, needs_win_paths, has_cuda = get_ffmpeg()
+    ffmpeg_path, needs_win_paths, _ = get_ffmpeg()
 
     if needs_win_paths:
-        video_path = to_win_path(VIDEO_FILE)
+        audio_path = to_win_path(ogg_path)
     else:
-        video_path = VIDEO_FILE
+        audio_path = ogg_path
 
-    # Extract raw PCM audio to a temp file, then prepend MSU-1 header
     raw_audio_path = os.path.join(chapter_dir, "sfx_video.raw")
     pcm_output_path = os.path.join(chapter_dir, "sfx_video.pcm")
 
@@ -206,12 +305,17 @@ def extract_chapter_audio(chapter_info, chapter_dir):
     else:
         raw_out = raw_audio_path
 
+    # Double-seeking for .ogg
+    pre_seek_s = max(0, offset_seconds - 5)
+    precise_offset_s = offset_seconds - pre_seek_s
+
     cmd = [
         ffmpeg_path, '-y',
-        '-ss', ts,
+        '-ss', f'{pre_seek_s:.3f}',
+        '-i', audio_path,
+        '-ss', f'{precise_offset_s:.3f}',
         '-t', dur,
-        '-i', video_path,
-        '-vn',  # no video
+        '-vn',
         '-ar', str(AUDIO_SAMPLE_RATE),
         '-ac', str(AUDIO_CHANNELS),
         '-f', 's16le',
@@ -226,18 +330,17 @@ def extract_chapter_audio(chapter_info, chapter_dir):
     except subprocess.TimeoutExpired:
         return False
 
-    # Read raw PCM and write with MSU-1 header
     try:
         with open(raw_audio_path, 'rb') as f:
             raw_pcm = f.read()
         with open(pcm_output_path, 'wb') as f:
             f.write(MSU1_AUDIO_HEADER)
             f.write(raw_pcm)
-        # Clean up temp raw file
         os.remove(raw_audio_path)
         return True
     except IOError:
         return False
+
 
 # ---------- Tile Conversion ----------
 def pad_tilemap(tilemap_file):
@@ -477,12 +580,15 @@ def main():
                         help='Skip audio extraction')
     parser.add_argument('--clean', action='store_true',
                         help='Remove existing video frames before extraction')
+    parser.add_argument('--framefile', type=str, default=DEFAULT_FRAMEFILE,
+                        help='Path to Daphne framefile (default: %(default)s)')
+    parser.add_argument('--content-root', type=str, default=None,
+                        help='Path to Daphne content directory (default: from framefile)')
     args = parser.parse_args()
 
     print("=" * 60)
     print("MSU-1 Video Data Generator")
     print("=" * 60)
-    print(f"Video source: {VIDEO_FILE}")
     print(f"Chapters dir: {CHAPTERS_DIR}")
     print(f"Output MSU:   {OUTPUT_MSU}")
     print(f"Workers:      {args.workers}")
@@ -491,11 +597,29 @@ def main():
     print(f"ffmpeg:       {ffmpeg_path}")
     print(f"CUDA GPU:     {'Yes' if has_cuda else 'No (CPU fallback)'}")
     print(f"superfamiconv: {SUPERFAMICONV}")
-    print()
 
-    if not os.path.exists(VIDEO_FILE):
-        print(f"ERROR: Video file not found: {VIDEO_FILE}")
+    # Load Daphne framefile for direct .m2v/.ogg extraction (mandatory)
+    if not os.path.exists(args.framefile):
+        print(f"\nERROR: Daphne framefile not found: {args.framefile}")
         sys.exit(1)
+
+    daphne_segments = parse_framefile(args.framefile, args.content_root)
+    print(f"Framefile:    {args.framefile} ({len(daphne_segments)} segments)")
+
+    if daphne_segments:
+        sample_m2v = daphne_segments[0]['m2v_path']
+        content_dir = os.path.dirname(sample_m2v)
+        if os.path.isdir(content_dir):
+            print(f"Content root: {content_dir}")
+        else:
+            print(f"\nERROR: Content root not found: {content_dir}")
+            sys.exit(1)
+    else:
+        print(f"\nERROR: Framefile parsed 0 segments")
+        sys.exit(1)
+
+    print(f"\nUsing direct .m2v/.ogg extraction from Daphne segments")
+    print()
 
     # Build chapter list
     chapters = []
@@ -513,11 +637,12 @@ def main():
 
     print(f"Found {len(chapters)} chapters to process\n")
 
-    # Phase 1: Extract video frames
+    # Phase 1: Extract video frames from .m2v segments
     total_frames = 0
     extract_errors = 0
+    skipped_no_frame = 0
     if not args.skip_extract:
-        print("--- Phase 1: Extracting video frames (ffmpeg + CUDA) ---")
+        print("--- Phase 1: Extracting video frames (ffmpeg from .m2v) ---")
         extract_start = time.time()
 
         for i, (name, cdir, xml) in enumerate(chapters):
@@ -537,29 +662,34 @@ def main():
                 total_frames += n
                 continue
 
-            n = extract_chapter_frames(info, cdir)
-            if n < 0:
+            if info.get('start_frame') is None:
+                print(f"[{i+1:3d}/{len(chapters)}] {name}: SKIP (no start_frame)")
+                skipped_no_frame += 1
+                continue
+
+            n = extract_chapter_frames_from_segment(info, cdir, daphne_segments)
+            if n > 0:
+                total_frames += n
+                print(f"[{i+1:3d}/{len(chapters)}] {name}: {n} frames (from .m2v)")
+            elif n == 0:
+                print(f"[{i+1:3d}/{len(chapters)}] {name}: 0 frames (no segment)")
+            else:
                 print(f"[{i+1:3d}/{len(chapters)}] {name}: EXTRACTION ERROR")
                 extract_errors += 1
-            elif n == 0:
-                print(f"[{i+1:3d}/{len(chapters)}] {name}: 0 frames")
-            else:
-                total_frames += n
-                print(f"[{i+1:3d}/{len(chapters)}] {name}: {n} frames extracted")
 
         extract_elapsed = time.time() - extract_start
         print(f"\nExtraction done: {total_frames} frames in {extract_elapsed:.1f}s "
-              f"({extract_errors} errors)\n")
+              f"({extract_errors} errors, {skipped_no_frame} skipped no start_frame)\n")
     else:
         for name, cdir, xml in chapters:
             total_frames += len(glob.glob(os.path.join(cdir, "*.gfx_video.png")))
         print(f"Skipping extraction. {total_frames} existing PNG frames found.\n")
 
-    # Phase 1b: Extract audio per chapter
+    # Phase 1b: Extract audio per chapter from .ogg segments
     total_audio = 0
     audio_errors = 0
     if not args.skip_audio:
-        print("--- Phase 1b: Extracting audio per chapter (ffmpeg) ---")
+        print("--- Phase 1b: Extracting audio per chapter (ffmpeg from .ogg) ---")
         audio_start = time.time()
 
         for i, (name, cdir, xml) in enumerate(chapters):
@@ -574,10 +704,10 @@ def main():
                     print(f"[{i+1:3d}/{len(chapters)}] {name}: audio (cached)")
                 continue
 
-            if extract_chapter_audio(info, cdir):
+            if extract_chapter_audio_from_segment(info, cdir, daphne_segments):
                 total_audio += 1
                 if (i + 1) % 50 == 0 or i == len(chapters) - 1:
-                    print(f"[{i+1:3d}/{len(chapters)}] {name}: audio extracted")
+                    print(f"[{i+1:3d}/{len(chapters)}] {name}: audio (from .ogg)")
             else:
                 audio_errors += 1
                 if audio_errors <= 5:

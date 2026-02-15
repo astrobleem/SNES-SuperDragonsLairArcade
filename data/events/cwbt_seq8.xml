@@ -1,7 +1,7 @@
 <chapter name="cwbt_seq8">
 	<timeline>
-		<timestart min="8" second="36" ms="601" />
-		<timeend min="8" second="38" ms="643" />
+		<timestart min="8" second="29" ms="142" frame="12537" />
+		<timeend min="8" second="31" ms="184" frame="12586" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="8" second="36" ms="601" />
+				<timestart min="8" second="29" ms="142" />
 			</timeline>
 		</event>
 	</events>

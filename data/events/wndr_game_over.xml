@@ -1,14 +1,14 @@
 <chapter name="wndr_game_over">
 	<timeline>
-		<timestart min="6" second="9" ms="495" />
-		<timeend min="6" second="12" ms="998" />
+		<timestart min="6" second="2" ms="37" frame="9010" />
+		<timeend min="6" second="5" ms="540" frame="9094" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="9" ms="495" />
+				<timestart min="6" second="2" ms="37" />
 			</timeline>
 		</event>
 	</events>

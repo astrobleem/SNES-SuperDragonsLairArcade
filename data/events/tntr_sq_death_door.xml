@@ -1,7 +1,7 @@
 <chapter name="tntr_sq_death_door">
 	<timeline>
-		<timestart min="1" second="56" ms="34" />
-		<timeend min="1" second="56" ms="908" />
+		<timestart min="1" second="48" ms="875" frame="2933" />
+		<timeend min="1" second="49" ms="749" frame="2954" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="1" second="56" ms="34" />
+				<timestart min="1" second="48" ms="875" />
 			</timeline>
 		</event>
 	</events>

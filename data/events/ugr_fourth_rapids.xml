@@ -1,20 +1,20 @@
 <chapter name="ugr_fourth_rapids">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="818" />
+		<timestart min="16" second="7" ms="330" frame="23202" />
+		<timeend min="16" second="10" ms="148" frame="23270" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="16" second="7" ms="330" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="1" ms="343" />
-				<timeend min="0" second="2" ms="163" />
+				<timestart min="16" second="8" ms="673" />
+				<timeend min="16" second="9" ms="493" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="2" ms="163" />
-				<timeend min="0" second="2" ms="785" />
+				<timestart min="16" second="9" ms="493" />
+				<timeend min="16" second="10" ms="115" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="1" ms="606" />
-				<timeend min="0" second="2" ms="818" />
+				<timestart min="16" second="8" ms="936" />
+				<timeend min="16" second="10" ms="148" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="1" ms="343" />
-				<timeend min="0" second="2" ms="163" />
+				<timestart min="16" second="8" ms="673" />
+				<timeend min="16" second="9" ms="493" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
-				<timestart min="0" second="2" ms="163" />
-				<timeend min="0" second="2" ms="785" />
+				<timestart min="16" second="9" ms="493" />
+				<timeend min="16" second="10" ms="115" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

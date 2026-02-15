@@ -1,14 +1,14 @@
 <chapter name="fpl_game_over">
 	<timeline>
-		<timestart min="10" second="39" ms="641" />
-		<timeend min="10" second="43" ms="144" />
+		<timestart min="10" second="45" ms="920" frame="15487" />
+		<timeend min="10" second="49" ms="423" frame="15571" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="39" ms="641" />
+				<timestart min="10" second="45" ms="920" />
 			</timeline>
 		</event>
 	</events>

@@ -10,6 +10,7 @@ Usage:
 """
 
 import argparse
+import json
 import logging
 import os
 import re
@@ -21,14 +22,52 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 Token = Union[str, int, float, bool, None, Tuple[str, str]]
 
 
-# ============ Time conversion functions matching game.lua ============
+# ============ Time conversion functions ============
+
+# Segment timing table loaded from data/segment_timing.json.
+# Each entry: {frame, cumulative_ms, duration_ms, filename}
+# Built by tools/generate_segment_timing.py from Daphne framefile + ffprobe.
+_segment_timing: List[Dict] = []
+
+
+def load_segment_timing(json_path: str) -> None:
+    """Load precomputed segment timing from JSON."""
+    global _segment_timing
+    with open(json_path) as f:
+        data = json.load(f)
+    _segment_timing = data['segments']
+    logging.info(f'Loaded {len(_segment_timing)} segment timing entries from {json_path}')
+
 
 def laserdisc_frame_to_ms(frame: float) -> float:
     return (frame / 23.976) * 1000.0
 
 
 def time_laserdisc_frame(frame: float) -> float:
-    return laserdisc_frame_to_ms(frame) - 6297.0
+    """Convert a laserdisc frame number to MP4 milliseconds.
+
+    Uses per-segment cumulative timing from the Daphne framefile.
+    Each segment in the assembled MP4 starts at a known cumulative time.
+    The offset within a segment is (frame - seg_start) / 23.976fps.
+    """
+    if not _segment_timing:
+        # Fallback to old formula if timing table not loaded
+        return laserdisc_frame_to_ms(frame) - 6297.0
+
+    # Find containing segment: last segment where seg.frame <= frame
+    seg = None
+    for s in _segment_timing:
+        if s['frame'] <= frame:
+            seg = s
+        else:
+            break
+
+    if seg is None:
+        # Frame is before first segment — use raw frame-to-ms
+        return laserdisc_frame_to_ms(frame)
+
+    offset_ms = (frame - seg['frame']) / 23.976 * 1000.0
+    return seg['cumulative_ms'] + offset_ms
 
 
 def time_laserdisc_noseek() -> float:
@@ -37,6 +76,48 @@ def time_laserdisc_noseek() -> float:
 
 def time_to_ms(seconds: float, ms: float) -> float:
     return seconds * 1000 + ms
+
+
+def capture_frame_numbers(text: str) -> Dict[float, int]:
+    """Pre-scan Lua text for time_laserdisc_frame() calls and build ms->frame mapping.
+
+    Must be called BEFORE preprocess_functions() which replaces these calls with
+    float values. Handles composite expressions like:
+      time_laserdisc_frame(1823) - laserdisc_frame_to_ms(2) -> effective frame 1821
+      time_laserdisc_frame(18282) + laserdisc_frame_to_ms(1) -> effective frame 18283
+
+    Returns Dict[float, int] mapping the evaluated ms value to the effective frame number.
+    """
+    mapping: Dict[float, int] = {}
+    pattern = re.compile(
+        r'time_laserdisc_frame\((\d+)\)'
+        r'(?:\s*([+-])\s*laserdisc_frame_to_ms\((\d+)\))?'
+    )
+    for m in pattern.finditer(text):
+        primary_frame = int(m.group(1))
+        if m.group(2) and m.group(3):
+            adj_frames = int(m.group(3))
+            if m.group(2) == '-':
+                effective_frame = primary_frame - adj_frames
+                ms_value = time_laserdisc_frame(primary_frame) - laserdisc_frame_to_ms(adj_frames)
+            else:
+                effective_frame = primary_frame + adj_frames
+                ms_value = time_laserdisc_frame(primary_frame) + laserdisc_frame_to_ms(adj_frames)
+        else:
+            effective_frame = primary_frame
+            ms_value = time_laserdisc_frame(primary_frame)
+        mapping[ms_value] = effective_frame
+    return mapping
+
+
+def lookup_frame(ms_to_frame: Dict[float, int], ms_value: float, tolerance: float = 0.5) -> Optional[int]:
+    """Look up frame number for a millisecond value with tolerance."""
+    if ms_value in ms_to_frame:
+        return ms_to_frame[ms_value]
+    for ms, frame in ms_to_frame.items():
+        if abs(ms - ms_value) < tolerance:
+            return frame
+    return None
 
 
 # ============ Name abbreviation ============
@@ -445,15 +526,18 @@ def derive_action_result(scene_name: str, action: Dict) -> Tuple[str, str]:
 
 # ============ XML generation ============
 
-def ms_to_attrs(total_ms: float) -> str:
-    """Convert milliseconds to min/second/ms XML attributes."""
+def ms_to_attrs(total_ms: float, frame: Optional[int] = None) -> str:
+    """Convert milliseconds to min/second/ms XML attributes, with optional frame."""
     if total_ms < 0:
         total_ms = 0
     total_ms = round(total_ms)
     minutes = int(total_ms // 60000)
     seconds = int((total_ms % 60000) // 1000)
     ms = int(total_ms % 1000)
-    return f'min="{minutes}" second="{seconds}" ms="{ms}"'
+    attrs = f'min="{minutes}" second="{seconds}" ms="{ms}"'
+    if frame is not None:
+        attrs += f' frame="{frame}"'
+    return attrs
 
 
 # Diagonal inputs to skip — they're always redundant with individual direction actions in game.lua
@@ -470,25 +554,201 @@ def to_float(val: Any, default: float = 0.0) -> float:
         return default
 
 
-def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Dict[str, str]) -> str:
+def resolve_scene_times(scene_data: Dict[str, Dict]) -> Dict[str, float]:
+    """Resolve noseek (-1) start times by walking predecessor chains.
+
+    In DirkSimple, time_laserdisc_noseek() means "don't seek the video player;
+    continue from the current position." For MSU-1, each chapter needs an absolute
+    timestamp. We resolve noseek times by finding each sequence's predecessor
+    (the sequence whose timeout.nextsequence points to it) and computing:
+        resolved[seq] = resolved[predecessor] + predecessor.timeout.when
+
+    Returns a dict mapping seq_name -> resolved start_time in ms.
+    """
+    resolved: Dict[str, float] = {}
+    # Build timeout predecessor map: seq_name -> predecessor seq_name
+    predecessor: Dict[str, str] = {}
+    for seq_name, seq in scene_data.items():
+        if not isinstance(seq, dict):
+            continue
+        timeout = seq.get('timeout', {})
+        if isinstance(timeout, dict):
+            next_seq = timeout.get('nextsequence')
+            if next_seq and isinstance(next_seq, str):
+                predecessor[next_seq] = seq_name
+
+    # Build action predecessor map: target -> (source_seq, action_from_ms)
+    # Most noseek sequences are reached via player actions, not timeouts
+    action_pred: Dict[str, Tuple[str, float]] = {}
+    for seq_name, seq in scene_data.items():
+        if not isinstance(seq, dict):
+            continue
+        actions = seq.get('actions')
+        if isinstance(actions, list):
+            for action in actions:
+                if not isinstance(action, dict):
+                    continue
+                next_seq = action.get('nextsequence')
+                if next_seq and isinstance(next_seq, str):
+                    action_from = to_float(action.get('from', 0))
+                    if next_seq not in action_pred:
+                        action_pred[next_seq] = (seq_name, action_from)
+
+    # Seed with sequences that have explicit start_time >= 0
+    for seq_name, seq in scene_data.items():
+        if not isinstance(seq, dict):
+            continue
+        start_time = to_float(seq.get('start_time', 0))
+        if start_time >= 0:
+            resolved[seq_name] = start_time
+
+    # Iteratively resolve noseek sequences from their predecessors
+    changed = True
+    while changed:
+        changed = False
+        for seq_name, seq in scene_data.items():
+            if not isinstance(seq, dict):
+                continue
+            if seq_name in resolved:
+                continue
+            # Try timeout predecessor first
+            pred = predecessor.get(seq_name)
+            if pred and pred in resolved:
+                pred_seq = scene_data[pred]
+                pred_timeout = pred_seq.get('timeout', {})
+                if isinstance(pred_timeout, dict):
+                    pred_when = to_float(pred_timeout.get('when', 0))
+                else:
+                    pred_when = 0.0
+                resolved[seq_name] = resolved[pred] + pred_when
+                changed = True
+            # Try action predecessor (player input transitions)
+            elif seq_name in action_pred:
+                action_src, action_from = action_pred[seq_name]
+                if action_src in resolved:
+                    resolved[seq_name] = resolved[action_src] + action_from
+                    changed = True
+
+    # Fallback: unreachable noseek sequences default to 0 (routing nodes)
+    for seq_name, seq in scene_data.items():
+        if not isinstance(seq, dict):
+            continue
+        if seq_name not in resolved:
+            resolved[seq_name] = 0.0
+
+    return resolved
+
+
+def resolve_scene_frames(scene_data: Dict[str, Dict], ms_to_frame: Dict[float, int],
+                         resolved_times: Dict[str, float]) -> Dict[str, int]:
+    """Resolve laserdisc frame numbers per sequence, including noseek sequences.
+
+    For sequences with explicit time_laserdisc_frame() calls, looks up the frame
+    from ms_to_frame mapping. For noseek sequences, computes:
+        frame = predecessor_frame + round(predecessor_timeout_when_ms * 23.976 / 1000)
+
+    Returns dict mapping seq_name -> resolved laserdisc frame number.
+    """
+    resolved: Dict[str, int] = {}
+
+    # Build timeout predecessor map: seq_name -> predecessor seq_name
+    predecessor: Dict[str, str] = {}
+    for seq_name, seq in scene_data.items():
+        if not isinstance(seq, dict):
+            continue
+        timeout = seq.get('timeout', {})
+        if isinstance(timeout, dict):
+            next_seq = timeout.get('nextsequence')
+            if next_seq and isinstance(next_seq, str):
+                predecessor[next_seq] = seq_name
+
+    # Build action predecessor map: target -> (source_seq, action_from_ms)
+    action_pred: Dict[str, Tuple[str, float]] = {}
+    for seq_name, seq in scene_data.items():
+        if not isinstance(seq, dict):
+            continue
+        actions = seq.get('actions')
+        if isinstance(actions, list):
+            for action in actions:
+                if not isinstance(action, dict):
+                    continue
+                next_seq = action.get('nextsequence')
+                if next_seq and isinstance(next_seq, str):
+                    action_from = to_float(action.get('from', 0))
+                    if next_seq not in action_pred:
+                        action_pred[next_seq] = (seq_name, action_from)
+
+    # Seed with sequences that have explicit frame numbers (start_time >= 0)
+    for seq_name, seq in scene_data.items():
+        if not isinstance(seq, dict):
+            continue
+        start_time = to_float(seq.get('start_time', 0))
+        if start_time >= 0:
+            frame = lookup_frame(ms_to_frame, start_time)
+            if frame is not None:
+                resolved[seq_name] = frame
+
+    # Iteratively resolve noseek sequences from their predecessors
+    changed = True
+    while changed:
+        changed = False
+        for seq_name, seq in scene_data.items():
+            if not isinstance(seq, dict):
+                continue
+            if seq_name in resolved:
+                continue
+            # Try timeout predecessor first
+            pred = predecessor.get(seq_name)
+            if pred and pred in resolved:
+                pred_seq = scene_data[pred]
+                pred_timeout = pred_seq.get('timeout', {})
+                if isinstance(pred_timeout, dict):
+                    pred_when = to_float(pred_timeout.get('when', 0))
+                else:
+                    pred_when = 0.0
+                resolved[seq_name] = resolved[pred] + round(pred_when * 23.976 / 1000)
+                changed = True
+            # Try action predecessor (player input transitions)
+            elif seq_name in action_pred:
+                action_src, action_from = action_pred[seq_name]
+                if action_src in resolved:
+                    resolved[seq_name] = resolved[action_src] + round(action_from * 23.976 / 1000)
+                    changed = True
+
+    return resolved
+
+
+def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Dict[str, str],
+                 resolved_times: Optional[Dict[str, float]] = None,
+                 resolved_frames: Optional[Dict[str, int]] = None) -> str:
     """Generate XML event file content for one chapter."""
     chapter_name = make_chapter_name(scene_name, seq_name)
 
-    start_time = to_float(sequence.get('start_time', 0))
+    # Use resolved time if available, otherwise fall back to raw start_time
+    if resolved_times and seq_name in resolved_times:
+        start_time = resolved_times[seq_name]
+    else:
+        start_time = to_float(sequence.get('start_time', 0))
     timeout = sequence.get('timeout', {})
     if not isinstance(timeout, dict):
         timeout = {}
     timeout_when = to_float(timeout.get('when', 0))
 
-    # Clamp noseek (-1) to 0 for XML times
+    # Clamp to 0 for XML times (shouldn't be needed after resolution, but safe)
     xml_start = max(0.0, start_time)
     xml_end = xml_start + timeout_when
+
+    # Resolve laserdisc frame numbers for chapter timeline
+    start_frame = resolved_frames.get(seq_name) if resolved_frames else None
+    end_frame = None
+    if start_frame is not None:
+        end_frame = start_frame + round(timeout_when * 23.976 / 1000)
 
     lines: List[str] = []
     lines.append(f'<chapter name="{chapter_name}">')
     lines.append(f'\t<timeline>')
-    lines.append(f'\t\t<timestart {ms_to_attrs(xml_start)} />')
-    lines.append(f'\t\t<timeend {ms_to_attrs(xml_end)} />')
+    lines.append(f'\t\t<timestart {ms_to_attrs(xml_start, start_frame)} />')
+    lines.append(f'\t\t<timeend {ms_to_attrs(xml_end, end_frame)} />')
     lines.append(f'\t</timeline>')
 
     # Params
@@ -590,12 +850,30 @@ def main() -> None:
         description='Generate XML event files from DirkSimple game.lua')
     parser.add_argument('--input', required=True, help='Path to game.lua')
     parser.add_argument('--outfolder', required=True, help='Output folder for XML files')
+    parser.add_argument('--segment-timing', default=None,
+                        help='Path to segment_timing.json (default: data/segment_timing.json)')
     args = parser.parse_args()
+
+    # Load segment timing table for accurate frame-to-ms conversion
+    if args.segment_timing:
+        timing_path = args.segment_timing
+    else:
+        script_dir = Path(__file__).resolve().parent
+        timing_path = str(script_dir.parent / 'data' / 'segment_timing.json')
+    if os.path.exists(timing_path):
+        load_segment_timing(timing_path)
+    else:
+        logging.warning(f'Segment timing not found at {timing_path}, using fallback formula')
 
     lua_text = Path(args.input).read_text()
 
-    # Preprocess: strip comments, evaluate function calls and arithmetic
+    # Preprocess: strip comments, then capture frame numbers BEFORE evaluating functions
     processed = strip_comments(lua_text)
+
+    # Capture laserdisc frame numbers before preprocessing replaces them with ms values
+    ms_to_frame = capture_frame_numbers(processed)
+    logging.info(f'Captured {len(ms_to_frame)} frame number mappings from time_laserdisc_frame() calls')
+
     processed = preprocess_functions(processed)
 
     # Parse scenes table
@@ -632,17 +910,37 @@ def main() -> None:
     total = 0
     skipped = 0
 
+    # Track noseek resolution stats
+    noseek_resolved = 0
+    noseek_fallback = 0
+
     for scene_name in sorted(scenes.keys()):
         scene_data = scenes[scene_name]
         if not isinstance(scene_data, dict):
             continue
+
+        # Resolve noseek times for this scene
+        resolved_times = resolve_scene_times(scene_data)
+
+        # Resolve laserdisc frame numbers for this scene
+        resolved_frames = resolve_scene_frames(scene_data, ms_to_frame, resolved_times)
+
+        # Count noseek resolutions
+        for seq_name, seq in scene_data.items():
+            if isinstance(seq, dict) and to_float(seq.get('start_time', 0)) < 0:
+                if resolved_times.get(seq_name, 0) > 0:
+                    noseek_resolved += 1
+                else:
+                    noseek_fallback += 1
+
         for seq_name in sorted(scene_data.keys()):
             sequence = scene_data[seq_name]
             if not isinstance(sequence, dict):
                 continue
 
             chapter_name = make_chapter_name(scene_name, seq_name)
-            xml_content = generate_xml(scene_name, seq_name, sequence, scene_order)
+            xml_content = generate_xml(scene_name, seq_name, sequence, scene_order,
+                                       resolved_times, resolved_frames)
 
             xml_path = outfolder / f'{chapter_name}.xml'
             xml_path.write_text(xml_content)
@@ -680,6 +978,9 @@ def main() -> None:
     logging.info(f'\nSummary:')
     logging.info(f'  Scenes: {len(scenes)}')
     logging.info(f'  Chapters generated: {total}')
+    logging.info(f'  Frame mappings captured: {len(ms_to_frame)}')
+    logging.info(f'  Noseek resolved: {noseek_resolved}')
+    logging.info(f'  Noseek fallback (0ms): {noseek_fallback}')
     logging.info(f'  Orphan XMLs: {len(orphans)}')
     logging.info(f'  Missing results: {missing_result}')
 

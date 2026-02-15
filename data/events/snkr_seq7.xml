@@ -1,7 +1,7 @@
 <chapter name="snkr_seq7">
 	<timeline>
-		<timestart min="2" second="15" ms="386" />
-		<timeend min="2" second="16" ms="260" />
+		<timestart min="2" second="8" ms="228" frame="3397" />
+		<timeend min="2" second="9" ms="102" frame="3418" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="15" ms="386" />
+				<timestart min="2" second="8" ms="228" />
 			</timeline>
 		</event>
 	</events>

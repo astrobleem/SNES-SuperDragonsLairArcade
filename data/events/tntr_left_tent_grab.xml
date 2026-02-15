@@ -1,7 +1,7 @@
 <chapter name="tntr_left_tent_grab">
 	<timeline>
-		<timestart min="1" second="47" ms="525" />
-		<timeend min="1" second="50" ms="443" />
+		<timestart min="1" second="40" ms="367" frame="2729" />
+		<timeend min="1" second="43" ms="285" frame="2799" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="1" second="47" ms="525" />
+				<timestart min="1" second="40" ms="367" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="rbal_start_dead">
 	<timeline>
-		<timestart min="17" second="59" ms="873" />
-		<timeend min="18" second="2" ms="207" />
+		<timestart min="18" second="5" ms="668" frame="26042" />
+		<timeend min="18" second="8" ms="2" frame="26098" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="17" second="59" ms="873" />
+				<timestart min="18" second="5" ms="668" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="ugr_start_dead">
 	<timeline>
-		<timestart min="15" second="39" ms="732" />
-		<timeend min="15" second="42" ms="66" />
+		<timestart min="15" second="45" ms="628" frame="22682" />
+		<timeend min="15" second="47" ms="962" frame="22738" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="15" second="39" ms="732" />
+				<timestart min="15" second="45" ms="628" />
 			</timeline>
 		</event>
 	</events>

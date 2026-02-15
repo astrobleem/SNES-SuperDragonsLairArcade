@@ -1,14 +1,14 @@
 <chapter name="vest_game_over">
 	<timeline>
-		<timestart min="1" second="26" ms="45" />
-		<timeend min="1" second="29" ms="548" />
+		<timestart min="1" second="18" ms="887" frame="2214" />
+		<timeend min="1" second="22" ms="390" frame="2298" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="1" second="26" ms="45" />
+				<timestart min="1" second="18" ms="887" />
 			</timeline>
 		</event>
 	</events>

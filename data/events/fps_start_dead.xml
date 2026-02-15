@@ -1,14 +1,14 @@
 <chapter name="fps_start_dead">
 	<timeline>
-		<timestart min="10" second="10" ms="612" />
-		<timeend min="10" second="12" ms="988" />
+		<timestart min="10" second="17" ms="41" frame="14791" />
+		<timeend min="10" second="19" ms="417" frame="14848" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="10" ms="612" />
+				<timestart min="10" second="17" ms="41" />
 			</timeline>
 		</event>
 	</events>

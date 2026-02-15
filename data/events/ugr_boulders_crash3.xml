@@ -1,7 +1,7 @@
 <chapter name="ugr_boulders_crash3">
 	<timeline>
-		<timestart min="16" second="34" ms="120" />
-		<timeend min="16" second="35" ms="662" />
+		<timestart min="16" second="39" ms="932" frame="23986" />
+		<timeend min="16" second="41" ms="474" frame="24023" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="16" second="34" ms="120" />
+				<timestart min="16" second="39" ms="932" />
 			</timeline>
 		</event>
 	</events>

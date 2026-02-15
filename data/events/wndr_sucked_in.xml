@@ -1,7 +1,7 @@
 <chapter name="wndr_sucked_in">
 	<timeline>
-		<timestart min="6" second="6" ms="492" />
-		<timeend min="6" second="9" ms="494" />
+		<timestart min="5" second="59" ms="34" frame="8938" />
+		<timeend min="6" second="2" ms="36" frame="9010" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="6" ms="492" />
+				<timestart min="5" second="59" ms="34" />
 			</timeline>
 		</event>
 	</events>

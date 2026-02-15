@@ -1,7 +1,7 @@
 <chapter name="sm_seq12">
 	<timeline>
-		<timestart min="5" second="12" ms="730" />
-		<timeend min="5" second="13" ms="688" />
+		<timestart min="5" second="5" ms="372" frame="7649" />
+		<timeend min="5" second="6" ms="330" frame="7672" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="5" second="12" ms="730" />
+				<timestart min="5" second="5" ms="372" />
 			</timeline>
 		</event>
 	</events>

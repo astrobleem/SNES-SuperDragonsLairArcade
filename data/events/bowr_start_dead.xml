@@ -1,14 +1,14 @@
 <chapter name="bowr_start_dead">
 	<timeline>
-		<timestart min="6" second="12" ms="957" />
-		<timeend min="6" second="15" ms="323" />
+		<timestart min="6" second="5" ms="582" frame="9093" />
+		<timeend min="6" second="7" ms="948" frame="9150" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="12" ms="957" />
+				<timestart min="6" second="5" ms="582" />
 			</timeline>
 		</event>
 	</events>

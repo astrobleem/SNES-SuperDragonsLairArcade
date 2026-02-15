@@ -1,7 +1,7 @@
 <chapter name="bcld_seq10">
 	<timeline>
-		<timestart min="3" second="43" ms="641" />
-		<timeend min="3" second="44" ms="766" />
+		<timestart min="3" second="36" ms="266" frame="5513" />
+		<timeend min="3" second="37" ms="391" frame="5540" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="3" second="43" ms="641" />
+				<timestart min="3" second="36" ms="266" />
 			</timeline>
 		</event>
 	</events>

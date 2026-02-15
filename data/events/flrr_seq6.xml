@@ -1,14 +1,14 @@
 <chapter name="flrr_seq6">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="57" />
+		<timestart min="8" second="45" ms="577" frame="12930" />
+		<timeend min="8" second="47" ms="634" frame="12979" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="8" second="45" ms="577" />
 			</timeline>
 		</event>
 	</events>

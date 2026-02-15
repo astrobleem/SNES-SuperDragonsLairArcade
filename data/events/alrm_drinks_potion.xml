@@ -1,7 +1,7 @@
 <chapter name="alrm_drinks_potion">
 	<timeline>
-		<timestart min="12" second="40" ms="220" />
-		<timeend min="12" second="44" ms="306" />
+		<timestart min="12" second="46" ms="466" frame="18378" />
+		<timeend min="12" second="50" ms="552" frame="18476" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="12" second="40" ms="220" />
+				<timestart min="12" second="46" ms="466" />
 			</timeline>
 		</event>
 	</events>

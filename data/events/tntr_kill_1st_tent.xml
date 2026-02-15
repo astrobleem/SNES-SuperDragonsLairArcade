@@ -1,20 +1,20 @@
 <chapter name="tntr_kill_1st_tent">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="359" />
+		<timestart min="1" second="27" ms="372" frame="2417" />
+		<timeend min="1" second="29" ms="731" frame="2474" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="1" second="27" ms="372" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="1" ms="409" />
-				<timeend min="0" second="2" ms="327" />
+				<timestart min="1" second="28" ms="781" />
+				<timeend min="1" second="29" ms="699" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />

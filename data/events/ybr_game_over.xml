@@ -1,14 +1,14 @@
 <chapter name="ybr_game_over">
 	<timeline>
-		<timestart min="3" second="21" ms="452" />
-		<timeend min="3" second="24" ms="955" />
+		<timestart min="3" second="14" ms="77" frame="4981" />
+		<timeend min="3" second="17" ms="580" frame="5065" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="3" second="21" ms="452" />
+				<timestart min="3" second="14" ms="77" />
 			</timeline>
 		</event>
 	</events>

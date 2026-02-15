@@ -1,14 +1,14 @@
 <chapter name="flrp_start_dead">
 	<timeline>
-		<timestart min="2" second="19" ms="891" />
-		<timeend min="2" second="22" ms="58" />
+		<timestart min="2" second="12" ms="733" frame="3505" />
+		<timeend min="2" second="14" ms="900" frame="3557" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="19" ms="891" />
+				<timestart min="2" second="12" ms="733" />
 			</timeline>
 		</event>
 	</events>

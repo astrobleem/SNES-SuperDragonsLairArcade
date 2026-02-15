@@ -1,14 +1,14 @@
 <chapter name="bcld_game_over">
 	<timeline>
-		<timestart min="3" second="44" ms="809" />
-		<timeend min="3" second="48" ms="312" />
+		<timestart min="3" second="37" ms="434" frame="5541" />
+		<timeend min="3" second="40" ms="937" frame="5625" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="3" second="44" ms="809" />
+				<timestart min="3" second="37" ms="434" />
 			</timeline>
 		</event>
 	</events>

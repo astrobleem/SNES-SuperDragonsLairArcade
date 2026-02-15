@@ -1,14 +1,14 @@
 <chapter name="tdl_endgame">
 	<timeline>
-		<timestart min="21" second="34" ms="87" />
-		<timeend min="21" second="44" ms="87" />
+		<timestart min="21" second="39" ms="815" frame="31178" />
+		<timeend min="21" second="49" ms="815" frame="31418" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="21" second="34" ms="87" />
+				<timestart min="21" second="39" ms="815" />
 			</timeline>
 		</event>
 	</events>

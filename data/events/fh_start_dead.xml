@@ -1,14 +1,14 @@
 <chapter name="fh_start_dead">
 	<timeline>
-		<timestart min="6" second="49" ms="327" />
-		<timeend min="6" second="51" ms="411" />
+		<timestart min="6" second="41" ms="910" frame="9965" />
+		<timeend min="6" second="43" ms="994" frame="10015" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="6" second="49" ms="327" />
+				<timestart min="6" second="41" ms="910" />
 			</timeline>
 		</event>
 	</events>

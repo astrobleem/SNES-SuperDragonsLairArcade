@@ -1,14 +1,14 @@
 <chapter name="fplr_seq7">
 	<timeline>
-		<timestart min="15" second="31" ms="224" />
-		<timeend min="15" second="36" ms="294" />
+		<timestart min="15" second="37" ms="36" frame="22478" />
+		<timeend min="15" second="42" ms="106" frame="22600" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="15" second="31" ms="224" />
+				<timestart min="15" second="37" ms="36" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="bcld_start_dead">
 	<timeline>
-		<timestart min="3" second="25" ms="39" />
-		<timeend min="3" second="27" ms="123" />
+		<timestart min="3" second="17" ms="748" frame="5067" />
+		<timeend min="3" second="19" ms="832" frame="5117" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="3" second="25" ms="39" />
+				<timestart min="3" second="17" ms="748" />
 			</timeline>
 		</event>
 	</events>

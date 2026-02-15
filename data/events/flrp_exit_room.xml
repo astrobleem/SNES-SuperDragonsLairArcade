@@ -1,14 +1,14 @@
 <chapter name="flrp_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="0" ms="792" />
+		<timestart min="2" second="23" ms="588" frame="3765" />
+		<timeend min="2" second="24" ms="380" frame="3784" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="2" second="23" ms="588" />
 			</timeline>
 		</event>
 	</events>

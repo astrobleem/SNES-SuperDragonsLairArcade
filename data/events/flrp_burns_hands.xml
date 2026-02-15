@@ -1,14 +1,14 @@
 <chapter name="flrp_burns_hands">
 	<timeline>
-		<timestart min="2" second="37" ms="408" />
-		<timeend min="2" second="38" ms="991" />
+		<timestart min="2" second="30" ms="83" frame="3925" />
+		<timeend min="2" second="31" ms="666" frame="3963" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="37" ms="408" />
+				<timestart min="2" second="30" ms="83" />
 			</timeline>
 		</event>
 	</events>

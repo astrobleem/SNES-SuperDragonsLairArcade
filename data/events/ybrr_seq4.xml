@@ -1,20 +1,20 @@
 <chapter name="ybrr_seq4">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="163" />
+		<timestart min="9" second="1" ms="609" frame="13324" />
+		<timeend min="9" second="3" ms="772" frame="13376" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="9" second="1" ms="609" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="1" ms="81" />
-				<timeend min="0" second="2" ms="425" />
+				<timestart min="9" second="2" ms="690" />
+				<timeend min="9" second="4" ms="34" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="1" ms="507" />
-				<timeend min="0" second="2" ms="392" />
+				<timestart min="9" second="3" ms="116" />
+				<timeend min="9" second="4" ms="1" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="1" ms="81" />
-				<timeend min="0" second="2" ms="425" />
+				<timestart min="9" second="2" ms="690" />
+				<timeend min="9" second="4" ms="34" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="1" ms="81" />
-				<timeend min="0" second="2" ms="425" />
+				<timestart min="9" second="2" ms="690" />
+				<timeend min="9" second="4" ms="34" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />

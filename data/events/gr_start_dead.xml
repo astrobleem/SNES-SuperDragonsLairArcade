@@ -1,14 +1,14 @@
 <chapter name="gr_start_dead">
 	<timeline>
-		<timestart min="5" second="20" ms="238" />
-		<timeend min="5" second="22" ms="572" />
+		<timestart min="5" second="12" ms="921" frame="7829" />
+		<timeend min="5" second="15" ms="255" frame="7885" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="5" second="20" ms="238" />
+				<timestart min="5" second="12" ms="921" />
 			</timeline>
 		</event>
 	</events>

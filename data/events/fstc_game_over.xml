@@ -1,14 +1,14 @@
 <chapter name="fstc_game_over">
 	<timeline>
-		<timestart min="4" second="38" ms="363" />
-		<timeend min="4" second="41" ms="866" />
+		<timestart min="4" second="30" ms="987" frame="6825" />
+		<timeend min="4" second="34" ms="490" frame="6909" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="4" second="38" ms="363" />
+				<timestart min="4" second="30" ms="987" />
 			</timeline>
 		</event>
 	</events>

@@ -1,7 +1,7 @@
 <chapter name="tntr_squeeze_to_death">
 	<timeline>
-		<timestart min="1" second="50" ms="528" />
-		<timeend min="1" second="52" ms="570" />
+		<timestart min="1" second="43" ms="370" frame="2801" />
+		<timeend min="1" second="45" ms="412" frame="2850" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="1" second="50" ms="528" />
+				<timestart min="1" second="43" ms="370" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="fhr_seq8">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="5" ms="8" />
+		<timestart min="11" second="39" ms="181" frame="16762" />
+		<timeend min="11" second="44" ms="189" frame="16882" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="11" second="39" ms="181" />
 			</timeline>
 		</event>
 	</events>

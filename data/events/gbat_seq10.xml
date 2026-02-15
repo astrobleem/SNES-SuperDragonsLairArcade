@@ -1,7 +1,7 @@
 <chapter name="gbat_seq10">
 	<timeline>
-		<timestart min="10" second="5" ms="940" />
-		<timeend min="10" second="7" ms="148" />
+		<timestart min="10" second="12" ms="312" frame="14679" />
+		<timeend min="10" second="13" ms="520" frame="14708" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="5" ms="940" />
+				<timestart min="10" second="12" ms="312" />
 			</timeline>
 		</event>
 	</events>

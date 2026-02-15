@@ -1,14 +1,14 @@
 <chapter name="ybrr_start_dead">
 	<timeline>
-		<timestart min="9" second="6" ms="214" />
-		<timeend min="9" second="8" ms="548" />
+		<timestart min="8" second="58" ms="388" frame="13247" />
+		<timeend min="9" second="0" ms="722" frame="13303" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="9" second="6" ms="214" />
+				<timestart min="8" second="58" ms="388" />
 			</timeline>
 		</event>
 	</events>

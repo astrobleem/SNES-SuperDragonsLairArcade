@@ -1,20 +1,20 @@
 <chapter name="snkr_seq9">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="0" ms="721" />
+		<timestart min="2" second="0" ms="435" frame="3210" />
+		<timeend min="2" second="1" ms="156" frame="3227" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="2" second="0" ms="435" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="0" ms="721" />
+				<timestart min="2" second="0" ms="435" />
+				<timeend min="2" second="1" ms="156" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="0" ms="721" />
+				<timestart min="2" second="0" ms="435" />
+				<timeend min="2" second="1" ms="156" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

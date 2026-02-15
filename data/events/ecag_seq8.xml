@@ -1,7 +1,7 @@
 <chapter name="ecag_seq8">
 	<timeline>
-		<timestart min="18" second="44" ms="918" />
-		<timeend min="18" second="46" ms="418" />
+		<timestart min="18" second="50" ms="630" frame="27122" />
+		<timeend min="18" second="52" ms="130" frame="27158" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="18" second="44" ms="918" />
+				<timestart min="18" second="50" ms="630" />
 			</timeline>
 		</event>
 	</events>

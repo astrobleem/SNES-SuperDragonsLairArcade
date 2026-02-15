@@ -1,14 +1,14 @@
 <chapter name="ecag_seq5">
 	<timeline>
-		<timestart min="18" second="40" ms="872" />
-		<timeend min="18" second="41" ms="586" />
+		<timestart min="18" second="46" ms="667" frame="27025" />
+		<timeend min="18" second="47" ms="381" frame="27042" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="18" second="40" ms="872" />
+				<timestart min="18" second="46" ms="667" />
 			</timeline>
 		</event>
 	</events>

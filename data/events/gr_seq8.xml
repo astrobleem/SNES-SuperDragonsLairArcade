@@ -1,7 +1,7 @@
 <chapter name="gr_seq8">
 	<timeline>
-		<timestart min="5" second="47" ms="181" />
-		<timeend min="5" second="49" ms="599" />
+		<timestart min="5" second="39" ms="723" frame="8475" />
+		<timeend min="5" second="42" ms="141" frame="8533" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="5" second="47" ms="181" />
+				<timestart min="5" second="39" ms="723" />
 			</timeline>
 		</event>
 	</events>

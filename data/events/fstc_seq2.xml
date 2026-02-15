@@ -1,20 +1,20 @@
 <chapter name="fstc_seq2">
 	<timeline>
-		<timestart min="4" second="19" ms="594" />
-		<timeend min="4" second="22" ms="19" />
+		<timestart min="4" second="12" ms="302" frame="6375" />
+		<timeend min="4" second="14" ms="727" frame="6433" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="4" second="19" ms="594" />
+				<timestart min="4" second="12" ms="302" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="4" second="21" ms="626" />
-				<timeend min="4" second="22" ms="347" />
+				<timestart min="4" second="14" ms="334" />
+				<timeend min="4" second="15" ms="55" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

@@ -1,7 +1,7 @@
 <chapter name="fstc_seq7">
 	<timeline>
-		<timestart min="4" second="30" ms="939" />
-		<timeend min="4" second="32" ms="981" />
+		<timestart min="4" second="23" ms="563" frame="6647" />
+		<timeend min="4" second="25" ms="605" frame="6696" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="4" second="30" ms="939" />
+				<timestart min="4" second="23" ms="563" />
 			</timeline>
 		</event>
 	</events>

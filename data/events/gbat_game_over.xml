@@ -1,14 +1,14 @@
 <chapter name="gbat_game_over">
 	<timeline>
-		<timestart min="10" second="7" ms="150" />
-		<timeend min="10" second="10" ms="653" />
+		<timestart min="10" second="13" ms="521" frame="14708" />
+		<timeend min="10" second="17" ms="24" frame="14792" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="7" ms="150" />
+				<timestart min="10" second="13" ms="521" />
 			</timeline>
 		</event>
 	</events>

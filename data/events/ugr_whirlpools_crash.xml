@@ -1,7 +1,7 @@
 <chapter name="ugr_whirlpools_crash">
 	<timeline>
-		<timestart min="16" second="38" ms="625" />
-		<timeend min="16" second="41" ms="293" />
+		<timestart min="16" second="44" ms="437" frame="24094" />
+		<timeend min="16" second="47" ms="105" frame="24158" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="16" second="38" ms="625" />
+				<timestart min="16" second="44" ms="437" />
 			</timeline>
 		</event>
 	</events>

@@ -1,14 +1,14 @@
 <chapter name="rk_seq10">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="3" ms="441" />
+		<timestart min="7" second="23" ms="91" frame="10953" />
+		<timeend min="7" second="26" ms="532" frame="11036" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="7" second="23" ms="91" />
 			</timeline>
 		</event>
 	</events>

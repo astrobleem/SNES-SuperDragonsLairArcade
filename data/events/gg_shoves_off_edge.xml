@@ -1,7 +1,7 @@
 <chapter name="gg_shoves_off_edge">
 	<timeline>
-		<timestart min="4" second="7" ms="749" />
-		<timeend min="4" second="10" ms="469" />
+		<timestart min="4" second="0" ms="373" frame="6091" />
+		<timeend min="4" second="3" ms="93" frame="6156" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="4" second="7" ms="749" />
+				<timestart min="4" second="0" ms="373" />
 			</timeline>
 		</event>
 	</events>

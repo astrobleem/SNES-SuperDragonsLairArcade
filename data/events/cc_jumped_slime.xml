@@ -1,20 +1,20 @@
 <chapter name="cc_jumped_slime">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="212" />
+		<timestart min="7" second="49" ms="438" frame="11583" />
+		<timeend min="7" second="50" ms="650" frame="11612" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="7" second="49" ms="438" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="0" ms="590" />
-				<timeend min="0" second="1" ms="180" />
+				<timestart min="7" second="50" ms="28" />
+				<timeend min="7" second="50" ms="618" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="590" />
-				<timeend min="0" second="1" ms="147" />
+				<timestart min="7" second="50" ms="28" />
+				<timeend min="7" second="50" ms="585" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="212" />
+				<timestart min="7" second="49" ms="438" />
+				<timeend min="7" second="50" ms="650" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="590" />
-				<timeend min="0" second="1" ms="147" />
+				<timestart min="7" second="50" ms="28" />
+				<timeend min="7" second="50" ms="585" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />

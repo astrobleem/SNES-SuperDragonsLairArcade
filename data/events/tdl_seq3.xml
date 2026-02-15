@@ -1,20 +1,20 @@
 <chapter name="tdl_seq3">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="11" ms="207" />
+		<timestart min="20" second="10" ms="321" frame="29032" />
+		<timeend min="20" second="21" ms="528" frame="29301" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="20" second="10" ms="321" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="10" ms="584" />
-				<timeend min="0" second="11" ms="141" />
+				<timestart min="20" second="20" ms="905" />
+				<timeend min="20" second="21" ms="462" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="10" ms="584" />
-				<timeend min="0" second="11" ms="141" />
+				<timestart min="20" second="20" ms="905" />
+				<timeend min="20" second="21" ms="462" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="10" ms="584" />
-				<timeend min="0" second="11" ms="141" />
+				<timestart min="20" second="20" ms="905" />
+				<timeend min="20" second="21" ms="462" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="action" label="action-4">
 			<timeline>
-				<timestart min="0" second="10" ms="584" />
-				<timeend min="0" second="11" ms="141" />
+				<timestart min="20" second="20" ms="905" />
+				<timeend min="20" second="21" ms="462" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />

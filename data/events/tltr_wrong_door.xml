@@ -1,7 +1,7 @@
 <chapter name="tltr_wrong_door">
 	<timeline>
-		<timestart min="14" second="3" ms="887" />
-		<timeend min="14" second="6" ms="597" />
+		<timestart min="14" second="9" ms="882" frame="20384" />
+		<timeend min="14" second="12" ms="592" frame="20449" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="14" second="3" ms="887" />
+				<timestart min="14" second="9" ms="882" />
 			</timeline>
 		</event>
 	</events>

@@ -1,7 +1,7 @@
 <chapter name="fh_hit_brick_wall">
 	<timeline>
-		<timestart min="7" second="11" ms="683" />
-		<timeend min="7" second="13" ms="975" />
+		<timestart min="7" second="4" ms="224" frame="10501" />
+		<timeend min="7" second="6" ms="516" frame="10556" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="7" second="11" ms="683" />
+				<timestart min="7" second="4" ms="224" />
 			</timeline>
 		</event>
 	</events>

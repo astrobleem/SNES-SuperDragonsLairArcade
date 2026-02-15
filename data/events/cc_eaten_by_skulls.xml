@@ -1,7 +1,7 @@
 <chapter name="cc_eaten_by_skulls">
 	<timeline>
-		<timestart min="8" second="10" ms="199" />
-		<timeend min="8" second="10" ms="741" />
+		<timestart min="8" second="2" ms="741" frame="11904" />
+		<timeend min="8" second="3" ms="282" frame="11917" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="8" second="10" ms="199" />
+				<timestart min="8" second="2" ms="741" />
 			</timeline>
 		</event>
 	</events>

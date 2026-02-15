@@ -1,14 +1,14 @@
 <chapter name="ugr_enter_room">
 	<timeline>
-		<timestart min="15" second="42" ms="68" />
-		<timeend min="15" second="44" ms="722" />
+		<timestart min="15" second="47" ms="964" frame="22738" />
+		<timeend min="15" second="50" ms="618" frame="22802" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="15" second="42" ms="68" />
+				<timestart min="15" second="47" ms="964" />
 			</timeline>
 		</event>
 	</events>

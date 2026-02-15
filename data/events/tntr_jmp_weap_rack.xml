@@ -1,20 +1,20 @@
 <chapter name="tntr_jmp_weap_rack">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="901" />
+		<timestart min="1" second="28" ms="781" frame="2451" />
+		<timeend min="1" second="30" ms="682" frame="2497" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="1" second="28" ms="781" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="1" ms="180" />
-				<timeend min="0" second="1" ms="933" />
+				<timestart min="1" second="29" ms="961" />
+				<timeend min="1" second="30" ms="714" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="901" />
+				<timestart min="1" second="28" ms="781" />
+				<timeend min="1" second="30" ms="682" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="action" label="action-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="901" />
+				<timestart min="1" second="28" ms="781" />
+				<timeend min="1" second="30" ms="682" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="1" ms="180" />
-				<timeend min="0" second="1" ms="933" />
+				<timestart min="1" second="29" ms="961" />
+				<timeend min="1" second="30" ms="714" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

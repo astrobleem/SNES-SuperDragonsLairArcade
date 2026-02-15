@@ -1,20 +1,20 @@
 <chapter name="wndr_enter_room">
 	<timeline>
-		<timestart min="5" second="56" ms="941" />
-		<timeend min="6" second="5" ms="100" />
+		<timestart min="5" second="49" ms="524" frame="8709" />
+		<timeend min="5" second="57" ms="683" frame="8905" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="5" second="56" ms="941" />
+				<timestart min="5" second="49" ms="524" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="6" second="4" ms="347" />
-				<timeend min="6" second="5" ms="67" />
+				<timestart min="5" second="56" ms="930" />
+				<timeend min="5" second="57" ms="650" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="6" second="2" ms="905" />
-				<timeend min="6" second="5" ms="67" />
+				<timestart min="5" second="55" ms="488" />
+				<timeend min="5" second="57" ms="650" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />

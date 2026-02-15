@@ -1,14 +1,14 @@
 <chapter name="snkr_game_over">
 	<timeline>
-		<timestart min="2" second="15" ms="970" />
-		<timeend min="2" second="19" ms="473" />
+		<timestart min="2" second="8" ms="812" frame="3411" />
+		<timeend min="2" second="12" ms="315" frame="3495" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="15" ms="970" />
+				<timestart min="2" second="8" ms="812" />
 			</timeline>
 		</event>
 	</events>

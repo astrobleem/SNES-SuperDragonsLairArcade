@@ -1,14 +1,14 @@
 <chapter name="tdl_seq13">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="18" ms="501" />
+		<timestart min="21" second="10" ms="385" frame="30472" />
+		<timeend min="21" second="28" ms="886" frame="30916" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="21" second="10" ms="385" />
 			</timeline>
 		</event>
 	</events>

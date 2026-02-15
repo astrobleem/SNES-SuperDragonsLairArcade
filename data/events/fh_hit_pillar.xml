@@ -1,7 +1,7 @@
 <chapter name="fh_hit_pillar">
 	<timeline>
-		<timestart min="7" second="9" ms="681" />
-		<timeend min="7" second="11" ms="682" />
+		<timestart min="7" second="2" ms="222" frame="10453" />
+		<timeend min="7" second="4" ms="223" frame="10501" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="7" second="9" ms="681" />
+				<timestart min="7" second="2" ms="222" />
 			</timeline>
 		</event>
 	</events>

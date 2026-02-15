@@ -1,20 +1,20 @@
 <chapter name="smr_seq2">
 	<timeline>
-		<timestart min="10" second="46" ms="564" />
-		<timeend min="10" second="49" ms="742" />
+		<timestart min="10" second="52" ms="886" frame="15653" />
+		<timeend min="10" second="56" ms="64" frame="15729" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="10" second="46" ms="564" />
+				<timestart min="10" second="52" ms="886" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="10" second="48" ms="39" />
-				<timeend min="10" second="48" ms="759" />
+				<timestart min="10" second="54" ms="361" />
+				<timeend min="10" second="55" ms="81" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="action" label="action-2">
 			<timeline>
-				<timestart min="10" second="48" ms="759" />
-				<timeend min="10" second="49" ms="677" />
+				<timestart min="10" second="55" ms="81" />
+				<timeend min="10" second="55" ms="999" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="10" second="46" ms="564" />
-				<timeend min="10" second="49" ms="677" />
+				<timestart min="10" second="52" ms="886" />
+				<timeend min="10" second="55" ms="999" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="10" second="46" ms="564" />
-				<timeend min="10" second="49" ms="677" />
+				<timestart min="10" second="52" ms="886" />
+				<timeend min="10" second="55" ms="999" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
-				<timestart min="10" second="48" ms="71" />
-				<timeend min="10" second="49" ms="742" />
+				<timestart min="10" second="54" ms="393" />
+				<timeend min="10" second="56" ms="64" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -63,8 +63,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-6">
 			<timeline>
-				<timestart min="10" second="46" ms="564" />
-				<timeend min="10" second="49" ms="218" />
+				<timestart min="10" second="52" ms="886" />
+				<timeend min="10" second="55" ms="540" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />

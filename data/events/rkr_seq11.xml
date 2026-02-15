@@ -1,7 +1,7 @@
 <chapter name="rkr_seq11">
 	<timeline>
-		<timestart min="15" second="0" ms="443" />
-		<timeend min="15" second="2" ms="444" />
+		<timestart min="15" second="6" ms="305" frame="21740" />
+		<timeend min="15" second="8" ms="306" frame="21788" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="15" second="0" ms="443" />
+				<timestart min="15" second="6" ms="305" />
 			</timeline>
 		</event>
 	</events>

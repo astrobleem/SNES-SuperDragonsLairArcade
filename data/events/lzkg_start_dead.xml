@@ -1,14 +1,14 @@
 <chapter name="lzkg_start_dead">
 	<timeline>
-		<timestart min="11" second="51" ms="421" />
-		<timeend min="11" second="53" ms="755" />
+		<timestart min="11" second="57" ms="734" frame="17208" />
+		<timeend min="12" second="0" ms="68" frame="17264" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="11" second="51" ms="421" />
+				<timestart min="11" second="57" ms="734" />
 			</timeline>
 		</event>
 	</events>

@@ -1,20 +1,20 @@
 <chapter name="lzkg_seq13">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="114" />
+		<timestart min="12" second="17" ms="371" frame="17680" />
+		<timeend min="12" second="18" ms="485" frame="17707" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="12" second="17" ms="371" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="0" ms="557" />
-				<timeend min="0" second="1" ms="81" />
+				<timestart min="12" second="17" ms="928" />
+				<timeend min="12" second="18" ms="452" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />

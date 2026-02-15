@@ -1,14 +1,14 @@
 <chapter name="tntr_exit_room">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="66" />
+		<timestart min="1" second="32" ms="779" frame="2547" />
+		<timeend min="1" second="33" ms="845" frame="2573" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="1" second="32" ms="779" />
 			</timeline>
 		</event>
 	</events>

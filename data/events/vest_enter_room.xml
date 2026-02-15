@@ -1,20 +1,20 @@
 <chapter name="vest_enter_room">
 	<timeline>
-		<timestart min="1" second="12" ms="407" />
-		<timeend min="1" second="16" ms="405" />
+		<timestart min="1" second="5" ms="274" frame="1887" />
+		<timeend min="1" second="9" ms="272" frame="1983" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="1" second="12" ms="407" />
+				<timestart min="1" second="5" ms="274" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="1" second="14" ms="373" />
-				<timeend min="1" second="16" ms="405" />
+				<timestart min="1" second="7" ms="240" />
+				<timeend min="1" second="9" ms="272" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="1" second="14" ms="373" />
-				<timeend min="1" second="16" ms="405" />
+				<timestart min="1" second="7" ms="240" />
+				<timeend min="1" second="9" ms="272" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="1" second="14" ms="373" />
-				<timeend min="1" second="16" ms="405" />
+				<timestart min="1" second="7" ms="240" />
+				<timeend min="1" second="9" ms="272" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="1" second="14" ms="897" />
-				<timeend min="1" second="16" ms="372" />
+				<timestart min="1" second="7" ms="764" />
+				<timeend min="1" second="9" ms="239" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

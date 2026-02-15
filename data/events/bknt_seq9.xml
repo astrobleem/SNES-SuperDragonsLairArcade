@@ -1,7 +1,7 @@
 <chapter name="bknt_seq9">
 	<timeline>
-		<timestart min="17" second="54" ms="701" />
-		<timeend min="17" second="56" ms="243" />
+		<timestart min="18" second="0" ms="413" frame="25918" />
+		<timeend min="18" second="1" ms="955" frame="25955" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="17" second="54" ms="701" />
+				<timestart min="18" second="0" ms="413" />
 			</timeline>
 		</event>
 	</events>

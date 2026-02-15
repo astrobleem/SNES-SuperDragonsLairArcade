@@ -1,20 +1,20 @@
 <chapter name="cc_jumped_skulls">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="311" />
+		<timestart min="7" second="47" ms="701" frame="11542" />
+		<timeend min="7" second="49" ms="12" frame="11573" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="7" second="47" ms="701" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="0" ms="688" />
-				<timeend min="0" second="1" ms="278" />
+				<timestart min="7" second="48" ms="389" />
+				<timeend min="7" second="48" ms="979" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="918" />
-				<timeend min="0" second="1" ms="278" />
+				<timestart min="7" second="48" ms="619" />
+				<timeend min="7" second="48" ms="979" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="311" />
+				<timestart min="7" second="47" ms="701" />
+				<timeend min="7" second="49" ms="12" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="668" />
-				<timeend min="0" second="1" ms="278" />
+				<timestart min="7" second="48" ms="369" />
+				<timeend min="7" second="48" ms="979" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

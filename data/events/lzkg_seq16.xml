@@ -1,7 +1,7 @@
 <chapter name="lzkg_seq16">
 	<timeline>
-		<timestart min="12" second="26" ms="956" />
-		<timeend min="12" second="30" ms="375" />
+		<timestart min="12" second="33" ms="186" frame="18060" />
+		<timeend min="12" second="36" ms="605" frame="18142" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="12" second="26" ms="956" />
+				<timestart min="12" second="33" ms="186" />
 			</timeline>
 		</event>
 	</events>

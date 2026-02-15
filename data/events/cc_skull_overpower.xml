@@ -1,7 +1,7 @@
 <chapter name="cc_skull_overpower">
 	<timeline>
-		<timestart min="8" second="9" ms="240" />
-		<timeend min="8" second="10" ms="740" />
+		<timestart min="8" second="1" ms="781" frame="11881" />
+		<timeend min="8" second="3" ms="281" frame="11917" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="8" second="9" ms="240" />
+				<timestart min="8" second="1" ms="781" />
 			</timeline>
 		</event>
 	</events>

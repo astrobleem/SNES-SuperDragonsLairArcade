@@ -1,14 +1,14 @@
 <chapter name="tdl_game_over">
 	<timeline>
-		<timestart min="21" second="47" ms="642" />
-		<timeend min="21" second="51" ms="145" />
+		<timestart min="21" second="53" ms="287" frame="31503" />
+		<timeend min="21" second="56" ms="790" frame="31587" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="21" second="47" ms="642" />
+				<timestart min="21" second="53" ms="287" />
 			</timeline>
 		</event>
 	</events>

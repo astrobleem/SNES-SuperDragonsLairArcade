@@ -1,7 +1,7 @@
 <chapter name="gg_swarm_of_goons">
 	<timeline>
-		<timestart min="4" second="4" ms="579" />
-		<timeend min="4" second="5" ms="287" />
+		<timestart min="3" second="57" ms="204" frame="6015" />
+		<timeend min="3" second="57" ms="912" frame="6032" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />
@@ -10,7 +10,7 @@
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="4" second="4" ms="579" />
+				<timestart min="3" second="57" ms="204" />
 			</timeline>
 		</event>
 	</events>

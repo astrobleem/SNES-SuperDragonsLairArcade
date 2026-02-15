@@ -1,14 +1,14 @@
 <chapter name="lzkg_game_over">
 	<timeline>
-		<timestart min="12" second="30" ms="376" />
-		<timeend min="12" second="33" ms="879" />
+		<timestart min="12" second="36" ms="623" frame="18142" />
+		<timeend min="12" second="40" ms="126" frame="18226" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="12" second="30" ms="376" />
+				<timestart min="12" second="36" ms="623" />
 			</timeline>
 		</event>
 	</events>

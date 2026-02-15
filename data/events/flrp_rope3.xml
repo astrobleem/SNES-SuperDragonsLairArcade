@@ -1,20 +1,20 @@
 <chapter name="flrp_rope3">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="507" />
+		<timestart min="2" second="22" ms="736" frame="3745" />
+		<timeend min="2" second="24" ms="243" frame="3781" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="2" second="22" ms="736" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="0" ms="852" />
+				<timestart min="2" second="22" ms="736" />
+				<timeend min="2" second="23" ms="588" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="852" />
-				<timeend min="0" second="1" ms="704" />
+				<timestart min="2" second="23" ms="588" />
+				<timeend min="2" second="24" ms="440" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="769" />
+				<timestart min="2" second="22" ms="736" />
+				<timeend min="2" second="24" ms="505" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="769" />
+				<timestart min="2" second="22" ms="736" />
+				<timeend min="2" second="24" ms="505" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="769" />
+				<timestart min="2" second="22" ms="736" />
+				<timeend min="2" second="24" ms="505" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

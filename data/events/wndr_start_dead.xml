@@ -1,14 +1,14 @@
 <chapter name="wndr_start_dead">
 	<timeline>
-		<timestart min="5" second="54" ms="606" />
-		<timeend min="5" second="56" ms="982" />
+		<timestart min="5" second="47" ms="189" frame="8653" />
+		<timeend min="5" second="49" ms="565" frame="8710" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="5" second="54" ms="606" />
+				<timestart min="5" second="47" ms="189" />
 			</timeline>
 		</event>
 	</events>

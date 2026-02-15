@@ -1,20 +1,20 @@
 <chapter name="gg_kill_upper_goons">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="606" />
+		<timestart min="3" second="48" ms="421" frame="5802" />
+		<timeend min="3" second="50" ms="27" frame="5841" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="3" second="48" ms="421" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="852" />
-				<timeend min="0" second="1" ms="540" />
+				<timestart min="3" second="49" ms="273" />
+				<timeend min="3" second="49" ms="961" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="0" ms="852" />
-				<timeend min="0" second="1" ms="540" />
+				<timestart min="3" second="49" ms="273" />
+				<timeend min="3" second="49" ms="961" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="606" />
+				<timestart min="3" second="48" ms="421" />
+				<timeend min="3" second="50" ms="27" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="action" label="action-4">
 			<timeline>
-				<timestart min="0" second="0" ms="786" />
-				<timeend min="0" second="1" ms="573" />
+				<timestart min="3" second="49" ms="207" />
+				<timeend min="3" second="49" ms="994" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />

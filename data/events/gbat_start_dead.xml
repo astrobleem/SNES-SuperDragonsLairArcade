@@ -1,14 +1,14 @@
 <chapter name="gbat_start_dead">
 	<timeline>
-		<timestart min="9" second="47" ms="255" />
-		<timeend min="9" second="49" ms="589" />
+		<timestart min="9" second="39" ms="362" frame="14231" />
+		<timeend min="9" second="41" ms="696" frame="14287" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="9" second="47" ms="255" />
+				<timestart min="9" second="39" ms="362" />
 			</timeline>
 		</event>
 	</events>

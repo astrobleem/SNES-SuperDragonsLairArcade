@@ -1,20 +1,20 @@
 <chapter name="tdl_enter_room">
 	<timeline>
-		<timestart min="20" second="0" ms="660" />
-		<timeend min="20" second="5" ms="542" />
+		<timestart min="20" second="6" ms="389" frame="28938" />
+		<timeend min="20" second="11" ms="271" frame="29055" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="20" second="0" ms="660" />
+				<timestart min="20" second="6" ms="389" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="20" second="4" ms="592" />
-				<timeend min="20" second="5" ms="510" />
+				<timestart min="20" second="10" ms="321" />
+				<timeend min="20" second="11" ms="239" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

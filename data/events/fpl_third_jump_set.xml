@@ -1,20 +1,20 @@
 <chapter name="fpl_third_jump_set">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="4" ms="293" />
+		<timestart min="10" second="30" ms="528" frame="15114" />
+		<timeend min="10" second="34" ms="821" frame="15217" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="10" second="30" ms="528" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="2" ms="458" />
+				<timestart min="10" second="30" ms="528" />
+				<timeend min="10" second="32" ms="986" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="2" ms="458" />
-				<timeend min="0" second="2" ms="785" />
+				<timestart min="10" second="32" ms="986" />
+				<timeend min="10" second="33" ms="313" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="2" ms="785" />
-				<timeend min="0" second="3" ms="113" />
+				<timestart min="10" second="33" ms="313" />
+				<timeend min="10" second="33" ms="641" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="3" ms="146" />
-				<timeend min="0" second="3" ms="473" />
+				<timestart min="10" second="33" ms="674" />
+				<timeend min="10" second="34" ms="1" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
-				<timestart min="0" second="3" ms="473" />
-				<timeend min="0" second="3" ms="801" />
+				<timestart min="10" second="34" ms="1" />
+				<timeend min="10" second="34" ms="329" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -63,8 +63,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-6">
 			<timeline>
-				<timestart min="0" second="3" ms="801" />
-				<timeend min="0" second="4" ms="129" />
+				<timestart min="10" second="34" ms="329" />
+				<timeend min="10" second="34" ms="657" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -73,8 +73,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-7">
 			<timeline>
-				<timestart min="0" second="4" ms="162" />
-				<timeend min="0" second="5" ms="571" />
+				<timestart min="10" second="34" ms="690" />
+				<timeend min="10" second="36" ms="99" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
@@ -83,8 +83,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-8">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="5" ms="571" />
+				<timestart min="10" second="30" ms="528" />
+				<timeend min="10" second="36" ms="99" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -93,8 +93,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-9">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="5" ms="571" />
+				<timestart min="10" second="30" ms="528" />
+				<timeend min="10" second="36" ms="99" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -103,8 +103,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-10">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="5" ms="571" />
+				<timestart min="10" second="30" ms="528" />
+				<timeend min="10" second="36" ms="99" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />

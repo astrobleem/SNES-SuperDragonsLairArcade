@@ -1,14 +1,14 @@
 <chapter name="snkr_seq6">
 	<timeline>
-		<timestart min="2" second="13" ms="384" />
-		<timeend min="2" second="15" ms="55" />
+		<timestart min="2" second="6" ms="226" frame="3349" />
+		<timeend min="2" second="7" ms="897" frame="3389" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="2" second="13" ms="384" />
+				<timestart min="2" second="6" ms="226" />
 			</timeline>
 		</event>
 	</events>

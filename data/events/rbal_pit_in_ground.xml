@@ -1,20 +1,20 @@
 <chapter name="rbal_pit_in_ground">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="1" ms="901" />
+		<timestart min="18" second="18" ms="891" frame="26360" />
+		<timeend min="18" second="20" ms="792" frame="26406" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="18" second="18" ms="891" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
-				<timeend min="0" second="1" ms="414" />
+				<timestart min="18" second="18" ms="891" />
+				<timeend min="18" second="20" ms="305" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />

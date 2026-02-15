@@ -1,20 +1,20 @@
 <chapter name="bcld_seq3">
 	<timeline>
-		<timestart min="0" second="0" ms="0" />
-		<timeend min="0" second="2" ms="523" />
+		<timestart min="3" second="22" ms="49" frame="5170" />
+		<timeend min="3" second="24" ms="572" frame="5230" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="0" ms="0" />
+				<timestart min="3" second="22" ms="49" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="1" ms="638" />
-				<timeend min="0" second="2" ms="490" />
+				<timestart min="3" second="23" ms="687" />
+				<timeend min="3" second="24" ms="539" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
@@ -23,8 +23,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="0" second="1" ms="638" />
-				<timeend min="0" second="2" ms="490" />
+				<timestart min="3" second="23" ms="687" />
+				<timeend min="3" second="24" ms="539" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -33,8 +33,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
-				<timestart min="0" second="1" ms="638" />
-				<timeend min="0" second="2" ms="490" />
+				<timestart min="3" second="23" ms="687" />
+				<timeend min="3" second="24" ms="539" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -43,8 +43,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
-				<timestart min="0" second="1" ms="835" />
-				<timeend min="0" second="2" ms="720" />
+				<timestart min="3" second="23" ms="884" />
+				<timeend min="3" second="24" ms="769" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -53,8 +53,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
-				<timestart min="0" second="1" ms="638" />
-				<timeend min="0" second="2" ms="490" />
+				<timestart min="3" second="23" ms="687" />
+				<timeend min="3" second="24" ms="539" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />
