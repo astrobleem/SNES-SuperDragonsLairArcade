@@ -171,7 +171,7 @@ All chapter scripts are aggregated in `data/chapters/chapter.include`, all data 
 The title screen (`src/title_screen.script`) has a full menu system:
 - **Main menu**: START GAME, OPTIONS
 - **Options submenu**: HIGH SCORES, ATTRACT MODE, SOUND TEST, SCENE SELECT, BACK
-- **Sound test**: L/R selects sample 0-5, A plays it
+- **Sound test**: L/R selects sample 0-6, A plays it
 - **Scene select**: L/R selects scene 1-29, A launches it via `_title_screen.sceneTable`
 
 Menu items start at tilemap position `$286` (row 20, col 6). Copyright text at `$306`/`$324` (rows 24-25). Cursor drawn at `$286 + cursor * 32`.
@@ -256,7 +256,10 @@ Each script has 9 hash pointer slots (hashPtr.1 through hashPtr.9). If two `.def
 Used as null pointer for the hash system. `CALL` with hash pntr=$FFFF dispatches to `dispatchObjMethodHashVoid` (safe no-op). Never use hash pntr=0 — it matches OopStack slot 0.
 
 ### SPC700 Audio Constraints
-SPC700 has 64KB RAM total. Engine code ~6.5KB, leaving ~57.5KB for BRR samples. Adding samples requires checking total BRR size stays under this limit.
+SPC700 has 64KB RAM total. Engine code ~6.5KB, leaving ~57.5KB for BRR samples. 7 samples currently (~53 KB BRR), ~4 KB headroom. Adding samples requires checking total BRR size stays under this limit.
+
+### MSU-1 Sound Effects
+Dragon roar plays as MSU-1 PCM track 250 during the MSU-1 splash screen (`msu1.script`). Too large for SPC (5.8s = ~144 KB BRR), so it uses the MSU-1 audio hardware instead. Source WAV converted to MSU-1 PCM format (44100 Hz stereo 16-bit LE with `MSU1` header). The `Msu1.audio` singleton auto-mutes when the track ends via `_checkTrackEnd`.
 
 ### CGRAM (Palette) Limits
 SNES has 8 BG palettes max for 4BPP mode ($100 bytes). `animationWriter_sfc.py` now forces `-P 1` (single sub-palette) in superfamiconv palette generation to prevent CGRAM overflow. CGRAM allocation failure in `abstract.Background.65816` is non-fatal (falls back to palette position 0). Default BG palettes in makefile reduced from 8 to 3.

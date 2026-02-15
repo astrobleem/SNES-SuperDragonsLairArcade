@@ -125,6 +125,7 @@ PtPlayerSamplePackPointertable:
   SAMPLE.0.TURN db
   SAMPLE.0.OK db
   SAMPLE.0.SHURIKEN db
+  SAMPLE.0.SAVEME db
 .ende
 
 .export SAMPLE.0.BRAKE
@@ -133,13 +134,14 @@ PtPlayerSamplePackPointertable:
 .export SAMPLE.0.TURN
 .export SAMPLE.0.OK
 .export SAMPLE.0.SHURIKEN
+.export SAMPLE.0.SAVEME
 
 
 .Section "sample pack 0" superfree
 SamplePack0:
 	.dw (SamplePack0End-SamplePack0)
 SamplePackStart0:
-	.db 6				;number of samples in this pack
+	.db 7				;number of samples in this pack
 
 Sample0Header:
 	.dw (Sample0-SamplePackStart0)	;relative pointer to sample	
@@ -248,6 +250,20 @@ Sample5Header:
 	.db 0
 	.db 0
 
+Sample6Header:
+	.dw (Sample6-SamplePackStart0)	;relative pointer to sample
+	.dw (Sample6-SamplePackStart0)	;relative loop pointer (no loop)
+	.db $28				;volume l
+	.db $28				;volume r
+	.dw $0B06			;pitch (22050 Hz)
+	.dw $0000			;adsr (off)
+	.db %11111111				;gain
+	.db 0
+	.db 0
+	.db 0
+	.db 0
+	.db 0
+
 Sample0:
 	.incbin "build/data/sounds/brake.sfx_loop.brr"
 Sample1:
@@ -260,6 +276,8 @@ Sample4:
 	.incbin "build/data/sounds/ok.sfx_normal.brr"	
 Sample5:
 	.incbin "build/data/sounds/shuriken.sfx_normal.brr"
+Sample6:
+	.incbin "build/data/sounds/saveme.sfx_normal.brr"
 
 SamplePack0End:
 

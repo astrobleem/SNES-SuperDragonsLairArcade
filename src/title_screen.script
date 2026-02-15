@@ -224,9 +224,11 @@ _title_screen.noDown:
   bra _title_screen.selectOptions
 
 _title_screen.selectStartGame:
+  lda.w #SAMPLE.0.SAVEME
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
   lda.w #level1
   sta.b menu.target
-  jmp _title_screen.startTransition
+  jmp _title_screen.startTransitionFade
 
 _title_screen.selectOptions:
   lda #1
@@ -293,13 +295,13 @@ _title_screen.paramSection:
     lda.b menu.state
     cmp #3
     beq _title_screen.leftLevel
-    ;sound test: decrement 0-5
+    ;sound test: decrement 0-6
     lda.b menu.param
     beq _title_screen.leftSoundWrap
       dec a
       bra _title_screen.paramMoved
 _title_screen.leftSoundWrap:
-    lda #5
+    lda #6
     bra _title_screen.paramMoved
 
 _title_screen.leftLevel:
@@ -319,9 +321,9 @@ _title_screen.noLeft:
     lda.b menu.state
     cmp #3
     beq _title_screen.rightLevel
-    ;sound test: increment 0-5
+    ;sound test: increment 0-6
     lda.b menu.param
-    cmp #5
+    cmp #6
     bcc _title_screen.rightSoundOk
       lda #$ffff
 _title_screen.rightSoundOk:
@@ -370,6 +372,7 @@ _title_screen.levelSelectGo:
 _title_screen.startTransition:
   lda.w #SAMPLE.0.TECHNIQUE
   CALL Spc.SpcPlaySoundEffect.MTD objSpc
+_title_screen.startTransitionFade:
   NEW Pause.CLS.PTR oopCreateNoPtr
   lda #BRIGHTNESS.NONE
   CALL Brightness.fadeTo.MTD objBrightness

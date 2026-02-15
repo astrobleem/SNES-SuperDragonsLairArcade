@@ -5,6 +5,7 @@
 .INDEX 16
 
   .def msu1Bg hashPtr.1
+  .def objMsu1Audio hashPtr.6
 
   NEW Brightness.CLS.PTR hashPtr.2
   lda #BRIGHTNESS.NONE
@@ -49,6 +50,11 @@
   lda.w #0
   CALL Spc.SpcIssueSamplePackUpload.MTD hashPtr.3
   jsr core.nmi.start
+
+  ;play dragon roar via MSU-1 PCM track 250
+  NEW Msu1.audio.CLS.PTR objMsu1Audio
+  lda.w #250
+  CALL Msu1.audio.playAudio.MTD objMsu1Audio
 
   jsr SavePC
 
