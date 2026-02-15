@@ -1,3 +1,0 @@
-Sprite: Legacy - Not Used in Dragon's Lair
-This sprite is from the RoadBlaster codebase and is not applicable to Dragon's Lair.
-Steering wheel controls are not part of Dragon's Lair gameplay.

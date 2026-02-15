@@ -502,13 +502,15 @@ _allocateMemory:
 
     jsr core.cgram.allocate
     bcs +
-      pei (animation.palette.length)
-      TRIGGER_ERROR E_OutOfCgram
+      ;cgram allocation failed, skip palette storage (non-fatal)
+      bra ++
 
 +   stx.b animation.palette.start
     sep #$20
     sta.b animation.palette.id
     rep #$31
+
+++
 
 ++
   lda animation.palette.start

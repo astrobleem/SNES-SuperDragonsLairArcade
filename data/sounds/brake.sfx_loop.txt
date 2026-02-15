@@ -1,2 +1,0 @@
-Sound: Brake (legacy)
-This is a legacy RoadBlaster brake loop sound that is not used in Dragon's Lair. It will be ignored by the engine.

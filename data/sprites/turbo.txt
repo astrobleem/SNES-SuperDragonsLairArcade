@@ -1,3 +1,0 @@
-Sprite: Legacy - Not Used in Dragon's Lair
-This sprite is from the RoadBlaster codebase and is not applicable to Dragon's Lair.
-Turbo mechanics are not part of Dragon's Lair gameplay.

@@ -1,3 +1,0 @@
-Sprite: Legacy - Not Used in Dragon's Lair
-This sprite is from the RoadBlaster codebase and is not used in Dragon's Lair.
-The build system will skip this folder, but it's kept for reference.

@@ -112,6 +112,7 @@ def main():
         "-y", # Overwrite output
         "-f", "concat", "-safe", "0", "-i", v_list,
         "-f", "concat", "-safe", "0", "-i", a_list,
+        "-vf", "yadif", "-r", "24000/1001", # Deinterlace + force 23.976fps (IVTC for 3:2 pulldown VOBs)
         "-c:v", "libx264", "-preset", "slow", "-crf", "18", # High quality video
         "-c:a", "aac", "-b:a", "192k", # Good quality audio
         "-map", "0:v", "-map", "1:a", # Map video from first input, audio from second

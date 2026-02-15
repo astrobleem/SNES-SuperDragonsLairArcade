@@ -861,6 +861,7 @@ _startNextVideo:
   jsr _playAudio
 
   rep #$31
+  stz.b this.framebuffer.current.pointer
   stz.b this.currentFrame
   stz.w GLOBAL.currentFrame
 

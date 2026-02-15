@@ -1,2 +1,0 @@
-Sound: Accept
-Used when a coin is inserted or a selection is made.

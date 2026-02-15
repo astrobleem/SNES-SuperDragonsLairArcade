@@ -142,14 +142,15 @@ _initBadArgs:
 
   jsr core.cgram.allocate
   bcs +
-	pei (this.palette.length)
-    TRIGGER_ERROR E_OutOfCgram
+    ;cgram allocation failed, skip palette storage (non-fatal)
+    bra ++
 
 + stx.b this.palette.start
   sep #$20
   sta.b this.palette.id
   rep #$31
 
+++
   rts
 
 /**
