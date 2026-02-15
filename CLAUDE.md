@@ -170,7 +170,7 @@ All chapter scripts are aggregated in `data/chapters/chapter.include`, all data 
 
 The title screen (`src/title_screen.script`) has a full menu system:
 - **Main menu**: START GAME, OPTIONS
-- **Options submenu**: HIGH SCORES, ATTRACT MODE, SOUND TEST, SCENE SELECT, BACK
+- **Options submenu**: HIGH SCORES, ATTRACT MODE, SOUND TEST, SCENE SELECT
 - **Sound test**: L/R selects sample 0-6, A plays it
 - **Scene select**: L/R selects scene 1-29, A launches it via `_title_screen.sceneTable`
 

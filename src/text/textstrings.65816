@@ -708,7 +708,7 @@ T_title:
 	.db "(C)1983 Cinematronics"
 	.db TC_pos
 	.dw $324
-	.db "ported by astrobleem 2026",TC_end
+	.db "astrobleem & snesdev0815",TC_end
 
 T_schleck:
     .db TC_pos
@@ -807,8 +807,7 @@ T_menu_options:
     .db " HIGH SCORES",TC_brk
     .db " ATTRACT MODE",TC_brk
     .db " SOUND TEST",TC_brk
-    .db " SCENE SELECT",TC_brk
-    .db " BACK",TC_end
+    .db " SCENE SELECT",TC_end
 
 T_menu_soundtest:
     .db TC_pos
