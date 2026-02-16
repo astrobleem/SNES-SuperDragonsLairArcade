@@ -32,6 +32,9 @@ venv/
 tools/wla-dx-9.5-svn/*.o
 tools/wla-dx-9.5-svn/wlalink/*.o
 
+# bsnes emulator (entire directory is runtime, nothing project-specific)
+bsnes/
+
 # Mesen emulator runtime files (keep test_template.lua and agent .md)
 mesen/*.exe
 mesen/*.dll
