@@ -47,6 +47,9 @@ mesen/SaveStates/
 mesen/Saves/
 mesen/Screenshots/
 
+# Source audio (large, convert once → data/sounds/*.pcm)
+roar.sfx_normal.wav
+
 # Test/temporary files
 build.log
 *.log

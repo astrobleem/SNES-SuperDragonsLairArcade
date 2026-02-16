@@ -44,6 +44,8 @@ CHAPTERS_DIR = os.path.join(PROJECT_DIR, 'data', 'chapters')
 TOOLS_DIR = os.path.join(PROJECT_DIR, 'tools')
 SUPERFAMICONV = os.path.join(TOOLS_DIR, 'superfamiconv', 'superfamiconv.exe')
 MSU_WRITER = os.path.join(TOOLS_DIR, 'msu1blockwriter.py')
+DRAGON_ROAR_PCM = os.path.join(PROJECT_DIR, 'data', 'sounds', 'SuperDragonsLairArcade-900.pcm')
+BLANK_FRAMES_SCRIPT = os.path.join(TOOLS_DIR, 'generate_blank_frames.py')
 
 # Windows ffmpeg with CUDA support (WSL-mounted path for subprocess, Windows path for display)
 WIN_FFMPEG_WSL = "/mnt/c/Users/chad/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-6.0-full_build/bin/ffmpeg.exe"
@@ -756,6 +758,31 @@ def main():
         print(f"Copied {pcm_copied} PCM files to {build_dir}")
         if os.path.isdir(final_dir):
             print(f"Also copied to {final_dir}")
+        print()
+
+    # Phase 1d: Copy dragon roar PCM (track 900) to build and sfc directories
+    if os.path.exists(DRAGON_ROAR_PCM):
+        build_dir = os.path.dirname(OUTPUT_MSU)
+        final_dir = os.path.normpath(os.path.join(PROJECT_DIR, '..', 'SuperDragonsLairArcade.sfc'))
+        roar_name = os.path.basename(DRAGON_ROAR_PCM)
+        shutil.copy2(DRAGON_ROAR_PCM, os.path.join(build_dir, roar_name))
+        if os.path.isdir(final_dir):
+            shutil.copy2(DRAGON_ROAR_PCM, os.path.join(final_dir, roar_name))
+        print(f"Copied dragon roar PCM (track 900) to build + sfc directories\n")
+    else:
+        print(f"WARNING: Dragon roar PCM not found at {DRAGON_ROAR_PCM}\n"
+              f"  Run: python3 tools/convert_roar_pcm.py\n")
+
+    # Phase 1e: Generate blank frames for chapters with no video
+    if not args.skip_extract:
+        print("--- Phase 1e: Generating blank frames for empty chapters ---")
+        result = subprocess.run(
+            [sys.executable, BLANK_FRAMES_SCRIPT],
+            capture_output=True, text=True, timeout=600, cwd=PROJECT_DIR)
+        if result.returncode == 0:
+            print(result.stdout.strip())
+        else:
+            print(f"WARNING: blank frame generation failed: {result.stderr.strip()}")
         print()
 
     # Phase 2: Convert frames to SNES tiles
