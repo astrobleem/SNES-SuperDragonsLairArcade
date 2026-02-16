@@ -63,7 +63,8 @@ Discarded classes: `attract_mode_attract_movie`, `attract_mode_insert_coins`, `i
 | Item | File | Issue |
 |------|------|-------|
 | ~~MSU-1 PCM track numbering wrong~~ | `tools/generate_msu_data.py` | **RESOLVED** — PCM files were numbered 1-205 (old Daphne framefile ordering). ROM requests tracks by chapter ID (0-515). Fixed: added Phase 1c to `generate_msu_data.py` that copies `sfx_video.pcm` to `SuperDragonsLairArcade-{chapterID}.pcm`. Now 476 correctly-numbered PCM files. `manifest.xml` updated to match. |
-| ~~SPC sample overflow~~ | `src/object/audio/spcinterface.h` | **RESOLVED** — Deleted `dragon_roar.sfx_normal.wav` and `sword_clank.sfx_normal.wav` (overflowed 57.5 KB SPC RAM budget). Added `saveme.sfx_normal.wav` (22050 Hz, 11.4 KB BRR) as SAMPLE.0.SAVEME (#6). Dragon roar moved to MSU-1 PCM track 250. 7 active samples (~53 KB), ~4 KB headroom. `dl_accept`, `dl_buzz`, `dl_credit` are candidates if space allows. |
+| ~~SPC sample overflow~~ | `src/object/audio/spcinterface.h` | **RESOLVED** — Deleted `dragon_roar.sfx_normal.wav` and `sword_clank.sfx_normal.wav` (overflowed 57.5 KB SPC RAM budget). Added `saveme.sfx_normal.wav` (22050 Hz, 11.4 KB BRR) as SAMPLE.0.SAVEME (#6). Dragon roar moved to MSU-1 PCM track 900. 7 active samples (~53 KB), ~4 KB headroom. `dl_accept`, `dl_buzz`, `dl_credit` are candidates if space allows. |
+| ~~Dragon roar plays wrong MSU-1 track~~ | `src/object/msu1/Msu1.audio.h` | **RESOLVED** — `Msu1.audio.currentTrack` was `db` (8-bit), truncating track 900 (0x0384) to 132 (0x84). Widened to `dw` and fixed `playAudio` to write both bytes of MSU_TRACK. Source WAV now lives in project root (`roar.sfx_normal.wav`). |
 | Legacy sample names | `src/object/audio/spcinterface.h` | Enum names still `SAMPLE.0.SHURIKEN`, `SAMPLE.0.TECHNIQUE` — should be renamed to Dragon's Lair equivalents. |
 | SpcPlaySoundEffectObjectXPos stub | `src/object/audio/spcinterface.65816:1013` | Panning sound effect method is `TRIGGER_ERROR E_Todo`. Not currently called, but would crash if used. |
 | Brightness.fadeTo range guard | `src/object/brightness/brightness.65816:46` | Out-of-range brightness value triggers `E_Todo` instead of clamping. Defensive code that crashes on invalid input. |
@@ -93,7 +94,7 @@ Discarded classes: `attract_mode_attract_movie`, `attract_mode_insert_coins`, `i
 
 | Item | Location | Issue |
 |------|----------|-------|
-| Legacy sprites still present | `data/sprites/` | dashboard, steering_wheel (3 variants), turbo, brake sprites are unused but still compiled into the ROM. Could save ROM space by excluding. |
+| Legacy sprites still present | `data/sprites/` | dashboard, steering_wheel (3 variants), brake sprites are unused but still compiled into the ROM. Could save ROM space by excluding. |
 | ROM header checksums hardcoded | `src/core/boot.65816:112-113` | `.dw $F9D8` and `.dw $0627` — "Invalid Checksum" in emulators. Known limitation of wla-dx `.snesheader` workaround. |
 
 ## Category 7: Missing Gameplay Events
@@ -117,6 +118,7 @@ The core input detection and event triggering system is now verified working (ve
 
 | Item | Likely Cause | Suggested Fix |
 |------|-------------|---------------|
+| ~~Introduction exits to wrong scene~~ | `tools/lua_scene_exporter.py` | **RESOLVED** — `build_scene_order()` mapped `introduction → linear[0]` which was `flaming_ropes`. Hardcoded `introduction → vestibule` (always the first gameplay scene). |
 | Chapter success paths don't match arcade | `data/scene_transitions.json` tracer algorithm followed attract-mode events (arg0=0) as canonical path, but some scenes have multiple valid success paths or the attract-mode path differs from the player-input path | Compare DirkSimple XML event data against an arcade playthrough video. Validate each scene's success chain manually. May need per-scene corrections in `scene_transitions.json`. |
 | `Event.chapter` default result fires unexpectedly | The XML `<result>` on the `<chapter>` element (not events) controls what happens when the chapter timeline expires with no event input. If this points to the wrong chapter, the default death/timeout path is wrong. | Audit the `EventResult` and `resultTarget` in `chapter.data` files for each scene's chapters. Cross-reference with DirkSimple game logic. |
 | `Event.seq_generic` ordering | Sequence events (seq2, seq3, etc.) must fire in the correct order for multi-input scenes. If `xmlsceneparser.py` generates wrong sequence numbers, the player's button presses don't match the expected sequence. | Verify `arg0` (sequence number) in generated chapter data matches the XML `<params>` values. |
@@ -132,6 +134,7 @@ Video frames extracted from Daphne .m2v segments still show visible misalignment
 | Video frame misalignment persists | **OPEN** | Extraction pipeline was rewritten (2026-02-15) to use Daphne .m2v segments directly instead of intermediate MP4, with CPU-only decode and `yadif→fps→trim→setpts` filter chain. Frame extraction produces correct frame counts, but visual inspection shows content offset from expected laserdisc frames in some chapters. |
 | ~~MP4 intermediate extraction~~ | **RESOLVED** | Removed MP4 fallback entirely. All frames now extracted directly from .m2v segments via Daphne framefile. |
 | ~~229 chapters missing frame attributes~~ | **RESOLVED** | Added action predecessor resolution to `lua_scene_exporter.py`. Now 473/516 chapters have frame attributes (remaining 43 are zero-duration `start_alive` routing nodes). |
+| ~~42 zero-frame chapters crash MSU player~~ | **RESOLVED** | `_msu1SeekToFrame` triggered `E_Msu1InvalidFrameRequested` when `frameCount=0`. Added `tools/generate_blank_frames.py` to generate placeholder frames (black or text) for all chapters without video tiles. `atmd_insert_coins` shows "INSERT COIN", `atmd_start_dead` shows "GAME OVER", all other routing nodes get a plain black frame. Run after MSU extraction to fill gaps. |
 
 **Possible remaining causes:**
 - `fps=24000/1001` filter converts 29.97i → 23.976p before `trim` — the frame-to-time mapping may have an off-by-one or rounding error at segment boundaries

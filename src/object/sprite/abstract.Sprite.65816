@@ -538,7 +538,7 @@ SpriteAnimationLUT:
   PTRLONG SpriteAnimationLUT SPRITE.left_arrow
   PTRLONG SpriteAnimationLUT SPRITE.down_arrow
   PTRLONG SpriteAnimationLUT SPRITE.up_arrow
-  PTRLONG SpriteAnimationLUT SPRITE.turbo
+  PTRLONG SpriteAnimationLUT SPRITE.sword
   PTRLONG SpriteAnimationLUT SPRITE.brake
   PTRLONG SpriteAnimationLUT SPRITE.dashboard
   PTRLONG SpriteAnimationLUT SPRITE.steering_wheel.normal
@@ -559,7 +559,7 @@ SpriteAnimationLUT:
   SPRITE_ANIMATION left_arrow
   SPRITE_ANIMATION down_arrow 
   SPRITE_ANIMATION up_arrow 
-  SPRITE_ANIMATION turbo
+  SPRITE_ANIMATION sword
   SPRITE_ANIMATION brake 
   SPRITE_ANIMATION dashboard 
   SPRITE_ANIMATION steering_wheel.normal 

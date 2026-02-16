@@ -542,7 +542,7 @@ scenes = {
             timeout = { when=time_to_ms(3, 0), nextsequence="attract_movie" },
         },
         attract_movie = {
-            start_time = time_to_ms(7, 0),
+            start_time = time_laserdisc_frame(323),
             timeout = { when=time_to_ms(43, 0), nextsequence="insert_coins" },
             actions = {
                 -- Player hit start to start the game
@@ -560,7 +560,7 @@ scenes = {
         },
     },
 
-    -- Intro level, no gameplay in the arcade version.
+    -- Intro level: castle exterior, drawbridge with sword action, then enter castle.
     introduction = {
         start_dead = {
             start_time = time_laserdisc_frame(1367),
@@ -572,12 +572,20 @@ scenes = {
             timeout = { when=0, nextsequence="castle_exterior" }
         },
 
-        castle_exterior = {  -- exterior shot of the castle
+        castle_exterior = {  -- castle exterior + drawbridge crossing
             start_time = time_laserdisc_frame(1424),
-            timeout = { when=time_to_ms(5, 767), nextsequence="exit_room" },
+            timeout = { when=time_to_ms(14, 598), nextsequence="drawbridge_death" },
+            actions = {
+                { input="action", from=time_to_ms(8, 340), to=time_to_ms(14, 181), nextsequence="exit_room" },
+            }
         },
 
-        -- this skips the drawbridge itself, like the arcade does.
+        drawbridge_death = {  -- tentacles pull Dirk under the drawbridge
+            start_time = time_laserdisc_frame(2044),
+            kills_player = true,
+            timeout = { when=time_to_ms(1, 502), nextsequence=nil },
+        },
+
         exit_room = {  -- player runs through the gates.
             start_time = time_laserdisc_frame(1823) - laserdisc_frame_to_ms(2),
             timeout = { when=time_to_ms(2, 359) + laserdisc_frame_to_ms(10), nextsequence=nil },

@@ -453,9 +453,8 @@ def build_scene_order(rows: List[List[str]]) -> Dict[str, str]:
     # Build next-scene mapping
     order: Dict[str, str] = {}
 
-    # Introduction -> first scene in rows
-    if linear:
-        order['introduction'] = linear[0]
+    # Introduction -> vestibule (always the first gameplay scene)
+    order['introduction'] = 'vestibule'
 
     # Each scene -> next scene in linear order
     for i in range(len(linear) - 1):

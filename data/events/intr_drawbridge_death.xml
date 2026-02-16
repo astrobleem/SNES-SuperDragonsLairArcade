@@ -1,0 +1,18 @@
+<chapter name="intr_drawbridge_death">
+	<timeline>
+		<timestart min="1" second="12" ms="5" frame="2044" />
+		<timeend min="1" second="13" ms="507" frame="2080" />
+	</timeline>
+	<params>
+		<int key="kills_player" value="1" />
+	</params>
+	<macros />
+	<events>
+		<event type="checkpoint">
+			<timeline>
+				<timestart min="1" second="12" ms="5" />
+			</timeline>
+		</event>
+	</events>
+	<result><lastcheckpoint /></result>
+</chapter>

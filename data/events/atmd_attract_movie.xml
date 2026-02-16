@@ -1,20 +1,20 @@
 <chapter name="atmd_attract_movie">
 	<timeline>
-		<timestart min="0" second="7" ms="0" />
-		<timeend min="0" second="50" ms="0" />
+		<timestart min="0" second="0" ms="0" frame="323" />
+		<timeend min="0" second="43" ms="0" frame="1354" />
 	</timeline>
 	<params />
 	<macros />
 	<events>
 		<event type="checkpoint">
 			<timeline>
-				<timestart min="0" second="7" ms="0" />
+				<timestart min="0" second="0" ms="0" />
 			</timeline>
 		</event>
 		<event type="direction" automacro="start" label="start-1">
 			<timeline>
-				<timestart min="0" second="7" ms="0" />
-				<timeend min="1" second="7" ms="0" />
+				<timestart min="0" second="0" ms="0" />
+				<timeend min="1" second="0" ms="0" />
 			</timeline>
 			<params>
 				<str key="type" value="start" />

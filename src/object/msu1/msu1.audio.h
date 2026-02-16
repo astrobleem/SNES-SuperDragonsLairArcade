@@ -15,7 +15,7 @@
 .endst
 
 .struct vars
-  currentTrack db
+  currentTrack dw
   audioPlaying db
 .endst
 

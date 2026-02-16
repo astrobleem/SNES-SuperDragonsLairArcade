@@ -1,7 +1,7 @@
 <chapter name="intr_castle_exterior">
 	<timeline>
 		<timestart min="0" second="45" ms="963" frame="1424" />
-		<timeend min="0" second="51" ms="730" frame="1562" />
+		<timeend min="1" second="0" ms="561" frame="1774" />
 	</timeline>
 	<params />
 	<macros />
@@ -11,6 +11,16 @@
 				<timestart min="0" second="45" ms="963" />
 			</timeline>
 		</event>
+		<event type="direction" automacro="action" label="action-1">
+			<timeline>
+				<timestart min="0" second="54" ms="303" />
+				<timeend min="1" second="0" ms="144" />
+			</timeline>
+			<params>
+				<str key="type" value="action" />
+			</params>
+			<result><playchapter name="intr_exit_room" /></result>
+		</event>
 	</events>
-	<result><playchapter name="intr_exit_room" /></result>
+	<result><playchapter name="intr_drawbridge_death" /></result>
 </chapter>

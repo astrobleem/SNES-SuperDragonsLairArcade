@@ -42,4 +42,4 @@ The title screen provides:
 ## Asset Theming Notes
 - Dragon's Lair themed sound effects (`dl_accept`, `dl_buzz`, `dl_credit`) exist in `data/sounds/` as WAVs but are not yet registered in the SPC build due to sample RAM constraints.
 - Legacy RoadBlaster identifiers remain in some code (`SAMPLE.0.SHURIKEN`, `SAMPLE.0.TECHNIQUE`) — these are functional placeholders.
-- Legacy sprites (brake, dashboard, steering wheels, turbo) are unused by Dragon's Lair scenes; keep unreferenced.
+- Legacy sprites (brake, dashboard, steering wheels) are unused by Dragon's Lair scenes; keep unreferenced.

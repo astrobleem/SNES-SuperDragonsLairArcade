@@ -196,8 +196,8 @@ _stopAudioTrack:
   METHOD playAudio
   php
   rep #$31
-  sep #$20
   sta.b this.currentTrack
+  sep #$20
 
   jsr _stopAudioTrack
 
@@ -211,7 +211,7 @@ _stopAudioTrack:
   ;set track
   lda.b this.currentTrack
   sta.l MSU_TRACK
-  lda.b #0
+  lda.b this.currentTrack+1
   sta.l MSU_TRACK+1
   jsr _waitAudioBusy
 

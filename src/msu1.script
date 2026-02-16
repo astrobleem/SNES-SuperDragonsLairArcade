@@ -51,9 +51,9 @@
   CALL Spc.SpcIssueSamplePackUpload.MTD hashPtr.3
   jsr core.nmi.start
 
-  ;play dragon roar via MSU-1 PCM track 250
+  ;play dragon roar via MSU-1 PCM track 900 (above chapter ID range to avoid collision)
   NEW Msu1.audio.CLS.PTR objMsu1Audio
-  lda.w #250
+  lda.w #900
   CALL Msu1.audio.playAudio.MTD objMsu1Audio
 
   jsr SavePC

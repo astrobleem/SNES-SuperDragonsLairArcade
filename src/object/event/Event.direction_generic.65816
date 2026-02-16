@@ -41,14 +41,14 @@ _branchImm_store:
 _direction_hasDir:
   cmp #JOY_BUTTON_A
   bne _not_action
-    ;action/sword — show turbo icon centered on screen
-    NEW Turbo_icon.CLS.PTR this.sprite 120 80
+    ;action/sword — show sword icon centered on screen
+    NEW Sword_icon.CLS.PTR this.sprite 120 80
     lda #120
     sta this.scoreX
     lda #80
     sta this.scoreY
     lda event.endFrame
-    CALL Turbo_icon.reset.MTD this.sprite this.scoreX this.scoreY
+    CALL Sword_icon.reset.MTD this.sprite this.scoreX this.scoreY
     jmp ++++
 _not_action:
   cmp #JOY_DIR_LEFT
