@@ -62,6 +62,13 @@ _title_screen.spcReady:
   NEW Player.CLS.PTR objPlayer
   CALL Player.reset.MTD objPlayer
 
+  lda.w GLOBAL.konamiActivated
+  beq _title_screen.noKonami
+    stz.w GLOBAL.konamiActivated
+    lda #30
+    CALL Player.setLifeCount.MTD objPlayer
+_title_screen.noKonami:
+
   jsr core.irq.position.get
   stx irq.buffer.x
   sty irq.buffer.y

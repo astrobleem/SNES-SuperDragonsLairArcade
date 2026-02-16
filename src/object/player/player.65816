@@ -84,6 +84,12 @@
   jsr _init
   rts
 
-  CLASS Player getScore getName getLifeCount addToScore loseLife reset
-.ends	
+  METHOD setLifeCount
+  sep #$20
+  sta.b this.lifes
+  rep #$31
+  rts
+
+  CLASS Player getScore getName getLifeCount addToScore loseLife reset setLifeCount
+.ends
 	

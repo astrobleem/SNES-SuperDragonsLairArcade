@@ -1,5 +1,10 @@
   SCRIPT losers
   .def objLosersBg hashPtr.1
+  .def objLosersSpc hashPtr.2
+  .def konami.step this._tmp
+  .def hold.timer this._tmp+2
+  .def konami.done this._tmp+4
+
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers
@@ -16,6 +21,8 @@
 
   rep #$31
 
+  stz.w GLOBAL.konamiActivated
+
   NEW Brightness.CLS.PTR objBrightness
   NEW Background.generic.CLS.PTR objLosersBg BG.LAYER.0 BG.losers.PTR
   lda.w #4
@@ -31,15 +38,71 @@
     rts
 +
 
-  lda #180            ;hold for 180 frames (~3 seconds)
-  sta.b this._tmp
+  ;initialize konami detection state
+  stz.b konami.step
+  stz.b konami.done
+  lda #180
+  sta.b hold.timer
 
   jsr SavePC
-  lda.b this._tmp
-  beq +
-    dec.b this._tmp
-    rts
-+
+
+  ;decrement hold timer
+  lda.b hold.timer
+  beq _losers.holdDone
+  dec.b hold.timer
+
+  ;if code already completed, just wait for timer
+  lda.b konami.done
+  bne _losers.holdRts
+
+  ;read trigger input (tax sets Z flag; plp in get.trigger restores caller flags)
+  ldx #INPUT.DEVICE.ID.0
+  jsr core.input.get.trigger
+  tax
+  beq _losers.holdRts
+
+  ;compare pressed button to expected sequence step
+  pha
+  lda.b konami.step
+  asl a
+  tax
+  pla
+  cmp.l _losers.konamiSequence,x
+  beq _losers.konamiMatch
+
+  ;wrong button — reset step
+  stz.b konami.step
+  rts
+
+_losers.konamiMatch:
+  ;correct button — advance step
+  lda.b konami.step
+  inc a
+  sta.b konami.step
+  cmp #10
+  bne _losers.holdRts
+
+  ;code complete — set WRAM flag
+  lda #1
+  sta.w GLOBAL.konamiActivated
+  sta.b konami.done
+
+  ;find Spc singleton for confirmation sound
+  jsr abstract.Iterator.reset
+  lda #OBJID.Spc
+  jsr abstract.Iterator.each.byId
+  bcc _losers.holdRts
+    lda.b iterator.target
+    sta.b objLosersSpc
+    lda.b iterator.target + 2
+    sta.b objLosersSpc + 2
+    lda.w #SAMPLE.0.TECHNIQUE
+    CALL Spc.SpcPlaySoundEffect.MTD objLosersSpc
+
+_losers.holdRts:
+  rts
+
+_losers.holdDone:
 
   lda #BRIGHTNESS.NONE
   CALL Brightness.fadeTo.MTD objBrightness
@@ -58,4 +121,9 @@
   NEW Script.CLS.PTR oopCreateNoPtr logo_intro
 
   DIE
+
+_losers.konamiSequence:
+  .dw JOY_DIR_UP, JOY_DIR_UP, JOY_DIR_DOWN, JOY_DIR_DOWN
+  .dw JOY_DIR_LEFT, JOY_DIR_RIGHT, JOY_DIR_LEFT, JOY_DIR_RIGHT
+  .dw JOY_BUTTON_B, JOY_BUTTON_A
 

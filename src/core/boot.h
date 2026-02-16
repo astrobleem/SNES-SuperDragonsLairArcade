@@ -22,6 +22,7 @@ rendererFrame					dw
 rendererScene					dw
 charConvReady 				db	;0=wait, 1=ready
 GLOBAL.memsel	db
+GLOBAL.konamiActivated	dw
 VARS_end							ds 0
 .ends
 
