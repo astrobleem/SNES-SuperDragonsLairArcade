@@ -32,6 +32,18 @@ venv/
 tools/wla-dx-9.5-svn/*.o
 tools/wla-dx-9.5-svn/wlalink/*.o
 
+# Mesen emulator runtime files (keep test_template.lua and agent .md)
+mesen/*.exe
+mesen/*.dll
+mesen/*.json
+mesen/*.txt
+mesen/Debugger/
+mesen/RecentGames/
+mesen/Satellaview/
+mesen/SaveStates/
+mesen/Saves/
+mesen/Screenshots/
+
 # Test/temporary files
 build.log
 *.log
