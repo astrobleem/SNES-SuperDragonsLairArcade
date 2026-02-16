@@ -8,11 +8,6 @@
 	</params>
 	<macros />
 	<events>
-		<event type="checkpoint">
-			<timeline>
-				<timestart min="18" second="29" ms="442" />
-			</timeline>
-		</event>
 	</events>
 	<result><lastcheckpoint /></result>
 </chapter>

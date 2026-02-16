@@ -2,7 +2,7 @@
 
 
 ;defines
-.define maxNumberOopObjs	36
+.define maxNumberOopObjs	48
 ;.define oopArrayLength 9
 .define oopStackTst	$aa55
 .define maxExecTime 10	;number of frames oop handler may spend on a single obj before nmi watchdog throws error

@@ -117,7 +117,6 @@ core.object.create:
 			sta tmp+9
 			stx tmp+4
 			jsr OopHandlerSaveObjPtr
-
 			pld
 			plp
 			rts

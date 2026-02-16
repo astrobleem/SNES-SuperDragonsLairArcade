@@ -1,0 +1,21 @@
+<chapter name="intr_drawbridge_swing">
+	<timeline>
+		<timestart min="1" second="0" ms="602" frame="1775" />
+		<timeend min="1" second="2" ms="521" frame="1821" />
+	</timeline>
+	<params />
+	<macros />
+	<events>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="1" second="1" ms="102" />
+				<timeend min="1" second="2" ms="302" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
+			</params>
+			<result><playchapter name="intr_exit_room" /></result>
+		</event>
+	</events>
+	<result><playchapter name="intr_drawbridge_death" /></result>
+</chapter>

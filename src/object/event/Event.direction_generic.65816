@@ -17,6 +17,9 @@
 
   jsr Event.template.initCommon
 
+  lda #oopCreateNoPtr
+  sta this.sprite+2
+
   lda OBJECT.CALL.ARG.5,s
   sta this.direction
 
@@ -42,13 +45,13 @@ _direction_hasDir:
   cmp #JOY_BUTTON_A
   bne _not_action
     ;action/sword — show sword icon centered on screen
-    NEW Sword_icon.CLS.PTR this.sprite 120 80
+    NEW Sword_icon.CLS.PTR this.sprite 120 300
     lda #120
     sta this.scoreX
     lda #80
     sta this.scoreY
     lda event.endFrame
-    CALL Sword_icon.reset.MTD this.sprite this.scoreX this.scoreY
+    CALL Sword_icon.reset.MTD this.sprite 120 300
     jmp ++++
 _not_action:
   cmp #JOY_DIR_LEFT
@@ -61,56 +64,74 @@ _notDown:
   bne _skip_up_check
     jmp +++
 _skip_up_check:
-        NEW Right_arrow.CLS.PTR this.sprite 160 80
+        NEW Right_arrow.CLS.PTR this.sprite 160 300
         lda #160
         sta this.scoreX
         lda #80
         sta this.scoreY
         lda event.endFrame
-        CALL Right_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+        CALL Right_arrow.reset.MTD this.sprite 160 300
         jmp ++++
   ;left arrow assets
-+ NEW Left_arrow.CLS.PTR this.sprite 60 80
++ NEW Left_arrow.CLS.PTR this.sprite 60 300
   lda #60
   sta this.scoreX
   lda #80
   sta this.scoreY
   lda event.endFrame
-  CALL Left_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+  CALL Left_arrow.reset.MTD this.sprite 60 300
   jmp ++++
 
   ;down arrow assets
-++ NEW Down_arrow.CLS.PTR this.sprite 110 192
+++ NEW Down_arrow.CLS.PTR this.sprite 110 300
   lda #110
   sta this.scoreX
   lda #192
   sta this.scoreY
   lda event.endFrame
-  CALL Down_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+  CALL Down_arrow.reset.MTD this.sprite 110 300
   jmp ++++
 
   ;up arrow assets
-+++ NEW Up_arrow.CLS.PTR this.sprite 110 16
++++ NEW Up_arrow.CLS.PTR this.sprite 110 300
   lda #110
   sta this.scoreX
   lda #16
   sta this.scoreY
   lda event.endFrame
-  CALL Up_arrow.reset.MTD this.sprite this.scoreX this.scoreY
+  CALL Up_arrow.reset.MTD this.sprite 110 300
 
 ++++
-
   NEW Spc.CLS.PTR this.audio
-  lda.w #SAMPLE.0.TURN
-  CALL Spc.SpcPlaySoundEffect.MTD this.audio
-
   rts
 
   METHOD play
   rep #$31
 
   jsr Event.template.waitTimeline
-  bcc _direction_done
+  bcs _in_timeline
+    rts
+_in_timeline:
+
+  ; First active frame: show sprite + play sound
+  lda event.age
+  cmp #1
+  bne _past_first_frame
+    lda this.sprite+2
+    cmp #oopCreateNoPtr
+    beq _no_show
+      pei (this.scoreY)
+      pei (this.scoreX)
+      lda event.endFrame
+      ldx #this.sprite
+      ldy #Right_arrow.reset.MTD
+      jsr core.object.call
+      pla
+      pla
+_no_show:
+    lda.w #SAMPLE.0.TURN
+    CALL Spc.SpcPlaySoundEffect.MTD this.audio
+_past_first_frame:
 
   ;check if player pressed the expected direction
   ldx #INPUT.DEVICE.ID.0
@@ -135,6 +156,17 @@ _score_default:
       lda #PLAYER.BONUS.DEFAULT
 _spawn_score:
         NEW Sprite.score.CLS.PTR oopCreateNoPtr this.scoreX this.scoreY
+
+        ; Hide sprite (visual feedback that input was accepted)
+        ; Don't kill — singletons must stay alive to avoid slot doubling
+        lda this.sprite+2
+        cmp #oopCreateNoPtr
+        beq _no_hide_sprite
+          lda #0
+          CALL Right_arrow.reset.MTD this.sprite 0 300
+_no_hide_sprite:
+
+        ; Trigger immediately — chapter transition kills all events
         jsr abstract.Event.triggerResult
         sep #$20
         lda #1
@@ -146,8 +178,9 @@ _direction_done:
   rts
 
   METHOD kill
+  rep #$31
+  ; Don't kill sprite singleton — it stays alive for reuse by next chapter
   jmp Event.template.kill
 
   CLASS Event.direction_generic
 .ends
-

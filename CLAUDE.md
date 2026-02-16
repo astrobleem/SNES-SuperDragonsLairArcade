@@ -36,7 +36,7 @@ cmd.exe /c "cd /d E:\gh\SNES-SuperDragonsLairArcade\mesen && Mesen.exe --testrun
 **Mesen Lua API quirks:**
 - `emu.getState()` returns a flat table with dot-separated string keys: use `state["cpu.a"]` NOT `state.cpu.a`
 - `emu.setInput({a = true})` — no port number argument, just a table
-- `emu.setInput` does NOT inject into hardware JOY1L — NMI's `_checkInputDevice` overwrites WRAM from hardware. To inject input, use an exec callback at `_checkInputDevice`'s RTS address to write WRAM directly: press=`$6B46`, trigger=`$6B48`, old=`$6B4C`
+- `emu.setInput` does NOT inject into hardware JOY1L — NMI's `_checkInputDevice` overwrites WRAM from hardware. To inject input, use an exec callback at `_checkInputDevice`'s RTS address to write WRAM directly: press=`$6D06`, trigger=`$6D08`, old=`$6D0C` (verify in .sym — shifts when maxNumberOopObjs changes)
 - `_checkInputDevice` address shifts between builds — look it up in `build/SuperDragonsLairArcade.sym` after each rebuild
 - `io.open` does not work in testrunner mode; use `print()` with output redirect
 - MSU-1 requires ROM in same folder as .msu/.pcm files. Debug scripts in `mesen/` directory.
@@ -328,12 +328,12 @@ cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLai
 ```
 Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm files there). Copy test scripts to `E:\gh\SuperDragonsLairArcade.sfc\` before running. Output via `print()` only (`io.open` is broken in testrunner mode).
 
-**Stable WRAM addresses** (do NOT change between builds):
-- `$7E6C46` — inputDevice.press (current buttons)
-- `$7E6C48` — inputDevice.trigger (newly pressed this frame)
-- `$7E6C4C` — inputDevice.old (previous frame)
-- `$7E6388` — OopStack base
-- `$7E6C62` — GLOBAL.currentFrame
+**WRAM addresses** (shift when `maxNumberOopObjs` changes — verify in .sym after slot count changes):
+- `$7E6D06` — inputDevice.press (current buttons)
+- `$7E6D08` — inputDevice.trigger (newly pressed this frame)
+- `$7E6D0C` — inputDevice.old (previous frame)
+- `$7E6388` — OopStack base (stable)
+- `$7E6D22` — GLOBAL.currentFrame
 
 **Addresses that CHANGE every rebuild** — look up in `build/SuperDragonsLairArcade.sym`:
 - `core.error.trigger` — hook for fatal error detection
@@ -366,9 +366,9 @@ Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm f
 local ADDR_ERROR_TRIGGER   = 0xC05905  -- grep 'core.error.trigger' build/*.sym
 local ADDR_CHECK_INPUT_RTS = 0xC07412  -- _checkInputDevice entry + $1E
 local ADDR_TRIGGER_RESULT  = 0xC06638  -- abstract.Event.triggerResult
-local ADDR_INPUT_PRESS     = 0x7E6C46
-local ADDR_INPUT_TRIGGER   = 0x7E6C48
-local ADDR_INPUT_OLD       = 0x7E6C4C
+local ADDR_INPUT_PRESS     = 0x7E6D06
+local ADDR_INPUT_TRIGGER   = 0x7E6D08
+local ADDR_INPUT_OLD       = 0x7E6D0C
 
 local JOY_START = 0x1000; local JOY_A = 0x0080
 local JOY_DOWN = 0x0400;  local JOY_RIGHT = 0x0100

@@ -184,6 +184,11 @@ SEQ_ABBREVS = {
     'small_ball_crushes': 'sm_ball_crush',               # 18->13
 }
 
+# Frame overrides for chapters where the resolved frame skips important content.
+# Maps abbreviated chapter name -> corrected laserdisc start frame.
+FRAME_OVERRIDES = {
+}
+
 MAX_CHAPTER_NAME = 22  # 63 - 41 overhead
 
 
@@ -739,9 +744,15 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
 
     # Resolve laserdisc frame numbers for chapter timeline
     start_frame = resolved_frames.get(seq_name) if resolved_frames else None
+
+    # Apply frame overrides (e.g. include sword swing in intr_exit_room)
+    if chapter_name in FRAME_OVERRIDES:
+        start_frame = FRAME_OVERRIDES[chapter_name]
+        xml_start = time_laserdisc_frame(start_frame)
+
     end_frame = None
     if start_frame is not None:
-        end_frame = start_frame + round(timeout_when * 23.976 / 1000)
+        end_frame = start_frame + round((xml_end - xml_start) * 23.976 / 1000)
 
     lines: List[str] = []
     lines.append(f'<chapter name="{chapter_name}">')
@@ -769,12 +780,13 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
     # Events
     lines.append(f'\t<events>')
 
-    # Checkpoint event
-    lines.append(f'\t\t<event type="checkpoint">')
-    lines.append(f'\t\t\t<timeline>')
-    lines.append(f'\t\t\t\t<timestart {ms_to_attrs(xml_start)} />')
-    lines.append(f'\t\t\t</timeline>')
-    lines.append(f'\t\t</event>')
+    # Checkpoint event (skip for death scenes and no_checkpoint sequences)
+    if not sequence.get('kills_player') and not sequence.get('no_checkpoint'):
+        lines.append(f'\t\t<event type="checkpoint">')
+        lines.append(f'\t\t\t<timeline>')
+        lines.append(f'\t\t\t\t<timestart {ms_to_attrs(xml_start)} />')
+        lines.append(f'\t\t\t</timeline>')
+        lines.append(f'\t\t</event>')
 
     # Action events
     actions = sequence.get('actions')

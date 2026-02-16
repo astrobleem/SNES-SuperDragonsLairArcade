@@ -576,7 +576,16 @@ scenes = {
             start_time = time_laserdisc_frame(1424),
             timeout = { when=time_to_ms(14, 598), nextsequence="drawbridge_death" },
             actions = {
-                { input="action", from=time_to_ms(8, 340), to=time_to_ms(14, 181), nextsequence="exit_room" },
+                { input="action", from=time_to_ms(8, 340), to=time_to_ms(14, 181), nextsequence="drawbridge_swing" },
+            }
+        },
+
+        drawbridge_swing = {  -- sword swing animation, press up to climb
+            start_time = time_laserdisc_frame(1775),
+            no_checkpoint = true,
+            timeout = { when=time_to_ms(1, 919), nextsequence="drawbridge_death" },
+            actions = {
+                { input="up", from=time_to_ms(0, 500), to=time_to_ms(1, 700), nextsequence="exit_room" },
             }
         },
 

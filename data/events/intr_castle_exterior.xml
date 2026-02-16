@@ -19,7 +19,7 @@
 			<params>
 				<str key="type" value="action" />
 			</params>
-			<result><playchapter name="intr_exit_room" /></result>
+			<result><playchapter name="intr_drawbridge_swing" /></result>
 		</event>
 	</events>
 	<result><playchapter name="intr_drawbridge_death" /></result>

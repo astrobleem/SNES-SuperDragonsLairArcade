@@ -8,11 +8,6 @@
 	</params>
 	<macros />
 	<events>
-		<event type="checkpoint">
-			<timeline>
-				<timestart min="6" second="35" ms="862" />
-			</timeline>
-		</event>
 	</events>
 	<result><playchapter name="firm_seq8" /></result>
 </chapter>
