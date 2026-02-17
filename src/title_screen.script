@@ -34,6 +34,10 @@
   NEW Brightness.CLS.PTR objBrightness
   NEW Background.textlayer.8x8.CLS.PTR objText
   NEW Background.generic.CLS.PTR objBackground BG.LAYER.1 BG.titlescreen.PTR
+
+  lda #BRIGHTNESS.FULL
+  CALL Brightness.fadeTo.MTD objBrightness
+
   NEW Background.generic.CLS.PTR objLogo BG.LAYER.0 BG.logo.PTR
   
   NEW LogoZoom.CLS.PTR objLogoZoom BG.LAYER.0
@@ -55,9 +59,6 @@ _title_screen.spcReady:
   lda #T_title.PTR
   CALL Background.textlayer.8x8.print.MTD objText
   CALL Background.textlayer.8x8.flush.MTD objText
-
-  lda #BRIGHTNESS.FULL
-  CALL Brightness.fadeTo.MTD objBrightness 
 
   NEW Player.CLS.PTR objPlayer
   CALL Player.reset.MTD objPlayer
@@ -141,6 +142,21 @@ _title_screen.menuInput:
 + rts
 
 _title_screen.handleInput:
+  ;--- SELECT button: insert coin ---
+  lda.b currentLevel
+  and.w #JOY_BUTTON_SELECT
+  beq _title_screen.noSelect
+    lda.w GLOBAL.credits
+    cmp #99
+    bcs _title_screen.noSelect
+      inc a
+      sta.w GLOBAL.credits
+    lda.w #SAMPLE.0.OK
+    CALL Spc.SpcPlaySoundEffect.MTD objSpc
+    jsr _title_screen.drawMenu
+    rts
+_title_screen.noSelect:
+
   ;--- B button: back navigation ---
   lda.b currentLevel
   and.w #JOY_BUTTON_B
@@ -231,11 +247,18 @@ _title_screen.noDown:
   bra _title_screen.selectOptions
 
 _title_screen.selectStartGame:
-  lda.w #SAMPLE.0.SAVEME
-  CALL Spc.SpcPlaySoundEffect.MTD objSpc
-  lda.w #level1
-  sta.b menu.target
-  jmp _title_screen.startTransitionFade
+  lda.w GLOBAL.credits
+  beq _title_screen.noCredits
+    dec a
+    sta.w GLOBAL.credits
+    lda.w #SAMPLE.0.SAVEME
+    CALL Spc.SpcPlaySoundEffect.MTD objSpc
+    lda.w #level1
+    sta.b menu.target
+    jmp _title_screen.startTransitionFade
+_title_screen.noCredits:
+  jsr _title_screen.drawMenu
+  rts
 
 _title_screen.selectOptions:
   lda #1
@@ -264,9 +287,15 @@ _title_screen.selectHighScores:
   jmp _title_screen.startTransition
 
 _title_screen.selectAttractMode:
+  stz.w GLOBAL.credits
+  ;kill existing Pause singleton so START doesn't clash in attract mode
+  lda.w #OBJID.Pause
+  jsr abstract.Iterator.kill.byId
   lda.w #atmd_start_alive
   sta.b menu.target
-  jmp _title_screen.startTransition
+  lda.w #SAMPLE.0.TECHNIQUE
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
+  jmp _title_screen.startTransitionNoPause
 
 _title_screen.selectSoundTest:
   lda #2
@@ -375,6 +404,7 @@ _title_screen.startTransition:
   CALL Spc.SpcPlaySoundEffect.MTD objSpc
 _title_screen.startTransitionFade:
   NEW Pause.CLS.PTR oopCreateNoPtr
+_title_screen.startTransitionNoPause:
   lda #BRIGHTNESS.NONE
   CALL Brightness.fadeTo.MTD objBrightness
 
@@ -430,7 +460,7 @@ _title_screen.drawMenu:
   bra _title_screen.drawFlush
 
 _title_screen.drawMain:
-  lda #T_menu_main.PTR
+  lda #T_menu_main_credits.PTR
   CALL Background.textlayer.8x8.print.MTD objText
   bra _title_screen.drawCursor
 
