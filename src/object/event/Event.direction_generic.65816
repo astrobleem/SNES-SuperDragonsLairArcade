@@ -151,7 +151,7 @@ _past_first_frame:
 _direction_normalCheck:
   ;check if player pressed the expected direction
   ldx #INPUT.DEVICE.ID.0
-  jsr core.input.get.press
+  jsr core.input.get.trigger
   and this.direction
   bne _direction_correctPress
   jmp _direction_done

@@ -26,17 +26,24 @@ Event.template.initCommon:
   rts
 
 ; wait until the timeline reaches the event start frame, then tick age
+; active when startFrame <= currentFrame < endFrame
 ; @return c<bool>  set when execution may continue for this frame
 Event.template.waitTimeline:
   rep #$31
   lda.b event.startFrame
   jsr GLOBAL.checkFrameReached
-  bcs +
+  bcs _wt_started
     clc
     rts
-+
+_wt_started:
+  lda.b event.endFrame
+  jsr GLOBAL.checkFrameReached
+  bcs _wt_expired
   inc event.age
   sec
+  rts
+_wt_expired:
+  clc
   rts
 
 ; trigger the configured result if an unexpected input was pressed

@@ -447,6 +447,7 @@ def build_scene_order(rows: List[List[str]]) -> Dict[str, str]:
     # Flatten rows left-to-right, row-by-row, skipping duplicates
     linear: List[str] = []
     seen: set = set()
+    seen.add('vestibule')  # exclude vestibule — it's special-cased below
     for row in rows:
         if not isinstance(row, list):
             continue
@@ -464,6 +465,10 @@ def build_scene_order(rows: List[List[str]]) -> Dict[str, str]:
     # Each scene -> next scene in linear order
     for i in range(len(linear) - 1):
         order[linear[i]] = linear[i + 1]
+
+    # Vestibule -> first real gameplay scene
+    if linear:
+        order['vestibule'] = linear[0]
 
     # Last scene (the_dragons_lair) -> title_screen (endgame)
     if linear:

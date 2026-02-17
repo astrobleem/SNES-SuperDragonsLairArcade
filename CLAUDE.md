@@ -334,6 +334,7 @@ In 16-bit accumulator mode (`rep #$20`), `lda zp_offset` reads 2 bytes. If a `db
 | `data/segment_timing.json` | Per-segment cumulative timing offsets for frame-accurate seeking |
 | `build/SuperDragonsLairArcade.sym` | Symbol table — look up addresses here after each build |
 | `E:\gh\SuperDragonsLairArcade.sfc\manifest.xml` | MSU-1 track manifest for emulators (lists PCM files by chapter ID) |
+| `tools/generate_playthrough_tests.py` | Generates per-scene Mesen Lua test scripts that verify every scene is beatable |
 
 ## Mesen Lua Test Runner — MANDATORY
 
@@ -376,6 +377,9 @@ Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm f
 4. **Use `emu.memType.snesMemory`**, not `cpuDebug` or `workRam`, for WRAM reads/writes.
 5. **Use `state["ppu.frameCount"]`** for timing, not a manual counter. Mesen's `emu.getState()` returns flat string-keyed tables: `state["cpu.a"]` not `state.cpu.a`.
 6. **Stale addresses = silent failure.** ROM code addresses shift on every build. Test scripts with old addresses produce "INCONCLUSIVE" results (callbacks never fire). Always re-read the sym file after building.
+7. **Single-frame injection windows for menus.** The title screen processes one input per frame. Multi-frame injection (e.g. `{600,602,JOY_DOWN}`) causes 3 separate presses — DOWN toggles cursor back and forth, A enters options then immediately selects the first item. Use `{frame, frame, button}` for menus.
+8. **No START during boot.** msu1.script's SavePC 59 LOOPS when START/A is pressed (`beq +; rts; +`). Pressing START delays the splash instead of skipping it. Let it auto-advance (~128 frames via `SCRIPT.MAX_AGE.DEFAULT`). Boot sequence takes ~575 PPU frames total to reach the title screen menu.
+9. **Put navigation logic in exec callback, not endFrame.** `endFrame` fires AFTER the frame's main loop; `exec` at `_checkInputDevice` RTS fires during the NEXT frame's NMI. Using `endFrame` to set a button variable introduces a 1-frame delay. For menu navigation (where timing is exact), check `ppu.frameCount` directly inside the exec callback.
 
 **Standard test script template:**
 ```lua
@@ -423,24 +427,71 @@ emu.addMemoryCallback(function()
     emu.stop()
 end, emu.callbackType.exec, ADDR_ERROR_TRIGGER)
 
--- Scene select navigation: START x6, DOWN, A, DOWN x3, A, RIGHT x N, A
+-- Scene select: no START during boot (auto-advances ~575 frames).
+-- Single-frame windows: DOWN, A (OPTIONS), DOWN x3, A (SCENE SELECT), RIGHT x N, A
+-- Menu active at ~frame 575. Start nav at frame 600.
 local navSchedule = {
-    {100,102,JOY_START},{150,152,JOY_START},{200,202,JOY_START},
-    {300,302,JOY_START},{400,402,JOY_START},{500,502,JOY_START},
-    {800,802,JOY_DOWN},{860,862,JOY_A},
-    {920,922,JOY_DOWN},{980,982,JOY_DOWN},{1040,1042,JOY_DOWN},
-    {1100,1102,JOY_A},
+    {600,600,JOY_DOWN},                         -- DOWN to OPTIONS
+    {630,630,JOY_A},                            -- A enter OPTIONS
+    {660,660,JOY_DOWN},{690,690,JOY_DOWN},      -- DOWN x3 to SCENE SELECT
+    {720,720,JOY_DOWN},{750,750,JOY_A},         -- A enter SCENE SELECT
     -- RIGHT x N for scene N+1 (omit for scene 1 = introduction)
-    {1160,1162,JOY_RIGHT},  -- scene 2 = vestibule
-    {1220,1222,JOY_A},      -- launch
+    {780,780,JOY_RIGHT},                        -- scene 2 = vestibule
+    {810,810,JOY_A},                            -- launch
 }
+
+-- For menus: put nav logic in exec callback to avoid 1-frame delay
+emu.addMemoryCallback(function()
+    local frame = emu.getState()["ppu.frameCount"]
+    for _, s in ipairs(navSchedule) do
+        if frame >= s[1] and frame <= s[2] then
+            writeWord(ADDR_INPUT_PRESS, s[3])
+            writeWord(ADDR_INPUT_TRIGGER, s[3])
+            writeWord(ADDR_INPUT_OLD, 0)
+            return
+        end
+    end
+    -- Golden path injection (set by endFrame, 1-frame delay OK for wide event windows)
+    if injectButton ~= 0 then
+        writeWord(ADDR_INPUT_PRESS, injectButton)
+        writeWord(ADDR_INPUT_TRIGGER, injectButton)
+        writeWord(ADDR_INPUT_OLD, 0)
+    end
+end, emu.callbackType.exec, ADDR_CHECK_INPUT_RTS)
 
 emu.addEventCallback(function()
     local frame = emu.getState()["ppu.frameCount"]
     injectButton = 0
-    for _, s in ipairs(navSchedule) do
-        if frame >= s[1] and frame <= s[2] then injectButton = s[3]; break end
-    end
+    -- (golden path frame monitoring goes here)
     if frame >= MAX_FRAMES then print("TIMEOUT"); emu.stop() end
 end, emu.eventType.endFrame)
+```
+
+## Automated Playthrough Tests
+
+`tools/generate_playthrough_tests.py` generates per-scene Mesen Lua test scripts that verify every gameplay scene is beatable with the correct inputs. It parses all 518 `chapter.data` files, builds directed chapter graphs, finds golden paths via BFS, and reads the `.sym` file for current ROM addresses.
+
+```bash
+# Generate all 28 scene test scripts (scene 29 attract_mode has no gameplay path)
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py"
+
+# Generate for a specific scene only
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py --scene 15"
+
+# Dry-run: show golden paths without generating Lua files
+wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py --dry-run"
+
+# Run one test (from sfc directory where .msu/.pcm files live)
+cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc test_scene_15_flaming_ropes.lua > out_15.txt 2>&1"
+```
+
+**IMPORTANT**: Regenerate test scripts after every build (`make`) because ROM addresses shift. The generator reads `build/SuperDragonsLairArcade.sym` automatically.
+
+**Golden path algorithm**: BFS from `{prefix}_start_alive`, following non-death direction events and default chapter transitions. Death chapters (EventResult.lastcheckpoint targets) and their transitive predecessors are excluded. For each direction event on the path, injects the button at the midpoint of the event's startFrame-endFrame window.
+
+**Test output**: Each test prints `PASS`, `FAIL` (with error code or death info), or `TIMEOUT`. Example:
+```
+INJECT: chapter=134 (flrp_enter_room) dir=0x0100 frame=40 ppuFrame=1304 step=1/4
+INJECT: chapter=140 (flrp_rope1) dir=0x0100 frame=35 ppuFrame=1381 step=2/4
+PASS: scene flaming_ropes - all 4 inputs injected successfully (ppuFrame=1523)
 ```
