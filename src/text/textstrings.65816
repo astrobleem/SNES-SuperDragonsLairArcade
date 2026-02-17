@@ -832,8 +832,139 @@ T_menu_levelselect:
     .dw GLOBAL.CORE.STRING.argument.0
     .db GLOBAL.CORE.STRING.argument.0>>16,1
     .db TC_pos
+    .dw $2E9
+    .db TC_iSub
+    .dw GLOBAL.pauseSceneNameIdx
+    .db TC_pos
     .dw $309
     .db "A:START  B:BACK",TC_end
+
+T_menu_main_credits:
+    .db TC_pos
+    .dw $286
+    .db " START GAME",TC_brk
+    .db " OPTIONS"
+    .db TC_pos
+    .dw $35
+    .db "CREDITS: ",TC_dToS
+    .dw GLOBAL.credits
+    .db GLOBAL.credits>>16,1
+    .db TC_end
+
+T_continue:
+    .db TC_pos
+    .dw $14B
+    .db "CONTINUE?"
+    .db TC_pos
+    .dw $1CF
+    .db TC_dToS
+    .dw GLOBAL.CORE.STRING.argument.0
+    .db GLOBAL.CORE.STRING.argument.0>>16,1
+    .db TC_pos
+    .dw $24A
+    .db "CREDITS: ",TC_dToS
+    .dw GLOBAL.credits
+    .db GLOBAL.credits>>16,1
+    .db TC_pos
+    .dw $30A
+    .db "SELECT:INSERT COIN"
+    .db TC_pos
+    .dw $32B
+    .db "START:CONTINUE"
+    .db TC_end
+
+T_sceneName.1:
+    .db "Drawbridge",TC_end
+T_sceneName.2:
+    .db "Vestibule",TC_end
+T_sceneName.3:
+    .db "Mist Room",TC_end
+T_sceneName.4:
+    .db "Bower",TC_end
+T_sceneName.5:
+    .db "Fire Room",TC_end
+T_sceneName.6:
+    .db "Throne Room",TC_end
+T_sceneName.7:
+    .db "Tilting Room",TC_end
+T_sceneName.8:
+    .db "Tentacle Room",TC_end
+T_sceneName.9:
+    .db "Breathing Door",TC_end
+T_sceneName.10:
+    .db "Giddy Goons",TC_end
+T_sceneName.11:
+    .db "Catwalk Bats",TC_end
+T_sceneName.12:
+    .db "Elevator Floor",TC_end
+T_sceneName.13:
+    .db "Rolling Balls",TC_end
+T_sceneName.14:
+    .db "Underground River",TC_end
+T_sceneName.15:
+    .db "Flaming Ropes",TC_end
+T_sceneName.16:
+    .db "Flying Barding",TC_end
+T_sceneName.17:
+    .db "Bubbling Cauldron",TC_end
+T_sceneName.18:
+    .db "Giant Bat",TC_end
+T_sceneName.19:
+    .db "Crypt Creeps",TC_end
+T_sceneName.20:
+    .db "Drink Me Room",TC_end
+T_sceneName.21:
+    .db "Robot Knight",TC_end
+T_sceneName.22:
+    .db "Smithee",TC_end
+T_sceneName.23:
+    .db "Smithee Reversed",TC_end
+T_sceneName.24:
+    .db "Grim Reaper",TC_end
+T_sceneName.25:
+    .db "Yellow Brick Road",TC_end
+T_sceneName.26:
+    .db "Black Knight",TC_end
+T_sceneName.27:
+    .db "Lizard King",TC_end
+T_sceneName.28:
+    .db "Dragon's Lair",TC_end
+T_sceneName.29:
+    .db "Attract Mode",TC_end
+
+T_pause:
+    .db TC_pos
+    .dw $0046
+    .db "====== PAUSED ======"
+    .db TC_pos
+    .dw $0081
+    .db "SCENE: ",TC_iSub
+    .dw GLOBAL.pauseSceneNameIdx
+    .db TC_pos
+    .dw $00E1
+    .db "SCORE:",TC_dToS
+    .dw GLOBAL.CORE.STRING.argument.0
+    .db GLOBAL.CORE.STRING.argument.0>>16,2
+    .db "000  LIVES:",TC_dToS
+    .dw GLOBAL.CORE.STRING.argument.1
+    .db GLOBAL.CORE.STRING.argument.1>>16,1
+    .db TC_pos
+    .dw $0121
+    .db "CREDITS:",TC_dToS
+    .dw GLOBAL.credits
+    .db GLOBAL.credits>>16,1
+    .db TC_pos
+    .dw $01A1
+    .db "------ DEBUG ------"
+    .db TC_pos
+    .dw $01E1
+    .db "CHAPTER:",TC_hToS
+    .dw GLOBAL.CORE.STRING.argument.2
+    .db GLOBAL.CORE.STRING.argument.2>>16,2
+    .db "  FRAME:",TC_hToS
+    .dw GLOBAL.currentFrame
+    .db GLOBAL.currentFrame>>16,2
+    .db TC_end
 
 ;used to check maximum valid string id
 T_max:

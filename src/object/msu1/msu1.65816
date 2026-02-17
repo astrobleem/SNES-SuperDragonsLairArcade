@@ -43,6 +43,7 @@
   rep #$31
   stz.b this.currentFrame
   stz.b this.currentChapter
+  stz.w GLOBAL.currentChapter
   stz.w GLOBAL.currentFrame
 
   NEW Background.framebuffer.CLS.PTR this.framebuffer.1.obj PALETTE.BPP.4 BG.LAYER.0 0 MSU1.FRAMEBUFFER.TILESIZE MSU1.FRAMEBUFFER.PALETTESIZE
@@ -545,9 +546,11 @@ _incrementFrame:
   cmp.b this.frameCount
   bcc +
 	;chapter complete
+	pha
 	jsr _stop
 	lda.b this.currentFrame
 	jsr _msu1SeekToFrame
+	pla
 
 + sta.b this.currentFrame
   sta.w GLOBAL.currentFrame
@@ -830,6 +833,7 @@ _startNextVideo:
   rep #$20
   lda.b this.nextChapter
   sta.b this.currentChapter
+  sta.w GLOBAL.currentChapter
   jsr _msu1SeekToChapter
   ;chapter id in msu1 data file must match (low byte only)
   sep #$20

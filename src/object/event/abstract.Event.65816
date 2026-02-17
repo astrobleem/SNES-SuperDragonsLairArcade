@@ -69,27 +69,37 @@ EventResult.restartchapter:
 
 EventResult.lastcheckpoint:
   .dw RESULT_MAGIC
-  ;seek current chapter, get init adress
   CALL Player.loseLife.MTD event.player
-  bcc +
-	pea game_over
-	NEW Script.CLS.PTR oopCreateNoPtr
-	pla
-	rts
-+
+  bcc _lastcheckpoint.alive
+
+  ;--- Game over: save checkpoint, show continue screen ---
   jsr abstract.Iterator.reset
   lda.w #OBJECT.PROPERTIES.isCheckpoint
   jsr abstract.Iterator.each.byProperties
-  bcs +
-	;error, no chapter found!
-    TRIGGER_ERROR E_NoCheckpointFound
+  bcc _lastcheckpoint.noCheckpointSave
+    CALL Event.checkpoint.getCheckpointAdress.MTD iterator.target
+    sta.w GLOBAL.lastCheckpoint
+    bra _lastcheckpoint.goContinue
+_lastcheckpoint.noCheckpointSave:
+  stz.w GLOBAL.lastCheckpoint
+_lastcheckpoint.goContinue:
+  pea continue_screen
+  NEW Script.CLS.PTR oopCreateNoPtr
+  pla
+  rts
 
-+ CALL Event.checkpoint.getCheckpointAdress.MTD iterator.target
-  ;use return adress of checkpoint as new target script adress
+_lastcheckpoint.alive:
+  ;--- Still alive: restart from checkpoint ---
+  jsr abstract.Iterator.reset
+  lda.w #OBJECT.PROPERTIES.isCheckpoint
+  jsr abstract.Iterator.each.byProperties
+  bcs _lastcheckpoint.foundCP
+    TRIGGER_ERROR E_NoCheckpointFound
+_lastcheckpoint.foundCP:
+  CALL Event.checkpoint.getCheckpointAdress.MTD iterator.target
   pha
   NEW Script.CLS.PTR oopCreateNoPtr
   pla
-  ;also show life counter once for good measure
   NEW Sprite.life_car.CLS.PTR oopCreateNoPtr 195 20 SPRITE.LIFE_COUNTER.MAX_AGE
   NEW Sprite.life_counter.CLS.PTR oopCreateNoPtr 220 20 SPRITE.LIFE_COUNTER.MAX_AGE
   rts

@@ -48,6 +48,10 @@
 
 +
 
+  ;give player one free credit at startup
+  lda #1
+  sta.w GLOBAL.credits
+
   NEW Script.CLS.PTR oopCreateNoPtr msu1
 
   jsr SavePC

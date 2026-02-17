@@ -9,6 +9,8 @@
   brightness.buffer db
   status db
   wait db
+  textlayer ds 4
+  screenMode.saved db
 .endst
 
 ;zp-vars

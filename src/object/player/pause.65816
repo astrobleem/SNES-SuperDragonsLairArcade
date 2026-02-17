@@ -1,5 +1,5 @@
 /**
-* 
+*
 */
 .include "src/object/player/pause.h"
 .section "pause"
@@ -23,19 +23,26 @@
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.trigger
   and.w #JOY_BUTTON_START
-  beq +
+  bne _pause.startPressed
+    jmp _pause.noPauseToggle
+_pause.startPressed:
 	sep #$20
 
 	;fetch msu1 object if present
 	jsr abstract.Iterator.reset
 	lda.b #OBJID.Msu1
 	jsr abstract.Iterator.each.byId
-	bcc +
+	bcs _pause.msu1Found
+	  jmp _pause.noPauseToggle
+_pause.msu1Found:
 		lda this.status
 		eor.b #PAUSE.STATUS.ENABLED
 		sta this.status
-		beq ++
+		bne _pause.doPause
+		  jmp _pause.doUnpause
 
+_pause.doPause:
+		  ;--- PAUSE ---
 		  CALL Msu1.pause.MTD iterator.target
 		  CALL Brightness.get.MTD this.brightness
 		  sta this.brightness.buffer
@@ -45,15 +52,106 @@
 		  lda.w #(JOY_DIR_LEFT | JOY_DIR_RIGHT | JOY_BUTTON_A | JOY_BUTTON_B) ~$ffff
 		  ldx #INPUT.DEVICE.ID.0
 		  jsr core.input.setMask
-		  bra +
-++
+
+		  ;save ScreenMode and set BG3 priority
+		  sep #$20
+		  lda.w ScreenMode
+		  sta.b this.screenMode.saved
+		  ora.b #BGMODE_PRIORITY_LAYER_3
+		  sta.w ScreenMode
+
+		  ;create text layer for pause overlay
+		  rep #$31
+		  NEW Background.textlayer.8x8.CLS.PTR this.textlayer
+
+		  ;force bright white text palette to CGRAM position 0
+		  ;(video palette overwrites CGRAM 0, making BG3 text invisible)
+		  rep #$31
+		  tsx
+		  sep #$20
+		  lda #DMA_TRANSFER.CGRAM
+		  pha
+		  pea _pause.fontPal
+		  lda #:_pause.fontPal
+		  pha
+		  rep #$31
+		  pea 0
+		  pea 4
+		  jsr core.dma.registerTransfer
+		  txs
+
+		  ;compute scene name LUT index from GLOBAL.currentScene
+		  sep #$20
+		  lda.w GLOBAL.currentScene
+		  bne _pause.sceneValid
+		    lda #1
+_pause.sceneValid:
+		  rep #$20
+		  and #$00FF
+		  dec a
+		  clc
+		  adc #T_sceneName.1.PTR
+		  sta.w GLOBAL.pauseSceneNameIdx
+
+		  ;push print args onto stack (deepest=arg.2, shallowest=arg.0)
+		  ;arg.2 = chapter
+		  rep #$31
+		  lda.w GLOBAL.currentChapter
+		  pha
+
+		  ;arg.1 = lives, arg.0 = score (from Player singleton)
+		  sep #$20
+		  jsr abstract.Iterator.reset
+		  lda.b #OBJID.Player
+		  jsr abstract.Iterator.each.byId
+		  bcc _pause.noPlayer
+		    rep #$31
+		    CALL Player.getLifeCount.MTD iterator.target
+		    pha
+		    CALL Player.getScore.MTD iterator.target
+		    pha
+		    bra _pause.printOverlay
+_pause.noPlayer:
+		  rep #$31
+		  pea 0
+		  pea 0
+
+_pause.printOverlay:
+		  ;draw pause overlay (print reads args from stack into argument.0-2)
+		  CALL Background.textlayer.8x8.clear.MTD this.textlayer
+		  lda #T_pause.PTR
+		  CALL Background.textlayer.8x8.print.MTD this.textlayer
+		  CALL Background.textlayer.8x8.flush.MTD this.textlayer
+		  pla
+		  pla
+		  pla
+		  jmp _pause.noPauseToggle
+
+_pause.doUnpause:
+		  ;--- UNPAUSE ---
 		  CALL Msu1.resume.MTD iterator.target
 		  lda this.brightness.buffer
 		  CALL Brightness.fadeTo.MTD this.brightness
+
+		  ;kill text layer
+		  rep #$31
+		  CALL Background.textlayer.8x8.kill.MTD this.textlayer
+
+		  ;restore ScreenMode
+		  sep #$20
+		  lda.b this.screenMode.saved
+		  sta.w ScreenMode
+
+		  ;clear BG3 from MainScreen
+		  lda.w MainScreen
+		  and.b #T_BG3_ENABLE ~$ff
+		  sta.w MainScreen
+
+		  rep #$31
 		  ldx #INPUT.DEVICE.ID.0
 		  jsr core.input.resetMask
-+
 
+_pause.noPauseToggle:
 ;sometimes, msu1 video keeps on playing even if paused, so we just keep on calling pause until it registers (bad hack).
   sep #$20
   lda this.status
@@ -71,8 +169,9 @@
 +
   rts
 
-
+_pause.fontPal:
+  .dw $0000, $7FFF	;black + bright white for BG3 text
 
   CLASS Pause
-.ends	
-	
+.ends
+

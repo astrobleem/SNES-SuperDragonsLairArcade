@@ -251,6 +251,10 @@ _title_screen.selectStartGame:
   beq _title_screen.noCredits
     dec a
     sta.w GLOBAL.credits
+    sep #$20
+    lda #1
+    sta.w GLOBAL.currentScene
+    rep #$20
     lda.w #SAMPLE.0.SAVEME
     CALL Spc.SpcPlaySoundEffect.MTD objSpc
     lda.w #level1
@@ -390,6 +394,10 @@ _title_screen.paramDone:
   rts
 
 _title_screen.levelSelectGo:
+  sep #$20
+  lda.b menu.param
+  sta.w GLOBAL.currentScene
+  rep #$20
   lda.b menu.param
   dec a
   asl a
@@ -452,7 +460,14 @@ _title_screen.drawMenu:
   cmp #2
   beq _title_screen.drawSoundTest
 
-  ;state 3: scene select
+  ;state 3: scene select — compute scene name LUT index
+  lda.b menu.param
+  dec a
+  and #$00FF
+  clc
+  adc #T_sceneName.1.PTR
+  sta.w GLOBAL.pauseSceneNameIdx
+
   lda #T_menu_levelselect.PTR
   pei (menu.param)
   CALL Background.textlayer.8x8.print.MTD objText

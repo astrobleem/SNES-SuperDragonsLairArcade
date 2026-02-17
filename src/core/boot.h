@@ -23,6 +23,10 @@ rendererScene					dw
 charConvReady 				db	;0=wait, 1=ready
 GLOBAL.memsel	db
 GLOBAL.konamiActivated	dw
+GLOBAL.credits					dw
+GLOBAL.lastCheckpoint		dw
+GLOBAL.currentScene			db
+GLOBAL.pauseSceneNameIdx	dw
 VARS_end							ds 0
 .ends
 

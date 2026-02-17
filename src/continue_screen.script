@@ -1,0 +1,194 @@
+
+  SCRIPT continue_screen
+.ACCU 16
+.INDEX 16
+
+  .def contText hashPtr.2
+  ;hashPtr.4 = objBrightness (predefined in script.h)
+  ;hashPtr.5 = objPlayer (predefined in script.h)
+  .def contSpc hashPtr.6
+
+  .def cont.countdown this._tmp+8
+  .def cont.frameTimer this._tmp+10
+  .def cont.target this._tmp+12
+
+  ;--- Cleanup: kill chapters, events, Msu1 ---
+  lda.w #OBJECT.PROPERTIES.isChapter
+  jsr abstract.Iterator.setProperties
+  jsr abstract.Iterator.killOthers
+
+  lda.w #OBJECT.PROPERTIES.isEvent
+  jsr abstract.Iterator.kill.byProperties
+
+  lda.w #OBJID.Msu1
+  jsr abstract.Iterator.kill.byId
+
+  ;--- Set BG mode ---
+  sep #$20
+  lda.b #BGMODE_MODE_1 | BGMODE_PRIORITY_LAYER_3
+  sta.w ScreenMode
+  lda.w MainScreen
+  and.b #(T_BG1_ENABLE | T_BG2_ENABLE | T_BG3_ENABLE | T_BG4_ENABLE) ~$ff
+  sta.w MainScreen
+  rep #$31
+
+  ;--- Create objects ---
+  NEW Brightness.CLS.PTR objBrightness
+  NEW Background.textlayer.8x8.CLS.PTR contText
+
+  ;try to reuse existing Spc singleton
+  jsr abstract.Iterator.reset
+  lda #OBJID.Spc
+  jsr abstract.Iterator.each.byId
+  bcc _continue_screen.createSpc
+    lda.b iterator.target
+    sta.b contSpc
+    lda.b iterator.target + 2
+    sta.b contSpc + 2
+    bra _continue_screen.spcReady
+_continue_screen.createSpc:
+  NEW Spc.CLS.PTR contSpc
+_continue_screen.spcReady:
+
+  ;--- Initialize countdown ---
+  lda #9
+  sta.b cont.countdown
+  lda #60
+  sta.b cont.frameTimer
+
+  ;--- Draw initial screen ---
+  jsr _continue_screen.draw
+
+  ;--- Fade in ---
+  lda #BRIGHTNESS.FULL
+  CALL Brightness.fadeTo.MTD objBrightness
+
+  jsr SavePC
+  CALL Brightness.isDone.MTD objBrightness
+  bcs +
+    rts
++
+
+  ;=== Main loop ===
+_continue_screen.mainLoop:
+  jsr SavePC
+
+  ;read trigger input
+  ldx #INPUT.DEVICE.ID.0
+  jsr core.input.get.trigger
+  tax
+  beq _continue_screen.noInput
+    sta.b cont.target  ;reuse tmp as input buffer
+
+    ;--- SELECT: insert coin ---
+    lda.b cont.target
+    and.w #JOY_BUTTON_SELECT
+    beq _continue_screen.noSelect
+      lda.w GLOBAL.credits
+      cmp #99
+      bcs _continue_screen.noSelect
+        inc a
+        sta.w GLOBAL.credits
+      lda.w #SAMPLE.0.OK
+      CALL Spc.SpcPlaySoundEffect.MTD contSpc
+      jsr _continue_screen.draw
+      rts
+
+_continue_screen.noSelect:
+    ;--- START: continue if credits > 0 ---
+    lda.b cont.target
+    and.w #JOY_BUTTON_START
+    beq _continue_screen.noInput
+      lda.w GLOBAL.credits
+      beq _continue_screen.noInput
+        dec a
+        sta.w GLOBAL.credits
+        lda.w #SAMPLE.0.SAVEME
+        CALL Spc.SpcPlaySoundEffect.MTD contSpc
+        ;reset player lives
+        CALL Player.reset.MTD objPlayer
+        jmp _continue_screen.doContinue
+
+_continue_screen.noInput:
+  ;--- Frame timer countdown ---
+  lda.b cont.frameTimer
+  dec a
+  sta.b cont.frameTimer
+  bne _continue_screen.timerNotZero
+
+    ;timer hit zero: decrement countdown digit
+    lda #60
+    sta.b cont.frameTimer
+    lda.b cont.countdown
+    dec a
+    sta.b cont.countdown
+    beq _continue_screen.timeout
+
+    ;play tick sound and redraw
+    lda.w #SAMPLE.0.OK
+    CALL Spc.SpcPlaySoundEffect.MTD contSpc
+    jsr _continue_screen.draw
+
+_continue_screen.timerNotZero:
+  rts
+
+  ;=== Timeout: fade out and go to title screen ===
+_continue_screen.timeout:
+  lda.w #SAMPLE.0.TECHNIQUE
+  CALL Spc.SpcPlaySoundEffect.MTD contSpc
+
+  lda #BRIGHTNESS.NONE
+  CALL Brightness.fadeTo.MTD objBrightness
+
+  jsr SavePC
+  CALL Brightness.isDone.MTD objBrightness
+  bcs +
+    rts
++
+
+  ;cleanup
+  CALL Background.textlayer.8x8.kill.MTD contText
+  jsr core.vram.init
+  jsr core.cgram.clear
+
+  NEW Script.CLS.PTR oopCreateNoPtr title_screen
+  DIE
+
+  ;=== Continue: fade out and restart from checkpoint ===
+_continue_screen.doContinue:
+  lda #BRIGHTNESS.NONE
+  CALL Brightness.fadeTo.MTD objBrightness
+
+  jsr SavePC
+  CALL Brightness.isDone.MTD objBrightness
+  bcs +
+    rts
++
+
+  ;cleanup
+  CALL Background.textlayer.8x8.kill.MTD contText
+  jsr core.vram.init
+  jsr core.cgram.clear
+
+  ;restart from saved checkpoint (fallback to title_screen if none)
+  lda.w GLOBAL.lastCheckpoint
+  beq _continue_screen.noCheckpoint
+    pha
+    NEW Script.CLS.PTR oopCreateNoPtr
+    pla
+    DIE
+
+_continue_screen.noCheckpoint:
+  NEW Script.CLS.PTR oopCreateNoPtr title_screen
+  DIE
+
+  ;=== Draw the continue screen ===
+_continue_screen.draw:
+  CALL Background.textlayer.8x8.clear.MTD contText
+  ;push countdown as stack arg — print method copies it to GLOBAL.CORE.STRING.argument.0
+  lda #T_continue.PTR
+  pei (cont.countdown)
+  CALL Background.textlayer.8x8.print.MTD contText
+  pla
+  CALL Background.textlayer.8x8.flush.MTD contText
+  rts

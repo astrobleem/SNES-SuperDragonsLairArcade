@@ -105,6 +105,7 @@ zpLen ds 0
 MSU1.GLOBAL.START ds 0
 
 GLOBAL.currentFrame dw
+GLOBAL.currentChapter dw
 GLOBAL.videoPlaying db
 
 MSU1.GLOBAL.END ds 0

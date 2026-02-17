@@ -61,6 +61,17 @@
 
   METHOD play
   rep #$31
+  ;global coin insert: SELECT adds a credit during any chapter
+  ldx #INPUT.DEVICE.ID.0
+  jsr core.input.get.trigger
+  and.w #JOY_BUTTON_SELECT
+  beq _chapterPlay.noCoin
+    lda.w GLOBAL.credits
+    cmp #99
+    bcs _chapterPlay.noCoin
+      inc a
+      sta.w GLOBAL.credits
+_chapterPlay.noCoin:
   jsr abstract.Event.checkResult
   rts
 

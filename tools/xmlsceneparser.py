@@ -335,6 +335,42 @@ def optimizeVideoFrames(options):
     logging.info("Optimized %d frames." % len(png_files))
 
 
+
+# Maps _start_alive chapter labels to scene indices (1-29).
+# When a cross-scene transition lands on a _start_alive chapter,
+# this auto-sets GLOBAL.currentScene so the pause screen shows the correct room name.
+SCENE_INDEX_MAP = {
+  'intr_start_alive': 1,   # introduction
+  'vest_start_alive': 2,   # vestibule
+  'snkr_start_alive': 3,   # snake_room
+  'bowr_start_alive': 4,   # bower
+  'firm_start_alive': 5,   # fire_room
+  'thrn_start_alive': 6,   # throne_room
+  'tltr_start_alive': 7,   # tilting_room
+  'tntr_start_alive': 8,   # tentacle_room
+  'wndr_start_alive': 9,   # wind_room
+  'gg_start_alive': 10,    # giddy_goons
+  'cwbt_start_alive': 11,  # catwalk_bats
+  'mudm_start_alive': 12,  # mudmen
+  'rbal_start_alive': 13,  # rolling_balls
+  'ugr_start_alive': 14,   # underground_river
+  'flrp_start_alive': 15,  # flaming_ropes
+  'fh_start_alive': 16,    # flying_horse
+  'bcld_start_alive': 17,  # bubbling_cauldron
+  'gbat_start_alive': 18,  # giant_bat
+  'cc_start_alive': 19,    # crypt_creeps
+  'alrm_start_alive': 20,  # alice_room
+  'rk_start_alive': 21,    # robot_knight
+  'sm_start_alive': 22,    # smithee
+  'smr_start_alive': 23,   # smithee_reversed
+  'gr_start_alive': 24,    # grim_reaper
+  'ybr_start_alive': 25,   # yellow_brick_road
+  'bknt_start_alive': 26,  # black_knight
+  'lzkg_start_alive': 27,  # lizard_king
+  'tdl_start_alive': 28,   # the_dragons_lair
+  'atmd_start_alive': 29,  # attract_mode
+}
+
 def writeEventFile(events, options):
   chapterLabel = options.get('chapterlabel')
   chapterFolder = options.get('chapterfolder')
@@ -351,6 +387,15 @@ def writeEventFile(events, options):
   scriptFile.write("    CHAPTER %s\n" % chapterLabel)
   scriptFile.write("    .dw %s.events\n" % chapterLabel)
   scriptFile.write("    .db :%s.events\n\n" % chapterLabel)
+
+  # Inject scene index setting for _start_alive chapters
+  if chapterLabel in SCENE_INDEX_MAP:
+    scene_idx = SCENE_INDEX_MAP[chapterLabel]
+    scriptFile.write("    sep #$20\n")
+    scriptFile.write("    lda #%d\n" % scene_idx)
+    scriptFile.write("    sta.w GLOBAL.currentScene\n")
+    scriptFile.write("    rep #$20\n\n")
+
   scriptFile.write("    DIE\n")
   scriptFile.close()
 

@@ -103,6 +103,38 @@ TextstringLUT:
     PTRLONG TextstringLUT T_menu_options
     PTRLONG TextstringLUT T_menu_soundtest
     PTRLONG TextstringLUT T_menu_levelselect
+    PTRLONG TextstringLUT T_menu_main_credits
+    PTRLONG TextstringLUT T_continue
+	PTRLONG TextstringLUT T_sceneName.1
+	PTRLONG TextstringLUT T_sceneName.2
+	PTRLONG TextstringLUT T_sceneName.3
+	PTRLONG TextstringLUT T_sceneName.4
+	PTRLONG TextstringLUT T_sceneName.5
+	PTRLONG TextstringLUT T_sceneName.6
+	PTRLONG TextstringLUT T_sceneName.7
+	PTRLONG TextstringLUT T_sceneName.8
+	PTRLONG TextstringLUT T_sceneName.9
+	PTRLONG TextstringLUT T_sceneName.10
+	PTRLONG TextstringLUT T_sceneName.11
+	PTRLONG TextstringLUT T_sceneName.12
+	PTRLONG TextstringLUT T_sceneName.13
+	PTRLONG TextstringLUT T_sceneName.14
+	PTRLONG TextstringLUT T_sceneName.15
+	PTRLONG TextstringLUT T_sceneName.16
+	PTRLONG TextstringLUT T_sceneName.17
+	PTRLONG TextstringLUT T_sceneName.18
+	PTRLONG TextstringLUT T_sceneName.19
+	PTRLONG TextstringLUT T_sceneName.20
+	PTRLONG TextstringLUT T_sceneName.21
+	PTRLONG TextstringLUT T_sceneName.22
+	PTRLONG TextstringLUT T_sceneName.23
+	PTRLONG TextstringLUT T_sceneName.24
+	PTRLONG TextstringLUT T_sceneName.25
+	PTRLONG TextstringLUT T_sceneName.26
+	PTRLONG TextstringLUT T_sceneName.27
+	PTRLONG TextstringLUT T_sceneName.28
+	PTRLONG TextstringLUT T_sceneName.29
+	PTRLONG TextstringLUT T_pause
 	PTRLONG TextstringLUT T_max
 	
 .ends

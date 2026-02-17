@@ -133,6 +133,22 @@ _no_show:
     CALL Spc.SpcPlaySoundEffect.MTD this.audio
 _past_first_frame:
 
+  ;attract mode: direction=0 means check START button
+  lda this.direction
+  bne _direction_normalCheck
+    ldx #INPUT.DEVICE.ID.0
+    jsr core.input.get.trigger
+    and.w #JOY_BUTTON_START
+    beq _direction_done
+      ;START pressed in attract mode: trigger result (no score)
+      jsr abstract.Event.triggerResult
+      sep #$20
+      lda #1
+      sta this.hasTriggered
+      rep #$20
+      rts
+
+_direction_normalCheck:
   ;check if player pressed the expected direction
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.press

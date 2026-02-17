@@ -51,7 +51,7 @@ cmd.exe /c "cd /d E:\gh\SNES-SuperDragonsLairArcade\mesen && Mesen.exe --testrun
 - Checksum values hardcoded in header — "Invalid Checksum" in emulators is expected
 
 ### OOP System (`src/core/oop.65816`)
-Custom object system with 36 concurrent object slots. Each object has init/play/kill methods, a direct page (ZP) allocation, and properties bitmask.
+Custom object system with 48 concurrent object slots. Each object has init/play/kill methods, a direct page (ZP) allocation, and properties bitmask.
 
 **Key macros** (defined in `src/config/macros.inc`):
 - `CLASS name method1 method2...` — defines a class with method table
@@ -259,7 +259,7 @@ Used as null pointer for the hash system. `CALL` with hash pntr=$FFFF dispatches
 SPC700 has 64KB RAM total. Engine code ~6.5KB, leaving ~57.5KB for BRR samples. 7 samples currently (~53 KB BRR), ~4 KB headroom. Adding samples requires checking total BRR size stays under this limit.
 
 ### MSU-1 Sound Effects
-Dragon roar plays as MSU-1 PCM track 250 during the MSU-1 splash screen (`msu1.script`). Too large for SPC (5.8s = ~144 KB BRR), so it uses the MSU-1 audio hardware instead. Source WAV converted to MSU-1 PCM format (44100 Hz stereo 16-bit LE with `MSU1` header). The `Msu1.audio` singleton auto-mutes when the track ends via `_checkTrackEnd`.
+Dragon roar plays as MSU-1 PCM track 900 during the MSU-1 splash screen (`msu1.script`). Too large for SPC (5.8s = ~144 KB BRR), so it uses the MSU-1 audio hardware instead. Source WAV converted to MSU-1 PCM format (44100 Hz stereo 16-bit LE with `MSU1` header). The `Msu1.audio` singleton auto-mutes when the track ends via `_checkTrackEnd`.
 
 ### CGRAM (Palette) Limits
 SNES has 8 BG palettes max for 4BPP mode ($100 bytes). `animationWriter_sfc.py` now forces `-P 1` (single sub-palette) in superfamiconv palette generation to prevent CGRAM overflow. CGRAM allocation failure in `abstract.Background.65816` is non-fatal (falls back to palette position 0). Default BG palettes in makefile reduced from 8 to 3.
@@ -281,6 +281,22 @@ Every class has a `.h` (header) and `.65816` (implementation). The header define
 
 ### Stack-Relative Addressing in Subroutines
 When reading `OBJECT.CALL.ARG.N,s` from a subroutine called via `jsr` from an init/play method, add +2 to compensate for the extra return address on the stack. `OBJECT.CALL.ARG` offsets assume the reader is the DIRECT callee of `OopHandlerExecute`'s `jsr (0,x)`. `Event.template.initCommon` uses `OBJECT.CALL.ARG.N+2,s` for this reason. Event classes that read args directly in their init method (Event.chapter, Event.cutscene) do NOT need the +2.
+
+### `core.string.parse_from_object` Overwrites String Arguments
+`core.string.parse_from_object` (called by `Background.textlayer.8x8.print`) reads CALL stack arguments and writes them to `GLOBAL.CORE.STRING.argument.0` through `.3`. **Any values written to those globals before the print CALL will be overwritten.** To pass values for `TC_dToS`/`TC_hToS` display, push them on the stack before the CALL (deepest push → argument.2, shallowest → argument.0), and pop them after. Example:
+```asm
+pha           ; push chapter (→ argument.2, deepest)
+pha           ; push lives   (→ argument.1)
+pha           ; push score   (→ argument.0, shallowest)
+lda #T_pause.PTR
+CALL Background.textlayer.8x8.print.MTD this.textlayer
+pla           ; pop score
+pla           ; pop lives
+pla           ; pop chapter
+```
+
+### Cross-Unit RAMSECTION Addresses Are 24-bit
+RAMSECTION labels referenced from a different compilation unit resolve to full 24-bit addresses (e.g., `$7E699C`). `sta.w` and `pea` with such labels cause `COMPUTE_PENDING_CALCULATIONS: out of 16bit range`. Either use `sta.l` (long addressing) or keep the data in ROM within the same section and reference it with local labels + `:label` for the bank byte.
 
 ### 16-bit `lda` on `db` (byte) Fields
 In 16-bit accumulator mode (`rep #$20`), `lda zp_offset` reads 2 bytes. If a `db` field is at the end of the ZP allocation (offset = zpLen - 1), the second byte reads into the adjacent object's ZP, producing a garbage high byte. Always mask with `and #$00FF` after reading, or use `sep #$20` to switch to 8-bit mode. Similarly, use `sep #$20` / `lda #value` / `sta field` / `rep #$20` when writing byte fields.
@@ -308,6 +324,7 @@ In 16-bit accumulator mode (`rep #$20`), `lda zp_offset` reads 2 bytes. If a `db
 | `data/chapters/chapter_data.include` | Aggregates all generated chapter.data files |
 | `src/losers.script` | Credits/losers screen (shown after MSU-1 init) |
 | `src/level1.script` – `src/level9.script` | Level entry points (each creates a starting chapter) |
+| `src/object/player/pause.65816` | Pause menu overlay — shows scene name, score, lives, credits, chapter, frame |
 | `src/title_screen.script` | Title screen with menu system and scene select |
 | `tools/generate_msu_data.py` | Full MSU-1 video pipeline: Daphne .m2v → ffmpeg → superfamiconv → tile reduction → .msu |
 | `tools/lua_scene_exporter.py` | Exports DirkSimple game.lua scene data to XML events with frame timing |
