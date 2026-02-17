@@ -1,10 +1,11 @@
 /**
-* 
+* life indicator sprite (Dirk head)
+*
 * @param a<int, 16bit>  x-pos
 * @param 1<int, 16bit>  y-pos
 */
-.include "src/object/sprite/Sprite.life_car.h"
-.section "Sprite.life_car"
+.include "src/object/sprite/Sprite.life_dirk.h"
+.section "Sprite.life_dirk"
 
   METHOD init
   rep #$31
@@ -16,14 +17,14 @@
 
   lda OBJECT.CALL.ARG.3,s
   sta this.age
-  
+
   sep #$20
   lda.b #$1
   sta.b animation.isLooping
 
   lda #$f
   sta.b animation.speed
-  lda #SPRITE.life_car.PTR
+  lda #SPRITE.life_dirk.PTR
   jsr abstract.Sprite.startAnimation
 
 
@@ -32,7 +33,7 @@
   METHOD play
   rep #$31
   jsr abstract.Sprite.playAnimation
-  
+
   ;wait a bit, then speed across screen
   lda this.age
   bne +
@@ -41,18 +42,18 @@
     sbc this.accel
     sta this.speed
     inc this.accel
-    
+
     pea 0
     pei (this.speed)
-    CALL Sprite.life_car.translate.MTD iterator.self
+    CALL Sprite.life_dirk.translate.MTD iterator.self
     pla
     pla
-    
+
     ;kill if travelled beyond screen
     lda.b dimension.position.x + 1
     bmi _kill
     rts
-    
+
 + dec this.age
   rts
 
@@ -60,9 +61,9 @@
   rep #$31
   jsr abstract.Sprite.deallocate
   lda #OBJR_kill
-  sta 3,s	
+  sta 3,s
   rts
 
-  CLASS Sprite.life_car
-.ends	
-	
+  CLASS Sprite.life_dirk
+.ends
+

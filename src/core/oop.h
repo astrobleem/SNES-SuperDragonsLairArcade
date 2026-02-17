@@ -148,7 +148,7 @@ OBJID.Left_arrow db
 OBJID.Up_arrow db
 OBJID.Down_arrow db
 OBJID.Sword_icon db
-OBJID.Brake_icon db
+OBJID.Shield_icon db
 ;OBJID.Dashboard db
 OBJID.VideoMask db
 OBJID.SteeringWheel db
@@ -165,7 +165,7 @@ OBJID.Sprite.super db
 OBJID.Palette.rotate db
 OBJID.Player.nameInput db
 OBJID.Background.dashboard db
-OBJID.Sprite.life_car db
+OBJID.Sprite.life_dirk db
 OBJID.Sprite.life_counter db
 OBJID.Sprite.score db
 OBJID.Sprite.bang db
@@ -243,7 +243,7 @@ OopClassLut:
         PTRLONG OopClassLut Up_arrow.CLS
         PTRLONG OopClassLut Down_arrow.CLS
         PTRLONG OopClassLut Sword_icon.CLS
-        PTRLONG OopClassLut Brake_icon.CLS
+        PTRLONG OopClassLut Shield_icon.CLS
         PTRLONG OopClassLut VideoMask.CLS
         PTRLONG OopClassLut SteeringWheel.CLS
         PTRLONG OopClassLut Background.generic.CLS
@@ -258,7 +258,7 @@ OopClassLut:
         PTRLONG OopClassLut Palette.rotate.CLS
         PTRLONG OopClassLut Player.nameInput.CLS
         PTRLONG OopClassLut Background.dashboard.CLS
-        PTRLONG OopClassLut Sprite.life_car.CLS
+        PTRLONG OopClassLut Sprite.life_dirk.CLS
 	PTRLONG OopClassLut Sprite.life_counter.CLS
 	PTRLONG OopClassLut Sprite.score.CLS
 	PTRLONG OopClassLut Sprite.bang.CLS

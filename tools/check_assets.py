@@ -11,7 +11,7 @@ SPRITE_SPECS = {
     'right_arrow': {'size': (32, 32), 'transparent': True},
     'up_arrow': {'size': (32, 32), 'transparent': True},
     'down_arrow': {'size': (32, 32), 'transparent': True},
-    'life_car': {'size': (24, 16), 'transparent': True},
+    'life_dirk': {'size': (24, 16), 'transparent': True},
     'life_counter': {'size': (16, 16), 'transparent': True},
     'points.normal': {'size': (32, 8), 'transparent': True},
     'points.extra': {'size': (32, 8), 'transparent': True},

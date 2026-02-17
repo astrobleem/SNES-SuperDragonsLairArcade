@@ -44,7 +44,7 @@
     
     pea -32
     pea 0
-    CALL Sprite.life_car.translate.MTD iterator.self
+    CALL Sprite.life_dirk.translate.MTD iterator.self
     pla
     pla
     
