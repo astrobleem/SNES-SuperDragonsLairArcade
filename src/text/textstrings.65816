@@ -707,8 +707,8 @@ T_title:
 	.dw $306
 	.db "(C)1983 Cinematronics"
 	.db TC_pos
-	.dw $324
-	.db "astrobleem & snesdev0815",TC_end
+	.dw $320
+	.db "ported by: astrobleem & d4s 2026",TC_end
 
 T_schleck:
     .db TC_pos
