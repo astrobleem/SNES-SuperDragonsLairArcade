@@ -759,6 +759,22 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
     if start_frame is not None:
         end_frame = start_frame + round((xml_end - xml_start) * 23.976 / 1000)
 
+    # --- Gap-fill: extend chapter video to bridge to default result chapter ---
+    # On the arcade laserdisc, footage plays continuously between chapters.
+    # Our chapter system has gaps where no chapter covers the footage.
+    # Extend the current chapter's end to the next chapter's start so the
+    # player sees the full animation (e.g. rocks falling in vestibule).
+    MAX_GAP_FRAMES = 120  # ~5 seconds at 23.976fps
+    next_seq = timeout.get('nextsequence')
+    if next_seq and resolved_frames and end_frame is not None:
+        next_start_frame = resolved_frames.get(next_seq)
+        if next_start_frame is not None and next_start_frame > end_frame:
+            gap_frames = next_start_frame - end_frame
+            if gap_frames <= MAX_GAP_FRAMES:
+                gap_ms = gap_frames / 23.976 * 1000
+                end_frame = next_start_frame
+                xml_end = xml_end + gap_ms
+
     lines: List[str] = []
     lines.append(f'<chapter name="{chapter_name}">')
     lines.append(f'\t<timeline>')

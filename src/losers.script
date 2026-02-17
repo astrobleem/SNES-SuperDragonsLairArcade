@@ -25,8 +25,8 @@
 
   NEW Brightness.CLS.PTR objBrightness
   NEW Background.generic.CLS.PTR objLosersBg BG.LAYER.0 BG.losers.PTR
-  lda.w #4
-  sta.w yScrollBG1     ; shift image up 4px: clips black at top, clears bottom text from edge
+  ;lda.w #4
+  ;sta.w yScrollBG1     ; shift image up 4px: clips black at top, clears bottom text from edge
 
   lda #BRIGHTNESS.FULL
   CALL Brightness.fadeTo.MTD objBrightness

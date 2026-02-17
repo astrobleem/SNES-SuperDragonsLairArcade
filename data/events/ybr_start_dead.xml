@@ -1,7 +1,7 @@
 <chapter name="ybr_start_dead">
 	<timeline>
 		<timestart min="2" second="36" ms="748" frame="4083" />
-		<timeend min="2" second="38" ms="832" frame="4133" />
+		<timeend min="2" second="39" ms="83" frame="4139" />
 	</timeline>
 	<params />
 	<macros />

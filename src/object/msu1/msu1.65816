@@ -545,12 +545,12 @@ _incrementFrame:
   inc a
   cmp.b this.frameCount
   bcc +
-	;chapter complete
-	pha
-	jsr _stop
-	lda.b this.currentFrame
-	jsr _msu1SeekToFrame
-	pla
+    ;video frames exhausted — freeze display, keep global counter for events
+    lda.w GLOBAL.currentFrame
+    inc a
+    sta.w GLOBAL.currentFrame
+    plp
+    rts
 
 + sta.b this.currentFrame
   sta.w GLOBAL.currentFrame
@@ -712,7 +712,8 @@ _msu1SeekToFrame:
   rep #$31
   cmp.b this.frameCount
   bcc +
-    TRIGGER_ERROR E_Msu1InvalidFrameRequested
+    lda.b this.frameCount
+    dec a
 
 + sta.b this.tmp
   stz.b this.tmp+2

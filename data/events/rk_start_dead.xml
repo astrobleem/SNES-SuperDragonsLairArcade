@@ -1,7 +1,7 @@
 <chapter name="rk_start_dead">
 	<timeline>
 		<timestart min="7" second="11" ms="940" frame="10685" />
-		<timeend min="7" second="14" ms="107" frame="10737" />
+		<timeend min="7" second="14" ms="274" frame="10741" />
 	</timeline>
 	<params />
 	<macros />

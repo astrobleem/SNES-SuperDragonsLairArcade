@@ -1,7 +1,7 @@
 <chapter name="tdl_seq7">
 	<timeline>
 		<timestart min="20" second="56" ms="459" frame="30138" />
-		<timeend min="21" second="1" ms="800" frame="30266" />
+		<timeend min="21" second="4" ms="803" frame="30338" />
 	</timeline>
 	<params />
 	<macros />

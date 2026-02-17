@@ -1,7 +1,7 @@
 <chapter name="bknt_start_dead">
 	<timeline>
 		<timestart min="17" second="42" ms="236" frame="25480" />
-		<timeend min="17" second="44" ms="278" frame="25529" />
+		<timeend min="17" second="44" ms="570" frame="25536" />
 	</timeline>
 	<params />
 	<macros />

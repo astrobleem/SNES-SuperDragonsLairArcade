@@ -1,7 +1,7 @@
 <chapter name="vest_enter_room">
 	<timeline>
 		<timestart min="1" second="5" ms="274" frame="1887" />
-		<timeend min="1" second="9" ms="272" frame="1983" />
+		<timeend min="1" second="13" ms="526" frame="2085" />
 	</timeline>
 	<params />
 	<macros />

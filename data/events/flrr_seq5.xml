@@ -1,7 +1,7 @@
 <chapter name="flrr_seq5">
 	<timeline>
 		<timestart min="8" second="44" ms="725" frame="12910" />
-		<timeend min="8" second="46" ms="226" frame="12946" />
+		<timeend min="8" second="50" ms="189" frame="13041" />
 	</timeline>
 	<params />
 	<macros />

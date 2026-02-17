@@ -1,7 +1,7 @@
 <chapter name="fh_start_dead">
 	<timeline>
 		<timestart min="6" second="41" ms="910" frame="9965" />
-		<timeend min="6" second="43" ms="994" frame="10015" />
+		<timeend min="6" second="44" ms="286" frame="10022" />
 	</timeline>
 	<params />
 	<macros />

@@ -1,7 +1,7 @@
 <chapter name="tntr_start_dead">
 	<timeline>
 		<timestart min="1" second="22" ms="349" frame="2297" />
-		<timeend min="1" second="24" ms="433" frame="2347" />
+		<timeend min="1" second="24" ms="683" frame="2353" />
 	</timeline>
 	<params />
 	<macros />

@@ -1,7 +1,7 @@
 <chapter name="bowr_enter_room">
 	<timeline>
 		<timestart min="6" second="8" ms="627" frame="9166" />
-		<timeend min="6" second="10" ms="399" frame="9209" />
+		<timeend min="6" second="13" ms="611" frame="9286" />
 	</timeline>
 	<params />
 	<macros />

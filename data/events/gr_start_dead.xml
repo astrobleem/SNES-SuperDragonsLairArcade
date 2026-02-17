@@ -1,7 +1,7 @@
 <chapter name="gr_start_dead">
 	<timeline>
 		<timestart min="5" second="12" ms="921" frame="7829" />
-		<timeend min="5" second="15" ms="255" frame="7885" />
+		<timeend min="5" second="20" ms="218" frame="8004" />
 	</timeline>
 	<params />
 	<macros />

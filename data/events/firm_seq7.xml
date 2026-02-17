@@ -1,7 +1,7 @@
 <chapter name="firm_seq7">
 	<timeline>
 		<timestart min="6" second="35" ms="862" frame="9821" />
-		<timeend min="6" second="37" ms="42" frame="9849" />
+		<timeend min="6" second="37" ms="376" frame="9857" />
 	</timeline>
 	<params>
 		<int key="kills_player" value="1" />

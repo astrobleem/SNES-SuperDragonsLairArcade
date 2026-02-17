@@ -1,7 +1,7 @@
 <chapter name="wndr_enter_room">
 	<timeline>
 		<timestart min="5" second="49" ms="524" frame="8709" />
-		<timeend min="5" second="57" ms="683" frame="8905" />
+		<timeend min="5" second="59" ms="60" frame="8938" />
 	</timeline>
 	<params />
 	<macros />

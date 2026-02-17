@@ -1,7 +1,7 @@
 <chapter name="gg_start_dead">
 	<timeline>
 		<timestart min="3" second="41" ms="104" frame="5627" />
-		<timeend min="3" second="43" ms="188" frame="5677" />
+		<timeend min="3" second="43" ms="438" frame="5683" />
 	</timeline>
 	<params />
 	<macros />

@@ -1,7 +1,7 @@
 <chapter name="cwbt_start_dead">
 	<timeline>
 		<timestart min="8" second="12" ms="334" frame="12133" />
-		<timeend min="8" second="14" ms="376" frame="12182" />
+		<timeend min="8" second="14" ms="709" frame="12190" />
 	</timeline>
 	<params />
 	<macros />

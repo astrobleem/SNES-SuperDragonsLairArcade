@@ -1,7 +1,7 @@
 <chapter name="rbal_start_dead">
 	<timeline>
 		<timestart min="18" second="5" ms="668" frame="26042" />
-		<timeend min="18" second="8" ms="2" frame="26098" />
+		<timeend min="18" second="8" ms="44" frame="26099" />
 	</timeline>
 	<params />
 	<macros />

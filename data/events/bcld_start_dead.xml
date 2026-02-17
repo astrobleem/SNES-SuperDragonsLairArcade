@@ -1,7 +1,7 @@
 <chapter name="bcld_start_dead">
 	<timeline>
 		<timestart min="3" second="17" ms="748" frame="5067" />
-		<timeend min="3" second="19" ms="832" frame="5117" />
+		<timeend min="3" second="20" ms="82" frame="5123" />
 	</timeline>
 	<params />
 	<macros />
