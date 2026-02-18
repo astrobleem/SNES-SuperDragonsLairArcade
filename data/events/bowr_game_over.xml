@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="6" second="17" ms="761" />
 			</timeline>
+			<result><none name="bowr_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

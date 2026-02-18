@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="9" second="35" ms="817" />
 			</timeline>
+			<result><none name="ybrr_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

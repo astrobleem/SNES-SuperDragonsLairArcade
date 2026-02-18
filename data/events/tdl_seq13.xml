@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="21" second="10" ms="385" />
 			</timeline>
+			<result><none name="tdl_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="tdl_endgame" /></result>

@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="14" second="44" ms="392" />
 			</timeline>
+			<result><none name="rkr_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

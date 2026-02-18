@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="10" second="40" ms="915" />
 			</timeline>
+			<result><none name="fps_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="rbal_start_alive" /></result>

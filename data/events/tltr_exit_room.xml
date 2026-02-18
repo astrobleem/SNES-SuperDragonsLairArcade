@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="14" second="6" ms="894" />
 			</timeline>
+			<result><none name="tltr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="mudm_start_alive" /></result>

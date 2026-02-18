@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="4" second="14" ms="334" />
 			</timeline>
+			<result><none name="fstc_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>

@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="15" second="37" ms="36" />
 			</timeline>
+			<result><none name="fplr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="tdl_start_alive" /></result>

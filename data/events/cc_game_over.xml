@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="8" second="8" ms="371" />
 			</timeline>
+			<result><none name="cc_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

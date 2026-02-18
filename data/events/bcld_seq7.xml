@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="3" second="26" ms="701" />
 			</timeline>
+			<result><none name="bcld_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="fstc_start_alive" /></result>

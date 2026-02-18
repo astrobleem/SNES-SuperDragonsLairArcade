@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="1" second="5" ms="274" />
 			</timeline>
+			<result><none name="vest_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

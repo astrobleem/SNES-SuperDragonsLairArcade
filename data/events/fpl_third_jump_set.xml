@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="10" second="30" ms="528" />
 			</timeline>
+			<result><none name="fpl_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

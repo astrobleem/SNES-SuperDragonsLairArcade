@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="0" second="0" ms="0" />
 			</timeline>
+			<result><none name="atmd_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="start" label="start-1">
 			<timeline>

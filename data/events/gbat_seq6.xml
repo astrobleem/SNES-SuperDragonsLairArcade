@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="10" second="1" ms="849" />
 			</timeline>
+			<result><none name="gbat_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="gbat_seq7" /></result>

@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="18" second="1" ms="998" />
 			</timeline>
+			<result><none name="bknt_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

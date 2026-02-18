@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="16" second="56" ms="365" />
 			</timeline>
+			<result><none name="mudm_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>

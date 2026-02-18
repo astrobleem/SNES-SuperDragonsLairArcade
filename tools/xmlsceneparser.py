@@ -405,13 +405,28 @@ def writeEventFile(events, options):
   except IOError:
     logging.error('unable to access output file %s/chapter.data.' % chapterFolder)
     sys.exit(1)
+  # Pre-compute max direction event endFrame so the chapter's default result
+  # doesn't fire before direction events close their input window.
+  max_direction_endframe = 0
+  for event in events:
+    if event.type == 'direction_generic':
+      endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
+      max_direction_endframe = max(max_direction_endframe, endframe)
+
   dataFile.write("%s.events:\n" % chapterLabel)
   for event in events:
     result = event.result
     resultname = event.resultname
     startframe = min(0xFFFF, max(0, event.framestart - chapterEvent.framestart))
     endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
-    dataFile.write("    .dw Event.%s.CLS.PTR, $%04x, $%04x, EventResult.%s, %s, %s, %s\n" % (event.type, startframe, endframe, result, resultname, event.arg0, event.arg1))
+    # Clamp chapter endFrame to at least max direction endFrame
+    if event.type == 'chapter' and max_direction_endframe > 0:
+      endframe = max(endframe, max_direction_endframe)
+    # Hide arrow for death-trap directions (result matches chapter default = death)
+    arg1_val = event.arg1
+    if event.type == 'direction_generic' and event.resultname == chapterEvent.resultname:
+      arg1_val = str(int(arg1_val) | 2)  # bit 1 = hide arrow
+    dataFile.write("    .dw Event.%s.CLS.PTR, $%04x, $%04x, EventResult.%s, %s, %s, %s\n" % (event.type, startframe, endframe, result, resultname, event.arg0, arg1_val))
   dataFile.write("    .dw 0\n")
   dataFile.close()
 

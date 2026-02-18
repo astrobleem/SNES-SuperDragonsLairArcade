@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="14" second="38" ms="553" />
 			</timeline>
+			<result><none name="thrn_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

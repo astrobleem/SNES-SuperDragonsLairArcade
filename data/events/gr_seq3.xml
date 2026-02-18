@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="5" second="26" ms="351" />
 			</timeline>
+			<result><none name="gr_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>

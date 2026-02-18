@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="6" second="38" ms="323" />
 			</timeline>
+			<result><none name="firm_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

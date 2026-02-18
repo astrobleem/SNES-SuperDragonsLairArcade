@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="3" second="50" ms="27" />
 			</timeline>
+			<result><none name="gg_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="firm_start_alive" /></result>

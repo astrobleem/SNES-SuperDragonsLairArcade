@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="18" second="18" ms="891" />
 			</timeline>
+			<result><none name="rbal_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

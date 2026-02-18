@@ -13,6 +13,16 @@
   jsr abstract.Iterator.killOthers
   ;Mwahaha, I'm the only valid checkpoint now!!!
 
+  ;check if a custom checkpoint target was provided via event data
+  lda OBJECT.CALL.ARG.4,s    ;resultTarget from event data
+  cmp #none                   ;'none' label = no custom target
+  beq _useCurrentChapter
+
+  ;custom target provided — use it directly as checkpoint address
+  sta.b this.checkPointAdress
+  rts
+
+_useCurrentChapter:
   ;seek current chapter, get init adress
   jsr abstract.Iterator.reset
   lda.w #(OBJECT.PROPERTIES.isScript | OBJECT.PROPERTIES.isChapter)

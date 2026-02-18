@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="12" second="36" ms="623" />
 			</timeline>
+			<result><none name="lzkg_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

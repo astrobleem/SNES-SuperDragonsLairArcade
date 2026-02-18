@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="5" second="9" ms="376" />
 			</timeline>
+			<result><none name="sm_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="1" second="24" ms="685" />
 			</timeline>
+			<result><none name="tntr_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>

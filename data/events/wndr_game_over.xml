@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="6" second="2" ms="37" />
 			</timeline>
+			<result><none name="wndr_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

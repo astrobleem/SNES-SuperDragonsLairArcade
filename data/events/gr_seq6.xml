@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="5" second="32" ms="381" />
 			</timeline>
+			<result><none name="gr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="grr_start_alive" /></result>

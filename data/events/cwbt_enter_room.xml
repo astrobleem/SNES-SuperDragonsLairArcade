@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="8" second="14" ms="711" />
 			</timeline>
+			<result><none name="cwbt_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="0" second="0" ms="0" />
 			</timeline>
+			<result><none name="ecag_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="ecag_enter_room" /></result>

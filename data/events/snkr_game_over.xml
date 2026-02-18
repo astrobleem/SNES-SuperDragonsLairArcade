@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="2" second="8" ms="812" />
 			</timeline>
+			<result><none name="snkr_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

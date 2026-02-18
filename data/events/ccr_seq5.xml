@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="13" second="2" ms="450" />
 			</timeline>
+			<result><none name="ccr_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>

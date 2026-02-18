@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="9" second="57" ms="589" />
 			</timeline>
+			<result><none name="gbat_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>

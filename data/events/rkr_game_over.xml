@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="15" second="9" ms="575" />
 			</timeline>
+			<result><none name="rkr_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

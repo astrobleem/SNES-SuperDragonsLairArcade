@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="16" second="50" ms="484" />
 			</timeline>
+			<result><none name="ugr_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="15" second="47" ms="964" />
 			</timeline>
+			<result><none name="ugr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="ugr_first_boulders" /></result>

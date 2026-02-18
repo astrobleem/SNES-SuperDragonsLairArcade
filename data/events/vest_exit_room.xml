@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="1" second="7" ms="240" />
 			</timeline>
+			<result><none name="vest_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="flrp_start_alive" /></result>

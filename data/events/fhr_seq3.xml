@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="11" second="33" ms="807" />
 			</timeline>
+			<result><none name="fhr_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

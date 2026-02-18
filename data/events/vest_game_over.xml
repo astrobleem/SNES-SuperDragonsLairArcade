@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="1" second="18" ms="887" />
 			</timeline>
+			<result><none name="vest_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

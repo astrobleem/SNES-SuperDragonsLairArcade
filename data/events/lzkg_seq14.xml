@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="12" second="18" ms="485" />
 			</timeline>
+			<result><none name="lzkg_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="sm_start_alive" /></result>

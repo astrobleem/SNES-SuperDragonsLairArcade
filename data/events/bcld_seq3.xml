@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="3" second="22" ms="49" />
 			</timeline>
+			<result><none name="bcld_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>

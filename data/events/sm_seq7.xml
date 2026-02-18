@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="4" second="49" ms="490" />
 			</timeline>
+			<result><none name="sm_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="smr_start_alive" /></result>

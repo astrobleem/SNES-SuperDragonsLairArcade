@@ -28,14 +28,16 @@
   sta this.wrongMask
 
   lda OBJECT.CALL.ARG.6,s
-  beq _branchImm_zero
-    lda #1
-    bra _branchImm_store
-_branchImm_zero:
-    lda #0
-_branchImm_store:
+  and #$0001
   sta this.branchImmediate
   stz this.hasTriggered
+
+  ; Check hide-arrow flag (bit 1 of arg1 = death-trap direction)
+  lda OBJECT.CALL.ARG.6,s
+  and #$0002
+  beq _createArrows
+  jmp ++++              ; skip arrow creation, go to audio
+_createArrows:
 
   ;choose assets and positioning based on direction mask
   lda this.direction

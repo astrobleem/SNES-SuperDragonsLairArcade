@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="10" second="13" ms="521" />
 			</timeline>
+			<result><none name="gbat_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

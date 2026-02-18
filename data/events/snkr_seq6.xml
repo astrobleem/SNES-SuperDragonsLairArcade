@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="2" second="6" ms="226" />
 			</timeline>
+			<result><none name="snkr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="snkr_seq7" /></result>

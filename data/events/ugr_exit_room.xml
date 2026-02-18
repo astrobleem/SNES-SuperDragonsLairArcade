@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="16" second="21" ms="388" />
 			</timeline>
+			<result><none name="ugr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="fps_start_alive" /></result>

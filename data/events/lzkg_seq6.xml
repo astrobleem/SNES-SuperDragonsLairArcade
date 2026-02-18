@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="12" second="7" ms="966" />
 			</timeline>
+			<result><none name="lzkg_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

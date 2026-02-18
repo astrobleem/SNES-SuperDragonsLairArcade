@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="18" second="52" ms="64" />
 			</timeline>
+			<result><none name="ecag_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

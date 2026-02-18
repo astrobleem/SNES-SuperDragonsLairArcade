@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="11" second="4" ms="124" />
 			</timeline>
+			<result><none name="smr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="wndr_start_alive" /></result>

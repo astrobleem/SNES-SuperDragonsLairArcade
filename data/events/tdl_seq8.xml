@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="21" second="1" ms="112" />
 			</timeline>
+			<result><none name="tdl_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

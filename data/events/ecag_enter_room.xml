@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="18" second="36" ms="365" />
 			</timeline>
+			<result><none name="ecag_start_dead" /></result>
 		</event>
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>

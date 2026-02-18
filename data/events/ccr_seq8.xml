@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="13" second="4" ms="384" />
 			</timeline>
+			<result><none name="ccr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="ugr_start_alive" /></result>

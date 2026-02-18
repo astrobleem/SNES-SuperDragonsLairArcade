@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="12" second="42" ms="587" />
 			</timeline>
+			<result><none name="alrm_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="cc_start_alive" /></result>

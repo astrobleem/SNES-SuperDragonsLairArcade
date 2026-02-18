@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="4" second="4" ms="836" />
 			</timeline>
+			<result><none name="gg_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

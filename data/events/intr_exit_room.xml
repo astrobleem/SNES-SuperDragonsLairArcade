@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="1" second="2" ms="521" />
 			</timeline>
+			<result><none name="intr_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="vest_start_alive" /></result>

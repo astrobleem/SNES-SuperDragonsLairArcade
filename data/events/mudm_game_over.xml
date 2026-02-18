@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="17" second="38" ms="758" />
 			</timeline>
+			<result><none name="mudm_start_dead" /></result>
 		</event>
 	</events>
 	<result><lastcheckpoint /></result>

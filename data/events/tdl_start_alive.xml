@@ -10,6 +10,7 @@
 			<timeline>
 				<timestart min="0" second="0" ms="0" />
 			</timeline>
+			<result><none name="tdl_start_dead" /></result>
 		</event>
 	</events>
 	<result><playchapter name="tdl_enter_room" /></result>

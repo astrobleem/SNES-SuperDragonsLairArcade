@@ -729,7 +729,8 @@ def resolve_scene_frames(scene_data: Dict[str, Dict], ms_to_frame: Dict[float, i
 
 def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Dict[str, str],
                  resolved_times: Optional[Dict[str, float]] = None,
-                 resolved_frames: Optional[Dict[str, int]] = None) -> str:
+                 resolved_frames: Optional[Dict[str, int]] = None,
+                 start_dead_chapter: Optional[str] = None) -> str:
     """Generate XML event file content for one chapter."""
     chapter_name = make_chapter_name(scene_name, seq_name)
 
@@ -807,6 +808,8 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
         lines.append(f'\t\t\t<timeline>')
         lines.append(f'\t\t\t\t<timestart {ms_to_attrs(xml_start)} />')
         lines.append(f'\t\t\t</timeline>')
+        if start_dead_chapter and seq_name != 'start_dead':
+            lines.append(f'\t\t\t<result><none name="{start_dead_chapter}" /></result>')
         lines.append(f'\t\t</event>')
 
     # Action events
@@ -965,6 +968,11 @@ def main() -> None:
                 else:
                     noseek_fallback += 1
 
+        # Compute start_dead chapter name for checkpoint targets
+        start_dead_chapter = None
+        if 'start_dead' in scene_data:
+            start_dead_chapter = make_chapter_name(scene_name, 'start_dead')
+
         for seq_name in sorted(scene_data.keys()):
             sequence = scene_data[seq_name]
             if not isinstance(sequence, dict):
@@ -972,7 +980,8 @@ def main() -> None:
 
             chapter_name = make_chapter_name(scene_name, seq_name)
             xml_content = generate_xml(scene_name, seq_name, sequence, scene_order,
-                                       resolved_times, resolved_frames)
+                                       resolved_times, resolved_frames,
+                                       start_dead_chapter=start_dead_chapter)
 
             xml_path = outfolder / f'{chapter_name}.xml'
             xml_path.write_text(xml_content)
