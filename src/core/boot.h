@@ -27,6 +27,7 @@ GLOBAL.credits					dw
 GLOBAL.lastCheckpoint		dw
 GLOBAL.currentScene			db
 GLOBAL.pauseSceneNameIdx	dw
+GLOBAL.sceneRow					dw	;current grid row (0-12) for random scene selection
 VARS_end							ds 0
 .ends
 

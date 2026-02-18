@@ -13,5 +13,5 @@
 			<result><none name="bcld_start_dead" /></result>
 		</event>
 	</events>
-	<result><playchapter name="fstc_start_alive" /></result>
+	<result><playchapter name="scene_router" /></result>
 </chapter>

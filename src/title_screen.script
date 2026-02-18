@@ -22,6 +22,8 @@
   lda.w #OBJID.Msu1
   jsr abstract.Iterator.kill.byId
 
+  stz.w GLOBAL.sceneRow
+
   lda.w GLOBAL.credits
   bne _title_screen.hasCredits
     lda #1

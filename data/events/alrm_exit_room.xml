@@ -13,5 +13,5 @@
 			<result><none name="alrm_start_dead" /></result>
 		</event>
 	</events>
-	<result><playchapter name="cc_start_alive" /></result>
+	<result><playchapter name="scene_router" /></result>
 </chapter>

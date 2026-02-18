@@ -13,5 +13,5 @@
 			<result><none name="mudm_start_dead" /></result>
 		</event>
 	</events>
-	<result><playchapter name="fpl_start_alive" /></result>
+	<result><playchapter name="scene_router" /></result>
 </chapter>

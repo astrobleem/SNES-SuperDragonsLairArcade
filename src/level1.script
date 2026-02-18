@@ -1,5 +1,7 @@
   SCRIPT level1
 
+  stz.w GLOBAL.sceneRow
+
   NEW Script.CLS.PTR oopCreateNoPtr intr_start_alive
 
   DIE

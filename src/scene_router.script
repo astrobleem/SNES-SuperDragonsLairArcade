@@ -1,0 +1,88 @@
+  SCRIPT scene_router
+.ACCU 16
+.INDEX 16
+
+  lda.w GLOBAL.sceneRow
+  cmp #13
+  bcc _scene_router.normalRow
+    ;all 13 rows done -> the_dragons_lair
+    NEW Script.CLS.PTR oopCreateNoPtr tdl_start_alive
+    DIE
+
+_scene_router.normalRow:
+  ;save row for table lookup
+  sta.b this._tmp
+
+  ;pick random column (8-bit RNG)
+  jsr core.random.get
+  and #$00FF
+
+  ;row 12 special: only columns 0-1 (exclude the_dragons_lair in col 2)
+  ldx.b this._tmp
+  cpx #12
+  bne _scene_router.threeWay
+    ;two-way: 0-127 = col 0, 128-255 = col 1
+    cmp #128
+    bcs _scene_router.col1
+    lda #0
+    bra _scene_router.colDone
+
+_scene_router.threeWay:
+  cmp #170
+  bcs _scene_router.col2
+  cmp #85
+  bcs _scene_router.col1
+  lda #0
+  bra _scene_router.colDone
+_scene_router.col1:
+  lda #2
+  bra _scene_router.colDone
+_scene_router.col2:
+  lda #4
+
+_scene_router.colDone:
+  ;table index = row * 6 + col_offset
+  pha
+  lda.b this._tmp
+  asl a
+  sta.b this._tmp+2
+  asl a
+  clc
+  adc.b this._tmp+2
+  sta.b this._tmp+2
+  pla
+  clc
+  adc.b this._tmp+2
+  tax
+
+  ;load target scene from ROM grid table
+  lda.l _scene_router.grid,x
+
+  ;increment row for next invocation
+  pha
+  lda.w GLOBAL.sceneRow
+  inc a
+  sta.w GLOBAL.sceneRow
+  pla
+
+  ;create the target scene script
+  pha
+  NEW Script.CLS.PTR oopCreateNoPtr
+  pla
+  DIE
+
+;13 rows x 3 scenes x 2 bytes = 78 bytes
+_scene_router.grid:
+  .dw flrp_start_alive, flrr_start_alive, bowr_start_alive   ;row 0
+  .dw fh_start_alive,   fhr_start_alive,  alrm_start_alive   ;row 1
+  .dw cc_start_alive,   ccr_start_alive,  ugr_start_alive    ;row 2
+  .dw fps_start_alive,  fps_start_alive,  vest_start_alive   ;row 3
+  .dw rbal_start_alive, ecag_start_alive, bknt_start_alive   ;row 4
+  .dw gr_start_alive,   grr_start_alive,  lzkg_start_alive   ;row 5
+  .dw sm_start_alive,   smr_start_alive,  wndr_start_alive   ;row 6
+  .dw tntr_start_alive, snkr_start_alive, bcld_start_alive   ;row 7
+  .dw fstc_start_alive, gg_start_alive,   firm_start_alive   ;row 8
+  .dw ybr_start_alive,  ybrr_start_alive, cwbt_start_alive   ;row 9
+  .dw rk_start_alive,   rkr_start_alive,  gbat_start_alive   ;row 10
+  .dw thrn_start_alive, tltr_start_alive, mudm_start_alive   ;row 11
+  .dw fpl_start_alive,  fplr_start_alive, tdl_start_alive    ;row 12

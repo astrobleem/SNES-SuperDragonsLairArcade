@@ -504,15 +504,13 @@ def derive_chapter_result(scene_name: str, sequence: Dict, scene_order: Dict[str
     elif kills:
         return ('lastcheckpoint', 'none')
     else:
-        # Scene exit — find next scene
-        next_scene = scene_order.get(scene_name)
-        if next_scene:
-            # title_screen is an assembly Script, not a generated chapter
-            if next_scene == 'title_screen':
-                return ('playchapter', 'title_screen')
-            return ('playchapter', make_chapter_name(next_scene, 'start_alive'))
+        # Scene exit — route through scene_router for randomization
+        if scene_name == 'introduction':
+            return ('playchapter', make_chapter_name('vestibule', 'start_alive'))
+        elif scene_name in ('the_dragons_lair', 'attract_mode'):
+            return ('playchapter', 'title_screen')
         else:
-            return ('lastcheckpoint', 'none')
+            return ('playchapter', 'scene_router')
 
 
 def derive_action_result(scene_name: str, action: Dict) -> Tuple[str, str]:

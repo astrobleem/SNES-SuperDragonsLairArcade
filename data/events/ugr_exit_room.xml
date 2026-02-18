@@ -13,5 +13,5 @@
 			<result><none name="ugr_start_dead" /></result>
 		</event>
 	</events>
-	<result><playchapter name="fps_start_alive" /></result>
+	<result><playchapter name="scene_router" /></result>
 </chapter>
