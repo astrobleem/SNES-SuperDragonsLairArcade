@@ -136,7 +136,7 @@ python3 tools/xmlsceneparser.py data/events/black_knight_seq2.xml
 +6: .dw EventResult.{RESULT}    (result handler: playchapter, restartchapter, lastcheckpoint, none)
 +8: .dw {RESULT_TARGET}         (target chapter label, or 'none')
 +10: .dw {ARG0}                 (event-specific: direction mask, sequence number, etc.)
-+12: .dw {ARG1}                 (event-specific)
++12: .dw {ARG1}                 (event-specific: for direction events, bit 0 = hide arrow sprite)
 ```
 
 **Type normalization** by xmlsceneparser.py:

@@ -22,6 +22,12 @@
   lda.w #OBJID.Msu1
   jsr abstract.Iterator.kill.byId
 
+  lda.w GLOBAL.credits
+  bne _title_screen.hasCredits
+    lda #1
+    sta.w GLOBAL.credits
+_title_screen.hasCredits:
+
   sep #$20
   lda.b #BGMODE_MODE_1 | BGMODE_PRIORITY_LAYER_3
   sta.w ScreenMode

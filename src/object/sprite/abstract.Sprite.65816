@@ -149,19 +149,20 @@ abstract.Sprite.playAnimation:
 
   lda.b animation.frame.current
   cmp.b animation.frame.last
-  beq _noBufferUpload
-    ;upload tiles (if any)  
+  beq _noTileUpload
+    ;upload tiles (if frame changed)
     lda.b animation.frame.tiles.length
     beq +
 	  jsr _tileTransfer
 
-+   ;upload palette (if any)  
-    lda.b animation.frame.palette.length
-    beq +
-	  jsr _paletteTransfer
++
+_noTileUpload:
+  ;always re-upload palette (CGRAM may have been cleared externally)
+  lda.b animation.frame.palette.length
+  beq +
+    jsr _paletteTransfer
 
 +
-_noBufferUpload:
   jsr _writeOamBuffer
 
   lda.b animation.frame.current

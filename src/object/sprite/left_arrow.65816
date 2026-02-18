@@ -63,6 +63,9 @@
 
   lda OBJECT.CALL.ARG.2,s
   sta.b dimension.position.y + 1
+
+  lda #$ffff
+  sta.b animation.frame.last
   rts
 
   METHOD getAllocatedPalette
