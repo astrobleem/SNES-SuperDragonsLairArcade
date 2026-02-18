@@ -83,7 +83,12 @@ EventResult.lastcheckpoint:
 _lastcheckpoint.noCheckpointSave:
   stz.w GLOBAL.lastCheckpoint
 _lastcheckpoint.goContinue:
-  pea continue_screen
+  lda.b event.resultTarget
+  cmp.w #none
+  bne +
+    lda.w #continue_screen
++
+  pha
   NEW Script.CLS.PTR oopCreateNoPtr
   pla
   rts

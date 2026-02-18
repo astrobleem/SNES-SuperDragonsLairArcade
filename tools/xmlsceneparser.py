@@ -371,6 +371,28 @@ SCENE_INDEX_MAP = {
   'atmd_start_alive': 29,  # attract_mode
 }
 
+def is_death_chapter(events_dir, chapter_name):
+  """Check if a chapter's XML result is lastcheckpoint (death chapter)."""
+  for name in (chapter_name, chapter_name.replace('_', '-')):
+    xml_path = os.path.join(events_dir, '%s.xml' % name)
+    if os.path.exists(xml_path):
+      try:
+        with open(xml_path, 'rb') as f:
+          dom = xml.dom.minidom.parseString(f.read())
+        for chapter in dom.getElementsByTagName('chapter'):
+          result_parent = [c for c in chapter.childNodes
+                           if c.nodeType == c.ELEMENT_NODE
+                           and c.tagName == 'result']
+          if result_parent:
+            children = [c for c in result_parent[0].childNodes
+                        if c.nodeType == c.ELEMENT_NODE]
+            if children and children[0].tagName == 'lastcheckpoint':
+              return True
+        return False
+      except:
+        return False
+  return False
+
 def writeEventFile(events, options):
   chapterLabel = options.get('chapterlabel')
   chapterFolder = options.get('chapterfolder')
@@ -413,6 +435,22 @@ def writeEventFile(events, options):
       endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
       max_direction_endframe = max(max_direction_endframe, endframe)
 
+  # Rule A: game_over chapters → playchapter to continue_screen
+  # Rule B: death chapters → route through their scene's game_over chapter
+  events_dir = os.path.dirname(options.get('infile'))
+  if chapterLabel.endswith('_game_over'):
+    for event in events:
+      if event.type == 'chapter' and event.result == 'lastcheckpoint':
+        event.result = 'playchapter'
+        event.resultname = 'continue_screen'
+  else:
+    prefix = chapterLabel.split('_')[0]
+    game_over_xml = os.path.join(events_dir, '%s_game_over.xml' % prefix)
+    if os.path.exists(game_over_xml):
+      for event in events:
+        if event.type == 'chapter' and event.result == 'lastcheckpoint' and event.resultname == 'none':
+          event.resultname = '%s_game_over' % prefix
+
   dataFile.write("%s.events:\n" % chapterLabel)
   for event in events:
     result = event.result
@@ -422,10 +460,16 @@ def writeEventFile(events, options):
     # Clamp chapter endFrame to at least max direction endFrame
     if event.type == 'chapter' and max_direction_endframe > 0:
       endframe = max(endframe, max_direction_endframe)
-    # Hide arrow for death-trap directions (result matches chapter default = death)
     arg1_val = event.arg1
-    if event.type == 'direction_generic' and event.resultname == chapterEvent.resultname:
-      arg1_val = str(int(arg1_val) | 2)  # bit 1 = hide arrow
+    if event.type == 'direction_generic':
+      # Hide arrow for death-trap directions (target chapter has lastcheckpoint result)
+      hide_arrow = False
+      if event.result in ('lastcheckpoint', 'restartchapter'):
+        hide_arrow = True
+      elif event.result == 'playchapter' and event.resultname != 'none':
+        hide_arrow = is_death_chapter(events_dir, event.resultname)
+      if hide_arrow:
+        arg1_val = str(int(arg1_val) | 2)
     dataFile.write("    .dw Event.%s.CLS.PTR, $%04x, $%04x, EventResult.%s, %s, %s, %s\n" % (event.type, startframe, endframe, result, resultname, event.arg0, arg1_val))
   dataFile.write("    .dw 0\n")
   dataFile.close()
