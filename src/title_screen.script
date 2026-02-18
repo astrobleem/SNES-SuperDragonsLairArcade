@@ -73,7 +73,7 @@ _title_screen.spcReady:
   beq _title_screen.noKonami
     stz.w GLOBAL.konamiActivated
     lda #30
-    CALL Player.setLifeCount.MTD objPlayer
+    sta.w GLOBAL.credits
 _title_screen.noKonami:
 
   jsr core.irq.position.get

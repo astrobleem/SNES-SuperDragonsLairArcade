@@ -45,7 +45,6 @@ TOOLS_DIR = os.path.join(PROJECT_DIR, 'tools')
 SUPERFAMICONV = os.path.join(TOOLS_DIR, 'superfamiconv', 'superfamiconv.exe')
 MSU_WRITER = os.path.join(TOOLS_DIR, 'msu1blockwriter.py')
 DRAGON_ROAR_PCM = os.path.join(PROJECT_DIR, 'data', 'sounds', 'SuperDragonsLairArcade-900.pcm')
-BLANK_FRAMES_SCRIPT = os.path.join(TOOLS_DIR, 'generate_blank_frames.py')
 
 # Windows ffmpeg with CUDA support (WSL-mounted path for subprocess, Windows path for display)
 WIN_FFMPEG_WSL = "/mnt/c/Users/chad/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-6.0-full_build/bin/ffmpeg.exe"
@@ -773,17 +772,6 @@ def main():
         print(f"WARNING: Dragon roar PCM not found at {DRAGON_ROAR_PCM}\n"
               f"  Run: python3 tools/convert_roar_pcm.py\n")
 
-    # Phase 1e: Generate blank frames for chapters with no video
-    if not args.skip_extract:
-        print("--- Phase 1e: Generating blank frames for empty chapters ---")
-        result = subprocess.run(
-            [sys.executable, BLANK_FRAMES_SCRIPT],
-            capture_output=True, text=True, timeout=600, cwd=PROJECT_DIR)
-        if result.returncode == 0:
-            print(result.stdout.strip())
-        else:
-            print(f"WARNING: blank frame generation failed: {result.stderr.strip()}")
-        print()
 
     # Phase 2: Convert frames to SNES tiles
     total_converted = 0

@@ -6,16 +6,6 @@
 	<params />
 	<macros />
 	<events>
-		<event type="direction" automacro="direction" label="direction-1">
-			<timeline>
-				<timestart min="1" second="1" ms="102" />
-				<timeend min="1" second="2" ms="302" />
-			</timeline>
-			<params>
-				<str key="type" value="up" />
-			</params>
-			<result><playchapter name="intr_exit_room" /></result>
-		</event>
 	</events>
-	<result><playchapter name="intr_drawbridge_death" /></result>
+	<result><playchapter name="intr_exit_room" /></result>
 </chapter>
