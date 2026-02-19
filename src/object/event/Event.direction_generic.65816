@@ -112,6 +112,18 @@ _skip_up_check:
 
   jsr Event.template.waitTimeline
   bcs _in_timeline
+    ; Hide arrow sprite when event window expires (prevents stale arrows
+    ; from sequential direction windows within the same chapter)
+    lda event.age
+    beq _play_done              ; never activated, nothing to hide
+    lda this.sprite+2
+    cmp #oopCreateNoPtr
+    beq _play_done              ; no sprite or already hidden
+      lda #0
+      CALL Right_arrow.reset.MTD this.sprite 0 300
+      lda #oopCreateNoPtr
+      sta this.sprite+2          ; prevent repeated hide calls
+_play_done:
     rts
 _in_timeline:
 
@@ -130,9 +142,9 @@ _in_timeline:
       jsr core.object.call
       pla
       pla
+      lda.w #SAMPLE.0.TURN
+      CALL Spc.SpcPlaySoundEffect.MTD this.audio
 _no_show:
-    lda.w #SAMPLE.0.TURN
-    CALL Spc.SpcPlaySoundEffect.MTD this.audio
 _past_first_frame:
 
   ;attract mode: direction=0 means check START button

@@ -144,10 +144,10 @@ SamplePackStart0:
 	.db 7				;number of samples in this pack
 
 Sample0Header:
-	.dw (Sample0-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample0-SamplePackStart0)	;relative pointer to sample
 	.dw (Sample0-SamplePackStart0)	;relative loop pointer
-	.db $18				;volume l
-	.db $18				;volume r
+	.db $0C				;volume l
+	.db $0C				;volume r
 	.dw $c00			;pitch
         ;edddaaaa VxADSR1
     .db %10001111         ;adsr
@@ -162,10 +162,10 @@ Sample0Header:
 	.db 0
 
 Sample1Header:
-	.dw (Sample1-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample1-SamplePackStart0)	;relative pointer to sample
 	.dw (Sample1-SamplePackStart0)	;relative loop pointer
-	.db $28				;volume l
-	.db $28				;volume r
+	.db $14				;volume l
+	.db $14				;volume r
 	.dw $1400			;pitch
 	.dw $0000			;adsr
 	.db %11111111				;gain
@@ -176,10 +176,10 @@ Sample1Header:
 	.db 0
 
 Sample2Header:
-	.dw (Sample2-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample2-SamplePackStart0)	;relative pointer to sample
 	.dw (Sample2-SamplePackStart0)	;relative loop pointer
-	.db $18				;volume l
-	.db $18				;volume r
+	.db $0C				;volume l
+	.db $0C				;volume r
 	.dw $c00			;pitch
         ;edddaaaa VxADSR1
     .db %10001111         ;adsr
@@ -205,10 +205,10 @@ Sample2Header:
 
  */	
 Sample3Header:
-	.dw (Sample3-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample3-SamplePackStart0)	;relative pointer to sample
 	.dw (Sample3-SamplePackStart0)	;relative loop pointer
-	.db $18				;volume l
-	.db $18				;volume r
+	.db $0C				;volume l
+	.db $0C				;volume r
 	.dw $e00			;pitch
         ;edddaaaa VxADSR1
 	.db %10001111         ;adsr
@@ -223,10 +223,10 @@ Sample3Header:
 	.db 0
 
 Sample4Header:
-	.dw (Sample4-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample4-SamplePackStart0)	;relative pointer to sample
 	.dw (Sample4-SamplePackStart0)	;relative loop pointer
-	.db $18				;volume l
-	.db $18				;volume r
+	.db $0C				;volume l
+	.db $0C				;volume r
 	.dw $1000			;pitch
 	.dw $0000			;adsr
 	.db %11111111				;gain
@@ -237,10 +237,10 @@ Sample4Header:
 	.db 0
 
 Sample5Header:
-	.dw (Sample5-SamplePackStart0)	;relative pointer to sample	
+	.dw (Sample5-SamplePackStart0)	;relative pointer to sample
 	.dw (Sample5-SamplePackStart0)	;relative loop pointer
-	.db $28				;volume l
-	.db $28				;volume r
+	.db $14				;volume l
+	.db $14				;volume r
 	.dw $e00			;pitch
 	.dw $0000			;adsr
 	.db %11111111				;gain
@@ -253,8 +253,8 @@ Sample5Header:
 Sample6Header:
 	.dw (Sample6-SamplePackStart0)	;relative pointer to sample
 	.dw (Sample6-SamplePackStart0)	;relative loop pointer (no loop)
-	.db $28				;volume l
-	.db $28				;volume r
+	.db $14				;volume l
+	.db $14				;volume r
 	.dw $0B06			;pitch (22050 Hz)
 	.dw $0000			;adsr (off)
 	.db %11111111				;gain

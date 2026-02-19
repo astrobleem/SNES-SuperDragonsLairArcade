@@ -451,6 +451,33 @@ def writeEventFile(events, options):
         if event.type == 'chapter' and event.result == 'lastcheckpoint' and event.resultname == 'none':
           event.resultname = '%s_game_over' % prefix
 
+  # Pre-pass: hide duplicate arrows for overlapping correct-direction events.
+  # Among visible-arrow direction events that share overlapping time windows,
+  # keep the arrow only on the first event and hide the rest (bit 1 of arg1).
+  visible_dir_events = []
+  for event in events:
+    if event.type == 'direction_generic':
+      # Skip events whose arrows are already hidden (attract mode bit 0, or explicit bit 1)
+      if int(event.arg1) & 1:
+        continue
+      # Skip death-trap directions (their arrows will be hidden in the write loop)
+      is_death = False
+      if event.result in ('lastcheckpoint', 'restartchapter'):
+        is_death = True
+      elif event.result == 'playchapter' and event.resultname != 'none':
+        is_death = is_death_chapter(events_dir, event.resultname)
+      if is_death:
+        continue
+      sf = min(0xFFFF, max(0, event.framestart - chapterEvent.framestart))
+      ef = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
+      visible_dir_events.append((event, sf, ef))
+  for i, (evt_i, sf_i, ef_i) in enumerate(visible_dir_events):
+    for j in range(i):
+      evt_j, sf_j, ef_j = visible_dir_events[j]
+      if sf_j < ef_i and sf_i < ef_j:  # intervals overlap
+        evt_i.arg1 = str(int(evt_i.arg1) | 2)
+        break
+
   dataFile.write("%s.events:\n" % chapterLabel)
   for event in events:
     result = event.result
