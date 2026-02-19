@@ -197,6 +197,9 @@ _continue_screen.doContinue:
   jsr core.vram.init
   jsr core.cgram.clear
 
+  ;recreate Pause singleton (killed at init to prevent pause on continue screen)
+  NEW Pause.CLS.PTR oopCreateNoPtr
+
   ;restart from saved checkpoint (fallback to title_screen if none)
   lda.w GLOBAL.lastCheckpoint
   beq _continue_screen.noCheckpoint
