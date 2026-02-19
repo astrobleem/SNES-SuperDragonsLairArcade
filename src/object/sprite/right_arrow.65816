@@ -74,6 +74,14 @@
   lda OBJECT.CALL.ARG.2,s
   sta.b dimension.position.y + 1
 
+  ; Re-allocate VRAM/CGRAM (old allocation may be stale after core.vram.init)
+  jsr abstract.Sprite.deallocate
+  sep #$20
+  stz.b animation.tiles.id
+  stz.b animation.palette.id
+  rep #$31
+  jsr abstract.Sprite.allocate
+
   lda #$ffff
   sta.b animation.frame.last
   rts
