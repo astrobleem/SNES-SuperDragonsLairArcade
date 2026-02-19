@@ -810,9 +810,13 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
     # Scene-exit chapters (nextsequence=nil, not death, not interrupt) cut video
     # short. Extend to the end of the current video segment so exit animations
     # (rocks falling, doors closing, etc.) are visible before scene transition.
+    # Skip chapters where the extended footage creates a visual discontinuity
+    # with the next scene (the video skip chain breaks at zero-frame routing nodes).
+    NO_EXIT_EXTENSION = {'intr_exit_room'}
     next_seq = timeout.get('nextsequence')
     if not next_seq and not timeout.get('interrupt') and not sequence.get('kills_player') \
-            and end_frame is not None and _segment_timing:
+            and end_frame is not None and _segment_timing \
+            and chapter_name not in NO_EXIT_EXTENSION:
         seg_end = get_segment_end_frame(end_frame)
         if seg_end is not None and seg_end > end_frame:
             extension = min(seg_end - end_frame, MAX_GAP_FRAMES)
