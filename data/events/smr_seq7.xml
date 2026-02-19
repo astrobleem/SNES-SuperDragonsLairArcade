@@ -1,7 +1,7 @@
 <chapter name="smr_seq7">
 	<timeline>
 		<timestart min="11" second="4" ms="124" frame="15923" />
-		<timeend min="11" second="8" ms="111" frame="16019" />
+		<timeend min="11" second="13" ms="116" frame="16139" />
 	</timeline>
 	<params />
 	<macros />

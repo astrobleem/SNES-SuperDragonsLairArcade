@@ -29,6 +29,10 @@ Token = Union[str, int, float, bool, None, Tuple[str, str]]
 # Built by tools/generate_segment_timing.py from Daphne framefile + ffprobe.
 _segment_timing: List[Dict] = []
 
+# Scene-exit extension counters (populated by generate_xml)
+_exit_extensions: int = 0
+_exit_extension_frames: int = 0
+
 
 def load_segment_timing(json_path: str) -> None:
     """Load precomputed segment timing from JSON."""
@@ -68,6 +72,27 @@ def time_laserdisc_frame(frame: float) -> float:
 
     offset_ms = (frame - seg['frame']) / 23.976 * 1000.0
     return seg['cumulative_ms'] + offset_ms
+
+
+def get_segment_end_frame(frame: float) -> Optional[int]:
+    """Find the end of the video segment containing the given frame.
+
+    Returns the next segment's start frame (= current segment's last frame + 1).
+    """
+    if not _segment_timing:
+        return None
+    seg_idx = None
+    for i, s in enumerate(_segment_timing):
+        if s['frame'] <= frame:
+            seg_idx = i
+        else:
+            break
+    if seg_idx is None:
+        return None
+    if seg_idx + 1 < len(_segment_timing):
+        return _segment_timing[seg_idx + 1]['frame']
+    seg = _segment_timing[seg_idx]
+    return seg['frame'] + round(seg['duration_ms'] / 1000.0 * 23.976)
 
 
 def time_laserdisc_noseek() -> float:
@@ -781,6 +806,26 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
                 end_frame = next_start_frame
                 xml_end = xml_end + gap_ms
 
+    # --- Scene-exit extension: show exit animation from remaining segment footage ---
+    # Scene-exit chapters (nextsequence=nil, not death, not interrupt) cut video
+    # short. Extend to the end of the current video segment so exit animations
+    # (rocks falling, doors closing, etc.) are visible before scene transition.
+    next_seq = timeout.get('nextsequence')
+    if not next_seq and not timeout.get('interrupt') and not sequence.get('kills_player') \
+            and end_frame is not None and _segment_timing:
+        seg_end = get_segment_end_frame(end_frame)
+        if seg_end is not None and seg_end > end_frame:
+            extension = min(seg_end - end_frame, MAX_GAP_FRAMES)
+            if extension > 0:
+                global _exit_extensions, _exit_extension_frames
+                gap_ms = extension / 23.976 * 1000
+                end_frame = end_frame + extension
+                xml_end = xml_end + gap_ms
+                _exit_extensions += 1
+                _exit_extension_frames += extension
+                logging.info(f'  Scene-exit extension: {chapter_name} +{extension} frames '
+                             f'(to segment end {seg_end})')
+
     lines: List[str] = []
     lines.append(f'<chapter name="{chapter_name}">')
     lines.append(f'\t<timeline>')
@@ -1033,6 +1078,7 @@ def main() -> None:
     logging.info(f'  Frame mappings captured: {len(ms_to_frame)}')
     logging.info(f'  Noseek resolved: {noseek_resolved}')
     logging.info(f'  Noseek fallback (0ms): {noseek_fallback}')
+    logging.info(f'  Scene-exit extensions: {_exit_extensions} chapters, {_exit_extension_frames} total frames')
     logging.info(f'  Orphan XMLs: {len(orphans)}')
     logging.info(f'  Missing results: {missing_result}')
 

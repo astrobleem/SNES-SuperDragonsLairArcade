@@ -1,7 +1,7 @@
 <chapter name="fps_exit_room">
 	<timeline>
 		<timestart min="10" second="40" ms="915" frame="15366" />
-		<timeend min="10" second="45" ms="918" frame="15486" />
+		<timeend min="10" second="49" ms="380" frame="15569" />
 	</timeline>
 	<params />
 	<macros />

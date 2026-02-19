@@ -1,7 +1,7 @@
 <chapter name="fhr_seq8">
 	<timeline>
 		<timestart min="11" second="39" ms="181" frame="16762" />
-		<timeend min="11" second="44" ms="189" frame="16882" />
+		<timeend min="11" second="48" ms="110" frame="16976" />
 	</timeline>
 	<params />
 	<macros />

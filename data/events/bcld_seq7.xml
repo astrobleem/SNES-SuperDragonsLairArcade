@@ -1,7 +1,7 @@
 <chapter name="bcld_seq7">
 	<timeline>
 		<timestart min="3" second="26" ms="701" frame="5281" />
-		<timeend min="3" second="27" ms="841" frame="5308" />
+		<timeend min="3" second="32" ms="638" frame="5423" />
 	</timeline>
 	<params />
 	<macros />

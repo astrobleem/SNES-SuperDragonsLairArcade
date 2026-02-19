@@ -1,7 +1,7 @@
 <chapter name="fh_exit_room">
 	<timeline>
 		<timestart min="6" second="53" ms="364" frame="10238" />
-		<timeend min="6" second="58" ms="405" frame="10359" />
+		<timeend min="7" second="2" ms="326" frame="10453" />
 	</timeline>
 	<params />
 	<macros />

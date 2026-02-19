@@ -1,7 +1,7 @@
 <chapter name="firm_seq6">
 	<timeline>
 		<timestart min="6" second="28" ms="650" frame="9647" />
-		<timeend min="6" second="31" ms="563" frame="9717" />
+		<timeend min="6" second="35" ms="900" frame="9821" />
 	</timeline>
 	<params />
 	<macros />

@@ -1,7 +1,7 @@
 <chapter name="tntr_exit_room">
 	<timeline>
 		<timestart min="1" second="32" ms="779" frame="2547" />
-		<timeend min="1" second="33" ms="845" frame="2573" />
+		<timeend min="1" second="38" ms="850" frame="2693" />
 	</timeline>
 	<params />
 	<macros />

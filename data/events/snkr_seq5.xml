@@ -1,7 +1,7 @@
 <chapter name="snkr_seq5">
 	<timeline>
 		<timestart min="2" second="0" ms="435" frame="3210" />
-		<timeend min="2" second="3" ms="580" frame="3285" />
+		<timeend min="2" second="6" ms="249" frame="3349" />
 	</timeline>
 	<params />
 	<macros />

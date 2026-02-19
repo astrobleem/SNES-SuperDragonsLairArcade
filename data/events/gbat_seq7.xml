@@ -1,7 +1,7 @@
 <chapter name="gbat_seq7">
 	<timeline>
 		<timestart min="10" second="3" ms="291" frame="14465" />
-		<timeend min="10" second="5" ms="48" frame="14507" />
+		<timeend min="10" second="7" ms="884" frame="14575" />
 	</timeline>
 	<params />
 	<macros />

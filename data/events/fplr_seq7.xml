@@ -1,7 +1,7 @@
 <chapter name="fplr_seq7">
 	<timeline>
 		<timestart min="15" second="37" ms="36" frame="22478" />
-		<timeend min="15" second="42" ms="106" frame="22600" />
+		<timeend min="15" second="45" ms="443" frame="22680" />
 	</timeline>
 	<params />
 	<macros />
