@@ -1184,19 +1184,13 @@ _waitAudioBusy:
   php
   rep #$31
   sep #$20
-  nop
-  nop
-  nop
-  nop
   ldx.w #MSU1_SEEK_TIMEOUT
 
 -	dex
-	beq +
 	lda.l MSU_STATUS
 	and.b #MSU_STATUS_AUDIO_BUSY
 	bne -
 
-+
   plp
   rts
 

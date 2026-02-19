@@ -41,9 +41,11 @@
 _checkTrackEnd:
   php
   sep #$20
-  lda.l MSU_STATUS
-  and.b #MSU_STATUS_AUDIO_PLAY
-  bne +
+  lda.b this.audioPlaying
+  beq +
+    lda.l MSU_STATUS
+    and.b #MSU_STATUS_AUDIO_PLAY
+    bne +
 	lda.b #MSU_VOLUME_MUTE
 	sta.l MSU_VOLUME
 	stz.b this.audioPlaying
