@@ -189,6 +189,13 @@ SEQ_ABBREVS = {
 FRAME_OVERRIDES = {
 }
 
+# Chapters with hand-edited event structure/timing that must not be regenerated.
+# DirkSimple game.lua timing doesn't match our Daphne video for these chapters.
+MANUAL_CHAPTERS = {
+    'intr_castle_exterior',   # sword+UP split, adjusted timing (commit a784b6e)
+    'intr_drawbridge_swing',  # auto-advancing cutscene, no player input
+}
+
 MAX_CHAPTER_NAME = 22  # 63 - 41 overhead
 
 
@@ -982,6 +989,11 @@ def main() -> None:
                                        start_dead_chapter=start_dead_chapter)
 
             xml_path = outfolder / f'{chapter_name}.xml'
+            if chapter_name in MANUAL_CHAPTERS:
+                logging.info(f'  SKIP (manual override): {chapter_name}')
+                generated_files.add(xml_path.name)
+                skipped += 1
+                continue
             xml_path.write_text(xml_content)
             generated_files.add(xml_path.name)
             total += 1
@@ -1017,6 +1029,7 @@ def main() -> None:
     logging.info(f'\nSummary:')
     logging.info(f'  Scenes: {len(scenes)}')
     logging.info(f'  Chapters generated: {total}')
+    logging.info(f'  Chapters skipped (manual): {skipped}')
     logging.info(f'  Frame mappings captured: {len(ms_to_frame)}')
     logging.info(f'  Noseek resolved: {noseek_resolved}')
     logging.info(f'  Noseek fallback (0ms): {noseek_fallback}')

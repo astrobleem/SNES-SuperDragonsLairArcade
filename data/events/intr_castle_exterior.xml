@@ -14,11 +14,21 @@
 		</event>
 		<event type="direction" automacro="action" label="action-1">
 			<timeline>
-				<timestart min="0" second="54" ms="303" />
-				<timeend min="1" second="0" ms="144" />
+				<timestart min="0" second="55" ms="510" />
+				<timeend min="0" second="57" ms="636" />
 			</timeline>
 			<params>
 				<str key="type" value="action" />
+			</params>
+			<result><none /></result>
+		</event>
+		<event type="direction" automacro="direction" label="direction-1">
+			<timeline>
+				<timestart min="0" second="59" ms="518" />
+				<timeend min="1" second="0" ms="519" />
+			</timeline>
+			<params>
+				<str key="type" value="up" />
 			</params>
 			<result><playchapter name="intr_drawbridge_swing" /></result>
 		</event>
