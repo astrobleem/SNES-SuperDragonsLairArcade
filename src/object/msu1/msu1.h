@@ -86,6 +86,7 @@
   tileTransferOffset dw
   videoMask ds 4
   videoMode db
+  videoSkipFrame dw
 .endst
 
 ;zp-vars

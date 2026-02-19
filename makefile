@@ -151,7 +151,7 @@ all: $(linkobjectfile)
 	cp $(romfile) "/mnt/e/gh/SuperDragonsLairArcade.sfc/SuperDragonsLairArcade.sfc"
 
 #create necessary directory substructure in build directory
-$(builddirs): $(chapterscripts)
+$(builddirs): $(chapterscripts) $(chapterfolder)/chapter_ld_frames.inc
 	$(MD) $@
 
 #create 65816 object linkfile
@@ -216,6 +216,10 @@ $(converted_sprite_animations): $(builddir)/%.$(spriteanimation): % | $(builddir
 $(converted_bg_animations): $(builddir)/%.$(spriteanimation): % | $(builddirs)
 	$(animation_converter) $($(filter gfx_%, $(subst .,$(space), $@))_flags) -infolder $< -outfile $@
 
+
+# Generate LD frame lookup table for MSU-1 skip feature
+$(chapterfolder)/chapter_ld_frames.inc: $(chapterscripts)
+	python3 tools/generate_ld_frame_table.py --events-dir $(eventfolder) --chapters-dir $(chapterfolder) --output $@
 
 #hack used for initial script/chapter building, not really part of the actual build process
 $(chapterscripts): $(chapterfolder)%/chapter.$(chapterscript):$(eventfolder)%.$(scripteventxml)

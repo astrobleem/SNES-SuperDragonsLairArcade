@@ -35,7 +35,11 @@
   rep #$31
   lda.b this.lifes
   sta.b animation.frame.current
-  
+
+  ;force tile re-upload (VRAM may have been overwritten by scene transitions)
+  lda #$ffff
+  sta.b animation.frame.last
+
   jsr abstract.Sprite.playAnimation
 
   ;wait a bit, then disappear above screen

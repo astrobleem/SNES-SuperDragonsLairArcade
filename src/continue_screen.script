@@ -20,6 +20,10 @@
   lda.w #OBJECT.PROPERTIES.isEvent
   jsr abstract.Iterator.kill.byProperties
 
+  ;kill Pause singleton so START doesn't trigger pause on continue screen
+  lda.w #OBJID.Pause
+  jsr abstract.Iterator.kill.byId
+
   ;pause MSU-1 video (keep frozen frame visible, stop DMA uploads)
   jsr abstract.Iterator.reset
   lda.w #OBJID.Msu1
@@ -122,6 +126,8 @@ _continue_screen.noSelect:
         sta.w GLOBAL.credits
         lda.w #SAMPLE.0.SAVEME
         CALL Spc.SpcPlaySoundEffect.MTD contSpc
+        ;find existing Player singleton and populate hash pointer
+        NEW Player.CLS.PTR objPlayer
         ;reset player lives
         CALL Player.reset.MTD objPlayer
         jmp _continue_screen.doContinue

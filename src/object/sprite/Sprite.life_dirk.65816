@@ -32,6 +32,9 @@
 
   METHOD play
   rep #$31
+  ;force tile re-upload (VRAM may have been overwritten by scene transitions)
+  lda #$ffff
+  sta.b animation.frame.last
   jsr abstract.Sprite.playAnimation
 
   ;wait a bit, then speed across screen

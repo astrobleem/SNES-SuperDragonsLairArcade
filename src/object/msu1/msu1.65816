@@ -817,6 +817,27 @@ _delay:
   sta.b this.frameWait
 
   rep #$31
+  ; ---- Compute video skip offset ----
+  ; skip = (ld_table[currentChapter] + currentFrame) - ld_table[nextChapter]
+  lda.b this.currentChapter
+  asl a
+  tax
+  lda.l chapter_ld_start_table,x    ; outgoing LD start
+  clc
+  adc.b this.currentFrame           ; current LD position
+  pha
+  lda.b this.nextChapter
+  asl a
+  tax
+  lda.l chapter_ld_start_table,x    ; incoming LD start
+  sta.b this.videoSkipFrame          ; temp store
+  pla                                ; current LD position
+  sec
+  sbc.b this.videoSkipFrame          ; skip = current - incoming
+  bpl +
+    lda #0                           ; negative → no skip
++ sta.b this.videoSkipFrame
+  ; ---- End skip computation ----
   stz.b this.currentFrame
   stz.w GLOBAL.currentFrame
 
@@ -867,8 +888,14 @@ _startNextVideo:
 
   rep #$31
   stz.b this.framebuffer.current.pointer
-  stz.b this.currentFrame
-  stz.w GLOBAL.currentFrame
+
+  lda.b this.videoSkipFrame
+  stz.b this.videoSkipFrame          ; reset for next transition
+  cmp.b this.frameCount
+  bcc +
+    lda #0                           ; skip >= frameCount → discontinuous, start at 0
++ sta.b this.currentFrame
+  sta.w GLOBAL.currentFrame
 
   lda.b this.currentFrame
   jsr _msu1SeekToFrame
