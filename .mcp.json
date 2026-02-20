@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mesen": {
+      "command": "python",
+      "args": ["tools/mesen_mcp_server.py"]
+    }
+  }
+}
