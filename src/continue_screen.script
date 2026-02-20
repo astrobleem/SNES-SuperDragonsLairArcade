@@ -42,21 +42,6 @@ _continue_screen.noMsu1:
   NEW Brightness.CLS.PTR objBrightness
   NEW Background.textlayer.8x8.CLS.PTR contText
 
-  ;force bright white font palette to CGRAM 0 (video palette makes BG3 text invisible)
-  rep #$31
-  tsx
-  sep #$20
-  lda #DMA_TRANSFER.CGRAM
-  pha
-  pea _continue_screen.fontPal
-  lda #:_continue_screen.fontPal
-  pha
-  rep #$31
-  pea 0
-  pea 4
-  jsr core.dma.registerTransfer
-  txs
-
   ;try to reuse existing Spc singleton
   jsr abstract.Iterator.reset
   lda #OBJID.Spc
@@ -222,6 +207,3 @@ _continue_screen.draw:
   pla
   CALL Background.textlayer.8x8.flush.MTD contText
   rts
-
-_continue_screen.fontPal:
-  .dw $0000, $7FFF    ;color 0: transparent, color 1: bright white

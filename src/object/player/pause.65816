@@ -64,22 +64,6 @@ _pause.doPause:
 		  rep #$31
 		  NEW Background.textlayer.8x8.CLS.PTR this.textlayer
 
-		  ;force bright white text palette to CGRAM position 0
-		  ;(video palette overwrites CGRAM 0, making BG3 text invisible)
-		  rep #$31
-		  tsx
-		  sep #$20
-		  lda #DMA_TRANSFER.CGRAM
-		  pha
-		  pea _pause.fontPal
-		  lda #:_pause.fontPal
-		  pha
-		  rep #$31
-		  pea 0
-		  pea 4
-		  jsr core.dma.registerTransfer
-		  txs
-
 		  ;compute scene name LUT index from GLOBAL.currentScene
 		  sep #$20
 		  lda.w GLOBAL.currentScene
@@ -168,9 +152,6 @@ _pause.noPauseToggle:
 
 +
   rts
-
-_pause.fontPal:
-  .dw $0000, $7FFF	;black + bright white for BG3 text
 
   CLASS Pause
 .ends

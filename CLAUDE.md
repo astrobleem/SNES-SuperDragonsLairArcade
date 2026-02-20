@@ -346,12 +346,12 @@ cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLai
 ```
 Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm files there). Copy test scripts to `E:\gh\SuperDragonsLairArcade.sfc\` before running. Output via `print()` only (`io.open` is broken in testrunner mode).
 
-**WRAM addresses** (shift when `maxNumberOopObjs` changes — verify in .sym after slot count changes):
-- `$7E6D06` — inputDevice.press (current buttons)
-- `$7E6D08` — inputDevice.trigger (newly pressed this frame)
-- `$7E6D0C` — inputDevice.old (previous frame)
+**WRAM addresses** (shift when `maxNumberOopObjs` or any RAMSECTION changes — verify in .sym):
+- `$7E7306` — inputDevice.press (current buttons)
+- `$7E7308` — inputDevice.trigger (newly pressed this frame)
+- `$7E730C` — inputDevice.old (previous frame)
 - `$7E6388` — OopStack base (stable)
-- `$7E6D22` — GLOBAL.currentFrame
+- `$7E731E` — GLOBAL.currentFrame
 
 **Addresses that CHANGE every rebuild** — look up in `build/SuperDragonsLairArcade.sym`:
 - `core.error.trigger` — hook for fatal error detection
@@ -387,9 +387,9 @@ Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm f
 local ADDR_ERROR_TRIGGER   = 0xC05905  -- grep 'core.error.trigger' build/*.sym
 local ADDR_CHECK_INPUT_RTS = 0xC07412  -- _checkInputDevice entry + $1E
 local ADDR_TRIGGER_RESULT  = 0xC06638  -- abstract.Event.triggerResult
-local ADDR_INPUT_PRESS     = 0x7E6D06
-local ADDR_INPUT_TRIGGER   = 0x7E6D08
-local ADDR_INPUT_OLD       = 0x7E6D0C
+local ADDR_INPUT_PRESS     = 0x7E7306  -- grep 'inputDevice.press' build/*.sym
+local ADDR_INPUT_TRIGGER   = 0x7E7308  -- grep 'inputDevice.trigger' build/*.sym
+local ADDR_INPUT_OLD       = 0x7E730C  -- grep 'inputDevice.old' build/*.sym
 
 local JOY_START = 0x1000; local JOY_A = 0x0080
 local JOY_DOWN = 0x0400;  local JOY_RIGHT = 0x0100

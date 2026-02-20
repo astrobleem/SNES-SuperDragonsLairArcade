@@ -40,14 +40,13 @@ _title_screen.hasCredits:
   rep #$31
 
   NEW Brightness.CLS.PTR objBrightness
-  NEW Background.textlayer.8x8.CLS.PTR objText
   NEW Background.generic.CLS.PTR objBackground BG.LAYER.1 BG.titlescreen.PTR
 
   lda #BRIGHTNESS.FULL
   CALL Brightness.fadeTo.MTD objBrightness
 
   NEW Background.generic.CLS.PTR objLogo BG.LAYER.0 BG.logo.PTR
-  
+
   NEW LogoZoom.CLS.PTR objLogoZoom BG.LAYER.0
 
   ;try to reuse existing Spc (engine already uploaded by msu1)
@@ -63,10 +62,6 @@ _title_screen.hasCredits:
 _title_screen.createSpc:
   NEW Spc.CLS.PTR objSpc
 _title_screen.spcReady:
-
-  lda #T_title.PTR
-  CALL Background.textlayer.8x8.print.MTD objText
-  CALL Background.textlayer.8x8.flush.MTD objText
 
   NEW Player.CLS.PTR objPlayer
   CALL Player.reset.MTD objPlayer
@@ -94,6 +89,10 @@ _title_screen.noKonami:
 	bcc +
 	  rts
 +
+
+  ;create text layer AFTER LogoZoom finishes — BG animations have settled
+  ;(frame.current == frame.last), so no more competing palette DMA.
+  NEW Background.textlayer.8x8.CLS.PTR objText
 
   CALL Background.generic.getAllocatedPalette.MTD objLogo
   bcc _title_screen.noPalRotate

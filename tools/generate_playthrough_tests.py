@@ -310,6 +310,9 @@ def parse_sym_file():
         "EventResult.lastcheckpoint": r"^[0-9a-f]+:([0-9a-f]+)\s+EventResult\.lastcheckpoint$",
         "GLOBAL.currentFrame": r"^[0-9a-f]+:([0-9a-f]+)\s+GLOBAL\.currentFrame$",
         "GLOBAL.currentChapter": r"^[0-9a-f]+:([0-9a-f]+)\s+GLOBAL\.currentChapter$",
+        "inputDevice.press": r"^[0-9a-f]+:([0-9a-f]+)\s+inputDevice\.press$",
+        "inputDevice.trigger": r"^[0-9a-f]+:([0-9a-f]+)\s+inputDevice\.trigger$",
+        "inputDevice.old": r"^[0-9a-f]+:([0-9a-f]+)\s+inputDevice\.old$",
     }
 
     for line in sym_text.split("\n"):
@@ -340,6 +343,9 @@ def generate_lua_script(scene_idx, scene_name, scene_prefix, golden_path, addres
     lastcheckpoint = 0xC00000 + addresses["EventResult.lastcheckpoint"]
     current_frame = addresses["GLOBAL.currentFrame"]
     current_chapter = addresses["GLOBAL.currentChapter"]
+    input_press = addresses["inputDevice.press"]
+    input_trigger = addresses["inputDevice.trigger"]
+    input_old = addresses["inputDevice.old"]
 
     # Filter path to only steps that need direction input
     # Each step: (source_chapter_id, direction_mask, inject_frame, source_name, target_name)
@@ -414,9 +420,9 @@ local ADDR_TRIGGER_RESULT  = 0x{trigger_result:06X}
 local ADDR_LASTCHECKPOINT  = 0x{lastcheckpoint:06X}
 local ADDR_CURRENT_FRAME   = 0x{current_frame:06X}
 local ADDR_CURRENT_CHAPTER = 0x{current_chapter:06X}
-local ADDR_INPUT_PRESS     = 0x7E6D06
-local ADDR_INPUT_TRIGGER   = 0x7E6D08
-local ADDR_INPUT_OLD       = 0x7E6D0C
+local ADDR_INPUT_PRESS     = 0x{input_press:06X}
+local ADDR_INPUT_TRIGGER   = 0x{input_trigger:06X}
+local ADDR_INPUT_OLD       = 0x{input_old:06X}
 
 local MAX_FRAMES = {max_frames}
 

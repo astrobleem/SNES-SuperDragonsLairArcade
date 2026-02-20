@@ -1,7 +1,12 @@
 /**
-* 
+*
 */
 .include "src/object/background/Background.textlayer.8x8.h"
+
+.ramsection "textlayer font buffer" bank 0 slot 1
+textlayerFontBuffer ds $600
+.ends
+
 .section "Background.textlayer.8x8"
 
   METHOD init
@@ -32,7 +37,7 @@ _allocateMemory:
   rep #$31
   lda.w #ExcFontTiles.LEN
   sta animation.tiles.length
-  lda.w #ExcFontPal.LEN
+  lda.w #_textlayerFontPal.end - _textlayerFontPal
   sta animation.palette.length
   lda.w #TILEMAP.SIZE.SINGLE
   sta animation.tilemap.length
@@ -40,17 +45,31 @@ _allocateMemory:
 
   jsr abstract.Background.allocateMemory
 
+  ;force palette 7 (CGRAM $38): BG3 is 2BPP, so palette N = CGRAM byte N*8 (not N*32).
+  ;Palette 7 at $38-$3F avoids video palettes 0-1. Text layer must be created LAST
+  ;so its play DMA queues after BGs and wins.
+  rep #$31
+  lda #$38
+  sta.b animation.palette.start
+  sep #$20
+  lda #$1C                       ;palette 7 = startid $1C (bits 10-12 of tilemap)
+  sta.b animation.palette.startid
+
   plp
   rts
 
 _uploadFont:
   php
+  rep #$31
+
+  ;DMA font tiles directly from ROM — no transform, background stays transparent
+  ;text pixels = color 1 (foreground), empty pixels = color 0 (transparent)
   sep #$20
   tsx
-  lda #DMA_TRANSFER.VRAM	;transfer type
+  lda #DMA_TRANSFER.VRAM
   pha
   pea ExcFontTiles
-  lda.b #:ExcFontTiles		;source bank
+  lda.b #:ExcFontTiles
   pha
   rep #$31
 
@@ -59,17 +78,18 @@ _uploadFont:
 
   jsr core.dma.registerTransfer
 
+  ;DMA font palette to CGRAM
   sep #$20
-  lda #DMA_TRANSFER.CGRAM	;transfer type
+  lda #DMA_TRANSFER.CGRAM
   pha
 
-  pea ExcFontPal
-  lda.b #:ExcFontPal		;source bank
+  pea _textlayerFontPal
+  lda.b #:_textlayerFontPal
   pha
   rep #$31
 
   pei (animation.palette.start)
-  pea ExcFontPal.LEN
+  pea _textlayerFontPal.end - _textlayerFontPal
 
   jsr core.dma.registerTransfer
 
@@ -77,9 +97,25 @@ _uploadFont:
   plp
   rts
 
+_textlayerFontPal:
+  .dw $0000   ;color 0: transparent (unused after transform)
+  .dw $7FFF   ;color 1: bright white text
+  .dw $0000   ;color 2: black background (opaque)
+  .dw $0000   ;color 3: unused
+_textlayerFontPal.end:
+
 _stringToTilemap:
   php
   rep #$31
+
+  ;precompute tilemap format bits: palette + priority
+  sep #$20
+  lda.b animation.palette.startid
+  rep #$31
+  and.w #$00FF
+  xba                            ;shift palette bits to high byte
+  ora.w #BG.FORMAT.PRIORITY      ;combine with priority bit
+  pha                            ;save on stack
 
   ldx #0
   ldy animation.ramBuffer.start
@@ -88,7 +124,7 @@ _stringToTilemap:
 	and.w #$ff
 	sec
 	sbc.w #$20	;shift back, whitespace starts at char 0 instead of $20
-	ora.w #BG.FORMAT.PRIORITY	;set priority
+	ora 1,s	;apply palette + priority from stack
 	sta.w GLOBAL.wramBuffer.start,y
 	inx
 	iny
@@ -96,10 +132,27 @@ _stringToTilemap:
 	cpx.w #GLOBAL.CORE.STRING.buffer.length
 	bne -
 
+  pla
   plp
   rts
 
   METHOD play
+  ;re-upload font palette to CGRAM $38 every frame. Text layer must be in the highest
+  ;OopStack slot (created last) so its DMA queues after any BG palette DMA and wins.
+  php
+  sep #$20
+  tsx
+  lda #DMA_TRANSFER.CGRAM
+  pha
+  pea _textlayerFontPal
+  lda.b #:_textlayerFontPal
+  pha
+  rep #$31
+  pei (animation.palette.start)
+  pea _textlayerFontPal.end - _textlayerFontPal
+  jsr core.dma.registerTransfer
+  txs
+  plp
   rts
 
   METHOD kill
