@@ -3,4 +3,8 @@
 
 .include "src/object/sprite/abstract.Sprite.h"
 
+.struct up_arrow_vars
+  endFrame dw
+.endst
+
 .endif

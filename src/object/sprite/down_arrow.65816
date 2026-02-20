@@ -1,14 +1,10 @@
 /**
 * down arrow sprite
-* 
+*
 * @param a<int, 16bit>  x-pos
 * @param 1<int, 16bit>  y-pos
 */
 .include "src/object/sprite/down_arrow.h"
-
-.struct down_arrow_vars
-  endFrame dw
-.endst
 
 .enum zpLen
   this INSTANCEOF down_arrow_vars
@@ -17,6 +13,7 @@
 .redefine CLASS.ZP_LENGTH zpLen + _sizeof_down_arrow_vars
 .redefine CLASS.FLAGS (OBJECT.FLAGS.Present | OBJECT.FLAGS.Singleton)
 .redefine CLASS.PROPERTIES (OBJECT.PROPERTIES.isSprite | OBJECT.PROPERTIES.isHud)
+.redefine CLASS.IMPLEMENTS interface.dimension
 
 .section "down_arrow"
 
@@ -55,7 +52,7 @@
   lda.b #$1
   sta.b animation.speed
   rts
-  
+
   METHOD play
   jsr abstract.Sprite.playAnimation
   rep #$31
@@ -63,7 +60,7 @@
   jsr GLOBAL.checkFrameReached
   bcc +
     lda #224
-    sta.b dimension.position.y + 1  
+    sta.b dimension.position.y + 1
 
 + rts
 
@@ -90,7 +87,7 @@
   rts
 
   METHOD getAllocatedPalette
-  rep #$31  
+  rep #$31
   ldx.b animation.palette.start
   lda.b animation.palette.startid
   and.w #$ff
@@ -103,8 +100,8 @@
   rep #$31
   jsr abstract.Sprite.deallocate
   lda #OBJR_kill
-  sta 3,s	
+  sta 3,s
   rts
 
   CLASS Down_arrow reset getAllocatedPalette
-.ends	
+.ends

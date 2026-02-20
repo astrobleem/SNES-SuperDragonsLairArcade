@@ -105,8 +105,8 @@ _lastcheckpoint.foundCP:
   pha
   NEW Script.CLS.PTR oopCreateNoPtr
   pla
-  NEW Sprite.life_dirk.CLS.PTR oopCreateNoPtr 195 20 SPRITE.LIFE_COUNTER.MAX_AGE
-  NEW Sprite.life_counter.CLS.PTR oopCreateNoPtr 220 20 SPRITE.LIFE_COUNTER.MAX_AGE
+  NEW Sprite.life_dirk.CLS.PTR oopCreateNoPtr 195 36 SPRITE.LIFE_COUNTER.MAX_AGE
+  NEW Sprite.life_counter.CLS.PTR oopCreateNoPtr 220 36 SPRITE.LIFE_COUNTER.MAX_AGE
   rts
 
   CLASS abstract.Event

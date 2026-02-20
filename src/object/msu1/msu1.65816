@@ -269,12 +269,6 @@ _uploadFirstChunk:
 +
   jsr _msu1SetupFrameLength
 
-  ;pre-read palette data from MSU stream into WRAM buffer.
-  ;this is necessary because tile data in the stream may exceed the VRAM buffer
-  ;(e.g. 768 tiles = $6000 bytes vs $4000 VRAM cap). if we DMA palette directly
-  ;from MSU_DATA, the stream desync causes tile data to be read as palette.
-  jsr _preReadPalette
-
   ;toggle between framebuffers
   lda.b this.framebuffer.current.pointer
   eor.w #this.framebuffer.2.obj - this.framebuffer.1.obj
@@ -346,71 +340,6 @@ _uploadFirstChunk:
     TRIGGER_ERROR E_DmaQueueFull
 
 +
-  rts
-
-/**
-* pre-read palette data from MSU stream into WRAM buffer.
-* seeks to palette position (past tilemap + tiles), reads palette bytes,
-* then seeks back to tilemap position so tile DMA can proceed normally.
-* this ensures correct palette even when tile data exceeds VRAM buffer.
-*/
-_preReadPalette:
-  php
-  rep #$31
-  lda.b this.paletteLength
-  beq _preReadPaletteDone
-
-  ;compute absolute palette position in MSU data file:
-  ;= currentFramePointer + MSU1_FRAME.FRAMEDATA + tilemapLength + tilesLength
-  lda.w #MSU1_FRAME.FRAMEDATA
-  clc
-  adc.b this.tilemapLength
-  clc
-  adc.b this.tilesLength
-  clc
-  adc.b this.currentFramePointer
-  sta.b this.tmp+4
-  lda.b this.currentFramePointer+2
-  adc.w #0
-  sta.b this.tmp+6
-
-  ;seek MSU data pointer to palette position
-  tsx
-  pei (this.tmp+4)
-  pei (this.tmp+6)
-  jsr _msu1SetAdress
-  txs
-
-  ;CPU-read palette bytes from MSU data into WRAM buffer
-  ldx.b this.paletteLength
-  ldy.w #0
-  sep #$20
-_preReadPaletteLoop:
-  lda.l MSU_DATA
-  sta.w msu1PaletteBuffer,y
-  iny
-  dex
-  bne _preReadPaletteLoop
-
-  ;seek back to frame data start (tilemap position)
-  ;= currentFramePointer + MSU1_FRAME.FRAMEDATA
-  rep #$31
-  lda.w #MSU1_FRAME.FRAMEDATA
-  clc
-  adc.b this.currentFramePointer
-  sta.b this.tmp+4
-  lda.b this.currentFramePointer+2
-  adc.w #0
-  sta.b this.tmp+6
-
-  tsx
-  pei (this.tmp+4)
-  pei (this.tmp+6)
-  jsr _msu1SetAdress
-  txs
-
-_preReadPaletteDone:
-  plp
   rts
 
 /**
@@ -497,13 +426,13 @@ _uploadSecondChunk:
 	bcs +
       TRIGGER_ERROR E_DmaQueueFull
 
-+ ;transfer palette from pre-read WRAM buffer (not MSU_DATA, to avoid stream desync)
++ ;transfer palette (sequential after tiles in MSU stream)
   tsx
   sep #$20
-  lda #DMA_TRANSFER.CGRAM		;sequential read from WRAM buffer (no FIXED_SOURCE)
+  lda #DMA_TRANSFER.CGRAM | DMA_TRANSFER.OPTION.FIXED_SOURCE
   pha
-  pea msu1PaletteBuffer	;source adress (WRAM)
-  lda #RAM		;source bank ($7e)
+  pea MSU_DATA	;source adress (MSU data port, sequential after tiles)
+  lda #0		;source bank
   pha
 
   rep #$31

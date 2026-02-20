@@ -6,8 +6,8 @@ Pipeline:
 1. Parse chapter XMLs for timing info
 2. Extract video frames from MP4 per chapter (ffmpeg with CUDA GPU accel)
 3. Convert frames to SNES tiles/tilemap/palette (superfamiconv)
-   - Each 256x192 frame produces up to 768 unique 8x8 tiles, but SNES VRAM
-     only holds 512 at 4BPP. reduce_tiles() merges the 256 most visually
+   - Each 256x160 frame produces up to 640 unique 8x8 tiles, but SNES VRAM
+     budget is 384 at 4BPP. reduce_tiles() merges the 256 most visually
      similar pairs using RGB-space L2 distance with a global greedy algorithm.
 4. Package into .msu file (msu1blockwriter.py)
 
@@ -57,10 +57,10 @@ SOURCE_FPS = 23.9777  # Source video fps for frame number calculation
 BPP = 4
 PALETTES = 1
 MAX_COLORS = PALETTES * (2 ** BPP)  # 1 * 16 = 16 (one sub-palette per frame for reliable conversion)
-MAX_TILES = 512  # VRAM tile buffer is $4000 bytes = 512 tiles at 4BPP (32 bytes/tile)
+MAX_TILES = 384  # VRAM tile buffer: 384 tiles at 4BPP (32 bytes/tile) = $3000 bytes
 FRAME_WIDTH = 256
-FRAME_HEIGHT = 192
-TILEMAP_TARGET_SIZE = 2048  # 32x32 tiles * 2 bytes per entry
+FRAME_HEIGHT = 160
+TILEMAP_TARGET_SIZE = 1280  # 32x20 tiles * 2 bytes per entry
 AUDIO_SAMPLE_RATE = 44100
 AUDIO_CHANNELS = 2
 MSU1_AUDIO_HEADER = b"MSU1" + struct.pack('<I', 0)  # "MSU1" + loop point (0 = no loop)
@@ -413,8 +413,8 @@ def decode_tiles_4bpp_rgb(tiles_raw, palette_rgb):
 def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
     """Reduce tile count to max_tiles using global greedy merge in RGB color space.
 
-    SNES VRAM buffer is $4000 bytes = 512 tiles at 4BPP. Video frames at
-    256x192 can have up to 768 unique tiles. This function finds the most
+    SNES VRAM budget is $3000 bytes = 384 tiles at 4BPP. Video frames at
+    256x160 can have up to 640 unique tiles. This function finds the most
     similar tile pairs across the ENTIRE image and merges them, distributing
     quality loss evenly rather than concentrating it in the bottom rows.
 

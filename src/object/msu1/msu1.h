@@ -1,7 +1,7 @@
 .include "src/config/config.inc"
 
 .define MSU1_SEEK_TIMEOUT $2000
-.define MSU1_MAX_TILE_TRANSFER_LENGTH $2000
+.define MSU1_MAX_TILE_TRANSFER_LENGTH $1800
 .define MSU1_CHUNK_DIFFERENCE $380
 .define MSU1_FRAME_CYCLE_COUNT $ff
 .define MSU1_VIDEOMODE_THRESHOLD $0400
@@ -13,7 +13,7 @@
 .define VRAM_TILES	$2000
 .define CGRAM_PALETTE	0
 
-.define V_SCROLL    240
+.define V_SCROLL    224
 
 
 
@@ -110,10 +110,6 @@ GLOBAL.currentChapter dw
 GLOBAL.videoPlaying db
 
 MSU1.GLOBAL.END ds 0
-.ends
-
-.ramsection "msu1 palette buffer" bank 0 slot 1
-msu1PaletteBuffer ds MSU1.FRAMEBUFFER.PALETTESIZE
 .ends
 
 .base BSL
