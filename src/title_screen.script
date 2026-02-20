@@ -123,6 +123,7 @@ _title_screen.noPalRotate:
   NEW Sprite.super.CLS.PTR objSuper 0 0
 
   ;--- Menu system ---
+  .def menu.idleStart this._tmp+0
   .def menu.state  this._tmp+8
   .def menu.cursor this._tmp+10
   .def menu.param  this._tmp+12
@@ -133,10 +134,21 @@ _title_screen.noPalRotate:
   stz.b menu.cursor
   lda #1
   sta.b menu.param
+  lda.w FrameCounter
+  sta.b menu.idleStart
   jsr _title_screen.drawMenu
 
 _title_screen.menuLoop:
   jsr SavePC
+
+  ;check idle timeout: 1 minute (3600 frames at 60fps)
+  lda.w FrameCounter
+  sec
+  sbc.b menu.idleStart
+  cmp #3600
+  bcc _title_screen.notIdle
+    jmp _title_screen.idleAttract
+_title_screen.notIdle:
 
 _title_screen.menuInput:
   ;read trigger input
@@ -145,6 +157,9 @@ _title_screen.menuInput:
   tax  ;plp in get.trigger restores caller Z flag; tax sets Z from A
   beq +
     sta.b currentLevel
+    ;reset idle timer on any input
+    lda.w FrameCounter
+    sta.b menu.idleStart
     bra _title_screen.handleInput
 + rts
 
@@ -208,7 +223,7 @@ _title_screen.cursorSection:
       dec a
       bra _title_screen.cursorMoved
 _title_screen.upWrap:
-    lda #3                        ;options: 4 items (0-3)
+    lda #2                        ;options: 3 items (0-2)
     ldx.b menu.state
     bne +
       lda #1                      ;main menu: 2 items (0-1)
@@ -222,7 +237,7 @@ _title_screen.noUp:
     lda.b menu.cursor
     ldx.b menu.state
     beq _title_screen.downMainMax
-      cmp #3                      ;options: wrap at 3
+      cmp #2                      ;options: wrap at 2
       bra _title_screen.downCheckWrap
 _title_screen.downMainMax:
       cmp #1                      ;main menu: wrap at 1
@@ -285,10 +300,8 @@ _title_screen.optionsSelect:
   lda.b menu.cursor
   beq _title_screen.selectHighScores
   cmp #1
-  beq _title_screen.selectAttractMode
-  cmp #2
   beq _title_screen.selectSoundTest
-  cmp #3
+  cmp #2
   beq _title_screen.selectLevelSelect
   rts
 
@@ -297,15 +310,13 @@ _title_screen.selectHighScores:
   sta.b menu.target
   jmp _title_screen.startTransition
 
-_title_screen.selectAttractMode:
+_title_screen.idleAttract:
   stz.w GLOBAL.credits
-  ;kill existing Pause singleton so START doesn't clash in attract mode
+  ;kill existing Pause singleton so buttons don't clash in attract mode
   lda.w #OBJID.Pause
   jsr abstract.Iterator.kill.byId
   lda.w #atmd_start_alive
   sta.b menu.target
-  lda.w #SAMPLE.0.TECHNIQUE
-  CALL Spc.SpcPlaySoundEffect.MTD objSpc
   jmp _title_screen.startTransitionNoPause
 
 _title_screen.selectSoundTest:

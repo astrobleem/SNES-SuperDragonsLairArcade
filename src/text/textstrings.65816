@@ -805,7 +805,6 @@ T_menu_options:
     .db TC_pos
     .dw $286
     .db " HIGH SCORES",TC_brk
-    .db " ATTRACT MODE",TC_brk
     .db " SOUND TEST",TC_brk
     .db " SCENE SELECT",TC_end
 

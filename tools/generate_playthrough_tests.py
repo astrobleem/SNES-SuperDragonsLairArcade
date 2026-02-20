@@ -365,7 +365,7 @@ def generate_lua_script(scene_idx, scene_name, scene_prefix, golden_path, addres
     # the menu to process the button multiple times (e.g., 3 frames of DOWN
     # toggles cursor 0→1→0→1; 3 frames of A enters options THEN selects first item).
     #
-    # Menu navigation: DOWN → A (OPTIONS) → DOWN x3 → A (SCENE SELECT)
+    # Menu navigation: DOWN → A (OPTIONS) → DOWN x2 → A (SCENE SELECT)
     #                  → RIGHT x (N-1) → A (launch)
     nav_lines = []
     frame = 600  # 25 frames after menu becomes active (~575)
@@ -377,9 +377,9 @@ def generate_lua_script(scene_idx, scene_name, scene_prefix, golden_path, addres
     nav_lines.append(f"    {{{frame}, {frame}, 0x0080}},  -- A (enter OPTIONS)")
     frame += 30
 
-    # DOWN x3 to SCENE SELECT (HIGH SCORES → ATTRACT → SOUND TEST → SCENE SELECT)
-    for i in range(3):
-        nav_lines.append(f"    {{{frame}, {frame}, 0x0400}},  -- DOWN to scene select ({i+1}/3)")
+    # DOWN x2 to SCENE SELECT (HIGH SCORES → SOUND TEST → SCENE SELECT)
+    for i in range(2):
+        nav_lines.append(f"    {{{frame}, {frame}, 0x0400}},  -- DOWN to scene select ({i+1}/2)")
         frame += 30
 
     # A to enter SCENE SELECT (starts at scene 1 = introduction)

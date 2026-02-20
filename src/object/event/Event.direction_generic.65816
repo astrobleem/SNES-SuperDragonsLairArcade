@@ -160,9 +160,9 @@ _past_first_frame:
   bne _direction_normalCheck
     ldx #INPUT.DEVICE.ID.0
     jsr core.input.get.trigger
-    and.w #JOY_BUTTON_START
+    and.w #$FFF0
     beq _direction_done
-      ;START pressed in attract mode: trigger result (no score)
+      ;any button pressed in attract mode: trigger result (no score)
       jsr abstract.Event.triggerResult
       sep #$20
       lda #1

@@ -23,5 +23,5 @@
 			<result><playchapter name="title_screen" /></result>
 		</event>
 	</events>
-	<result><playchapter name="atmd_insert_coins" /></result>
+	<result><playchapter name="hall_of_fame" /></result>
 </chapter>

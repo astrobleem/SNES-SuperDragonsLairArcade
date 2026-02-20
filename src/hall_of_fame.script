@@ -1,6 +1,7 @@
   SCRIPT hall_of_fame
 
   .def objMsu1 hashPtr.5
+  .def fame.waitStart this._tmp+0
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers
@@ -89,15 +90,26 @@
   ldy #213
   jsr core.irq.position.set
 
+  lda.w FrameCounter
+  sta.b fame.waitStart
+
   jsr SavePC
 
   CALL Msu1.audio.isDone.MTD objMsu1
   bcc +
 	bra _exit
 +
+  ;30-second timeout (1800 frames at 60fps)
+  lda.w FrameCounter
+  sec
+  sbc.b fame.waitStart
+  cmp #1800
+  bcs _exit
+
+  ;any button press exits
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.trigger
-  and.w #(JOY_BUTTON_A | JOY_BUTTON_START)
+  and.w #$FFF0
   beq +
 
 _exit:
