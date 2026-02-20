@@ -6,6 +6,7 @@
   age dw
   direction dw
   wrongMask dw
+  inputMask dw
   scoreX dw
   scoreY dw
   branchImmediate db

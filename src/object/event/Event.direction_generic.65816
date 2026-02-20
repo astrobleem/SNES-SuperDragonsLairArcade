@@ -27,6 +27,14 @@
   eor this.direction
   sta this.wrongMask
 
+  ; Build input mask: action events accept all face buttons (A/B/X/Y)
+  lda this.direction
+  cmp #JOY_BUTTON_A
+  bne _not_action_mask
+    lda #(JOY_BUTTON_A | JOY_BUTTON_B | JOY_BUTTON_X | JOY_BUTTON_Y)
+_not_action_mask:
+  sta this.inputMask
+
   lda OBJECT.CALL.ARG.6,s
   and #$0001
   sta this.branchImmediate
@@ -166,7 +174,7 @@ _direction_normalCheck:
   ;check if player pressed the expected direction
   ldx #INPUT.DEVICE.ID.0
   jsr core.input.get.trigger
-  and this.direction
+  and this.inputMask
   bne _direction_correctPress
   jmp _direction_done
 _direction_correctPress:
@@ -175,7 +183,7 @@ _direction_correctPress:
       bne _direction_done
 
       jsr core.input.get.trigger
-      and this.direction
+      and this.inputMask
       beq _score_default
         lda event.age
         cmp #EVENT.BONUS.EXTRA.TIMEOUT

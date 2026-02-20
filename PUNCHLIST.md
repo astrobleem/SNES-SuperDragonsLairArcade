@@ -6,11 +6,10 @@ Outstanding issues, stubs, and incomplete work. Organized by priority.
 
 ## Category 1: Event Stubs (MODERATE)
 
-5 event types are referenced in chapter data tables but immediately self-kill. Chapters that rely on them have missing interactions (the chapter always falls through to its default timeout result):
+4 event types are referenced in chapter data tables but immediately self-kill. Chapters that rely on them have missing interactions (the chapter always falls through to its default timeout result):
 
 | Event Class | File | What It Should Do |
 |-------------|------|-------------------|
-| `Event.touch` | `Event.touch.65816` | Handle sword/action input events (SNES button A) |
 | `Event.target` | `Event.target.65816` | Target-tracking input events |
 | `Event.show_help` | `Event.show_help.65816` | Display help overlays during gameplay |
 | `Event.change_dash` | `Event.change_dash.65816` | Modify HUD/dashboard state |
@@ -36,6 +35,7 @@ All in `Event.cutscene.65816`. Scene-specific death/transition cutscenes that ar
 |------|------|-------|
 | `none.script` | `src/none.script` | `TRIGGER_ERROR E_Todo`. Included but never referenced at runtime. Diagnostic placeholder. |
 | `Event.Test_Script` | `Event.Test_Script.65816` | Template file, linker-discarded. |
+| `Event.touch` | `Event.touch.65816` | Stub event class with zero chapter data references. Sword/action input handled by `Event.direction_generic`. |
 
 ## Category 3: Minor Code Issues
 
