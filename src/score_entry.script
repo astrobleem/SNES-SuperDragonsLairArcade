@@ -143,7 +143,7 @@
   ldy irq.buffer.y
   jsr core.irq.position.set
 
-  NEW Script.CLS.PTR oopCreateNoPtr msu1
+  NEW Script.CLS.PTR oopCreateNoPtr title_screen
   rts
 
 

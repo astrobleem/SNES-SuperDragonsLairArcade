@@ -96,7 +96,7 @@ _skip_up_check:
 ++ NEW Down_arrow.CLS.PTR this.sprite 110 300
   lda #110
   sta this.scoreX
-  lda #180
+  lda #156
   sta this.scoreY
   lda event.endFrame
   CALL Down_arrow.reset.MTD this.sprite 110 300

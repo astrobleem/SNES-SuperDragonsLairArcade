@@ -3,6 +3,6 @@
 
   ;title_screen already handles full cleanup (killOthers, kill events, kill Msu1,
   ;screen mode, VRAM/CGRAM clear, etc.) so game_over just transitions directly.
-  NEW Script.CLS.PTR oopCreateNoPtr title_screen
+  NEW Script.CLS.PTR oopCreateNoPtr score_entry
 
   DIE

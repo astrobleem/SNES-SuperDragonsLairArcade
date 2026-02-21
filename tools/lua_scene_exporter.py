@@ -532,7 +532,11 @@ def derive_chapter_result(scene_name: str, sequence: Dict, scene_order: Dict[str
         else:
             return ('lastcheckpoint', 'none')
     elif next_seq:
-        return ('playchapter', make_chapter_name(scene_name, next_seq))
+        target = make_chapter_name(scene_name, next_seq)
+        # Attract mode: route attract movie to hall_of_fame instead of insert_coins
+        if scene_name == 'attract_mode' and next_seq == 'insert_coins':
+            target = 'hall_of_fame'
+        return ('playchapter', target)
     elif kills:
         return ('lastcheckpoint', 'none')
     else:

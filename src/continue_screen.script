@@ -161,7 +161,7 @@ _continue_screen.timeout:
   jsr core.vram.init
   jsr core.cgram.clear
 
-  NEW Script.CLS.PTR oopCreateNoPtr title_screen
+  NEW Script.CLS.PTR oopCreateNoPtr score_entry
   DIE
 
   ;=== Continue: fade out and restart from checkpoint ===
