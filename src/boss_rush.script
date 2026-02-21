@@ -1,0 +1,8 @@
+
+  SCRIPT boss_rush
+
+  stz.w GLOBAL.sceneRow
+
+  NEW Script.CLS.PTR oopCreateNoPtr scene_router
+
+  DIE

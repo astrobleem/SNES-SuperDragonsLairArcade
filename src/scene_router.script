@@ -2,22 +2,58 @@
 .ACCU 16
 .INDEX 16
 
+  ;--- Check game mode and handle row wrap/finale ---
+  lda.w GLOBAL.gameMode
+  beq _scene_router.arcadeSetup
+  cmp #1
+  beq _scene_router.bossSetup
+
+  ;--- Mode 2: Oops, All Traps! (7 rows, loops) ---
+  lda.w GLOBAL.sceneRow
+  cmp #7
+  bcc _scene_router.trapsOk
+    stz.w GLOBAL.sceneRow
+    lda #0
+_scene_router.trapsOk:
+  sta.b this._tmp
+  lda #(_scene_router.trapsGrid - _scene_router.grid)
+  sta.b this._tmp+4
+  jmp _scene_router.pickColumn
+
+_scene_router.bossSetup:
+  ;--- Mode 1: Boss Rush (5 rows, loops) ---
+  lda.w GLOBAL.sceneRow
+  cmp #5
+  bcc _scene_router.bossOk
+    stz.w GLOBAL.sceneRow
+    lda #0
+_scene_router.bossOk:
+  sta.b this._tmp
+  lda #(_scene_router.bossGrid - _scene_router.grid)
+  sta.b this._tmp+4
+  jmp _scene_router.pickColumn
+
+_scene_router.arcadeSetup:
+  ;--- Mode 0: Arcade (13 rows, then dragon finale) ---
   lda.w GLOBAL.sceneRow
   cmp #13
-  bcc _scene_router.normalRow
+  bcc _scene_router.arcadeOk
     ;all 13 rows done -> the_dragons_lair
     NEW Script.CLS.PTR oopCreateNoPtr tdl_start_alive
     DIE
 
-_scene_router.normalRow:
-  ;save row for table lookup
+_scene_router.arcadeOk:
   sta.b this._tmp
+  stz.b this._tmp+4               ;arcade grid offset = 0
 
+_scene_router.pickColumn:
   ;pick random column (8-bit RNG)
   jsr core.random.get
   and #$00FF
 
-  ;row 12 special: only columns 0-1 (exclude the_dragons_lair in col 2)
+  ;row 12 special case: arcade mode only, 2-way split (exclude dragon from column 2)
+  ldx.w GLOBAL.gameMode
+  bne _scene_router.threeWay
   ldx.b this._tmp
   cpx #12
   bne _scene_router.threeWay
@@ -41,7 +77,7 @@ _scene_router.col2:
   lda #4
 
 _scene_router.colDone:
-  ;table index = row * 6 + col_offset
+  ;table index = gridOffset + row * 6 + col_offset
   pha
   lda.b this._tmp
   asl a
@@ -49,6 +85,8 @@ _scene_router.colDone:
   asl a
   clc
   adc.b this._tmp+2
+  clc
+  adc.b this._tmp+4                ;add grid base offset
   sta.b this._tmp+2
   pla
   clc
@@ -71,7 +109,7 @@ _scene_router.colDone:
   pla
   DIE
 
-;13 rows x 3 scenes x 2 bytes = 78 bytes
+;--- Arcade grid: 13 rows x 3 columns ---
 _scene_router.grid:
   .dw flrp_start_alive, flrr_start_alive, bowr_start_alive   ;row 0
   .dw fh_start_alive,   fhr_start_alive,  alrm_start_alive   ;row 1
@@ -86,3 +124,21 @@ _scene_router.grid:
   .dw rk_start_alive,   rkr_start_alive,  gbat_start_alive   ;row 10
   .dw thrn_start_alive, tltr_start_alive, mudm_start_alive   ;row 11
   .dw fpl_start_alive,  fplr_start_alive, tdl_start_alive    ;row 12
+
+;--- Boss Rush grid: 5 rows x 3 columns ---
+_scene_router.bossGrid:
+  .dw snkr_start_alive, tntr_start_alive, gg_start_alive     ;row 0
+  .dw cc_start_alive,   ccr_start_alive,  mudm_start_alive   ;row 1
+  .dw gbat_start_alive, rk_start_alive,   sm_start_alive     ;row 2
+  .dw smr_start_alive,  rkr_start_alive,  grr_start_alive    ;row 3
+  .dw gr_start_alive,   bknt_start_alive, lzkg_start_alive   ;row 4
+
+;--- Oops, All Traps! grid: 7 rows x 3 columns ---
+_scene_router.trapsGrid:
+  .dw firm_start_alive, tltr_start_alive, wndr_start_alive   ;row 0
+  .dw flrp_start_alive, flrr_start_alive, rbal_start_alive   ;row 1
+  .dw fh_start_alive,   fhr_start_alive,  ugr_start_alive    ;row 2
+  .dw cwbt_start_alive, ecag_start_alive, fps_start_alive    ;row 3
+  .dw fstc_start_alive, bowr_start_alive, vest_start_alive   ;row 4
+  .dw ybr_start_alive,  ybrr_start_alive, alrm_start_alive   ;row 5
+  .dw thrn_start_alive, fpl_start_alive,  fplr_start_alive   ;row 6

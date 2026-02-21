@@ -165,6 +165,8 @@ _CHAPTER.init.done:
 .include "src/continue_screen.script"
 .include "data/chapters/chapter.include"
 .include "src/level1.script"
+.include "src/boss_rush.script"
+.include "src/oops_all_traps.script"
 .include "src/scene_router.script"
 
 .ends

@@ -1,0 +1,8 @@
+
+  SCRIPT oops_all_traps
+
+  stz.w GLOBAL.sceneRow
+
+  NEW Script.CLS.PTR oopCreateNoPtr scene_router
+
+  DIE

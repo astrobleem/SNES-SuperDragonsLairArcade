@@ -1,6 +1,7 @@
   SCRIPT level1
 
   stz.w GLOBAL.sceneRow
+  stz.w GLOBAL.gameMode
 
   NEW Script.CLS.PTR oopCreateNoPtr intr_start_alive
 
