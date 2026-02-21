@@ -1,0 +1,43 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="crystalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a0a3a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a0a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0515;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pinkGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#E8B4D8" />
+      <stop offset="50%" style="stop-color:#FFD700" />
+      <stop offset="100%" style="stop-color:#E8B4D8" />
+    </linearGradient>
+    <filter id="sparkle"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <radialGradient id="bubbleGrad" cx="40%" cy="40%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#9966CC;stop-opacity:0.1" />
+    </radialGradient>
+  </defs>
+  <rect width="600" height="200" fill="url(#crystalGrad)" />
+  <!-- Magic bubbles -->
+  <circle cx="80" cy="100" r="50" fill="none" stroke="#9966CC" stroke-width="1" opacity="0.2"/>
+  <circle cx="80" cy="100" r="45" fill="url(#bubbleGrad)" opacity="0.3"/>
+  <circle cx="520" cy="100" r="50" fill="none" stroke="#9966CC" stroke-width="1" opacity="0.2"/>
+  <circle cx="520" cy="100" r="45" fill="url(#bubbleGrad)" opacity="0.3"/>
+  <!-- Sparkles -->
+  <polygon points="100,40 103,45 100,50 97,45" fill="#E8B4D8" opacity="0.6" filter="url(#sparkle)"/>
+  <polygon points="500,50 503,55 500,60 497,55" fill="#FFD700" opacity="0.5" filter="url(#sparkle)"/>
+  <polygon points="150,160 153,165 150,170 147,165" fill="#E8B4D8" opacity="0.4" filter="url(#sparkle)"/>
+  <polygon points="450,150 453,155 450,160 447,155" fill="#FFD700" opacity="0.4" filter="url(#sparkle)"/>
+  <polygon points="200,30 202,33 200,36 198,33" fill="white" opacity="0.5" filter="url(#sparkle)"/>
+  <polygon points="380,35 382,38 380,41 378,38" fill="white" opacity="0.4" filter="url(#sparkle)"/>
+  <!-- Crown -->
+  <path d="M270,25 L280,10 L290,22 L300,5 L310,22 L320,10 L330,25Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.4"/>
+  <!-- Key -->
+  <circle cx="300" cy="170" r="8" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.3"/>
+  <line x1="300" y1="178" x2="300" y2="195" stroke="#FFD700" stroke-width="1.5" opacity="0.3"/>
+  <line x1="300" y1="188" x2="306" y2="188" stroke="#FFD700" stroke-width="1.5" opacity="0.3"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#pinkGold)" stroke-width="3"/>
+  <!-- Title -->
+  <text x="300" y="85" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="38" font-weight="bold" fill="url(#pinkGold)" filter="url(#sparkle)">PRINCESS DAPHNE</text>
+  <text x="300" y="120" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="16" fill="#E8B4D8" letter-spacing="4">THE FAIR MAIDEN</text>
+</svg>

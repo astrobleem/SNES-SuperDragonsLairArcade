@@ -1,0 +1,35 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="deathGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0d0d0d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="boneWhite" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#888888" />
+      <stop offset="50%" style="stop-color:#CCCCCC" />
+      <stop offset="100%" style="stop-color:#888888" />
+    </linearGradient>
+    <filter id="deathGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="200" fill="url(#deathGrad)" />
+  <!-- Thorn vines from edges -->
+  <path d="M0,200 L8,175 L3,180 L15,155 L10,165 L22,140 L17,150 L30,130" fill="none" stroke="#2a4a00" stroke-width="1.5" opacity="0.4"/>
+  <path d="M600,200 L592,175 L597,180 L585,155 L590,165 L578,140 L583,150 L570,130" fill="none" stroke="#2a4a00" stroke-width="1.5" opacity="0.4"/>
+  <path d="M0,180 L12,160 L5,168 L20,145" fill="none" stroke="#1a3a00" stroke-width="1" opacity="0.3"/>
+  <path d="M600,180 L588,160 L595,168 L580,145" fill="none" stroke="#1a3a00" stroke-width="1" opacity="0.3"/>
+  <!-- Scythe silhouette -->
+  <path d="M80,30 Q60,40 50,70 Q45,90 60,100" fill="none" stroke="#666666" stroke-width="2" opacity="0.3"/>
+  <line x1="80" y1="30" x2="80" y2="170" stroke="#666666" stroke-width="2" opacity="0.25"/>
+  <!-- Whirling baton hint -->
+  <circle cx="530" cy="100" r="35" fill="none" stroke="#444444" stroke-width="1" opacity="0.2" stroke-dasharray="8,8"/>
+  <line x1="500" y1="80" x2="560" y2="120" stroke="#555555" stroke-width="2" opacity="0.2"/>
+  <!-- Hourglass / time motif -->
+  <path d="M290,160 L310,160 L305,175 L300,180 L295,175 L290,160Z" fill="none" stroke="#666666" stroke-width="1" opacity="0.3"/>
+  <path d="M290,195 L310,195 L305,180 L300,175 L295,180 L290,195Z" fill="none" stroke="#666666" stroke-width="1" opacity="0.3"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#boneWhite)" stroke-width="3"/>
+  <!-- Title -->
+  <text x="300" y="80" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="38" font-weight="bold" fill="url(#boneWhite)" filter="url(#deathGlow)">THE GRIM REAPER</text>
+  <text x="300" y="115" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="16" fill="#888888" letter-spacing="4">HARBINGER OF DOOM</text>
+</svg>
