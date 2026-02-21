@@ -11,7 +11,7 @@ Open `usermanual-page000.md` (the cover) and follow the links to navigate throug
 ### Front Matter
 *   **Cover:** `usermanual-page000.md`
 *   **Story & How to Play:** `usermanual-page001.md`
-*   **Controls & Secrets:** `usermanual-page002.md` (D-pad, Sword, Flash system, Konami Code, Scene Select)
+*   **Controls, Game Modes & Secrets:** `usermanual-page002.md` (D-pad, Sword, Flash system, Game Modes, Konami Code, Scene Select)
 
 ### Character Bios (9 profiles)
 *   **Dirk the Daring:** `usermanual-bio-dirk.md` -- The hero. Clumsy but courageous.

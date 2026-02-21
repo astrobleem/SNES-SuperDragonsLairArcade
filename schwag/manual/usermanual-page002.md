@@ -45,6 +45,24 @@ Just like the original 1983 arcade, you need credits to play!
 
 ---
 
+## Game Modes
+
+Select your mode from the main menu. All modes share lives, credits, and scoring.
+
+### Arcade Mode
+
+The classic Dragon's Lair experience. Battle through 13 randomized scenes, then face Singe the Dragon in the finale. Each playthrough shuffles the scene order, so you never know what's coming next.
+
+### Boss Rush
+
+Major creature encounters only. 5 randomized scenes in an endless loop. Giant bats, grim reapers, lizard kings -- how long can you survive the castle's deadliest inhabitants?
+
+### Oops, All Traps!
+
+Environmental hazards only. 7 randomized scenes in an endless loop. Flaming ropes, tilting rooms, rolling boulders -- a fever dream high score gauntlet with no bosses in sight.
+
+---
+
 ## Secrets
 
 ### The Konami Code

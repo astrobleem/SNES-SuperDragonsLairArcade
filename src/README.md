@@ -34,8 +34,8 @@ Chapter transitions happen via `EventResult.playchapter` — when a player input
 ## Title Screen Menu
 
 The title screen provides:
-- **Main menu** (state 0): START GAME, OPTIONS
-- **Options submenu** (state 1): HIGH SCORES, ATTRACT MODE, SOUND TEST, SCENE SELECT, BACK
+- **Main menu** (state 0): ARCADE MODE, BOSS RUSH, OOPS,ALL TRAPS!, OPTIONS
+- **Options submenu** (state 1): HIGH SCORES, SOUND TEST, SCENE SELECT
 - **Sound test** (state 2): L/R selects sample 0-5, A plays it
 - **Scene select** (state 3): L/R selects scene 1-29, A launches it
 

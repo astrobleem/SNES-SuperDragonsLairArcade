@@ -79,7 +79,10 @@ Scripts are 65816 code that runs synchronously during init (via `bra _play`) unt
 
 ### Game Flow
 ```
-boot.65816 → main.script → msu1.script → losers.script → logo_intro.script → title_screen.script → level1.script → ...
+boot.65816 → main.script → msu1.script → losers.script → logo_intro.script → title_screen.script
+  → Arcade Mode:  level1.script → introduction_start_alive → ... → scene_router → ... → the_dragons_lair
+  → Boss Rush:    boss_rush.script → scene_router (5-row grid, loops)
+  → Oops All Traps: oops_all_traps.script → scene_router (7-row grid, loops)
 ```
 Each script creates the next via `NEW Script.CLS.PTR oopCreateNoPtr nextScript` then `DIE`.
 
@@ -87,7 +90,7 @@ Each script creates the next via `NEW Script.CLS.PTR oopCreateNoPtr nextScript` 
 
 The game is divided into 29 scenes (rooms), each containing multiple chapters (short video segments with events). Chapters chain together via EventResult handlers based on player input.
 
-**Scene flow**: `title_screen` → `level1.script` → `introduction_start_alive` (chapter) → player input triggers → next chapter → ... → scene complete → next scene
+**Scene flow**: `title_screen` → mode entry script → first chapter → player input triggers → next chapter → ... → scene complete → `scene_router` → next scene. In Arcade Mode, after 13 scenes the router sends the player to `the_dragons_lair` (finale). In Boss Rush and Oops All Traps, the router loops back to row 0 after the last row.
 
 **Level scripts** (`src/level1.script` through `src/level9.script`) are minimal entry points:
 ```asm
@@ -169,14 +172,31 @@ All chapter scripts are aggregated in `data/chapters/chapter.include`, all data 
 ### Title Screen Menu and Scene Select
 
 The title screen (`src/title_screen.script`) has a full menu system:
-- **Main menu**: START GAME, OPTIONS
-- **Options submenu**: HIGH SCORES, ATTRACT MODE, SOUND TEST, SCENE SELECT
+- **Main menu**: ARCADE MODE, BOSS RUSH, OOPS,ALL TRAPS!, OPTIONS (4 items, cursor 0-3)
+- **Options submenu**: HIGH SCORES, SOUND TEST, SCENE SELECT (3 items, cursor 0-2)
 - **Sound test**: L/R selects sample 0-6, A plays it
 - **Scene select**: L/R selects scene 1-29, A launches it via `_title_screen.sceneTable`
+
+Main menu cursor 0-2 selects a game mode (sets `GLOBAL.gameMode` to 0/1/2, dispatches to `level1`/`boss_rush`/`oops_all_traps`). Cursor 3 enters OPTIONS.
 
 Menu items start at tilemap position `$286` (row 20, col 6). Copyright text at `$306`/`$324` (rows 24-25). Cursor drawn at `$286 + cursor * 32`.
 
 **Transition pattern** (must use dedicated SavePC): After fadeTo black, a `jsr SavePC` creates a new resume point. Each frame polls `Brightness.isDone`; when done, cleanup kills objects, clears VRAM/CGRAM, creates target Script, and DIEs. The inline SavePC replaces the menu's SavePC — menu input stops during transition.
+
+### Scene Router & Game Modes
+
+`src/scene_router.script` routes the player to the next scene after completing a scene. It reads `GLOBAL.gameMode` to select which grid table to use, picks a random column from the current row, and increments `GLOBAL.sceneRow`.
+
+**`GLOBAL.gameMode`** (word at WRAM): 0 = Arcade, 1 = Boss Rush, 2 = Oops All Traps. Set by `title_screen.script` on mode selection, cleared to 0 on return to title screen.
+
+**Grid tables** in `scene_router.script`:
+- **Arcade** (`_scene_router.grid`): 13 rows x 3 columns. After row 12, sends player to `the_dragons_lair` (finale). Row 12 is a 2-way split (excludes `the_dragons_lair` from random selection since it's always the finale).
+- **Boss Rush** (`_scene_router.bossGrid`): 5 rows x 3 columns. Loops to row 0 after row 4.
+- **Oops All Traps** (`_scene_router.trapsGrid`): 7 rows x 3 columns. Loops to row 0 after row 6.
+
+**Entry scripts**: `boss_rush.script` and `oops_all_traps.script` are minimal — they reset `GLOBAL.sceneRow` to 0 and create `scene_router`. `level1.script` does the same for Arcade Mode but routes through `introduction_start_alive` first (intro is always the first scene).
+
+**Scene exit routing**: `lua_scene_exporter.py` `derive_chapter_result()` routes all scene exit chapters to `scene_router`, except: introduction → vestibule (direct), the_dragons_lair/attract_mode → title_screen.
 
 ### MSU-1 Video Data Pipeline
 
@@ -326,6 +346,9 @@ In 16-bit accumulator mode (`rep #$20`), `lda zp_offset` reads 2 bytes. If a `db
 | `src/level1.script` – `src/level9.script` | Level entry points (each creates a starting chapter) |
 | `src/object/player/pause.65816` | Pause menu overlay — shows scene name, score, lives, credits, chapter, frame |
 | `src/title_screen.script` | Title screen with menu system and scene select |
+| `src/scene_router.script` | Scene-to-scene routing with per-mode grid tables |
+| `src/boss_rush.script` | Boss Rush mode entry point (resets row, creates scene_router) |
+| `src/oops_all_traps.script` | Oops All Traps mode entry point (resets row, creates scene_router) |
 | `tools/generate_msu_data.py` | Full MSU-1 video pipeline: Daphne .m2v → ffmpeg → superfamiconv → tile reduction → .msu |
 | `tools/lua_scene_exporter.py` | Exports DirkSimple game.lua scene data to XML events with frame timing |
 | `tools/generate_segment_timing.py` | Generates `data/segment_timing.json` from Daphne framefile + ffprobe |
@@ -428,16 +451,17 @@ emu.addMemoryCallback(function()
 end, emu.callbackType.exec, ADDR_ERROR_TRIGGER)
 
 -- Scene select: no START during boot (auto-advances ~575 frames).
--- Single-frame windows: DOWN, A (OPTIONS), DOWN x3, A (SCENE SELECT), RIGHT x N, A
+-- Main menu has 4 items: ARCADE MODE, BOSS RUSH, OOPS ALL TRAPS!, OPTIONS
+-- Single-frame windows: DOWN x3 to OPTIONS, A, DOWN x2 to SCENE SELECT, A, RIGHT x N, A
 -- Menu active at ~frame 575. Start nav at frame 600.
 local navSchedule = {
-    {600,600,JOY_DOWN},                         -- DOWN to OPTIONS
-    {630,630,JOY_A},                            -- A enter OPTIONS
-    {660,660,JOY_DOWN},{690,690,JOY_DOWN},      -- DOWN x3 to SCENE SELECT
-    {720,720,JOY_DOWN},{750,750,JOY_A},         -- A enter SCENE SELECT
+    {600,600,JOY_DOWN},{630,630,JOY_DOWN},      -- DOWN x3 to OPTIONS (4th item)
+    {660,660,JOY_DOWN},{690,690,JOY_A},         -- A enter OPTIONS
+    {720,720,JOY_DOWN},{750,750,JOY_DOWN},      -- DOWN x2 to SCENE SELECT (3rd item)
+    {780,780,JOY_A},                            -- A enter SCENE SELECT
     -- RIGHT x N for scene N+1 (omit for scene 1 = introduction)
-    {780,780,JOY_RIGHT},                        -- scene 2 = vestibule
-    {810,810,JOY_A},                            -- launch
+    {810,810,JOY_RIGHT},                        -- scene 2 = vestibule
+    {840,840,JOY_A},                            -- launch
 }
 
 -- For menus: put nav logic in exec callback to avoid 1-frame delay
