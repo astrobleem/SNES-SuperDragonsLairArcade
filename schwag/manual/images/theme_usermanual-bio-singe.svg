@@ -1,0 +1,42 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fireGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF4500;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#DAA520" />
+      <stop offset="50%" style="stop-color:#FFD700" />
+      <stop offset="100%" style="stop-color:#DAA520" />
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="fireGlow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="200" fill="url(#fireGrad)" />
+  <!-- Gold coin piles -->
+  <ellipse cx="100" cy="195" rx="80" ry="15" fill="#8B6914" opacity="0.6"/>
+  <ellipse cx="500" cy="195" rx="80" ry="15" fill="#8B6914" opacity="0.6"/>
+  <circle cx="60" cy="185" r="8" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="80" cy="182" r="8" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="120" cy="183" r="8" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="540" cy="185" r="8" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="500" cy="180" r="8" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="470" cy="184" r="8" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <!-- Dragon silhouette left -->
+  <path d="M30,80 Q50,40 80,50 Q90,30 110,40 Q120,25 130,35 L140,60 Q150,50 160,65 L155,80 Q145,75 140,85 L130,90 Q120,80 110,90 Q90,100 70,95 Q50,100 30,80Z" fill="#2d0000" opacity="0.5"/>
+  <!-- Dragon wing right -->
+  <path d="M530,50 Q550,20 570,40 Q580,25 590,35 L585,60 Q575,55 570,70 L550,75 Q540,65 530,50Z" fill="#2d0000" opacity="0.4"/>
+  <!-- Flame accents -->
+  <path d="M20,200 Q30,160 25,140 Q35,120 30,100 Q40,110 35,130 Q45,120 40,150 Q50,140 45,170 Q55,160 40,200Z" fill="#FF6600" opacity="0.4" filter="url(#fireGlow)"/>
+  <path d="M560,200 Q570,150 565,130 Q575,110 570,90 Q580,100 575,120 Q585,110 580,140 Q590,130 585,170 Q595,160 580,200Z" fill="#FF6600" opacity="0.4" filter="url(#fireGlow)"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#goldGrad)" stroke-width="3"/>
+  <rect x="14" y="14" width="572" height="172" rx="5" ry="5" fill="none" stroke="#8B0000" stroke-width="1"/>
+  <!-- Title -->
+  <text x="300" y="90" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="38" font-weight="bold" fill="url(#goldGrad)" filter="url(#glow)">SINGE the DRAGON</text>
+  <text x="300" y="125" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="16" fill="#FF6600" letter-spacing="4">THE SCOURGE OF THE KINGDOM</text>
+  <!-- Decorative diamonds -->
+  <polygon points="250,145 255,150 250,155 245,150" fill="#DAA520" opacity="0.7"/>
+  <polygon points="350,145 355,150 350,155 345,150" fill="#DAA520" opacity="0.7"/>
+</svg>

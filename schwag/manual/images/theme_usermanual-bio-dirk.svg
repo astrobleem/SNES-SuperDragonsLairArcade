@@ -1,0 +1,47 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a3e;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#2a2a5e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d0d1a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="steelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#A0A0A0" />
+      <stop offset="50%" style="stop-color:#E0E0E0" />
+      <stop offset="100%" style="stop-color:#A0A0A0" />
+    </linearGradient>
+    <linearGradient id="swordGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E0E0E0" />
+      <stop offset="50%" style="stop-color:#FFFFFF" />
+      <stop offset="100%" style="stop-color:#A0A0A0" />
+    </linearGradient>
+    <filter id="heroGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="200" fill="url(#heroGrad)" />
+  <!-- Stars -->
+  <circle cx="50" cy="30" r="1" fill="white" opacity="0.6"/>
+  <circle cx="150" cy="45" r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="250" cy="20" r="1" fill="white" opacity="0.7"/>
+  <circle cx="400" cy="35" r="1" fill="white" opacity="0.5"/>
+  <circle cx="520" cy="25" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="80" cy="60" r="1" fill="white" opacity="0.3"/>
+  <circle cx="550" cy="55" r="1" fill="white" opacity="0.4"/>
+  <!-- Sword left -->
+  <line x1="50" y1="170" x2="80" y2="40" stroke="url(#swordGrad)" stroke-width="4" opacity="0.3"/>
+  <line x1="65" y1="100" x2="95" y2="100" stroke="url(#swordGrad)" stroke-width="3" opacity="0.3"/>
+  <!-- Shield right -->
+  <path d="M530,60 L560,70 L560,120 L545,140 L530,120 L530,60Z" fill="none" stroke="#A0A0A0" stroke-width="2" opacity="0.25"/>
+  <!-- Castle silhouettes bottom -->
+  <rect x="0" y="170" width="600" height="30" fill="#0d0d1a"/>
+  <rect x="10" y="155" width="20" height="45" fill="#151530"/>
+  <rect x="5" y="150" width="30" height="8" fill="#1a1a40"/>
+  <rect x="570" y="155" width="20" height="45" fill="#151530"/>
+  <rect x="565" y="150" width="30" height="8" fill="#1a1a40"/>
+  <rect x="280" y="160" width="40" height="40" fill="#151530"/>
+  <rect x="275" y="155" width="50" height="8" fill="#1a1a40"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#steelGrad)" stroke-width="3"/>
+  <!-- Title -->
+  <text x="300" y="85" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="38" font-weight="bold" fill="url(#steelGrad)" filter="url(#heroGlow)">DIRK THE DARING</text>
+  <text x="300" y="120" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="16" fill="#FFCC00" letter-spacing="4">HERO OF THE REALM</text>
+</svg>

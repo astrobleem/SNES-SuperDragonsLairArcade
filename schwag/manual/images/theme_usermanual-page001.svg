@@ -1,0 +1,41 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="storyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a2a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#15153a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#050515;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="storyGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#DAA520" />
+      <stop offset="50%" style="stop-color:#FFD700" />
+      <stop offset="100%" style="stop-color:#DAA520" />
+    </linearGradient>
+    <filter id="storyGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="200" fill="url(#storyGrad)" />
+  <!-- Stars -->
+  <circle cx="50" cy="30" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="150" cy="20" r="1" fill="white" opacity="0.6"/>
+  <circle cx="300" cy="15" r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="450" cy="25" r="1" fill="white" opacity="0.5"/>
+  <circle cx="550" cy="18" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="100" cy="45" r="1" fill="white" opacity="0.3"/>
+  <circle cx="500" cy="40" r="1" fill="white" opacity="0.4"/>
+  <!-- Scroll/parchment edges hint -->
+  <path d="M30,60 Q25,55 30,50 L30,150 Q25,155 30,160" fill="none" stroke="#DAA520" stroke-width="1" opacity="0.3"/>
+  <path d="M570,60 Q575,55 570,50 L570,150 Q575,155 570,160" fill="none" stroke="#DAA520" stroke-width="1" opacity="0.3"/>
+  <!-- Moon -->
+  <circle cx="540" cy="40" r="15" fill="#CCCCAA" opacity="0.15"/>
+  <circle cx="545" cy="37" r="13" fill="url(#storyGrad)"/>
+  <!-- Castle and dragon in distance -->
+  <rect x="0" y="170" width="600" height="30" fill="#050515"/>
+  <rect x="250" y="155" width="100" height="45" fill="#0a0a20"/>
+  <rect x="260" y="140" width="20" height="60" fill="#0d0d25"/>
+  <rect x="320" y="140" width="20" height="60" fill="#0d0d25"/>
+  <polygon points="300,130 270,145 330,145" fill="#0d0d25"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#storyGold)" stroke-width="3"/>
+  <!-- Title -->
+  <text x="300" y="85" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="36" font-weight="bold" fill="url(#storyGold)" filter="url(#storyGlow)">THE LEGEND BEGINS</text>
+  <text x="300" y="118" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="14" fill="#AAAACC" letter-spacing="3">THE STORY OF DIRK THE DARING</text>
+</svg>

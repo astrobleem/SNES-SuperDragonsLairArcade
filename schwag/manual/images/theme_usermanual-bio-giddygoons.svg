@@ -1,0 +1,40 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a0a3a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a0520;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0210;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6A0DAD" />
+      <stop offset="50%" style="stop-color:#9B59B6" />
+      <stop offset="100%" style="stop-color:#6A0DAD" />
+    </linearGradient>
+    <filter id="goonGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="200" fill="url(#goonGrad)" />
+  <!-- Spiral staircase hint -->
+  <path d="M40,190 Q50,170 60,175 Q70,155 80,160 Q90,140 100,145 Q110,125 120,130 Q130,110 140,115" fill="none" stroke="#3a1550" stroke-width="3" opacity="0.3"/>
+  <path d="M560,190 Q550,170 540,175 Q530,155 520,160 Q510,140 500,145 Q490,125 480,130 Q470,110 460,115" fill="none" stroke="#3a1550" stroke-width="3" opacity="0.3"/>
+  <!-- Dagger silhouettes scattered -->
+  <line x1="170" y1="40" x2="180" y2="70" stroke="#9B59B6" stroke-width="1.5" opacity="0.3"/>
+  <line x1="175" y1="55" x2="185" y2="50" stroke="#9B59B6" stroke-width="1" opacity="0.3"/>
+  <line x1="420" y1="50" x2="430" y2="80" stroke="#9B59B6" stroke-width="1.5" opacity="0.3"/>
+  <line x1="425" y1="65" x2="435" y2="60" stroke="#9B59B6" stroke-width="1" opacity="0.3"/>
+  <line x1="200" y1="150" x2="210" y2="170" stroke="#9B59B6" stroke-width="1.5" opacity="0.25"/>
+  <line x1="400" y1="155" x2="390" y2="175" stroke="#9B59B6" stroke-width="1.5" opacity="0.25"/>
+  <!-- Glowing eyes pairs -->
+  <circle cx="60" cy="80" r="2" fill="#FFFF00" opacity="0.5"/>
+  <circle cx="70" cy="80" r="2" fill="#FFFF00" opacity="0.5"/>
+  <circle cx="530" cy="85" r="2" fill="#FFFF00" opacity="0.4"/>
+  <circle cx="540" cy="85" r="2" fill="#FFFF00" opacity="0.4"/>
+  <circle cx="50" cy="130" r="1.5" fill="#FFFF00" opacity="0.3"/>
+  <circle cx="58" cy="130" r="1.5" fill="#FFFF00" opacity="0.3"/>
+  <circle cx="545" cy="140" r="1.5" fill="#FFFF00" opacity="0.3"/>
+  <circle cx="553" cy="140" r="1.5" fill="#FFFF00" opacity="0.3"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#purpleGrad)" stroke-width="3"/>
+  <!-- Title -->
+  <text x="300" y="85" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="38" font-weight="bold" fill="url(#purpleGrad)" filter="url(#goonGlow)">THE GIDDY GOONS</text>
+  <text x="300" y="120" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="16" fill="#9B59B6" letter-spacing="4">THE LAUGHING MENACE</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="treasureGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a1a00;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3d2800;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0f00;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="richGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#B8860B" />
+      <stop offset="50%" style="stop-color:#FFD700" />
+      <stop offset="100%" style="stop-color:#B8860B" />
+    </linearGradient>
+    <filter id="goldGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="200" fill="url(#treasureGrad)" />
+  <!-- Gold coins -->
+  <ellipse cx="80" cy="185" rx="70" ry="18" fill="#8B6914" opacity="0.5"/>
+  <ellipse cx="520" cy="185" rx="70" ry="18" fill="#8B6914" opacity="0.5"/>
+  <circle cx="40" cy="178" r="7" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="60" cy="175" r="7" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="100" cy="175" r="7" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="500" cy="172" r="7" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="540" cy="175" r="7" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.5"/>
+  <!-- Scepter left -->
+  <line x1="55" y1="30" x2="55" y2="150" stroke="#9B7A00" stroke-width="3" opacity="0.3"/>
+  <circle cx="55" cy="25" r="10" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.3"/>
+  <!-- Crown right -->
+  <path d="M530,30 L535,15 L540,25 L545,10 L550,25 L555,15 L560,30Z" fill="#FFD700" opacity="0.25"/>
+  <!-- Scale pattern -->
+  <path d="M250,170 Q260,165 270,170 Q280,165 290,170 Q300,165 310,170 Q320,165 330,170 Q340,165 350,170" fill="none" stroke="#4a6b00" stroke-width="1" opacity="0.3"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#richGold)" stroke-width="3"/>
+  <!-- Title -->
+  <text x="300" y="80" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="38" font-weight="bold" fill="url(#richGold)" filter="url(#goldGlow)">THE LIZARD KING</text>
+  <text x="300" y="115" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="16" fill="#DAA520" letter-spacing="4">RULER OF THE POT OF GOLD</text>
+</svg>

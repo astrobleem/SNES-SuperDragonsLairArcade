@@ -1,0 +1,38 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="swampGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a00;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2a2000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3a2a0a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mudGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6B4226" />
+      <stop offset="50%" style="stop-color:#8B6914" />
+      <stop offset="100%" style="stop-color:#6B4226" />
+    </linearGradient>
+    <filter id="mudGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="200" fill="url(#swampGrad)" />
+  <!-- Mud/swamp surface at bottom -->
+  <path d="M0,170 Q50,160 100,170 Q150,180 200,168 Q250,158 300,170 Q350,182 400,168 Q450,155 500,170 Q550,180 600,170 L600,200 L0,200Z" fill="#3a2a0a" opacity="0.5"/>
+  <path d="M0,180 Q75,170 150,182 Q225,192 300,178 Q375,165 450,180 Q525,192 600,178 L600,200 L0,200Z" fill="#4a3a15" opacity="0.4"/>
+  <!-- Bubbles rising from mud -->
+  <circle cx="100" cy="165" r="4" fill="none" stroke="#6B4226" stroke-width="1" opacity="0.4"/>
+  <circle cx="110" cy="155" r="3" fill="none" stroke="#6B4226" stroke-width="1" opacity="0.3"/>
+  <circle cx="105" cy="145" r="2" fill="none" stroke="#6B4226" stroke-width="1" opacity="0.2"/>
+  <circle cx="480" cy="168" r="4" fill="none" stroke="#6B4226" stroke-width="1" opacity="0.4"/>
+  <circle cx="490" cy="158" r="3" fill="none" stroke="#6B4226" stroke-width="1" opacity="0.3"/>
+  <circle cx="485" cy="148" r="2" fill="none" stroke="#6B4226" stroke-width="1" opacity="0.2"/>
+  <circle cx="300" cy="170" r="3" fill="none" stroke="#6B4226" stroke-width="1" opacity="0.3"/>
+  <!-- Grasping hands silhouette -->
+  <path d="M60,175 L55,155 L58,140 M55,155 L50,142 M55,155 L62,140" fill="none" stroke="#4a3520" stroke-width="2" opacity="0.35"/>
+  <path d="M530,178 L535,158 L532,143 M535,158 L540,145 M535,158 L528,143" fill="none" stroke="#4a3520" stroke-width="2" opacity="0.35"/>
+  <!-- Fog wisps -->
+  <path d="M0,120 Q100,110 200,125 Q300,135 400,120 Q500,108 600,120" fill="none" stroke="#666644" stroke-width="1" opacity="0.15"/>
+  <path d="M0,100 Q150,90 300,105 Q450,115 600,100" fill="none" stroke="#666644" stroke-width="1" opacity="0.1"/>
+  <!-- Border -->
+  <rect x="8" y="8" width="584" height="184" rx="8" ry="8" fill="none" stroke="url(#mudGrad)" stroke-width="3"/>
+  <!-- Title -->
+  <text x="300" y="65" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="38" font-weight="bold" fill="url(#mudGrad)" filter="url(#mudGlow)">THE MUDMEN</text>
+  <text x="300" y="100" dominant-baseline="middle" text-anchor="middle" font-family="'Times New Roman', Georgia, serif" font-size="16" fill="#8B6914" letter-spacing="4">CREATURES OF THE MUCK</text>
+</svg>
