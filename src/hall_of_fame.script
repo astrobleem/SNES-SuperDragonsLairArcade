@@ -138,8 +138,9 @@ _exit:
   jsr core.irq.position.set
 
   NEW Script.CLS.PTR oopCreateNoPtr title_screen
-+ 
+  DIE
 
++
   rts
 
 
