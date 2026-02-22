@@ -295,6 +295,7 @@ abstract.Iterator.killOthers:
 */
 abstract.Iterator.kill.byProperties:
   php
+  sei
   rep #$31
   pha
   jsr abstract.Iterator.reset

@@ -1,5 +1,31 @@
   SCRIPT level1
 
+  ;--- Cleanup stale objects from previous session ---
+  ;Stop HDMA hardware and flush DMA queue (prevents stale DMA on real SD2SNES)
+  jsr core.dma.resetHardware
+
+  lda.w #OBJECT.PROPERTIES.isSprite
+  jsr abstract.Iterator.kill.byProperties
+
+  lda.w #OBJECT.PROPERTIES.isHdma
+  jsr abstract.Iterator.kill.byProperties
+
+  jsr core.vram.init
+  jsr core.cgram.clear
+
+  ;--- Wait for MSU-1 hardware to settle before re-initialization ---
+  sep #$20
+  ldx.w #0
+-   lda.l $2000         ;MSU_STATUS: bit 7 = DATA_BUSY
+    bpl +               ;not busy, proceed
+    dex
+    bne -
++ rep #$31
+
+  ;--- Wake up MSU-1 hardware (SD2SNES needs register writes after idle) ---
+  NEW Msu1.CLS.PTR hashPtr.1
+  CALL Msu1.kill.MTD hashPtr.1
+
   stz.w GLOBAL.sceneRow
   stz.w GLOBAL.gameMode
 

@@ -13,5 +13,5 @@
 			<result><none name="tdl_start_dead" /></result>
 		</event>
 	</events>
-	<result><playchapter name="title_screen" /></result>
+	<result><playchapter name="score_entry" /></result>
 </chapter>

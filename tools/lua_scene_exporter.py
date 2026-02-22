@@ -502,9 +502,9 @@ def build_scene_order(rows: List[List[str]]) -> Dict[str, str]:
     if linear:
         order['vestibule'] = linear[0]
 
-    # Last scene (the_dragons_lair) -> title_screen (endgame)
+    # Last scene (the_dragons_lair) -> score_entry (endgame victory)
     if linear:
-        order[linear[-1]] = 'title_screen'
+        order[linear[-1]] = 'score_entry'
 
     # attract_mode -> title_screen
     order['attract_mode'] = 'title_screen'
@@ -543,8 +543,10 @@ def derive_chapter_result(scene_name: str, sequence: Dict, scene_order: Dict[str
         # Scene exit — route through scene_router for randomization
         if scene_name == 'introduction':
             return ('playchapter', make_chapter_name('vestibule', 'start_alive'))
-        elif scene_name in ('the_dragons_lair', 'attract_mode'):
+        elif scene_name == 'attract_mode':
             return ('playchapter', 'title_screen')
+        elif scene_name == 'the_dragons_lair':
+            return ('playchapter', 'score_entry')
         else:
             return ('playchapter', 'scene_router')
 

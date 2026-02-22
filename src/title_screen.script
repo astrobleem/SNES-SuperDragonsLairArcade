@@ -12,6 +12,19 @@
   .def objSpc hashPtr.7
   .def objPalRotate hashPtr.8
   .def objSuper hashPtr.9
+  ;--- Cleanup stale objects from previous session ---
+  ;Stop HDMA hardware and flush DMA queue (prevents stale DMA on real SD2SNES)
+  jsr core.dma.resetHardware
+
+  lda.w #OBJECT.PROPERTIES.isSprite
+  jsr abstract.Iterator.kill.byProperties
+
+  lda.w #OBJECT.PROPERTIES.isHdma
+  jsr abstract.Iterator.kill.byProperties
+
+  jsr core.vram.init
+  jsr core.cgram.clear
+
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers
@@ -124,7 +137,7 @@ _title_screen.noPalRotate:
   NEW Sprite.super.CLS.PTR objSuper 0 0
 
   ;--- Menu system ---
-  .def menu.idleStart this._tmp+0
+  .def menu.idleStart this._tmp+6
   .def menu.state  this._tmp+8
   .def menu.cursor this._tmp+10
   .def menu.param  this._tmp+12
@@ -466,6 +479,10 @@ _title_screen.startTransitionNoPause:
 
 ;--- Cleanup and launch target script ---
 _title_screen.doCleanup:
+  ;Stop HDMA hardware and flush DMA queue before killing objects
+  ;(prevents stale DMA entries from firing after objects are destroyed)
+  jsr core.dma.resetHardware
+
   CALL Sprite.super.kill.MTD objSuper
   CALL Background.generic.kill.MTD objBackground
   CALL Background.generic.kill.MTD objLogo

@@ -144,9 +144,21 @@
   rep #$31
   jsr _stop
 
-  CALL VideoMask.kill.MTD this.videoMask
-  CALL Background.framebuffer.kill.MTD this.framebuffer.1.obj
-  CALL Background.framebuffer.kill.MTD this.framebuffer.2.obj
+  ldx #this.videoMask
+  jsr oop.object.exists
+  bcc +
+    CALL VideoMask.kill.MTD this.videoMask
++
+  ldx #this.framebuffer.1.obj
+  jsr oop.object.exists
+  bcc +
+    CALL Background.framebuffer.kill.MTD this.framebuffer.1.obj
++
+  ldx #this.framebuffer.2.obj
+  jsr oop.object.exists
+  bcc +
+    CALL Background.framebuffer.kill.MTD this.framebuffer.2.obj
++
 
   lda #OBJR_kill
   sta 3,s

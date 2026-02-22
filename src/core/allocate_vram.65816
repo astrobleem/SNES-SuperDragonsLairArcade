@@ -133,7 +133,7 @@ _isIdInUse:
   phx
   sep #$20
 
-  ldx.w #VRAM_ALLOCATION_BLOCKS
+  ldx.w #VRAM_ALLOCATION_BLOCKS - 1
 -   cmp.w GLOBAL.vramAllocationBlocks,x
     bne +
 
@@ -283,7 +283,7 @@ core.vram.deallocate:
 
 + pea 0
 
-  ldx.w #VRAM_ALLOCATION_BLOCKS
+  ldx.w #VRAM_ALLOCATION_BLOCKS - 1
 -	cmp.w GLOBAL.vramAllocationBlocks,x
 	bne +
 	  sta 1,s

@@ -59,6 +59,10 @@
 _CHAPTER.init:
   rep #$31
 
+  ;flush DMA queue before chapter cleanup to prevent stale DMA entries
+  ;from firing after objects are killed (prevents $15 transferType crash)
+  jsr core.dma.flushQueue
+
   ;kill all events from previous chapter
   lda.w #OBJECT.PROPERTIES.isEvent
   jsr abstract.Iterator.kill.byProperties

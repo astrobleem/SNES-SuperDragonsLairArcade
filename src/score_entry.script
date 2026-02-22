@@ -5,6 +5,10 @@
   .def objScoreText hashPtr.2
   .def objBackground3 hashPtr.3
   .def objNameEntry hashPtr.8
+  ;--- Stop HDMA hardware and flush DMA queue before cleanup ---
+  ;(prevents stale DMA entries from firing after objects are destroyed)
+  jsr core.dma.resetHardware
+
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers

@@ -2,6 +2,38 @@
 .ACCU 16
 .INDEX 16
 
+  ;--- Full cleanup between scenes (matches level1/boss_rush/oops_all_traps) ---
+  ;Save HDMA channel state before reset (VideoMask must survive scene transitions)
+  sep #$20
+  lda.w GLOBAL.HDMA.CHANNEL.ENABLE
+  pha
+  rep #$31
+
+  ;Stop HDMA hardware and flush DMA queue (prevents stale DMA on real SD2SNES)
+  jsr core.dma.resetHardware
+
+  ;Kill stale sprite singletons (arrows/sword hold stale VRAM/CGRAM allocs)
+  lda.w #OBJECT.PROPERTIES.isSprite
+  jsr abstract.Iterator.kill.byProperties
+
+  ;DON'T kill HDMA objects — VideoMask must persist across scene_router transitions.
+  ;Msu1 singleton survives (no isHdma property), so its VideoMask hash pointer stays valid.
+  ;Entry scripts (level1/boss_rush/oops_all_traps) kill Msu1 explicitly, which properly
+  ;chains to VideoMask.kill via Msu1.kill.
+
+  ;DON'T reset VRAM allocation table — Msu1's framebuffers survive and hold valid
+  ;VRAM allocations. Resetting the table orphans those allocations, causing new sprites
+  ;to overlap Msu1's VRAM (competing DMA transfers → corruption after many scenes).
+  ;Sprite VRAM is already freed by kill.byProperties(isSprite) above.
+  ;Clear CGRAM colors to black for clean visual transition.
+  jsr core.cgram.clear
+
+  ;Restore HDMA channel enable (VideoMask's HDMA resumes on next NMI)
+  sep #$20
+  pla
+  sta.w GLOBAL.HDMA.CHANNEL.ENABLE
+  rep #$31
+
   ;--- Check game mode and handle row wrap/finale ---
   lda.w GLOBAL.gameMode
   beq _scene_router.arcadeSetup

@@ -7,6 +7,7 @@
 GLOBAL.irq.xpos   dw
 GLOBAL.irq.ypos   dw
 GLOBAL.irq.callback   dw
+GLOBAL.irq.callback.backup   dw
 GLOBAL.irq.buffer ds 16
 .ends
 
