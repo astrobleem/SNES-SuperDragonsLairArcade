@@ -1,0 +1,31 @@
+name: Build Manual PDF
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-manual:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install reportlab
+        run: python3 -m pip install reportlab
+
+      - name: Build manual PDF
+        run: python3 schwag/manual/tools/build_manual_pdf.py
+
+      - name: Upload manual PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Super_Dragons_Lair_Manual
+          path: schwag/manual/Super_Dragons_Lair_Manual.pdf
