@@ -22,7 +22,7 @@ jobs:
         run: python3 -m pip install reportlab
 
       - name: Build manual PDF
-        run: python3 schwag/manual/tools/build_manual_pdf.py
+        run: python3 ./schwag/manual/tools/build_manual_pdf.py
 
       - name: Upload manual PDF artifact
         uses: actions/upload-artifact@v4
