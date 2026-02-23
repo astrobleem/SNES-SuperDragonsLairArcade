@@ -50,6 +50,9 @@ mesen/Screenshots/
 # Source audio (large, convert once → data/sounds/*.pcm)
 roar.sfx_normal.wav
 
+# Generated manual artifacts
+schwag/manual/*.pdf
+
 # Test/temporary files
 build.log
 *.log
