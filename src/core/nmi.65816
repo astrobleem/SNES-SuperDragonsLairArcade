@@ -181,6 +181,9 @@ NmiKill:
 * temporally prevent nmis from happening.
 * useful if working on transaction that could be corrupted by asynchronous writes.
 * reenable with core.nmi.start
+*
+* MUST clear BOTH hardware AND GLOBAL.interruptFlags to prevent the IRQ handler
+* (which calls core.nmi.start) from accidentally re-enabling NMI mid-transaction.
 */
 core.nmi.stop:
   pha
@@ -188,6 +191,7 @@ core.nmi.stop:
   sep #$20
   lda.w GLOBAL.interruptFlags
   and #NMITIMEN_NMI_ENABLE ~$ff
+  sta.w GLOBAL.interruptFlags
   sta.l NMITIMEN
 
   plp
@@ -202,6 +206,8 @@ core.nmi.start:
   php
   sep #$20
   lda.w GLOBAL.interruptFlags
+  ora #NMITIMEN_NMI_ENABLE
+  sta.w GLOBAL.interruptFlags
   sta.l NMITIMEN
 
   plp

@@ -1,5 +1,7 @@
 # PUNCHLIST — Super Dragon's Lair Arcade
 
+All items below are cosmetic or low-priority. None are release blockers. The game is fully playable on real hardware across all 3 game modes with 28/28 automated scene tests passing.
+
 Outstanding issues, stubs, and incomplete work. Organized by priority.
 
 ---

@@ -50,6 +50,8 @@ core.vram.init:
   ldx.w #VRAM_ALLOCATE.GLOBAL.START
   jsr ClearWRAM
   stz.w GLOBAL.currentVramAllocationId
+  lda #0
+  sta.l GLOBAL.oam.vram.id
   plp
   rts
 
@@ -133,7 +135,7 @@ _isIdInUse:
   phx
   sep #$20
 
-  ldx.w #VRAM_ALLOCATION_BLOCKS
+  ldx.w #VRAM_ALLOCATION_BLOCKS - 1
 -   cmp.w GLOBAL.vramAllocationBlocks,x
     bne +
 
@@ -283,7 +285,7 @@ core.vram.deallocate:
 
 + pea 0
 
-  ldx.w #VRAM_ALLOCATION_BLOCKS
+  ldx.w #VRAM_ALLOCATION_BLOCKS - 1
 -	cmp.w GLOBAL.vramAllocationBlocks,x
 	bne +
 	  sta 1,s

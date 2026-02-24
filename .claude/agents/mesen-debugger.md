@@ -22,7 +22,7 @@ cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLai
 ## Existing Test Scripts
 
 Test scripts live in `E:\gh\SuperDragonsLairArcade.sfc\`:
-- **test_intro_lastcheckpoint.lua** — Fail path: START GAME → no input → chapter timeout → lastcheckpoint → game_over
+- **test_intro_lastcheckpoint.lua** — Fail path: ARCADE MODE → no input → chapter timeout → lastcheckpoint → game_over
 - **test_intro_success.lua** — Success path: sword event + UP direction → reaches vestibule
 - **test_scene_transitions.lua** — Smoke test: verify 3+ playchapters without errors
 - **test_konami.lua** — Easter egg: Konami code during losers screen → 30 lives
@@ -96,18 +96,18 @@ local ADDR_CHECK_INPUT_RTS = 0xC0741F  -- _checkInputDevice + $1E
 
 emu.addMemoryCallback(function()
     if injectButton ~= 0 then
-        writeWord(0x7E6C46, injectButton)  -- inputDevice.press
-        writeWord(0x7E6C48, injectButton)  -- inputDevice.trigger
-        writeWord(0x7E6C4C, 0)             -- inputDevice.old
+        writeWord(0x7E7206, injectButton)  -- inputDevice.press
+        writeWord(0x7E7208, injectButton)  -- inputDevice.trigger
+        writeWord(0x7E720C, 0)             -- inputDevice.old
     end
 end, emu.callbackType.exec, ADDR_CHECK_INPUT_RTS)
 ```
 
-**WRAM input addresses are STABLE** (don't shift between builds):
-- `$7E6C46` = inputDevice.press
-- `$7E6C48` = inputDevice.trigger
-- `$7E6C4A` = inputDevice.mask
-- `$7E6C4C` = inputDevice.old
+**WRAM input addresses shift when `maxNumberOopObjs` or any RAMSECTION changes** — verify in `.sym` file:
+- `$7E7206` = inputDevice.press
+- `$7E7208` = inputDevice.trigger
+- `$7E720A` = inputDevice.mask
+- `$7E720C` = inputDevice.old
 
 **`_checkInputDevice` ROM address shifts every build.** Entry in sym, add +$1E for RTS, add $C0 bank prefix.
 
@@ -154,7 +154,7 @@ emu.stop()  -- stop emulation
 
 ## OopStack Layout
 
-36 object slots at `OopStack` (WRAM $7E6388):
+48 object slots at `OopStack` (WRAM $7E6388):
 ```
 Per slot (16 bytes):
   +0: flags (db)  - $80=Present, $04=DeleteScheduled

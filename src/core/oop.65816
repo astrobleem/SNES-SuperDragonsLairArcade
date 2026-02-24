@@ -473,7 +473,12 @@ core.object.play:
 
 OopHandlerLoop:
 		lda.l OopStack.flags-1,x	;get flags
-		bpl ++	;exit if all active objects have been processed
+		bpl _oopLoopContinue	;exit if all active objects have been processed
+
+			tsc
+			sta.l GLOBAL.oopRecoverySP
+			txa
+			sta.l GLOBAL.oopRecoveryX
 
             lda.l OopStack.play,x
 
@@ -481,8 +486,9 @@ OopHandlerLoop:
 			phx
 			jsr OopHandlerExecute
 			plx
-	
-++		txa	;update pntr
+
+_oopLoopContinue:
+		txa	;update pntr
 		clc
 		adc #_sizeof_oopStackObj
 		tax
@@ -491,6 +497,9 @@ OopHandlerLoop:
 		beq	OopHandlerLoop
 
 	jsr collectGarbage
+
+	lda #0
+	sta.l GLOBAL.oopRecoverySP
 
 	lda dpBuffr
 	tcd
@@ -609,8 +618,42 @@ OopHandlerNoError:
 
 ;object is no longer in it's place(moved or deleted)
 execObjGone:
+    ;save fingerprint diagnostic data before error handler clobbers everything
+    ;tmp = expected id (popped from CPU stack), tmp+2 = expected num (popped from CPU stack)
+    ;OopStack.id[X] = actual id, OopStack.num[X] = actual num
+    lda tmp
+    sta.l GLOBAL.fpExpectedId
+    lda tmp+2
+    sta.l GLOBAL.fpExpectedNum
+    lda.w OopStack.id,x
+    and #$ff
+    sta.l GLOBAL.fpActualId
+    lda.w OopStack.num,x
+    sta.l GLOBAL.fpActualNum
+    txa
+    sta.l GLOBAL.fpSlotIndex
+    tsc
+    sta.l GLOBAL.fpCrashSP
 
-    TRIGGER_ERROR E_ObjStackCorrupted
+    lda.l GLOBAL.fpMismatchCount
+    inc a
+    sta.l GLOBAL.fpMismatchCount
+
+    ;recover: if play loop save point exists, longjmp to it (bypasses
+    ;corrupted return address on stack). otherwise fall back to rts.
+    lda.l GLOBAL.oopRecoverySP
+    beq _execObjGone_mild
+
+    ;longjmp: restore SP to play loop save point, discard all nested frames
+    tcs
+    lda #ZP
+    tcd
+    lda.l GLOBAL.oopRecoveryX
+    tax
+    jmp _oopLoopContinue
+
+_execObjGone_mild:
+    bra OopHandlerNoError
 
 
 OopHandlerStackError:
@@ -817,6 +860,14 @@ staticFastCall:
 	rts
 
 dispatchObjBadHash:
+	;save diagnostic data before error handler clobbers state
+	;x = hash pointer (zp-adjusted), has Hash.id/count/pntr
+	txa
+	sta.l GLOBAL.crashSP	;hash pointer address
+	lda.w Hash.id,x
+	sta.l GLOBAL.crashPC	;corrupted hash id (low) + count (high)
+	lda.w Hash.pntr,x
+	sta.l GLOBAL.crashPB	;corrupted hash pntr (word, spans crashPB+crashP)
     TRIGGER_ERROR E_ObjBadHash
 
 dispatchObjMethodHashVoid:
@@ -884,13 +935,17 @@ dispatchMethNoZP:
 	cmp #oopCreateNoPtr
 	beq dispatchObjMethodHashVoid
 
-	cmp #OopStackEnd
-	bcs dispatchObjBadHash
+	cmp #OopStackEnd-OopStack
+	bcc _hashPntrOk
+	jmp dispatchObjBadHash
+_hashPntrOk:
 
 	lda.w Hash.id,x
 	and #$ff
 	cmp #MAXOBJID
-	bcs dispatchObjBadHash
+	bcc _hashIdOk
+	jmp dispatchObjBadHash
+_hashIdOk:
 
 	lda.w Hash.pntr,x
 	phx

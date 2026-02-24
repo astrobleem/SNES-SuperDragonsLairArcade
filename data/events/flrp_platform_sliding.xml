@@ -1,7 +1,7 @@
 <chapter name="flrp_platform_sliding">
 	<timeline>
 		<timestart min="2" second="17" ms="296" frame="3614" />
-		<timeend min="2" second="19" ms="917" frame="3677" />
+		<timeend min="2" second="20" ms="180" frame="3684" />
 	</timeline>
 	<params />
 	<macros />

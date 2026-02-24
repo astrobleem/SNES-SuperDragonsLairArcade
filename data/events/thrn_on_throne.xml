@@ -1,7 +1,7 @@
 <chapter name="thrn_on_throne">
 	<timeline>
 		<timestart min="14" second="24" ms="175" frame="20725" />
-		<timeend min="14" second="28" ms="468" frame="20828" />
+		<timeend min="14" second="28" ms="533" frame="20830" />
 	</timeline>
 	<params />
 	<macros />

@@ -1,7 +1,7 @@
 <chapter name="tntr_jump_to_door">
 	<timeline>
 		<timestart min="1" second="29" ms="961" frame="2479" />
-		<timeend min="1" second="31" ms="403" frame="2514" />
+		<timeend min="1" second="31" ms="436" frame="2515" />
 	</timeline>
 	<params />
 	<macros />

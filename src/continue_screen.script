@@ -154,10 +154,16 @@ _continue_screen.timeout:
     rts
 +
 
-  ;cleanup
+  ;cleanup — stop DMA/HDMA hardware, kill all objects, transition to score_entry
+  jsr core.dma.resetHardware
+
   CALL Background.textlayer.8x8.kill.MTD contText
+  lda.w #OBJECT.PROPERTIES.isSprite
+  jsr abstract.Iterator.kill.byProperties
   lda.w #OBJID.Msu1
   jsr abstract.Iterator.kill.byId
+  lda.w #OBJECT.PROPERTIES.isHdma
+  jsr abstract.Iterator.kill.byProperties
   jsr core.vram.init
   jsr core.cgram.clear
 
@@ -175,10 +181,16 @@ _continue_screen.doContinue:
     rts
 +
 
-  ;cleanup
+  ;cleanup — stop DMA/HDMA hardware, kill orphaned objects, restart from checkpoint
+  jsr core.dma.resetHardware
+
   CALL Background.textlayer.8x8.kill.MTD contText
+  lda.w #OBJECT.PROPERTIES.isSprite
+  jsr abstract.Iterator.kill.byProperties
   lda.w #OBJID.Msu1
   jsr abstract.Iterator.kill.byId
+  lda.w #OBJECT.PROPERTIES.isHdma
+  jsr abstract.Iterator.kill.byProperties
   jsr core.vram.init
   jsr core.cgram.clear
 

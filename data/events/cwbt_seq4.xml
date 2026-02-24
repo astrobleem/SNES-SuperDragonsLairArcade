@@ -1,7 +1,7 @@
 <chapter name="cwbt_seq4">
 	<timeline>
 		<timestart min="8" second="14" ms="711" frame="12190" />
-		<timeend min="8" second="17" ms="201" frame="12250" />
+		<timeend min="8" second="17" ms="496" frame="12258" />
 	</timeline>
 	<params />
 	<macros />

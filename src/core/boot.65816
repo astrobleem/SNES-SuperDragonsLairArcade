@@ -19,6 +19,17 @@ core.boot.init:
 
 	sep #$20
 
+	;clear OopObjRam + stack (SNES DRAM can power-on to $55, causing wild jumps)
+	lda.b #0
+	ldy.w #$1980
+	ldx.w #$0000
+	jsr ClearWRAM
+
+	;clear HdmaSpcBuffer (same uninitialized DRAM issue)
+	lda.b #0
+	ldy.w #$0100
+	ldx.w #HdmaSpcBuffer & $ffff
+	jsr ClearWRAM
 
 	lda.b #0		;clear zero page
 	ldy.w #kernelEnd-kernelStart
@@ -69,6 +80,31 @@ EmptyHandler:
 Stop:
 	jml StopJmp
 StopJmp:
+	rep #$30
+	;save crash-site registers FIRST (jml preserves A/X/Y/D from crash site)
+	sta.l GLOBAL.crashA
+	txa
+	sta.l GLOBAL.crashX
+	tya
+	sta.l GLOBAL.crashY
+	tdc
+	sta.l GLOBAL.crashDP
+	;read kernel ZP tmp (OopHandlerExecute's cached method address)
+	lda.w #ZP
+	tcd
+	lda tmp
+	sta.l GLOBAL.crashTmp
+	;BRK native mode stack: [SP+1]=P, [SP+2..3]=PC+2, [SP+4]=PB
+	;save crash-site info before error handler clobbers the stack
+	tsc
+	sta.l GLOBAL.crashSP
+	lda 2,s
+	sta.l GLOBAL.crashPC
+	sep #$20
+	lda 4,s
+	sta.l GLOBAL.crashPB
+	lda 1,s
+	sta.l GLOBAL.crashP
 	rep #$31
     TRIGGER_ERROR E_Brk
 

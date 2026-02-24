@@ -1,4 +1,5 @@
-  SCRIPT level1
+
+  SCRIPT oops_all_traps
 
   ;--- Cleanup stale objects from previous session ---
   ;Stop HDMA hardware and flush DMA queue (prevents stale DMA on real SD2SNES)
@@ -27,8 +28,7 @@
   CALL Msu1.kill.MTD hashPtr.1
 
   stz.w GLOBAL.sceneRow
-  stz.w GLOBAL.gameMode
 
-  NEW Script.CLS.PTR oopCreateNoPtr intr_start_alive
+  NEW Script.CLS.PTR oopCreateNoPtr scene_router
 
   DIE

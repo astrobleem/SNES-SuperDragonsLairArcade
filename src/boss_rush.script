@@ -1,19 +1,26 @@
-  SCRIPT level1
+
+  SCRIPT boss_rush
 
   ;--- Cleanup stale objects from previous session ---
   ;Stop HDMA hardware and flush DMA queue (prevents stale DMA on real SD2SNES)
   jsr core.dma.resetHardware
 
+  ;Kill leftover sprite singletons (arrows/sword hold stale VRAM/CGRAM allocs)
   lda.w #OBJECT.PROPERTIES.isSprite
   jsr abstract.Iterator.kill.byProperties
 
+  ;Kill leftover HDMA objects (VideoMask holds DMA channel)
   lda.w #OBJECT.PROPERTIES.isHdma
   jsr abstract.Iterator.kill.byProperties
 
+  ;Reset VRAM/CGRAM allocation tables and zero VRAM
   jsr core.vram.init
   jsr core.cgram.clear
 
   ;--- Wait for MSU-1 hardware to settle before re-initialization ---
+  ;SD2SNES may still have pending file operations after previous session
+  ;(e.g., game over → title screen → mode select). Poll DATA_BUSY for up to
+  ;~200ms before creating Msu1, so the seek in Msu1.init doesn't timeout.
   sep #$20
   ldx.w #0
 -   lda.l $2000         ;MSU_STATUS: bit 7 = DATA_BUSY
@@ -27,8 +34,7 @@
   CALL Msu1.kill.MTD hashPtr.1
 
   stz.w GLOBAL.sceneRow
-  stz.w GLOBAL.gameMode
 
-  NEW Script.CLS.PTR oopCreateNoPtr intr_start_alive
+  NEW Script.CLS.PTR oopCreateNoPtr scene_router
 
   DIE

@@ -28,6 +28,7 @@ GLOBAL.lastCheckpoint		dw
 GLOBAL.currentScene			db
 GLOBAL.pauseSceneNameIdx	dw
 GLOBAL.sceneRow					dw	;current grid row (0-12) for random scene selection
+GLOBAL.gameMode					dw	;0=Arcade, 1=Boss Rush, 2=Oops All Traps
 VARS_end							ds 0
 .ends
 

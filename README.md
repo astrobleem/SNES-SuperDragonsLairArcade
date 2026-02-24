@@ -39,25 +39,27 @@ Your complete Super Dragon's Lair Arcade package includes:
 - **516 chapters across 29 scenes** covering the complete Dragon's Lair arcade game
 - **40+ event classes** — direction, sequence, checkpoint, room transition, cutscene, plus scene-specific events (rolling balls, tentacle room, flying horse, giddy goons, etc.)
 - **MSU-1 video pipeline overhaul** — Daphne .m2v/.ogg source with ffmpeg deinterlacing, superfamiconv tile conversion, and RGB-space tile reduction (768 unique tiles merged to 512 per frame via greedy L2 distance)
-- **Title screen with full menu system** — Start Game, Options submenu (High Scores, Attract Mode, Sound Test, Scene Select)
+- **3 game modes** — Arcade Mode (13 randomized scenes + dragon finale), Boss Rush (5 boss scenes, endless loop), Oops, All Traps! (7 hazard scenes, endless loop)
+- **Randomized scene order** — each playthrough shuffles scenes from a grid of options per row, so no two runs are the same
+- **Title screen with full menu system** — Arcade Mode, Boss Rush, Oops All Traps!, Options submenu (High Scores, Sound Test, Scene Select)
 - **Scene select** — jump to any of the 29 scenes directly from the title screen
-- **Attract mode** — automated demo playback with START to interrupt
+- **Attract mode** — automated demo playback after 60 seconds idle on the title screen
 - **Credit/coin system** — SELECT inserts credits during gameplay, continue screen on game over with countdown timer
 - **Pause menu overlay** — displays scene name, score, lives, credits, chapter ID, and current video frame
-- **Cross-scene transition system** — data-driven routing from terminal chapters to next scene via `scene_transitions.json`
+- **Scene router** — data-driven routing from terminal chapters to next scene via `scene_router.script` with per-mode grid tables
 - **Per-segment video timing** — cumulative offsets from Daphne framefile for frame-accurate chapter seeking (replaces fixed global offset)
 - **48 concurrent object slots** (up from 36) to handle simultaneous video, event, and UI objects
 - **7 SPC700 sound effects** in BRR format within the 57.5 KB sample RAM budget, plus MSU-1 PCM dragon roar
 - **Blank frame generation** for zero-duration routing chapters (INSERT COIN, GAME OVER overlays)
 - **Python 3 toolchain** — all build tools modernized from Python 2
 
-## Current Status
+## What You Get
 
-- **All 29 Scenes Playable** — 9 levels spanning introduction through the dragon's lair, with full chapter-to-chapter transitions driven by player input
-- **MSU-1 Video Pipeline Complete** — all 516 chapters converted to SNES tile data (~568 MB `.msu` file)
-- **Complete Boot Sequence** — Boot → MSU-1 init → losers screen → logo intro → title screen → gameplay
-- **Chapter/Event System** — data-table architecture with `xmlsceneparser.py` generating assembly from 516 XML chapter definitions
-- **Dragon's Lair Themed Assets** — backgrounds, sprites, and UI elements themed for the arcade experience
+- **All 29 scenes fully playable** across 3 game modes with randomized scene order per playthrough
+- **28/28 automated scene tests passing** — every gameplay scene verified beatable with correct inputs
+- **Tested and working on real NTSC SNES hardware** with SD2SNES / FXPAK Pro
+- **516 chapters** converted to SNES tile data via the MSU-1 video pipeline
+- **Complete boot-to-gameplay loop** — Boot → MSU-1 init → losers screen → logo intro → title screen → gameplay
 
 ## Build at a Glance
 

@@ -80,6 +80,7 @@ core.irq.registerCallback:
   inx
   txa
   sta.l GLOBAL.irq.callback
+  sta.l GLOBAL.irq.callback.backup
 
   ;enable irq next frame
   sep #$20
@@ -141,6 +142,7 @@ core.irq.init:
   rep #$31
   lda #core.irq.callback.void
   sta.l GLOBAL.irq.callback
+  sta.l GLOBAL.irq.callback.backup
   jsr core.irq.stop
   rts
 
@@ -181,7 +183,21 @@ core.irq.play:
     lda.l (ROM << 16),x
     cmp #IRQ_MAGIC
     beq +
-      TRIGGER_ERROR E_BadIrqCallback
+      ;callback corrupted — restore from backup and retry
+      lda.w GLOBAL.irq.callback.backup
+      sta.w GLOBAL.irq.callback
+      tax
+      dex
+      dex
+      dex
+      dex
+      dex
+      dex
+      lda.l (ROM << 16),x
+      cmp #IRQ_MAGIC
+      beq +
+        ;backup also bad — fatal
+        TRIGGER_ERROR E_BadIrqCallback
 
 +
     lda.w GLOBAL.irq.callback

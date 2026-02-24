@@ -240,8 +240,11 @@ def find_golden_path(chapters, start_name, scene_prefix):
                 continue
             if result == "EventResult.lastcheckpoint":
                 continue
-            # Inject at midpoint of the success window
-            inject_frame = (sf + ef) // 2
+            # Inject near the start of the success window, not the midpoint.
+            # GLOBAL.currentFrame carries over to the next chapter during MSU-1
+            # seek delay, so a late injection means the next chapter's events may
+            # see a stale high frame number and expire immediately.
+            inject_frame = min(sf + 2, ef - 1)
             edges.append((target, direction_mask, inject_frame))
 
         # Default transition (for routing/cutscene nodes)
@@ -365,14 +368,15 @@ def generate_lua_script(scene_idx, scene_name, scene_prefix, golden_path, addres
     # the menu to process the button multiple times (e.g., 3 frames of DOWN
     # toggles cursor 0→1→0→1; 3 frames of A enters options THEN selects first item).
     #
-    # Menu navigation: DOWN → A (OPTIONS) → DOWN x2 → A (SCENE SELECT)
+    # Menu navigation: DOWN x3 → A (OPTIONS) → DOWN x2 → A (SCENE SELECT)
     #                  → RIGHT x (N-1) → A (launch)
     nav_lines = []
     frame = 600  # 25 frames after menu becomes active (~575)
 
-    # DOWN to OPTIONS (from START GAME)
-    nav_lines.append(f"    {{{frame}, {frame}, 0x0400}},  -- DOWN to OPTIONS")
-    frame += 30
+    # DOWN x3 to OPTIONS (from ARCADE MODE, past BOSS RUSH and OOPS,ALL TRAPS!)
+    for i in range(3):
+        nav_lines.append(f"    {{{frame}, {frame}, 0x0400}},  -- DOWN to OPTIONS ({i+1}/3)")
+        frame += 30
     # A to enter OPTIONS
     nav_lines.append(f"    {{{frame}, {frame}, 0x0080}},  -- A (enter OPTIONS)")
     frame += 30

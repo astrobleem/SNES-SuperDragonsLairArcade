@@ -59,9 +59,22 @@
 _CHAPTER.init:
   rep #$31
 
+  ;flush DMA queue before chapter cleanup to prevent stale DMA entries
+  ;from firing after objects are killed (prevents $15 transferType crash)
+  jsr core.dma.flushQueue
+
   ;kill all events from previous chapter
   lda.w #OBJECT.PROPERTIES.isEvent
   jsr abstract.Iterator.kill.byProperties
+
+  ;clear stale input so newly created events don't react to the previous
+  ;chapter's button press during the same play loop iteration.
+  ;Without this, a direction event that triggers a chapter transition leaves
+  ;its button in inputDevice.trigger; the new chapter's events (created at
+  ;higher OopStack slots) get their play() called in the same core.object.play
+  ;pass and see the stale trigger — firing a wrong-direction death event.
+  ldx #0  ;INPUT.DEVICE.ID.0
+  jsr core.input.reset
 
   ;set chapter properties and kill other chapter scripts
   lda.w #OBJECT.PROPERTIES.isChapter
@@ -165,6 +178,8 @@ _CHAPTER.init.done:
 .include "src/continue_screen.script"
 .include "data/chapters/chapter.include"
 .include "src/level1.script"
+.include "src/boss_rush.script"
+.include "src/oops_all_traps.script"
 .include "src/scene_router.script"
 
 .ends

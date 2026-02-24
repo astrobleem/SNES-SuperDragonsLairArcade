@@ -78,7 +78,7 @@ SpcReportBuffer ds 16
 .ends
 
 .ramsection "hdma-spc buffer dummy" bank 0 slot 1
-HdmaSpcBuffer ds 200
+HdmaSpcBuffer ds 256
 .ends
 
 

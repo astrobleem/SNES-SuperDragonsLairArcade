@@ -102,7 +102,7 @@ core.dma.registerTransfer:
   ;jsr core.nmi.stop
   sei
   lda.w GLOBAL.currentDmaQueueSlot
-  and.w #(DMA_QUEUE_SLOTS * _sizeof_dmaQueue) - 1
+  and.w #(DMA_QUEUE_SLOTS - 1) * _sizeof_dmaQueue
   tax
   
   ldy.w #DMA_QUEUE_SLOTS
@@ -115,7 +115,7 @@ core.dma.registerTransfer:
 	txa
 	clc
 	adc.w #_sizeof_dmaQueue
-	and.w #(DMA_QUEUE_SLOTS * _sizeof_dmaQueue) - 1
+	and.w #(DMA_QUEUE_SLOTS - 1) * _sizeof_dmaQueue
 	tax
 	dey
 	bne -
@@ -174,7 +174,7 @@ core.dma.isQueueEmpty:
   rep #$31
   phx
   lda.w GLOBAL.currentDmaQueueSlot
-  and.w #(DMA_QUEUE_SLOTS * _sizeof_dmaQueue) - 1
+  and.w #(DMA_QUEUE_SLOTS - 1) * _sizeof_dmaQueue
   tax
   
   lda.w GLOBAL.dmaQueue.1.transferType,x
@@ -203,7 +203,7 @@ core.dma.processQueue:
   php
   rep #$31
   lda.w GLOBAL.currentDmaQueueSlot
-  and.w #(DMA_QUEUE_SLOTS * _sizeof_dmaQueue) - 1
+  and.w #(DMA_QUEUE_SLOTS - 1) * _sizeof_dmaQueue
   tax
 dmaQueueLoop:
 	lda.w GLOBAL.dmaQueue.1.transferType,x
@@ -214,6 +214,7 @@ dmaQueueLoop:
 	and.w #(DMA_TRANSFER.OPTION.FIXED_SOURCE | DMA_TRANSFER.OPTION.ACTIVE | DMA_TRANSFER.OPTION.REVERSE) ~$ff
 	cmp.w #DMA_TRANSFER.MAX
 	bcc +
+	  phx         ; queue slot index -> excArgs+2
 	  pha
       TRIGGER_ERROR E_InvalidDmaTransferType
 
@@ -232,7 +233,7 @@ dmaQueueLoop:
 	txa
 	clc
 	adc.w #_sizeof_dmaQueue
-	and.w #(DMA_QUEUE_SLOTS * _sizeof_dmaQueue) - 1
+	and.w #(DMA_QUEUE_SLOTS - 1) * _sizeof_dmaQueue
 	tax
 	bra dmaQueueLoop
 
@@ -364,7 +365,7 @@ dmaQueueSetDmap0:
 /**
  * Irq-callback routine
  */  
-  IRQ dmaQueue IRQ.VPOS.PAL 0
+  IRQ dmaQueue IRQ.VPOS.PAL 8
   php
   sep #$20
   ;hack to fix 1/1/1-chipset bug, stop all hdma channels before starting dma transfers
@@ -395,6 +396,62 @@ dmaQueueSetDmap0:
 
   lda.w ScreenBrightness
   sta.l INIDSP
+  plp
+  rts
+
+/**
+ * Flush DMA queue without stopping HDMA.
+ * Use during chapter transitions and checkpoint restarts to prevent
+ * stale DMA entries from firing after objects are killed.
+ * Unlike resetHardware, this preserves HDMA (VideoMask must survive).
+ */
+core.dma.flushQueue:
+  php
+  rep #$31
+  sei
+  ldx #0
+  ldy.w #DMA_QUEUE_SLOTS
+- stz.w GLOBAL.dmaQueue.1.transferType,x
+  txa
+  clc
+  adc.w #_sizeof_dmaQueue
+  tax
+  dey
+  bne -
+  stz.w GLOBAL.currentDmaQueueSlot
+  plp
+  rts
+
+/**
+ * Stop HDMA hardware and flush DMA queue for safe object cleanup.
+ * Call before killing HDMA/DMA-using objects to prevent stale DMA
+ * channel access on real SD2SNES/FXPAK Pro hardware.
+ *
+ * On real hardware, HDMA channels continue running until the next NMI
+ * writes HDMAEN. Killing HDMA objects between NMI cycles leaves stale
+ * channels active, which can corrupt DMA state.
+ */
+core.dma.resetHardware:
+  php
+  sep #$20
+  lda #0
+  sta.l HDMAEN
+  stz.w GLOBAL.HDMA.CHANNEL.ENABLE
+
+  rep #$31
+  sei
+  ldx #0
+  ldy.w #DMA_QUEUE_SLOTS
+- stz.w GLOBAL.dmaQueue.1.transferType,x
+  txa
+  clc
+  adc.w #_sizeof_dmaQueue
+  tax
+  dey
+  bne -
+
+  stz.w GLOBAL.currentDmaQueueSlot
+
   plp
   rts
 

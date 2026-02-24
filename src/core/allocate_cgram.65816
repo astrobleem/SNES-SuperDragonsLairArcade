@@ -150,7 +150,7 @@ _isIdInUse:
   phx
   sep #$20
 
-  ldx.w #CGRAM_ALLOCATION_BLOCKS
+  ldx.w #CGRAM_ALLOCATION_BLOCKS - 1
 -   cmp.w GLOBAL.cgramAllocationBlocks,x
     bne +
 
@@ -302,7 +302,7 @@ core.cgram.deallocate:
 	dec.w GLOBAL.currentCgramAllocationId
 + pea 0
 
-  ldx.w #CGRAM_ALLOCATION_BLOCKS
+  ldx.w #CGRAM_ALLOCATION_BLOCKS - 1
 -	cmp.w GLOBAL.cgramAllocationBlocks,x
 	bne +
 	  sta 1,s

@@ -1,7 +1,7 @@
 <chapter name="flrr_enter_room">
 	<timeline>
 		<timestart min="8" second="37" ms="25" frame="12725" />
-		<timeend min="8" second="39" ms="548" frame="12785" />
+		<timeend min="8" second="41" ms="285" frame="12827" />
 	</timeline>
 	<params />
 	<macros />

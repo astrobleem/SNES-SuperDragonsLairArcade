@@ -1,7 +1,7 @@
 <chapter name="fstc_seq2">
 	<timeline>
 		<timestart min="4" second="12" ms="302" frame="6375" />
-		<timeend min="4" second="14" ms="727" frame="6433" />
+		<timeend min="4" second="15" ms="55" frame="6441" />
 	</timeline>
 	<params />
 	<macros />

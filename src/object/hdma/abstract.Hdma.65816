@@ -42,7 +42,7 @@ abstract.Hdma.start:
   rts
 
 /**
-* disable hdma, deallocate channel
+* disable hdma, deallocate channel (safe to call multiple times)
 */
 abstract.Hdma.stop:
   php
@@ -51,9 +51,12 @@ abstract.Hdma.stop:
   jsr abstract.Hdma.makePhysical
 
   lda hdma.channel
-  and.b #HDMA.CHANNEL.ALLOCATED ~$ff
-  jsr core.dma_channel.deallocate
-
+  bit #HDMA.CHANNEL.ALLOCATED
+  beq +
+    and.b #HDMA.CHANNEL.ALLOCATED ~$ff
+    jsr core.dma_channel.deallocate
+    stz hdma.channel
++
   plp
   rts
 

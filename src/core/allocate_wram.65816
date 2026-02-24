@@ -97,7 +97,7 @@ _isIdInUse:
   phx
   sep #$20
 
-  ldx.w #WRAM_ALLOCATION_BLOCKS
+  ldx.w #WRAM_ALLOCATION_BLOCKS - 1
 -   cmp.w GLOBAL.wramAllocationBlocks,x
     bne +
 
@@ -243,7 +243,7 @@ core.wram.deallocate:
 
 + pea 0
 
-  ldx.w #WRAM_ALLOCATION_BLOCKS
+  ldx.w #WRAM_ALLOCATION_BLOCKS - 1
 -	cmp.w GLOBAL.wramAllocationBlocks,x
 	bne +
 	  sta 1,s

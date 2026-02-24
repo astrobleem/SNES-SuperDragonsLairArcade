@@ -2,22 +2,90 @@
 .ACCU 16
 .INDEX 16
 
+  ;--- Full cleanup between scenes (matches level1/boss_rush/oops_all_traps) ---
+  ;Save HDMA channel state before reset (VideoMask must survive scene transitions)
+  sep #$20
+  lda.w GLOBAL.HDMA.CHANNEL.ENABLE
+  pha
+  rep #$31
+
+  ;Stop HDMA hardware and flush DMA queue (prevents stale DMA on real SD2SNES)
+  jsr core.dma.resetHardware
+
+  ;Kill stale sprite singletons (arrows/sword hold stale VRAM/CGRAM allocs)
+  lda.w #OBJECT.PROPERTIES.isSprite
+  jsr abstract.Iterator.kill.byProperties
+
+  ;DON'T kill HDMA objects — VideoMask must persist across scene_router transitions.
+  ;Msu1 singleton survives (no isHdma property), so its VideoMask hash pointer stays valid.
+  ;Entry scripts (level1/boss_rush/oops_all_traps) kill Msu1 explicitly, which properly
+  ;chains to VideoMask.kill via Msu1.kill.
+
+  ;DON'T reset VRAM allocation table — Msu1's framebuffers survive and hold valid
+  ;VRAM allocations. Resetting the table orphans those allocations, causing new sprites
+  ;to overlap Msu1's VRAM (competing DMA transfers → corruption after many scenes).
+  ;Sprite VRAM is already freed by kill.byProperties(isSprite) above.
+  ;Clear CGRAM colors to black for clean visual transition.
+  jsr core.cgram.clear
+
+  ;Restore HDMA channel enable (VideoMask's HDMA resumes on next NMI)
+  sep #$20
+  pla
+  sta.w GLOBAL.HDMA.CHANNEL.ENABLE
+  rep #$31
+
+  ;--- Check game mode and handle row wrap/finale ---
+  lda.w GLOBAL.gameMode
+  beq _scene_router.arcadeSetup
+  cmp #1
+  beq _scene_router.bossSetup
+
+  ;--- Mode 2: Oops, All Traps! (7 rows, loops) ---
+  lda.w GLOBAL.sceneRow
+  cmp #7
+  bcc _scene_router.trapsOk
+    stz.w GLOBAL.sceneRow
+    lda #0
+_scene_router.trapsOk:
+  sta.b this._tmp
+  lda #(_scene_router.trapsGrid - _scene_router.grid)
+  sta.b this._tmp+4
+  jmp _scene_router.pickColumn
+
+_scene_router.bossSetup:
+  ;--- Mode 1: Boss Rush (5 rows, loops) ---
+  lda.w GLOBAL.sceneRow
+  cmp #5
+  bcc _scene_router.bossOk
+    stz.w GLOBAL.sceneRow
+    lda #0
+_scene_router.bossOk:
+  sta.b this._tmp
+  lda #(_scene_router.bossGrid - _scene_router.grid)
+  sta.b this._tmp+4
+  jmp _scene_router.pickColumn
+
+_scene_router.arcadeSetup:
+  ;--- Mode 0: Arcade (13 rows, then dragon finale) ---
   lda.w GLOBAL.sceneRow
   cmp #13
-  bcc _scene_router.normalRow
+  bcc _scene_router.arcadeOk
     ;all 13 rows done -> the_dragons_lair
     NEW Script.CLS.PTR oopCreateNoPtr tdl_start_alive
     DIE
 
-_scene_router.normalRow:
-  ;save row for table lookup
+_scene_router.arcadeOk:
   sta.b this._tmp
+  stz.b this._tmp+4               ;arcade grid offset = 0
 
+_scene_router.pickColumn:
   ;pick random column (8-bit RNG)
   jsr core.random.get
   and #$00FF
 
-  ;row 12 special: only columns 0-1 (exclude the_dragons_lair in col 2)
+  ;row 12 special case: arcade mode only, 2-way split (exclude dragon from column 2)
+  ldx.w GLOBAL.gameMode
+  bne _scene_router.threeWay
   ldx.b this._tmp
   cpx #12
   bne _scene_router.threeWay
@@ -41,7 +109,7 @@ _scene_router.col2:
   lda #4
 
 _scene_router.colDone:
-  ;table index = row * 6 + col_offset
+  ;table index = gridOffset + row * 6 + col_offset
   pha
   lda.b this._tmp
   asl a
@@ -49,6 +117,8 @@ _scene_router.colDone:
   asl a
   clc
   adc.b this._tmp+2
+  clc
+  adc.b this._tmp+4                ;add grid base offset
   sta.b this._tmp+2
   pla
   clc
@@ -57,6 +127,17 @@ _scene_router.colDone:
 
   ;load target scene from ROM grid table
   lda.l _scene_router.grid,x
+
+  ;set scene name for pause screen from parallel lookup table
+  pha
+  txa
+  lsr a                          ;byte index = word index / 2
+  tax
+  sep #$20
+  lda.l _scene_router.sceneNameGrid,x
+  sta.w GLOBAL.currentScene
+  rep #$20
+  pla
 
   ;increment row for next invocation
   pha
@@ -71,7 +152,7 @@ _scene_router.colDone:
   pla
   DIE
 
-;13 rows x 3 scenes x 2 bytes = 78 bytes
+;--- Arcade grid: 13 rows x 3 columns ---
 _scene_router.grid:
   .dw flrp_start_alive, flrr_start_alive, bowr_start_alive   ;row 0
   .dw fh_start_alive,   fhr_start_alive,  alrm_start_alive   ;row 1
@@ -86,3 +167,54 @@ _scene_router.grid:
   .dw rk_start_alive,   rkr_start_alive,  gbat_start_alive   ;row 10
   .dw thrn_start_alive, tltr_start_alive, mudm_start_alive   ;row 11
   .dw fpl_start_alive,  fplr_start_alive, tdl_start_alive    ;row 12
+
+;--- Boss Rush grid: 5 rows x 3 columns ---
+_scene_router.bossGrid:
+  .dw snkr_start_alive, tntr_start_alive, gg_start_alive     ;row 0
+  .dw cc_start_alive,   ccr_start_alive,  mudm_start_alive   ;row 1
+  .dw gbat_start_alive, rk_start_alive,   sm_start_alive     ;row 2
+  .dw smr_start_alive,  rkr_start_alive,  grr_start_alive    ;row 3
+  .dw gr_start_alive,   bknt_start_alive, lzkg_start_alive   ;row 4
+
+;--- Oops, All Traps! grid: 7 rows x 3 columns ---
+_scene_router.trapsGrid:
+  .dw firm_start_alive, tltr_start_alive, wndr_start_alive   ;row 0
+  .dw flrp_start_alive, flrr_start_alive, rbal_start_alive   ;row 1
+  .dw fh_start_alive,   fhr_start_alive,  ugr_start_alive    ;row 2
+  .dw cwbt_start_alive, ecag_start_alive, fps_start_alive    ;row 3
+  .dw fstc_start_alive, bowr_start_alive, vest_start_alive   ;row 4
+  .dw ybr_start_alive,  ybrr_start_alive, alrm_start_alive   ;row 5
+  .dw thrn_start_alive, fpl_start_alive,  fplr_start_alive   ;row 6
+
+;--- Scene name index tables (parallel to chapter grids above) ---
+; Each byte is a T_sceneName index (1-32) for the corresponding grid cell.
+_scene_router.sceneNameGrid:
+  .db 15, 15,  4                ;row  0: flrp=Flaming Ropes, flrr=Flaming Ropes, bowr=Bower
+  .db 16, 16, 20                ;row  1: fh=Flying Barding, fhr=Flying Barding, alrm=Drink Me
+  .db 19, 19, 14                ;row  2: cc=Crypt Creeps, ccr=Crypt Creeps, ugr=Underground River
+  .db 30, 30,  2                ;row  3: fps=Elevator Shaft, fps=Elevator Shaft, vest=Vestibule
+  .db 13, 31, 26                ;row  4: rbal=Rolling Balls, ecag=Electric Cage, bknt=Black Knight
+  .db 24, 24, 27                ;row  5: gr=Grim Reaper, grr=Grim Reaper, lzkg=Lizard King
+  .db 22, 23,  9                ;row  6: sm=Smithee, smr=Smithee Rev, wndr=Breathing Door
+  .db  8,  3, 17                ;row  7: tntr=Tentacle Room, snkr=Mist Room, bcld=Bubbling Cauldron
+  .db 32, 10,  5                ;row  8: fstc=Staircase, gg=Giddy Goons, firm=Fire Room
+  .db 25, 25, 11                ;row  9: ybr=Yellow Brick Road, ybrr=YBR, cwbt=Catwalk Bats
+  .db 21, 21, 18                ;row 10: rk=Robot Knight, rkr=Robot Knight, gbat=Giant Bat
+  .db  6,  7, 12                ;row 11: thrn=Throne Room, tltr=Tilting Room, mudm=Ye Mudmen
+  .db 30, 30, 28                ;row 12: fpl=Elevator Shaft, fplr=Elevator Shaft, tdl=Dragon's Lair
+
+_scene_router.bossNameGrid:
+  .db  3,  8, 10                ;row  0: snkr=Mist Room, tntr=Tentacle Room, gg=Giddy Goons
+  .db 19, 19, 12                ;row  1: cc=Crypt Creeps, ccr=Crypt Creeps, mudm=Ye Mudmen
+  .db 18, 21, 22                ;row  2: gbat=Giant Bat, rk=Robot Knight, sm=Smithee
+  .db 23, 21, 24                ;row  3: smr=Smithee Rev, rkr=Robot Knight, grr=Grim Reaper
+  .db 24, 26, 27                ;row  4: gr=Grim Reaper, bknt=Black Knight, lzkg=Lizard King
+
+_scene_router.trapsNameGrid:
+  .db  5,  7,  9                ;row  0: firm=Fire Room, tltr=Tilting Room, wndr=Breathing Door
+  .db 15, 15, 13                ;row  1: flrp=Flaming Ropes, flrr=Flaming Ropes, rbal=Rolling Balls
+  .db 16, 16, 14                ;row  2: fh=Flying Barding, fhr=Flying Barding, ugr=Underground River
+  .db 11, 31, 30                ;row  3: cwbt=Catwalk Bats, ecag=Electric Cage, fps=Elevator Shaft
+  .db 32,  4,  2                ;row  4: fstc=Staircase, bowr=Bower, vest=Vestibule
+  .db 25, 25, 20                ;row  5: ybr=YBR, ybrr=YBR, alrm=Drink Me Room
+  .db  6, 30, 30                ;row  6: thrn=Throne Room, fpl=Elevator Shaft, fplr=Elevator Shaft

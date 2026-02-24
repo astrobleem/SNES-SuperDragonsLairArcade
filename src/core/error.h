@@ -99,6 +99,25 @@ excFlags	db
 excPc	dw
 excErr	dw
 excArgs	ds 8
+GLOBAL.crashSP   dw  ;SP after BRK/COP hw pushes (add 4 for pre-crash SP)
+GLOBAL.crashPC   dw  ;crash-site PC+2 from BRK/COP interrupt frame
+GLOBAL.crashPB   db  ;crash-site program bank
+GLOBAL.crashP    db  ;crash-site processor status
+GLOBAL.crashA    dw  ;crash-site accumulator (saved before anything clobbers it)
+GLOBAL.crashX    dw  ;crash-site X register (OopStack slot ptr if in play loop)
+GLOBAL.crashY    dw  ;crash-site Y register
+GLOBAL.crashDP   dw  ;crash-site direct page (kernel ZP = dispatch, obj ZP = in method)
+GLOBAL.crashTmp  dw  ;kernel ZP tmp at crash time (OopHandlerExecute method addr)
+;fingerprint check diagnostics (E_ObjStackCorrupted)
+GLOBAL.fpExpectedId   dw  ;id & $FF from CPU stack (what was pushed at OHE entry)
+GLOBAL.fpExpectedNum  dw  ;num from CPU stack (what was pushed at OHE entry)
+GLOBAL.fpActualId     dw  ;OopStack.id[X] & $FF at check time
+GLOBAL.fpActualNum    dw  ;OopStack.num[X] at check time
+GLOBAL.fpSlotIndex    dw  ;X register = OopStack slot offset
+GLOBAL.fpCrashSP      dw  ;CPU stack pointer at fingerprint failure
+GLOBAL.fpMismatchCount dw  ;number of fingerprint mismatches since boot
+GLOBAL.oopRecoverySP  dw  ;SP saved at play loop entry for longjmp recovery
+GLOBAL.oopRecoveryX   dw  ;X (slot ptr) saved at play loop for longjmp recovery
 .ends
 
 

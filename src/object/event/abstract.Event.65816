@@ -95,6 +95,8 @@ _lastcheckpoint.goContinue:
 
 _lastcheckpoint.alive:
   ;--- Still alive: restart from checkpoint ---
+  ;flush DMA queue to prevent stale entries from corrupting during restart
+  jsr core.dma.flushQueue
   jsr abstract.Iterator.reset
   lda.w #OBJECT.PROPERTIES.isCheckpoint
   jsr abstract.Iterator.each.byProperties

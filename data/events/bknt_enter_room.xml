@@ -1,7 +1,7 @@
 <chapter name="bknt_enter_room">
 	<timeline>
 		<timestart min="17" second="44" ms="572" frame="25536" />
-		<timeend min="17" second="48" ms="111" frame="25621" />
+		<timeend min="17" second="48" ms="144" frame="25622" />
 	</timeline>
 	<params />
 	<macros />

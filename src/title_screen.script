@@ -12,6 +12,19 @@
   .def objSpc hashPtr.7
   .def objPalRotate hashPtr.8
   .def objSuper hashPtr.9
+  ;--- Cleanup stale objects from previous session ---
+  ;Stop HDMA hardware and flush DMA queue (prevents stale DMA on real SD2SNES)
+  jsr core.dma.resetHardware
+
+  lda.w #OBJECT.PROPERTIES.isSprite
+  jsr abstract.Iterator.kill.byProperties
+
+  lda.w #OBJECT.PROPERTIES.isHdma
+  jsr abstract.Iterator.kill.byProperties
+
+  jsr core.vram.init
+  jsr core.cgram.clear
+
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers
@@ -23,6 +36,7 @@
   jsr abstract.Iterator.kill.byId
 
   stz.w GLOBAL.sceneRow
+  stz.w GLOBAL.gameMode
 
   lda.w GLOBAL.credits
   bne _title_screen.hasCredits
@@ -123,7 +137,7 @@ _title_screen.noPalRotate:
   NEW Sprite.super.CLS.PTR objSuper 0 0
 
   ;--- Menu system ---
-  .def menu.idleStart this._tmp+0
+  .def menu.idleStart this._tmp+6
   .def menu.state  this._tmp+8
   .def menu.cursor this._tmp+10
   .def menu.param  this._tmp+12
@@ -226,7 +240,7 @@ _title_screen.upWrap:
     lda #2                        ;options: 3 items (0-2)
     ldx.b menu.state
     bne +
-      lda #1                      ;main menu: 2 items (0-1)
+      lda #3                      ;main menu: 4 items (0-3)
 +   bra _title_screen.cursorMoved
 
 _title_screen.noUp:
@@ -240,7 +254,7 @@ _title_screen.noUp:
       cmp #2                      ;options: wrap at 2
       bra _title_screen.downCheckWrap
 _title_screen.downMainMax:
-      cmp #1                      ;main menu: wrap at 1
+      cmp #3                      ;main menu: wrap at 3
 _title_screen.downCheckWrap:
     bcc _title_screen.downNoWrap
       lda #$ffff
@@ -264,27 +278,50 @@ _title_screen.noDown:
 
   ;main menu selection
   lda.b menu.cursor
-  beq _title_screen.selectStartGame
-  ;cursor 1: options
-  bra _title_screen.selectOptions
-
-_title_screen.selectStartGame:
+  cmp #3
+  bne _title_screen.checkGameModes
+    jmp _title_screen.selectOptions
+_title_screen.checkGameModes:
+  ;game modes (cursor 0-2) all need credits
   lda.w GLOBAL.credits
-  beq _title_screen.noCredits
-    dec a
-    sta.w GLOBAL.credits
-    sep #$20
-    lda #1
-    sta.w GLOBAL.currentScene
-    rep #$20
-    lda.w #SAMPLE.0.SAVEME
-    CALL Spc.SpcPlaySoundEffect.MTD objSpc
-    lda.w #level1
-    sta.b menu.target
-    jmp _title_screen.startTransitionFade
-_title_screen.noCredits:
-  jsr _title_screen.drawMenu
-  rts
+  bne _title_screen.modeHasCredits
+    jsr _title_screen.drawMenu
+    rts
+_title_screen.modeHasCredits:
+  dec a
+  sta.w GLOBAL.credits
+  lda.w #SAMPLE.0.SAVEME
+  CALL Spc.SpcPlaySoundEffect.MTD objSpc
+
+  lda.b menu.cursor
+  beq _title_screen.selectArcadeMode
+  cmp #1
+  beq _title_screen.selectBossRush
+  bra _title_screen.selectOopsAllTraps
+
+_title_screen.selectArcadeMode:
+  stz.w GLOBAL.gameMode
+  sep #$20
+  lda #1
+  sta.w GLOBAL.currentScene
+  rep #$20
+  lda.w #level1
+  sta.b menu.target
+  jmp _title_screen.startTransitionFade
+
+_title_screen.selectBossRush:
+  lda #1
+  sta.w GLOBAL.gameMode
+  lda.w #boss_rush
+  sta.b menu.target
+  jmp _title_screen.startTransitionFade
+
+_title_screen.selectOopsAllTraps:
+  lda #2
+  sta.w GLOBAL.gameMode
+  lda.w #oops_all_traps
+  sta.b menu.target
+  jmp _title_screen.startTransitionFade
 
 _title_screen.selectOptions:
   lda #1
@@ -442,7 +479,12 @@ _title_screen.startTransitionNoPause:
 
 ;--- Cleanup and launch target script ---
 _title_screen.doCleanup:
+  ;Stop HDMA hardware and flush DMA queue before killing objects
+  ;(prevents stale DMA entries from firing after objects are destroyed)
+  jsr core.dma.resetHardware
+
   CALL Sprite.super.kill.MTD objSuper
+  jsr core.oam.clearTable
   CALL Background.generic.kill.MTD objBackground
   CALL Background.generic.kill.MTD objLogo
   CALL Background.textlayer.8x8.kill.MTD objText
