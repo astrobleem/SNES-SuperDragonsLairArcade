@@ -427,14 +427,6 @@ def writeEventFile(events, options):
   except IOError:
     logging.error('unable to access output file %s/chapter.data.' % chapterFolder)
     sys.exit(1)
-  # Pre-compute max direction event endFrame so the chapter's default result
-  # doesn't fire before direction events close their input window.
-  max_direction_endframe = 0
-  for event in events:
-    if event.type == 'direction_generic':
-      endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
-      max_direction_endframe = max(max_direction_endframe, endframe)
-
   # Rule A: game_over chapters → playchapter to continue_screen
   # Rule B: death chapters → route through their scene's game_over chapter
   events_dir = os.path.dirname(options.get('infile'))
@@ -484,9 +476,6 @@ def writeEventFile(events, options):
     resultname = event.resultname
     startframe = min(0xFFFF, max(0, event.framestart - chapterEvent.framestart))
     endframe = min(0xFFFF, max(0, event.frameend - chapterEvent.framestart))
-    # Clamp chapter endFrame to at least max direction endFrame
-    if event.type == 'chapter' and max_direction_endframe > 0:
-      endframe = max(endframe, max_direction_endframe)
     arg1_val = event.arg1
     if event.type == 'direction_generic':
       # Hide arrow for death-trap directions (target chapter has lastcheckpoint result)
@@ -521,8 +510,11 @@ def parseEvents(options):
     for event in chapter.getElementsByTagName('event'):
       eventList.append(Event(event, options))
 
-  #return eventList
-  return sorted(eventList, key=lambda event: event.framestart)
+  # Do NOT sort by framestart — XML order must be preserved.
+  # DirkSimple marks direction-1 as the correct input.  Sorting by
+  # framestart can reorder events so a death-direction appears first,
+  # causing the overlap pre-pass to hide the correct arrow.
+  return eventList
 
 
 def debugLog( data, message = '' ):

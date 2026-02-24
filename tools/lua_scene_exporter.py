@@ -32,6 +32,13 @@ _segment_timing: List[Dict] = []
 # Scene-exit extension counters (populated by generate_xml)
 _exit_extensions: int = 0
 _exit_extension_frames: int = 0
+_original_end_frames: dict = {}  # chapter_name -> (end_frame, xml_end) before extension
+
+# DLS "b" bonus segments are ALL death animations (Dirk skeletonized), not victory
+# footage.  Visual inspection of all 20 auto-generated exit rooms confirmed every
+# dls##b.vob.m2v segment shows the same skeleton death sequence.  Disable auto-
+# generated exit rooms entirely — only game.lua exit rooms have correct footage.
+BONUS_SEGMENT_BLACKLIST = None  # sentinel: skip ALL bonus segments
 
 
 def load_segment_timing(json_path: str) -> None:
@@ -93,6 +100,43 @@ def get_segment_end_frame(frame: float) -> Optional[int]:
         return _segment_timing[seg_idx + 1]['frame']
     seg = _segment_timing[seg_idx]
     return seg['frame'] + round(seg['duration_ms'] / 1000.0 * 23.976)
+
+
+def find_bonus_segment(frame: int) -> Optional[Tuple[int, int, str]]:
+    """Find the DLS bonus segment ("b" suffix) corresponding to a frame's segment.
+
+    On the Dragon's Lair laserdisc, each scene's gameplay is in a numbered segment
+    (e.g. dls15.vob) with death variants (dls15d1, dls15d2) and a bonus/victory
+    segment (dls15b.vob) following it.  This function finds the bonus segment for
+    the segment containing the given frame.
+
+    Returns (start_frame, end_frame, filename) or None if not found.
+    """
+    if not _segment_timing:
+        return None
+    # Find the segment containing the given frame
+    seg_idx = None
+    for i, s in enumerate(_segment_timing):
+        if s['frame'] <= frame:
+            seg_idx = i
+        else:
+            break
+    if seg_idx is None:
+        return None
+    # Extract DLS number from filename (e.g. "dls15.vob.m2v" -> "15")
+    seg_file = _segment_timing[seg_idx]['filename']
+    m = re.match(r'dls(\d+)\.vob\.m2v', seg_file)
+    if not m:
+        return None
+    dls_num = m.group(1)
+    bonus_name = f'dls{dls_num}b.vob.m2v'
+    # Find the bonus segment in the timing table
+    for i, s in enumerate(_segment_timing):
+        if s['filename'] == bonus_name:
+            end_frame = _segment_timing[i + 1]['frame'] if i + 1 < len(_segment_timing) else \
+                s['frame'] + round(s['duration_ms'] / 1000.0 * 23.976)
+            return (s['frame'], end_frame, bonus_name)
+    return None
 
 
 def time_laserdisc_noseek() -> float:
@@ -828,6 +872,7 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
             extension = min(seg_end - end_frame, MAX_GAP_FRAMES)
             if extension > 0:
                 global _exit_extensions, _exit_extension_frames
+                _original_end_frames[chapter_name] = (end_frame, xml_end)
                 gap_ms = extension / 23.976 * 1000
                 end_frame = end_frame + extension
                 xml_end = xml_end + gap_ms
@@ -835,6 +880,36 @@ def generate_xml(scene_name: str, seq_name: str, sequence: Dict, scene_order: Di
                 _exit_extension_frames += extension
                 logging.info(f'  Scene-exit extension: {chapter_name} +{extension} frames '
                              f'(to segment end {seg_end})')
+
+    # --- Direction event window extension: ensure MSU-1 video covers the full
+    # input window for all direction events.  DirkSimple's data often has event
+    # windows that extend past the chapter's natural video end (on the arcade
+    # laserdisc the footage plays continuously).  Extend xml_end so the MSU
+    # pipeline generates enough frozen frames for the player to react.
+    # Capped to MAX_GAP_FRAMES to avoid absurd extensions (e.g. attract mode).
+    MAX_DIR_EXTENSION_FRAMES = MAX_GAP_FRAMES  # ~5 seconds, more than enough reaction time
+    max_dir_extension_ms = MAX_DIR_EXTENSION_FRAMES / 23.976 * 1000
+    actions_list = sequence.get('actions')
+    if isinstance(actions_list, list):
+        max_action_end = xml_end
+        for action in actions_list:
+            if not isinstance(action, dict):
+                continue
+            input_type = action.get('input', '')
+            if input_type in DIAGONAL_INPUTS:
+                continue
+            action_to = to_float(action.get('to', 0))
+            action_end_abs = xml_start + action_to
+            if action_end_abs > max_action_end:
+                max_action_end = action_end_abs
+        if max_action_end > xml_end:
+            extension_ms = min(max_action_end - xml_end, max_dir_extension_ms)
+            extension_frames = int(extension_ms * 23.976 / 1000) + 1
+            if end_frame is not None:
+                end_frame += extension_frames
+            xml_end += extension_ms
+            logging.info(f'  Direction window extension: {chapter_name} +{extension_frames} frames '
+                         f'(covers event window to {xml_end:.0f}ms)')
 
     lines: List[str] = []
     lines.append(f'<chapter name="{chapter_name}">')
@@ -1055,6 +1130,118 @@ def main() -> None:
 
     logging.info(f'Generated {total} XML event files in {outfolder}')
 
+    # --- Post-processing: generate exit_room chapters for scene-exit sequences ---
+    # Each Dragon's Lair scene has a bonus video segment (dls##b.vob) that shows
+    # ~3.5s of victory animation after the player completes the scene.  The exporter
+    # routes scene-exit chapters directly to scene_router, skipping this footage.
+    # This pass creates exit_room chapters covering the bonus segment and re-routes
+    # scene-exit chapters through them.
+    exit_rooms_created = 0
+    created_exit_rooms: set = set()  # track prefixes that already have exit rooms
+    if _segment_timing:
+        for xml_file in sorted(outfolder.glob('*.xml')):
+            if xml_file.name not in generated_files:
+                continue
+            content = xml_file.read_text()
+            # Only process scene-exit chapters: result → scene_router, not already an exit_room
+            chapter_name = xml_file.stem
+            if '_exit_room' in chapter_name:
+                continue
+            if '_start_alive' in chapter_name or '_start_dead' in chapter_name:
+                continue
+            if '_game_over' in chapter_name:
+                continue
+            # Must route to scene_router as the chapter-level (not event-level) result
+            # Check that scene_router appears after </events> (chapter result, not event result)
+            events_end = content.rfind('</events>')
+            if events_end < 0:
+                continue
+            chapter_result = content[events_end:]
+            if '<playchapter name="scene_router" />' not in chapter_result:
+                continue
+            # Skip death chapters (kills_player param)
+            if 'kills_player' in content:
+                continue
+            # Extract the frame attribute from the chapter's timestart
+            m = re.search(r'<timestart[^>]+frame="(\d+)"', content)
+            if not m:
+                continue
+            start_frame = int(m.group(1))
+            # Find the bonus segment for this chapter's video segment
+            bonus = find_bonus_segment(start_frame)
+            if bonus is None:
+                continue
+            bonus_start, bonus_end, bonus_file = bonus
+            if BONUS_SEGMENT_BLACKLIST is None:
+                # All DLS "b" segments are death animations — skip auto-generation entirely
+                continue
+            # Derive the exit_room chapter name from the scene prefix
+            # e.g. "rk_seq10" → prefix "rk", exit_room = "rk_exit_room"
+            prefix = chapter_name.split('_')[0]
+            # Handle multi-part prefixes (e.g. "ecag_seq5" → "ecag")
+            # by matching against known chapter pattern: everything before _seq/_game_over/etc.
+            for suffix in ('_seq', '_game_over', '_enter_room', '_start_alive', '_start_dead'):
+                idx = chapter_name.find(suffix)
+                if idx > 0:
+                    prefix = chapter_name[:idx]
+                    break
+            exit_room_name = f'{prefix}_exit_room'
+            exit_room_path = outfolder / f'{exit_room_name}.xml'
+            # Skip if exit_room already exists (from game.lua data or previous iteration)
+            if prefix in created_exit_rooms:
+                continue
+            if exit_room_path.exists() and exit_room_path.name in generated_files:
+                continue
+            # Find start_dead chapter for checkpoint
+            start_dead_name = f'{prefix}_start_dead'
+            start_dead_path = outfolder / f'{start_dead_name}.xml'
+            # Generate exit_room XML with bonus segment timing
+            bonus_start_ms = time_laserdisc_frame(bonus_start)
+            bonus_end_ms = time_laserdisc_frame(bonus_end)
+            exit_lines = [
+                f'<chapter name="{exit_room_name}">',
+                f'\t<timeline>',
+                f'\t\t<timestart {ms_to_attrs(bonus_start_ms, bonus_start)} />',
+                f'\t\t<timeend {ms_to_attrs(bonus_end_ms, bonus_end)} />',
+                f'\t</timeline>',
+                f'\t<params />',
+                f'\t<macros />',
+                f'\t<events>',
+            ]
+            if start_dead_path.exists():
+                exit_lines.append(f'\t\t<event type="checkpoint">')
+                exit_lines.append(f'\t\t\t<timeline>')
+                exit_lines.append(f'\t\t\t\t<timestart {ms_to_attrs(bonus_start_ms)} />')
+                exit_lines.append(f'\t\t\t</timeline>')
+                exit_lines.append(f'\t\t\t<result><none name="{start_dead_name}" /></result>')
+                exit_lines.append(f'\t\t</event>')
+            exit_lines.append(f'\t</events>')
+            exit_lines.append(f'\t<result><playchapter name="scene_router" /></result>')
+            exit_lines.append(f'</chapter>')
+            exit_xml = '\n'.join(exit_lines) + '\n'
+            exit_room_path.write_text(exit_xml)
+            generated_files.add(exit_room_path.name)
+            created_exit_rooms.add(prefix)
+            # Re-route the scene-exit chapter through exit_room
+            # Only replace the chapter-level result, not event-level results
+            new_content = content[:events_end] + content[events_end:].replace(
+                '<playchapter name="scene_router" />',
+                f'<playchapter name="{exit_room_name}" />', 1)
+            # Undo scene-exit extension on parent: the exit room provides the exit
+            # animation, so the parent doesn't need extended footage (which may
+            # include death frames from the end of the segment).
+            if chapter_name in _original_end_frames:
+                orig_end_frame, orig_xml_end = _original_end_frames[chapter_name]
+                new_content = re.sub(
+                    r'<timeend[^/]*/>',
+                    f'<timeend {ms_to_attrs(orig_xml_end, orig_end_frame)} />',
+                    new_content, count=1)
+            xml_file.write_text(new_content)
+            exit_rooms_created += 1
+            logging.info(f'  Exit room: {chapter_name} -> {exit_room_name} '
+                         f'(bonus {bonus_file} frames {bonus_start}-{bonus_end})')
+    logging.info(f'Exit room chapters created: {exit_rooms_created}')
+
     # Check for orphan XML files (exist on disk but not generated)
     existing_xmls = {f.name for f in outfolder.glob('*.xml')}
     orphans = existing_xmls - generated_files
@@ -1089,6 +1276,7 @@ def main() -> None:
     logging.info(f'  Noseek resolved: {noseek_resolved}')
     logging.info(f'  Noseek fallback (0ms): {noseek_fallback}')
     logging.info(f'  Scene-exit extensions: {_exit_extensions} chapters, {_exit_extension_frames} total frames')
+    logging.info(f'  Exit room chapters: {exit_rooms_created}')
     logging.info(f'  Orphan XMLs: {len(orphans)}')
     logging.info(f'  Missing results: {missing_result}')
 

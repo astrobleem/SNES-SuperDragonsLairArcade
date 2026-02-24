@@ -1,7 +1,7 @@
 <chapter name="atmd_insert_coins">
 	<timeline>
 		<timestart min="0" second="6" ms="200" frame="1354" />
-		<timeend min="0" second="11" ms="200" frame="1474" />
+		<timeend min="0" second="16" ms="205" frame="1595" />
 	</timeline>
 	<params />
 	<macros />

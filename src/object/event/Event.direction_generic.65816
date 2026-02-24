@@ -217,7 +217,13 @@ _direction_done:
 
   METHOD kill
   rep #$31
-  ; Don't kill sprite singleton — it stays alive for reuse by next chapter
+  ; Hide sprite singleton before dying (move offscreen so it doesn't linger)
+  lda this.sprite+2
+  cmp #oopCreateNoPtr
+  beq _kill_noSprite
+    lda #0
+    CALL Right_arrow.reset.MTD this.sprite 0 300
+_kill_noSprite:
   jmp Event.template.kill
 
   CLASS Event.direction_generic

@@ -21,12 +21,25 @@
     TRIGGER_ERROR E_Msu1NotPresent
 
 +
+  ;retry MSU-1 data file check: FXPAK hot-boot may need time to map .msu file
+  rep #$10
+  ldy.w #128
+_msu1FileRetry:
   jsr _isMsu1FilePresent
-  bcs +
-    jsr core.nmi.start
-    TRIGGER_ERROR E_Msu1FileNotPresent
+  bcs _msu1FileOk
+  ;delay ~12ms between retries ($2000 iterations x 4 cycles @ 2.68MHz)
+  phx
+  ldx.w #$2000
+-   dex
+    bne -
+  plx
+  dey
+  bne _msu1FileRetry
+  ;all retries exhausted (~1.5s total)
+  jsr core.nmi.start
+  TRIGGER_ERROR E_Msu1FileNotPresent
 
-+
+_msu1FileOk:
   jsr _stopAudioTrack
   jsr _setupVideoConfig
 
@@ -125,6 +138,25 @@
   and.w #MSU1_FRAME_CYCLE_COUNT
   asl a
   tax
+
+  ;bounds check: NTSC max X=8 (5 entries), PAL max X=48 (25 entries)
+  sep #$20
+  lda.b this.videoMode
+  beq _playBoundsNtsc
+    rep #$20
+    cpx.w #50                        ; PAL: 25 entries, max valid X = 48
+    bcc _playBoundsOk
+    bra _playBoundsReset
+_playBoundsNtsc:
+    rep #$20
+    cpx.w #10                        ; NTSC: 5 entries, max valid X = 8
+    bcc _playBoundsOk
+_playBoundsReset:
+    sep #$20
+    stz.b this.frameCycle             ; reset cycle to recover
+    bra _playCycleDone                ; skip this frame's dispatch
+_playBoundsOk:
+
   sep #$20
   inc.b this.frameCycle
   lda.b this.videoMode
@@ -135,6 +167,7 @@
 +
 	jsr (_frameCycleLUT24fpsNTSC,x)
 ++
+_playCycleDone:
   jsr _checkTrackEnd
   jsr core.nmi.start
   plp
@@ -757,6 +790,19 @@ _delay:
   lda #MSU1_NEXT_VIDEO_DELAY
   sta.b this.frameWait
 
+  ;Abort any in-flight frame cycle.  _CHAPTER.init flushes the DMA queue
+  ;before calling playVideo, which drops _uploadFirstChunk's queued transfers.
+  ;If frameBusy stays TRUE, next frame dispatches _uploadSecondChunk which reads
+  ;from the MSU data stream at the WRONG position (tilemap data instead of
+  ;remaining tiles) — uploading garbled tile data as palette → 1-2 frame
+  ;palette inversion flicker after every button press.
+  stz.b this.frameBusy
+  stz.b this.frameCycle
+
+  ;Mute immediately so old track doesn't play during frameWait delay
+  lda.b #MSU_VOLUME_MUTE
+  sta.l MSU_VOLUME
+
   rep #$31
   ; ---- Compute video skip offset ----
   ; skip = (ld_table[currentChapter] + currentFrame) - ld_table[nextChapter]
@@ -828,7 +874,6 @@ _startNextVideo:
   jsr _playAudio
 
   rep #$31
-  stz.b this.framebuffer.current.pointer
 
   lda.b this.videoSkipFrame
   stz.b this.videoSkipFrame          ; reset for next transition
@@ -853,9 +898,22 @@ _startNextVideo:
   lda.b #BGMODE_MODE_1
   sta.w ScreenMode
 
+  ;Sync framebuffer pointer to currently-displayed BG.
+  ;Keeps old frame visible — _uploadFirstChunk toggles to OTHER buffer,
+  ;_uploadSecondChunk toggles MainScreen to show new frame. Seamless.
   lda.w MainScreen
-  and.b #(T_BG1_ENABLE | T_BG2_ENABLE | T_BG3_ENABLE | T_BG4_ENABLE) ~$ff
-  sta.w MainScreen
+  bit.b #T_BG2_ENABLE
+  beq _syncFb1
+    rep #$20
+    lda.w #this.framebuffer.2.obj - this.framebuffer.1.obj
+    sta.b this.framebuffer.current.pointer
+    sep #$20
+    bra _syncFbDone
+_syncFb1:
+    rep #$20
+    stz.b this.framebuffer.current.pointer
+    sep #$20
+_syncFbDone:
 
   ;re-apply window masking registers for VideoMask HDMA
   lda #(W12SEL_BG2_W1_ENABLE | W12SEL_BG1_W1_ENABLE)
@@ -1085,10 +1143,6 @@ _stopAudioTrack:
 
   jsr _stopAudioTrack
 
-  ;set volume
-  lda.b #MSU_VOLUME_FULL
-  sta.l MSU_VOLUME
-
   ;set track
   lda.b this.currentTrack
   sta.l MSU_TRACK
@@ -1100,6 +1154,10 @@ _stopAudioTrack:
   lda.b #MSU_CONTROL_PLAY
   sta.l MSU_CONTROL
   jsr _waitAudioBusy
+
+  ;set volume AFTER track is playing (prevents DC offset click)
+  lda.b #MSU_VOLUME_FULL
+  sta.l MSU_VOLUME
 
   ;check if error occured while seeking to audio track
   lda.l MSU_STATUS
@@ -1158,6 +1216,11 @@ GLOBAL.checkFrameReached:
   php
   sep #$20
   stz.b this.videoPlaying
+
+  ;Abort in-flight frame cycle to prevent stale DMA during pause.
+  ;Same defensive pattern as playVideo chapter transition.
+  stz.b this.frameBusy
+  stz.b this.frameCycle
 
   ;mute audio
   lda.b #MSU_VOLUME_MUTE

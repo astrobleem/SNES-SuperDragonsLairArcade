@@ -1,7 +1,7 @@
 <chapter name="fpl_third_jump_set">
 	<timeline>
 		<timestart min="10" second="30" ms="528" frame="15114" />
-		<timeend min="10" second="34" ms="821" frame="15217" />
+		<timeend min="10" second="36" ms="99" frame="15248" />
 	</timeline>
 	<params />
 	<macros />

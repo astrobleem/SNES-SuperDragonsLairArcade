@@ -1,7 +1,7 @@
 <chapter name="ybrr_enter_room">
 	<timeline>
 		<timestart min="9" second="0" ms="724" frame="13303" />
-		<timeend min="9" second="2" ms="592" frame="13348" />
+		<timeend min="9" second="2" ms="723" frame="13352" />
 	</timeline>
 	<params />
 	<macros />

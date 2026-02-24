@@ -240,8 +240,11 @@ def find_golden_path(chapters, start_name, scene_prefix):
                 continue
             if result == "EventResult.lastcheckpoint":
                 continue
-            # Inject at midpoint of the success window
-            inject_frame = (sf + ef) // 2
+            # Inject near the start of the success window, not the midpoint.
+            # GLOBAL.currentFrame carries over to the next chapter during MSU-1
+            # seek delay, so a late injection means the next chapter's events may
+            # see a stale high frame number and expire immediately.
+            inject_frame = min(sf + 2, ef - 1)
             edges.append((target, direction_mask, inject_frame))
 
         # Default transition (for routing/cutscene nodes)

@@ -1,7 +1,7 @@
 <chapter name="gr_enter_room">
 	<timeline>
 		<timestart min="5" second="20" ms="220" frame="8004" />
-		<timeend min="5" second="26" ms="20" frame="8143" />
+		<timeend min="5" second="26" ms="315" frame="8151" />
 	</timeline>
 	<params />
 	<macros />

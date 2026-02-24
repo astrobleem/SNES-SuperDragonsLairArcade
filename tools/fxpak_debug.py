@@ -60,32 +60,51 @@ ADDR = {
     'WRAM_alloc_blocks':        0x7E7175,
 
     # OOP dispatch state
-    'currentObject':            0x7E720F,  # GLOBAL.currentObject (word)
-    'currentMethod':            0x7E7211,  # GLOBAL.currentMethod (word)
-    'currentClass':             0x7E7213,  # GLOBAL.currentClass (word)
-    'currentObjectStr':         0x7E7215,  # 3 bytes (ptr + bank)
-    'currentMethodStr':         0x7E7218,  # 3 bytes
-    'currentClassStr':          0x7E721B,  # 3 bytes
+    'currentObject':            0x7E7211,  # GLOBAL.currentObject (word)
+    'currentMethod':            0x7E7213,  # GLOBAL.currentMethod (word)
+    'currentClass':             0x7E7215,  # GLOBAL.currentClass (word)
+    'currentObjectStr':         0x7E7217,  # 3 bytes (ptr + bank)
+    'currentMethodStr':         0x7E721A,  # 3 bytes
+    'currentClassStr':          0x7E721D,  # 3 bytes
 
     # Hardware state
     'HDMA_channel_enable':      0x7E71E5,  # GLOBAL.HDMA.CHANNEL.ENABLE
 
     # Game state (these are in bank 0 ZP area, $0000-$1FFF)
-    'sceneRow':                 0x001A00,  # GLOBAL.sceneRow (word)
-    'gameMode':                 0x001A02,  # GLOBAL.gameMode (word)
+    'sceneRow':                 0x001A35,  # GLOBAL.sceneRow (word)
+    'gameMode':                 0x001A37,  # GLOBAL.gameMode (word)
 
     # Exception handler state (slot 2 / ZP area)
-    'excStack':                 0x001A04,  # 2 bytes - saved stack pointer
-    'excA':                     0x001A06,  # 2 bytes - accumulator at crash
-    'excY':                     0x001A08,  # 2 bytes - Y register at crash
-    'excX':                     0x001A0A,  # 2 bytes - X register at crash
-    'excDp':                    0x001A0C,  # 2 bytes - direct page at crash
-    'excDb':                    0x001A0E,  # 1 byte  - data bank
-    'excPb':                    0x001A0F,  # 1 byte  - program bank
-    'excFlags':                 0x001A10,  # 1 byte  - P register
-    'excPc':                    0x001A11,  # 2 bytes - PC (of TRIGGER_ERROR, NOT BRK location)
-    'excErr':                   0x001A13,  # 2 bytes - error code (E_xxx enum)
-    'excArgs':                  0x001A15,  # 8 bytes - arguments / BRK interrupt frame
+    'excStack':                 0x001993,  # 2 bytes - saved stack pointer
+    'excA':                     0x001995,  # 2 bytes - accumulator at crash
+    'excY':                     0x001997,  # 2 bytes - Y register at crash
+    'excX':                     0x001999,  # 2 bytes - X register at crash
+    'excDp':                    0x00199B,  # 2 bytes - direct page at crash
+    'excDb':                    0x00199D,  # 1 byte  - data bank
+    'excPb':                    0x00199E,  # 1 byte  - program bank
+    'excFlags':                 0x00199F,  # 1 byte  - P register
+    'excPc':                    0x0019A0,  # 2 bytes - PC (of TRIGGER_ERROR, NOT BRK location)
+    'excErr':                   0x0019A2,  # 2 bytes - error code (E_xxx enum)
+    'excArgs':                  0x0019A4,  # 8 bytes - arguments / BRK interrupt frame
+
+    # BRK/COP crash-site diagnostics (saved by enhanced BRK handler before error handler)
+    'crashSP':                  0x0019AC,  # 2 bytes - SP after BRK hw pushes (add 4 for pre-BRK SP)
+    'crashPC':                  0x0019AE,  # 2 bytes - crash-site PC+2 from BRK interrupt frame
+    'crashPB':                  0x0019B0,  # 1 byte  - crash-site program bank
+    'crashP':                   0x0019B1,  # 1 byte  - crash-site processor status
+    'crashA':                   0x0019B2,  # 2 bytes - crash-site accumulator
+    'crashX':                   0x0019B4,  # 2 bytes - crash-site X register
+    'crashY':                   0x0019B6,  # 2 bytes - crash-site Y register
+    'crashDP':                  0x0019B8,  # 2 bytes - crash-site direct page register
+    'crashTmp':                 0x0019BA,  # 2 bytes - kernel ZP tmp (OopHandlerExecute method addr)
+
+    # Fingerprint diagnostics (E_ObjStackCorrupted)
+    'fpExpectedId':             0x0019BC,  # 2 bytes - expected id from CPU stack
+    'fpExpectedNum':            0x0019BE,  # 2 bytes - expected num from CPU stack
+    'fpActualId':               0x0019C0,  # 2 bytes - actual OopStack.id[X] & $FF
+    'fpActualNum':              0x0019C2,  # 2 bytes - actual OopStack.num[X]
+    'fpSlotIndex':              0x0019C4,  # 2 bytes - X register (OopStack slot offset)
+    'fpCrashSP':                0x0019C6,  # 2 bytes - CPU stack pointer at fingerprint failure
 
     # OOP ZP pool
     'OopObjRam':                0x000010,  # start of OOP zero page pool
@@ -284,6 +303,44 @@ def load_class_names():
     return names
 
 
+def load_kernel_zp():
+    """Load the kernel ZP base address from sym file (label 'ZP')."""
+    try:
+        with open('build/SuperDragonsLairArcade.sym', 'r') as f:
+            for line in f:
+                parts = line.strip().split()
+                if len(parts) >= 2 and parts[1] == 'ZP':
+                    addr_str = parts[0]
+                    val = int(addr_str.split(':')[1], 16)
+                    return val
+    except Exception:
+        pass
+    return None
+
+
+def load_sym_addresses():
+    """Load ROM symbol addresses for method/function lookup."""
+    syms = {}
+    try:
+        with open('build/SuperDragonsLairArcade.sym', 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith(';') or line.startswith('['):
+                    continue
+                parts = line.split()
+                if len(parts) >= 2 and ':' in parts[0]:
+                    bank_str, addr_str = parts[0].split(':')
+                    try:
+                        addr = int(addr_str, 16)
+                        name = parts[1]
+                        syms[addr] = name
+                    except ValueError:
+                        pass
+    except Exception:
+        pass
+    return syms
+
+
 # Load method ID->name mappings for a given class
 def load_method_names():
     """Load method name mappings (classname.methodname.MTD) from sym file."""
@@ -316,7 +373,11 @@ def load_method_names():
 async def main():
     class_names = load_class_names()
     method_names = load_method_names()
+    kernel_zp = load_kernel_zp()
+    sym_addrs = load_sym_addresses()
     print(f"Loaded {len(class_names)} class name mappings from sym file")
+    if kernel_zp is not None:
+        print(f"Kernel ZP base: ${kernel_zp:04X}")
     print(f"Connecting to QUsb2Snes at {WS_URL}...")
 
     try:
@@ -387,10 +448,134 @@ async def main():
                 brk_pc_plus2 = exc_args[1] | (exc_args[2] << 8)
                 brk_pbr = exc_args[3]
                 brk_pc = (brk_pc_plus2 - 2) & 0xFFFF
-                print(f"\n  *** {'BRK' if (exc_err & 0xFF) == 13 else 'COP'} CRASH LOCATION ***")
+                print(f"\n  *** {'BRK' if (exc_err & 0xFF) == 13 else 'COP'} CRASH LOCATION (from excArgs) ***")
                 print(f"  BRK/COP instruction at: ${brk_pbr:02X}:{brk_pc:04X}")
                 print(f"  BRK P register: ${brk_p:02X} = {format_p_register(brk_p)}")
                 print(f"  (Look up ${brk_pc:04X} in build/SuperDragonsLairArcade.sym)")
+
+                # Also read dedicated crash diagnostics (saved by enhanced BRK handler)
+                crash_data = await read_memory(ws, ADDR['crashSP'], 16)
+                crash_sp = struct.unpack_from('<H', crash_data, 0)[0]
+                crash_pc = struct.unpack_from('<H', crash_data, 2)[0]
+                crash_pb = crash_data[4]
+                crash_p  = crash_data[5]
+                crash_a  = struct.unpack_from('<H', crash_data, 6)[0]
+                crash_x  = struct.unpack_from('<H', crash_data, 8)[0]
+                crash_y  = struct.unpack_from('<H', crash_data, 10)[0]
+                crash_dp = struct.unpack_from('<H', crash_data, 12)[0]
+                crash_tmp = struct.unpack_from('<H', crash_data, 14)[0]
+                pre_brk_sp = (crash_sp + 4) & 0xFFFF
+                # crash_pc is PC+2 (BRK pushes address after BRK + signature byte)
+                crash_pc_actual = (crash_pc - 2) & 0xFFFF
+                print(f"\n  *** BRK CRASH DIAGNOSTICS (dedicated WRAM) ***")
+                print(f"  Crash instruction at: ${crash_pb:02X}:{crash_pc_actual:04X}")
+                print(f"  Crash PC+2 (raw):     ${crash_pb:02X}:{crash_pc:04X}")
+                print(f"  Pre-BRK SP:           ${pre_brk_sp:04X}")
+                print(f"  SP after BRK pushes:  ${crash_sp:04X}")
+                print(f"  Crash P register:     ${crash_p:02X} = {format_p_register(crash_p)}")
+                print(f"  Crash registers:      A=${crash_a:04X} X=${crash_x:04X} Y=${crash_y:04X}")
+                print(f"  Crash DP:             ${crash_dp:04X}")
+                print(f"  Kernel ZP tmp:        ${crash_tmp:04X}")
+
+                # Analyze crash-site DP
+                if kernel_zp is not None and crash_dp == kernel_zp:
+                    print(f"  DP analysis:          DP = kernel ZP -> crash in dispatch/play loop code")
+                elif 0x0010 <= crash_dp < 0x1810:
+                    print(f"  DP analysis:          DP in OOP ZP pool -> crash inside object method")
+                else:
+                    print(f"  DP analysis:          DP=${crash_dp:04X} (unexpected, not kernel ZP or OOP pool)")
+
+                # Analyze crash-site X as OopStack slot pointer
+                oop_base = ADDR['OopStack'] & 0xFFFF
+                oop_end = oop_base + OOP_NUM_SLOTS * OOP_SLOT_SIZE
+                if oop_base <= crash_x < oop_end:
+                    slot_idx = (crash_x - oop_base) // OOP_SLOT_SIZE
+                    slot_off = slot_idx * OOP_SLOT_SIZE
+                    slot = parse_oop_slot(oop_data[slot_off:slot_off+OOP_SLOT_SIZE], slot_idx)
+                    if slot:
+                        cname = class_names.get(slot['id'], f'?${slot["id"]:02X}')
+                        print(f"  X as OopStack slot:   slot {slot_idx} = {cname} "
+                              f"(flags={format_flags(slot['flags'])}, play=${slot['play']:04X})")
+                elif crash_x < 0x8000:
+                    print(f"  X=${crash_x:04X} (not a valid OopStack pointer)")
+
+                # Analyze kernel ZP tmp as method address
+                if crash_tmp != 0:
+                    sym_name = sym_addrs.get(crash_tmp, None)
+                    if sym_name:
+                        print(f"  tmp as method addr:   ${crash_tmp:04X} = {sym_name}")
+                    else:
+                        print(f"  tmp as method addr:   ${crash_tmp:04X} (no exact sym match)")
+                else:
+                    print(f"  tmp as method addr:   $0000 (null — possibly cleared WRAM)")
+
+                print(f"  (Look up ${crash_pc_actual:04X} in build/SuperDragonsLairArcade.sym)")
+
+            # For E_ObjStackCorrupted: show fingerprint mismatch diagnostics
+            if (exc_err & 0xFF) == 59:  # E_ObjStackCorrupted
+                fp_data = await read_memory(ws, ADDR['fpExpectedId'], 12)
+                fp_exp_id   = struct.unpack_from('<H', fp_data, 0)[0]
+                fp_exp_num  = struct.unpack_from('<H', fp_data, 2)[0]
+                fp_act_id   = struct.unpack_from('<H', fp_data, 4)[0]
+                fp_act_num  = struct.unpack_from('<H', fp_data, 6)[0]
+                fp_slot_idx = struct.unpack_from('<H', fp_data, 8)[0]
+                fp_crash_sp = struct.unpack_from('<H', fp_data, 10)[0]
+
+                # Calculate OopStack slot number from byte offset
+                oop_base = ADDR['OopStack'] & 0xFFFF
+                slot_num = fp_slot_idx // OOP_SLOT_SIZE if fp_slot_idx < OOP_NUM_SLOTS * OOP_SLOT_SIZE else -1
+
+                exp_id_name = class_names.get(fp_exp_id & 0xFF, f'?${fp_exp_id:02X}')
+                act_id_name = class_names.get(fp_act_id & 0xFF, f'?${fp_act_id:02X}')
+
+                print(f"\n  *** E_ObjStackCorrupted FINGERPRINT DIAGNOSTICS ***")
+                print(f"  OopStack slot offset:  X=${fp_slot_idx:04X} (slot #{slot_num})")
+                print(f"  Expected id  (stack):  ${fp_exp_id:04X} ({exp_id_name})")
+                print(f"  Actual id    (OopSt):  ${fp_act_id:04X} ({act_id_name})")
+                print(f"  Expected num (stack):  ${fp_exp_num:04X}")
+                print(f"  Actual num   (OopSt):  ${fp_act_num:04X}")
+                print(f"  CPU SP at failure:     ${fp_crash_sp:04X}")
+
+                # Determine what changed
+                id_match = (fp_exp_id == fp_act_id)
+                num_match = (fp_exp_num == fp_act_num)
+                if not id_match and not num_match:
+                    print(f"  >>> BOTH id AND num changed — possible stack corruption or slot reuse")
+                elif not id_match:
+                    print(f"  >>> Only id changed ({exp_id_name} -> {act_id_name}) — slot may have been reused")
+                elif not num_match:
+                    print(f"  >>> Only num changed (${fp_exp_num:04X} -> ${fp_act_num:04X}) — slot may have been reused")
+
+                # Check for $55/$AA pattern (uninitialized DRAM)
+                if fp_exp_id in (0x5555, 0x55AA, 0xAA55) or fp_exp_num in (0x5555, 0x55AA, 0xAA55):
+                    print(f"  >>> $55/$AA PATTERN in expected values — CPU STACK CORRUPTION likely!")
+                    print(f"      (Stack pop read uninitialized DRAM instead of pushed fingerprint)")
+                if fp_act_id in (0x5555, 0x55AA, 0xAA55) or fp_act_num in (0x5555, 0x55AA, 0xAA55):
+                    print(f"  >>> $55/$AA PATTERN in OopStack values — OopStack MEMORY CORRUPTION!")
+
+                # Check if actual values look like valid object data
+                if fp_act_id == 0 and fp_act_num == 0:
+                    print(f"  >>> Actual id+num are ZERO — slot was cleared (object killed during its own method?)")
+                elif fp_act_id == 0xFF or (fp_act_id & 0xFF) > 0x60:
+                    print(f"  >>> Actual id=${fp_act_id:04X} is out of valid OBJID range — CORRUPTION")
+
+            # For E_ObjBadHash: crash diagnostic fields hold hash pointer info
+            if (exc_err & 0xFF) == 21:  # E_ObjBadHash
+                crash_data = await read_memory(ws, ADDR['crashSP'], 6)
+                hash_ptr_addr = struct.unpack_from('<H', crash_data, 0)[0]
+                hash_id_count = struct.unpack_from('<H', crash_data, 2)[0]
+                hash_pntr = struct.unpack_from('<H', crash_data, 4)[0]
+                hash_id = hash_id_count & 0xFF
+                hash_count = (hash_id_count >> 8) & 0xFF
+                print(f"\n  *** E_ObjBadHash DIAGNOSTICS (from crash WRAM) ***")
+                print(f"  Hash pointer addr (X): ${hash_ptr_addr:04X}")
+                print(f"  Hash.id:               ${hash_id:02X} (MAXOBJID=${0x50:02X}, {'VALID' if hash_id < 0x50 else 'INVALID'})")
+                print(f"  Hash.count:            ${hash_count:02X}")
+                print(f"  Hash.pntr:             ${hash_pntr:04X} (OopStack range: $0000-$02FF)")
+                if hash_pntr >= 0x0300:
+                    print(f"  *** Hash.pntr OUT OF RANGE (>= $0300) ***")
+                if hash_id == 0x55 or hash_pntr == 0x5555:
+                    print(f"  *** $55 CORRUPTION PATTERN DETECTED ***")
 
             # ================================================================
             # OOP DISPATCH STATE
@@ -618,7 +803,43 @@ async def main():
                 brk_pc_plus2 = exc_args[1] | (exc_args[2] << 8)
                 brk_pbr = exc_args[3]
                 brk_pc = (brk_pc_plus2 - 2) & 0xFFFF
-                print(f"  {'BRK' if (exc_err & 0xFF) == 13 else 'COP'} at: ${brk_pbr:02X}:{brk_pc:04X}")
+                print(f"  {'BRK' if (exc_err & 0xFF) == 13 else 'COP'} at (excArgs): ${brk_pbr:02X}:{brk_pc:04X}")
+                # Dedicated crash diagnostics
+                crash_data = await read_memory(ws, ADDR['crashSP'], 16)
+                crash_sp = struct.unpack_from('<H', crash_data, 0)[0]
+                crash_pc_raw = struct.unpack_from('<H', crash_data, 2)[0]
+                crash_pb = crash_data[4]
+                crash_a  = struct.unpack_from('<H', crash_data, 6)[0]
+                crash_x  = struct.unpack_from('<H', crash_data, 8)[0]
+                crash_y  = struct.unpack_from('<H', crash_data, 10)[0]
+                crash_dp = struct.unpack_from('<H', crash_data, 12)[0]
+                crash_tmp = struct.unpack_from('<H', crash_data, 14)[0]
+                crash_pc_actual = (crash_pc_raw - 2) & 0xFFFF
+                pre_brk_sp = (crash_sp + 4) & 0xFFFF
+                print(f"  BRK at (dedicated):   ${crash_pb:02X}:{crash_pc_actual:04X}  (pre-BRK SP=${pre_brk_sp:04X})")
+                print(f"  Crash regs: A=${crash_a:04X} X=${crash_x:04X} Y=${crash_y:04X} DP=${crash_dp:04X} tmp=${crash_tmp:04X}")
+            if (exc_err & 0xFF) == 21:  # E_ObjBadHash
+                crash_data = await read_memory(ws, ADDR['crashSP'], 6)
+                h_addr = struct.unpack_from('<H', crash_data, 0)[0]
+                h_id = crash_data[2]
+                h_count = crash_data[3]
+                h_pntr = struct.unpack_from('<H', crash_data, 4)[0]
+                print(f"  Corrupted hash: addr=${h_addr:04X} id=${h_id:02X} count=${h_count:02X} pntr=${h_pntr:04X}")
+                if h_id == 0x55 or h_pntr == 0x5555:
+                    print(f"  *** $55 CORRUPTION PATTERN ***")
+            if (exc_err & 0xFF) == 59:  # E_ObjStackCorrupted
+                fp_data = await read_memory(ws, ADDR['fpExpectedId'], 12)
+                fp_exp_id   = struct.unpack_from('<H', fp_data, 0)[0]
+                fp_exp_num  = struct.unpack_from('<H', fp_data, 2)[0]
+                fp_act_id   = struct.unpack_from('<H', fp_data, 4)[0]
+                fp_act_num  = struct.unpack_from('<H', fp_data, 6)[0]
+                fp_slot_idx = struct.unpack_from('<H', fp_data, 8)[0]
+                fp_crash_sp = struct.unpack_from('<H', fp_data, 10)[0]
+                slot_num = fp_slot_idx // OOP_SLOT_SIZE if fp_slot_idx < OOP_NUM_SLOTS * OOP_SLOT_SIZE else -1
+                exp_name = class_names.get(fp_exp_id & 0xFF, f'?${fp_exp_id:02X}')
+                act_name = class_names.get(fp_act_id & 0xFF, f'?${fp_act_id:02X}')
+                print(f"  Fingerprint: expected id=${fp_exp_id:04X}({exp_name}) num=${fp_exp_num:04X}")
+                print(f"               actual   id=${fp_act_id:04X}({act_name}) num=${fp_act_num:04X}  slot={slot_num} SP=${fp_crash_sp:04X}")
             print(f"  CPU: A=${exc_a:04X} X=${exc_x:04X} Y=${exc_y:04X} DP=${exc_dp:04X} SP=${exc_stack:04X}")
             print(f"  Game mode: {mode_names.get(game_mode, '???')} (row {scene_row})")
             print(f"  Active OOP objects: {active_count}/{OOP_NUM_SLOTS}")

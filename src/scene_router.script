@@ -128,6 +128,17 @@ _scene_router.colDone:
   ;load target scene from ROM grid table
   lda.l _scene_router.grid,x
 
+  ;set scene name for pause screen from parallel lookup table
+  pha
+  txa
+  lsr a                          ;byte index = word index / 2
+  tax
+  sep #$20
+  lda.l _scene_router.sceneNameGrid,x
+  sta.w GLOBAL.currentScene
+  rep #$20
+  pla
+
   ;increment row for next invocation
   pha
   lda.w GLOBAL.sceneRow
@@ -174,3 +185,36 @@ _scene_router.trapsGrid:
   .dw fstc_start_alive, bowr_start_alive, vest_start_alive   ;row 4
   .dw ybr_start_alive,  ybrr_start_alive, alrm_start_alive   ;row 5
   .dw thrn_start_alive, fpl_start_alive,  fplr_start_alive   ;row 6
+
+;--- Scene name index tables (parallel to chapter grids above) ---
+; Each byte is a T_sceneName index (1-32) for the corresponding grid cell.
+_scene_router.sceneNameGrid:
+  .db 15, 15,  4                ;row  0: flrp=Flaming Ropes, flrr=Flaming Ropes, bowr=Bower
+  .db 16, 16, 20                ;row  1: fh=Flying Barding, fhr=Flying Barding, alrm=Drink Me
+  .db 19, 19, 14                ;row  2: cc=Crypt Creeps, ccr=Crypt Creeps, ugr=Underground River
+  .db 30, 30,  2                ;row  3: fps=Elevator Shaft, fps=Elevator Shaft, vest=Vestibule
+  .db 13, 31, 26                ;row  4: rbal=Rolling Balls, ecag=Electric Cage, bknt=Black Knight
+  .db 24, 24, 27                ;row  5: gr=Grim Reaper, grr=Grim Reaper, lzkg=Lizard King
+  .db 22, 23,  9                ;row  6: sm=Smithee, smr=Smithee Rev, wndr=Breathing Door
+  .db  8,  3, 17                ;row  7: tntr=Tentacle Room, snkr=Mist Room, bcld=Bubbling Cauldron
+  .db 32, 10,  5                ;row  8: fstc=Staircase, gg=Giddy Goons, firm=Fire Room
+  .db 25, 25, 11                ;row  9: ybr=Yellow Brick Road, ybrr=YBR, cwbt=Catwalk Bats
+  .db 21, 21, 18                ;row 10: rk=Robot Knight, rkr=Robot Knight, gbat=Giant Bat
+  .db  6,  7, 12                ;row 11: thrn=Throne Room, tltr=Tilting Room, mudm=Ye Mudmen
+  .db 30, 30, 28                ;row 12: fpl=Elevator Shaft, fplr=Elevator Shaft, tdl=Dragon's Lair
+
+_scene_router.bossNameGrid:
+  .db  3,  8, 10                ;row  0: snkr=Mist Room, tntr=Tentacle Room, gg=Giddy Goons
+  .db 19, 19, 12                ;row  1: cc=Crypt Creeps, ccr=Crypt Creeps, mudm=Ye Mudmen
+  .db 18, 21, 22                ;row  2: gbat=Giant Bat, rk=Robot Knight, sm=Smithee
+  .db 23, 21, 24                ;row  3: smr=Smithee Rev, rkr=Robot Knight, grr=Grim Reaper
+  .db 24, 26, 27                ;row  4: gr=Grim Reaper, bknt=Black Knight, lzkg=Lizard King
+
+_scene_router.trapsNameGrid:
+  .db  5,  7,  9                ;row  0: firm=Fire Room, tltr=Tilting Room, wndr=Breathing Door
+  .db 15, 15, 13                ;row  1: flrp=Flaming Ropes, flrr=Flaming Ropes, rbal=Rolling Balls
+  .db 16, 16, 14                ;row  2: fh=Flying Barding, fhr=Flying Barding, ugr=Underground River
+  .db 11, 31, 30                ;row  3: cwbt=Catwalk Bats, ecag=Electric Cage, fps=Elevator Shaft
+  .db 32,  4,  2                ;row  4: fstc=Staircase, bowr=Bower, vest=Vestibule
+  .db 25, 25, 20                ;row  5: ybr=YBR, ybrr=YBR, alrm=Drink Me Room
+  .db  6, 30, 30                ;row  6: thrn=Throne Room, fpl=Elevator Shaft, fplr=Elevator Shaft

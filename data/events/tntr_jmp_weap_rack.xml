@@ -1,7 +1,7 @@
 <chapter name="tntr_jmp_weap_rack">
 	<timeline>
 		<timestart min="1" second="28" ms="781" frame="2451" />
-		<timeend min="1" second="30" ms="682" frame="2497" />
+		<timeend min="1" second="30" ms="714" frame="2498" />
 	</timeline>
 	<params />
 	<macros />

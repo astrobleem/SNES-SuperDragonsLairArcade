@@ -50,6 +50,8 @@ core.vram.init:
   ldx.w #VRAM_ALLOCATE.GLOBAL.START
   jsr ClearWRAM
   stz.w GLOBAL.currentVramAllocationId
+  lda #0
+  sta.l GLOBAL.oam.vram.id
   plp
   rts
 

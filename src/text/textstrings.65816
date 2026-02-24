@@ -899,7 +899,7 @@ T_sceneName.10:
 T_sceneName.11:
     .db "Catwalk Bats",TC_end
 T_sceneName.12:
-    .db "Elevator Floor",TC_end
+    .db "Ye Mudmen",TC_end
 T_sceneName.13:
     .db "Rolling Balls",TC_end
 T_sceneName.14:
@@ -934,6 +934,12 @@ T_sceneName.28:
     .db "Dragon's Lair",TC_end
 T_sceneName.29:
     .db "Attract Mode",TC_end
+T_sceneName.30:
+    .db "Elevator Shaft",TC_end
+T_sceneName.31:
+    .db "Electric Cage",TC_end
+T_sceneName.32:
+    .db "Staircase",TC_end
 
 T_pause:
     .db TC_pos

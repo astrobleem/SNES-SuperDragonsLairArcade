@@ -484,6 +484,7 @@ _title_screen.doCleanup:
   jsr core.dma.resetHardware
 
   CALL Sprite.super.kill.MTD objSuper
+  jsr core.oam.clearTable
   CALL Background.generic.kill.MTD objBackground
   CALL Background.generic.kill.MTD objLogo
   CALL Background.textlayer.8x8.kill.MTD objText

@@ -1,7 +1,7 @@
 <chapter name="ybrr_seq8">
 	<timeline>
 		<timestart min="9" second="5" ms="49" frame="13407" />
-		<timeend min="9" second="8" ms="293" frame="13485" />
+		<timeend min="9" second="8" ms="391" frame="13488" />
 	</timeline>
 	<params />
 	<macros />
