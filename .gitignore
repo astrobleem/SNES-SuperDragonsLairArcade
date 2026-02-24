@@ -1,3 +1,6 @@
+# User manual (not ready for public yet)
+schwag/manual/
+
 # Video files (large, user-supplied)
 data/videos/
 !data/videos/README.md
