@@ -1,6 +1,7 @@
 builddir := build
 sourcedir := src
 datadir := data
+distdir := distribution
 linkdir := $(builddir)/lnk
 
 romext := sfc
@@ -148,7 +149,8 @@ builddirs := $(sort $(dir $(objects) $(datafiles)) $(linkdir))
 #link 65816 objects
 all: $(linkobjectfile)
 	$(linker) $(linkflags) $(linkobjectfile) $(romfile)
-	cp $(romfile) "/mnt/e/gh/SuperDragonsLairArcade.sfc/SuperDragonsLairArcade.sfc"
+	$(MD) $(distdir)
+	cp $(romfile) $(distdir)/SuperDragonsLairArcade.sfc
 
 #create necessary directory substructure in build directory
 $(builddirs): $(chapterscripts) $(chapterfolder)/chapter_ld_frames.inc

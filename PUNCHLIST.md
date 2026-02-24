@@ -52,7 +52,7 @@ All in `Event.cutscene.65816`. Scene-specific death/transition cutscenes that ar
 
 | Item | File | Issue |
 |------|------|-------|
-| Hardcoded user paths in generate_msu_data.py | `tools/generate_msu_data.py:50-51` | FFmpeg paths hardcoded to `C:\Users\chad\...`. Non-portable. |
+| ~~Hardcoded user paths~~ | ~~`tools/*.py`~~ | ~~RESOLVED: All scripts now use `tools/paths.py` for shared path resolution. FFmpeg, Daphne, and output paths configurable via `project.conf` or env vars.~~ |
 | `generate_manifest.py` obsolete | `tools/generate_manifest.py` | Superseded by dynamic PCM scanning. Can be deleted. |
 | Makefile commented-out code | `Makefile:94,223` | Unused `convertedframefolder` var, commented-out chapter processing line. |
 | `gfx_converter.py` duplicate print | `tools/gfx_converter.py:45,47` | Same padding message printed twice. |

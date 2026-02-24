@@ -11,8 +11,10 @@ except ImportError:
     print("ERROR: pip install websockets")
     sys.exit(1)
 
+from paths import DISTRIBUTION, wsl_to_windows
+
 WS_URL = "ws://localhost:23074"
-ROM_PATH = r"E:\gh\SuperDragonsLairArcade.sfc\SuperDragonsLairArcade.sfc"
+ROM_PATH = wsl_to_windows(str(DISTRIBUTION / "SuperDragonsLairArcade.sfc"))
 FXPAK_ROM_PATH = "/SuperDragonsLair/SuperDragonsLairArcade.sfc"
 
 async def main():

@@ -4,24 +4,24 @@ You are an expert at debugging SNES games using Mesen 2's Lua testrunner API. Yo
 
 ## Template
 
-**Always start new test scripts from the template**: `mesen/test_template.lua`. Copy it to `E:\gh\SuperDragonsLairArcade.sfc\` and customize. The template includes all standard boilerplate (address constants, utilities, input injection, error detection, schedule handler).
+**Always start new test scripts from the template**: `mesen/test_template.lua`. Copy it to `distribution/` and customize. The template includes all standard boilerplate (address constants, utilities, input injection, error detection, schedule handler).
 
 ## Running Mesen Tests
 
-**Location**: `E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe`
+**Location**: `mesen/Mesen.exe` (inside the project)
 
-**Testrunner command** (from the SFC deployment folder with MSU data):
+**Testrunner command** (from the distribution folder with MSU data):
 ```bat
-cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc script.lua > out.txt 2>&1"
+cmd.exe /c "cd /d <project>\distribution && <project>\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc script.lua > out.txt 2>&1"
 ```
 
-**MSU-1 requirement**: The ROM (.sfc) must be in the same folder as .msu and .pcm files. The deployment folder is `E:\gh\SuperDragonsLairArcade.sfc\`. The build automatically copies the ROM there.
+**MSU-1 requirement**: The ROM (.sfc) must be in the same folder as .msu and .pcm files. The deployment folder is `distribution/`. The build automatically copies the ROM there.
 
 **Output**: Use `print()` in Lua. Capture with `> out.txt 2>&1` redirect. `io.open` does NOT work in testrunner mode.
 
 ## Existing Test Scripts
 
-Test scripts live in `E:\gh\SuperDragonsLairArcade.sfc\`:
+Test scripts live in `distribution/`:
 - **test_intro_lastcheckpoint.lua** — Fail path: ARCADE MODE → no input → chapter timeout → lastcheckpoint → game_over
 - **test_intro_success.lua** — Success path: sword event + UP direction → reaches vestibule
 - **test_scene_transitions.lua** — Smoke test: verify 3+ playchapters without errors

@@ -7,8 +7,8 @@ setlocal
 REM Set paths
 set "SCRIPT_DIR=%~dp0"
 set "PROJECT_ROOT=%SCRIPT_DIR%.."
-set "DAPHNE_DIR=e:\gh\DaphneCDROM"
-set "FRAMEFILE=%DAPHNE_DIR%\framefile\dlcdrom.TXT"
+set "DAPHNE_DIR=%PROJECT_ROOT%\data\laserdisc"
+set "FRAMEFILE=%DAPHNE_DIR%\dlcdrom.TXT"
 set "OUTPUT=%PROJECT_ROOT%\data\videos\dl_arcade.mp4"
 set "LOGFILE=%SCRIPT_DIR%convert_daphne.log"
 
@@ -17,10 +17,10 @@ echo Daphne CDROM to MP4 Conversion
 echo ========================================
 echo.
 
-REM Check if DaphneCDROM directory exists
+REM Check if Daphne laserdisc directory exists
 if not exist "%DAPHNE_DIR%" (
-    echo ERROR: DaphneCDROM directory not found at: %DAPHNE_DIR%
-    echo Please ensure the Daphne CDROM files are available.
+    echo ERROR: Daphne laserdisc directory not found at: %DAPHNE_DIR%
+    echo Please copy Daphne files to data\laserdisc\ (see data\laserdisc\README.md).
     echo.
     pause
     exit /b 1

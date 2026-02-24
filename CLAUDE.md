@@ -12,14 +12,14 @@ Build runs under WSL. The project uses WLA-DX v9.3 assembler (v9.4+ breaks the b
 
 ```bash
 # Standard build (clean + build, ~2-3 min)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"
+wsl -e bash -c "cd <wsl-project-root> && make clean && make"
 
 # Fast rebuild (skip clean if only .65816/.script files changed)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"
+wsl -e bash -c "cd <wsl-project-root> && make"
 
 # Build output
 # ROM: build/SuperDragonsLairArcade.sfc
-# Also copied to: E:\gh\SuperDragonsLairArcade.sfc\SuperDragonsLairArcade.sfc
+# Also copied to: distribution/SuperDragonsLairArcade.sfc
 ```
 
 **Build warnings that are normal:**
@@ -29,8 +29,9 @@ wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"
 **Emulator testing with Mesen 2:**
 ```bat
 :: Mesen.exe is at mesen\Mesen.exe (inside the project)
+:: ROM MUST load from distribution/ where .msu/.pcm files live
 :: Use cmd.exe redirect for reliable output capture (PowerShell Out-String can truncate)
-cmd.exe /c "cd /d E:\gh\SNES-SuperDragonsLairArcade\mesen && Mesen.exe --testrunner ..\build\SuperDragonsLairArcade.sfc script.lua > out.txt 2>&1"
+cmd.exe /c "cd /d <project>\distribution && <project>\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc script.lua > out.txt 2>&1"
 ```
 
 **Mesen Lua API quirks:**
@@ -200,30 +201,30 @@ Menu items start at tilemap position `$286` (row 20, col 6). Copyright text at `
 
 ### MSU-1 Video Data Pipeline
 
-Video frames are extracted directly from **Daphne .m2v/.ogg segment files** (NOT an intermediate MP4). The Daphne framefile (`data/laserdisc/dl_lair.txt`) maps laserdisc frame numbers to 204 MPEG-2 video segments and paired Ogg Vorbis audio segments. There is no MP4 fallback — the framefile is mandatory.
+Video frames are extracted directly from **Daphne .m2v/.ogg segment files** (NOT an intermediate MP4). The Daphne framefile (`data/laserdisc/dlcdrom.TXT`) maps laserdisc frame numbers to 204 MPEG-2 video segments and paired Ogg Vorbis audio segments stored in `data/laserdisc/segments/`. There is no MP4 fallback — the framefile is mandatory.
 
 **Video source**: Daphne .m2v segments (interlaced 29.97fps MPEG-2), deinterlaced and rate-converted by ffmpeg.
 
 ```bash
 # Full pipeline: extract frames + audio from .m2v/.ogg, convert tiles, package .msu
 # (~1hr first time with 8 workers, CPU-only ffmpeg decode)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --workers 8"
 
 # Clean + full pipeline (re-extracts everything from scratch)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --clean --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --clean --workers 8"
 
 # Skip extraction (use existing PNG frames), only convert tiles + package .msu (~23 min)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --skip-extract --workers 8"
 
 # Output: build/SuperDragonsLairArcade.msu (~516 MB)
-# Also copied to: E:\gh\SuperDragonsLairArcade.sfc\SuperDragonsLairArcade.msu
+# Also copied to: distribution/SuperDragonsLairArcade.msu
 ```
 
 ```bash
 # Audio-only extraction + PCM file numbering (~30s, no video processing needed)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --skip-convert --skip-package --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --skip-extract --skip-convert --skip-package --workers 8"
 # Output: build/SuperDragonsLairArcade-{chapterID}.pcm (473 files)
-# Also copied to: E:\gh\SuperDragonsLairArcade.sfc\
+# Also copied to: distribution/
 ```
 
 **Frame extraction details**: Each .m2v segment is decoded CPU-only (no CUDA) with this ffmpeg filter chain:
@@ -246,9 +247,9 @@ yadif,fps=24000/1001,trim=start={offset_s}:duration={dur_s},setpts=PTS-STARTPTS,
 
 **Frame inspection**: After extraction, frames are copied to `data/videos/frames/{chapter_name}/` for per-chapter visual debugging. Each subdirectory contains the PNG frames for that chapter.
 
-**MSU-1 audio track numbering**: PCM files are named `SuperDragonsLairArcade-{chapterID}.pcm` where chapterID matches the chapter's index in the .msu pointer table (from `chapter.id.NNN` files in each chapter directory). The ROM passes `this.currentChapter` as the audio track number to MSU-1 hardware. `msu1blockwriter.py` also writes PCM files during .msu packaging (Phase 3). `generate_msu_data.py` Phase 1c copies them to build/ and sfc/ directories.
+**MSU-1 audio track numbering**: PCM files are named `SuperDragonsLairArcade-{chapterID}.pcm` where chapterID matches the chapter's index in the .msu pointer table (from `chapter.id.NNN` files in each chapter directory). The ROM passes `this.currentChapter` as the audio track number to MSU-1 hardware. `msu1blockwriter.py` also writes PCM files during .msu packaging (Phase 3). `generate_msu_data.py` Phase 1c copies them to build/ and distribution/ directories.
 
-**manifest.xml**: Required by some emulators (bsnes/higan) to map MSU-1 PCM tracks. Located at `E:\gh\SuperDragonsLairArcade.sfc\manifest.xml`. Must list only tracks that have corresponding PCM files. Regenerate after any MSU data change by scanning actual PCM files in the sfc directory.
+**manifest.xml**: Required by some emulators (bsnes/higan) to map MSU-1 PCM tracks. Located at `distribution/manifest.xml`. Must list only tracks that have corresponding PCM files. Regenerate after any MSU data change by scanning actual PCM files in the distribution directory.
 
 **Pipeline steps** (per chapter):
 1. ffmpeg extracts 256x192 PNG frames from .m2v segment (CPU decode, yadif+trim filter chain)
@@ -262,7 +263,7 @@ yadif,fps=24000/1001,trim=start={offset_s}:duration={dur_s},setpts=PTS-STARTPTS,
 - MSU title in `.msu` file must exactly match ROM header title (`SUPER DRAGON'S LAIR`) or `_isMsu1FilePresent` rejects it.
 - `make clean` DELETES `data/chapters/` — wipes all extracted video frames. Run MSU generation AFTER final build, or use `make` without `clean`.
 - BLAS thread safety: `OPENBLAS_NUM_THREADS=1` must be set before `import numpy` in generate_msu_data.py — multi-threaded BLAS corrupts results when called from concurrent Python threads.
-- Daphne framefile (`data/laserdisc/dl_lair.txt`) is REQUIRED — there is no MP4 fallback.
+- Daphne framefile (`data/laserdisc/dlcdrom.TXT`) is REQUIRED — there is no MP4 fallback.
 
 ## Critical Pitfalls
 
@@ -353,21 +354,21 @@ In 16-bit accumulator mode (`rep #$20`), `lda zp_offset` reads 2 bytes. If a `db
 | `tools/lua_scene_exporter.py` | Exports DirkSimple game.lua scene data to XML events with frame timing |
 | `tools/generate_segment_timing.py` | Generates `data/segment_timing.json` from Daphne framefile + ffprobe |
 | `tools/msu1blockwriter.py` | Packages tile/tilemap/palette data into .msu file format |
-| `data/laserdisc/dl_lair.txt` | Daphne framefile — maps laserdisc frames to .m2v/.ogg segment files |
+| `data/laserdisc/dlcdrom.TXT` | Daphne framefile — maps laserdisc frames to .m2v/.ogg segment files |
 | `data/segment_timing.json` | Per-segment cumulative timing offsets for frame-accurate seeking |
 | `build/SuperDragonsLairArcade.sym` | Symbol table — look up addresses here after each build |
-| `E:\gh\SuperDragonsLairArcade.sfc\manifest.xml` | MSU-1 track manifest for emulators (lists PCM files by chapter ID) |
+| `distribution/manifest.xml` | MSU-1 track manifest for emulators (lists PCM files by chapter ID) |
 | `tools/generate_playthrough_tests.py` | Generates per-scene Mesen Lua test scripts that verify every scene is beatable |
 
 ## Mesen Lua Test Runner — MANDATORY
 
-**Mesen path**: `E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe`
+**Mesen path**: `mesen/Mesen.exe` (inside the project)
 
-**Run command** (ROM MUST load from the sfc directory where .msu/.pcm files live, NOT from build/):
+**Run command** (ROM MUST load from `distribution/` where .msu/.pcm files live, NOT from build/):
 ```bat
-cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc test_myscript.lua > out.txt 2>&1"
+cmd.exe /c "cd /d <project>\distribution && <project>\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc test_myscript.lua > out.txt 2>&1"
 ```
-Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm files there). Copy test scripts to `E:\gh\SuperDragonsLairArcade.sfc\` before running. Output via `print()` only (`io.open` is broken in testrunner mode).
+Loading from `build/` will crash at frame ~4 with an MSU-1 error (no .msu/.pcm files there). Copy test scripts to `distribution/` before running. Output via `print()` only (`io.open` is broken in testrunner mode).
 
 **WRAM addresses** (shift when `maxNumberOopObjs` or any RAMSECTION changes — verify in .sym):
 - `$7E7306` — inputDevice.press (current buttons)
@@ -497,16 +498,16 @@ end, emu.eventType.endFrame)
 
 ```bash
 # Generate all 28 scene test scripts (scene 29 attract_mode has no gameplay path)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_playthrough_tests.py"
 
 # Generate for a specific scene only
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py --scene 15"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_playthrough_tests.py --scene 15"
 
 # Dry-run: show golden paths without generating Lua files
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py --dry-run"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_playthrough_tests.py --dry-run"
 
-# Run one test (from sfc directory where .msu/.pcm files live)
-cmd.exe /c "cd /d E:\gh\SuperDragonsLairArcade.sfc && E:\gh\SNES-SuperDragonsLairArcade\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc test_scene_15_flaming_ropes.lua > out_15.txt 2>&1"
+# Run one test (from distribution/ where .msu/.pcm files live)
+cmd.exe /c "cd /d <project>\distribution && <project>\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc test_scene_15_flaming_ropes.lua > out_15.txt 2>&1"
 ```
 
 **IMPORTANT**: Regenerate test scripts after every build (`make`) because ROM addresses shift. The generator reads `build/SuperDragonsLairArcade.sym` automatically.

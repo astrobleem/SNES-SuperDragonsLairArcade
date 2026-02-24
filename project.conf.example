@@ -1,0 +1,5 @@
+[paths]
+# FFmpeg executable. Default 'ffmpeg' uses system PATH.
+# Override with full path if you need a specific build (e.g., CUDA-enabled):
+# ffmpeg = /mnt/c/path/to/ffmpeg.exe
+ffmpeg = ffmpeg

@@ -5,9 +5,10 @@ and actual cumulative MP4 positions from concatenated .m2v segments."""
 import subprocess
 import os
 import sys
+from paths import DAPHNE_FRAMEFILE, DAPHNE_CONTENT
 
-framefile = "/mnt/e/gh/DaphneCDROM/framefile/dlcdrom.TXT"
-content_root = "/mnt/e/gh/DaphneCDROM/DLCDROM"
+framefile = str(DAPHNE_FRAMEFILE)
+content_root = str(DAPHNE_CONTENT)
 
 with open(framefile) as f:
     lines = f.readlines()

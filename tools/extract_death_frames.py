@@ -1,25 +1,17 @@
 #!/usr/bin/env python3
 """Quick script to extract sample frames from intro death segments."""
 import subprocess, os, sys
+from paths import FFMPEG, PROJECT_ROOT, DAPHNE_CONTENT, wsl_to_windows as to_win_path
 
-def to_win_path(path):
-    path = os.path.abspath(path)
-    if path.startswith("/mnt/"):
-        parts = path[5:]
-        drive = parts[0].upper()
-        rest = parts[1:]
-        return drive + ":" + rest.replace("/", "\\")
-    return path
-
-ffmpeg = "/mnt/c/Users/chad/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-6.0-full_build/bin/ffmpeg.exe"
-outdir = "/mnt/e/gh/SNES-SuperDragonsLairArcade/mesen/Screenshots/death"
+ffmpeg = FFMPEG
+outdir = str(PROJECT_ROOT / "mesen" / "Screenshots" / "death")
 os.makedirs(outdir, exist_ok=True)
 
 segments = ["dls01d1.vob.m2v", "dls01d2.vob.m2v", "dls01d3.vob.m2v", "dls01b.vob.m2v"]
 
 for seg in segments:
     base = seg.replace(".vob.m2v", "")
-    inp = to_win_path("/mnt/e/gh/DaphneCDROM/DLCDROM/" + seg)
+    inp = to_win_path(str(DAPHNE_CONTENT / seg))
 
     # first frame
     out1 = os.path.join(outdir, base + "_first.png")

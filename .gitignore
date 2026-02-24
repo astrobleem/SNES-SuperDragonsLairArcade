@@ -67,6 +67,16 @@ build.log
 *.swo
 *~
 
+# Project config (user-specific overrides)
+project.conf
+
+# Distribution output (ROM + MSU data for hardware/emulator)
+distribution/*
+!distribution/README.md
+
+# Daphne laserdisc segments (large, user-supplied)
+data/laserdisc/segments/
+
 # OS generated files
 .DS_Store
 Thumbs.db

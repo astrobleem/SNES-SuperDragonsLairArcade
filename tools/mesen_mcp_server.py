@@ -13,9 +13,10 @@ import zlib
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
+from paths import PROJECT_ROOT, DISTRIBUTION, windows_to_wsl
 
-PROJECT = Path(r"E:\gh\SNES-SuperDragonsLairArcade")
-SFC_DIR = Path(r"E:\gh\SuperDragonsLairArcade.sfc")
+PROJECT = PROJECT_ROOT
+SFC_DIR = DISTRIBUTION
 SYM_FILE = PROJECT / "build" / "SuperDragonsLairArcade.sym"
 MESEN = PROJECT / "mesen" / "Mesen.exe"
 
@@ -110,7 +111,8 @@ def build_rom(clean: bool = True) -> str:
         clean: If True, runs 'make clean && make'. If False, runs 'make' only.
     """
     make_cmd = "make clean && make" if clean else "make"
-    wsl_cmd = f'wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && {make_cmd}"'
+    wsl_project = windows_to_wsl(str(PROJECT))
+    wsl_cmd = f'wsl -e bash -c "cd {wsl_project} && {make_cmd}"'
 
     try:
         result = subprocess.run(
@@ -147,8 +149,9 @@ def generate_test(scene: int | None = None, dry_run: bool = False) -> str:
     if dry_run:
         args += " --dry-run"
 
+    wsl_project = windows_to_wsl(str(PROJECT))
     wsl_cmd = (
-        f'wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && '
+        f'wsl -e bash -c "cd {wsl_project} && '
         f'python3 tools/generate_playthrough_tests.py{args}"'
     )
 

@@ -18,13 +18,14 @@ import json
 import os
 import subprocess
 import sys
+from paths import DAPHNE_FRAMEFILE, DAPHNE_CONTENT
 
 
 def main():
     parser = argparse.ArgumentParser(description='Generate segment timing JSON from Daphne framefile')
-    parser.add_argument('--framefile', default='/mnt/e/gh/DaphneCDROM/framefile/dlcdrom.TXT',
+    parser.add_argument('--framefile', default=str(DAPHNE_FRAMEFILE),
                         help='Path to Daphne framefile')
-    parser.add_argument('--content-root', default='/mnt/e/gh/DaphneCDROM/DLCDROM',
+    parser.add_argument('--content-root', default=str(DAPHNE_CONTENT),
                         help='Path to Daphne content root (where .m2v files are)')
     parser.add_argument('--output', default=None,
                         help='Output JSON path (default: data/segment_timing.json relative to project root)')

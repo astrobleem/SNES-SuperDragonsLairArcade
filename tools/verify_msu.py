@@ -85,7 +85,7 @@ def main():
     # Determine paths
     project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     msu_path = os.path.join(project_dir, "build", "SuperDragonsLairArcade.msu")
-    sfc_msu_path = os.path.join("E:\\gh\\SuperDragonsLairArcade.sfc", "SuperDragonsLairArcade.msu")
+    sfc_msu_path = os.path.join(project_dir, "distribution", "SuperDragonsLairArcade.msu")
     chapters_dir = os.path.join(project_dir, "data", "chapters")
 
     # Use sfc dir copy if build copy doesn't exist

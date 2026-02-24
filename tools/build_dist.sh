@@ -10,7 +10,7 @@
 #   bash tools/build_dist.sh [--skip-extract] [--skip-convert] [--workers N]
 #
 # Output:
-#   E:\gh\SuperDragonsLairArcade.sfc\  (distribution folder)
+#   distribution/  (distribution folder)
 #     SuperDragonsLairArcade.sfc       (ROM)
 #     SuperDragonsLairArcade.msu       (video data, ~568 MB)
 #     SuperDragonsLairArcade-*.pcm     (audio tracks, ~476 files)
@@ -22,7 +22,7 @@
 set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DIST_DIR="/mnt/e/gh/SuperDragonsLairArcade.sfc"
+DIST_DIR="$PROJECT_DIR/distribution"
 FRAMES_ARCHIVE="$PROJECT_DIR/data/videos/frames"
 WORKERS=8
 SKIP_EXTRACT=""

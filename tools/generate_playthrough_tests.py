@@ -18,11 +18,11 @@ import argparse
 from collections import deque
 from pathlib import Path
 
-# Project root (one level up from tools/)
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+from paths import PROJECT_ROOT, DISTRIBUTION
+
 CHAPTERS_DIR = PROJECT_ROOT / "data" / "chapters"
 SYM_FILE = PROJECT_ROOT / "build" / "SuperDragonsLairArcade.sym"
-SFC_DIR = Path("/mnt/e/gh/SuperDragonsLairArcade.sfc")
+SFC_DIR = DISTRIBUTION
 
 # Direction constants matching src/definition/snes.registers
 JOY_DIR_UP    = 0x0800

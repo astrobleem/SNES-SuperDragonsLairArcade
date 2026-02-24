@@ -38,19 +38,14 @@ import struct
 import numpy as np
 
 # ---------- Configuration ----------
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from paths import PROJECT_ROOT, BUILD_DIR, TOOLS_DIR, DISTRIBUTION, DAPHNE_FRAMEFILE, DAPHNE_CONTENT, FFMPEG
+
+PROJECT_DIR = str(PROJECT_ROOT)
 EVENTS_DIR = os.path.join(PROJECT_DIR, 'data', 'events')
 CHAPTERS_DIR = os.path.join(PROJECT_DIR, 'data', 'chapters')
-TOOLS_DIR = os.path.join(PROJECT_DIR, 'tools')
-SUPERFAMICONV = os.path.join(TOOLS_DIR, 'superfamiconv', 'superfamiconv.exe')
-MSU_WRITER = os.path.join(TOOLS_DIR, 'msu1blockwriter.py')
+SUPERFAMICONV = os.path.join(str(TOOLS_DIR), 'superfamiconv', 'superfamiconv.exe')
+MSU_WRITER = os.path.join(str(TOOLS_DIR), 'msu1blockwriter.py')
 DRAGON_ROAR_PCM = os.path.join(PROJECT_DIR, 'data', 'sounds', 'SuperDragonsLairArcade-900.pcm')
-
-# Windows ffmpeg with CUDA support (WSL-mounted path for subprocess, Windows path for display)
-WIN_FFMPEG_WSL = "/mnt/c/Users/chad/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-6.0-full_build/bin/ffmpeg.exe"
-WIN_FFMPEG_WIN = r"C:\Users\chad\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-6.0-full_build\bin\ffmpeg.exe"
-# Fallback to system ffmpeg
-SYSTEM_FFMPEG = "ffmpeg"
 
 FPS = 24  # MSU-1 playback fps (msu1blockwriter uses integer)
 SOURCE_FPS = 23.9777  # Source video fps for frame number calculation
@@ -65,12 +60,11 @@ AUDIO_SAMPLE_RATE = 44100
 AUDIO_CHANNELS = 2
 MSU1_AUDIO_HEADER = b"MSU1" + struct.pack('<I', 0)  # "MSU1" + loop point (0 = no loop)
 
-OUTPUT_MSU = os.path.join(PROJECT_DIR, 'build', 'SuperDragonsLairArcade.msu')
-FINAL_MSU_PATH = os.path.join(PROJECT_DIR, '..', 'SuperDragonsLairArcade.sfc', 'SuperDragonsLairArcade.msu')
+OUTPUT_MSU = os.path.join(str(BUILD_DIR), 'SuperDragonsLairArcade.msu')
+FINAL_MSU_PATH = os.path.join(str(DISTRIBUTION), 'SuperDragonsLairArcade.msu')
 
-# Daphne source paths (computed relative to project parent directory)
-DEFAULT_FRAMEFILE = os.path.join(os.path.dirname(PROJECT_DIR), 'DaphneCDROM', 'framefile', 'dlcdrom.TXT')
-DEFAULT_CONTENT_ROOT = os.path.join(os.path.dirname(PROJECT_DIR), 'DaphneCDROM', 'DLCDROM')
+DEFAULT_FRAMEFILE = str(DAPHNE_FRAMEFILE)
+DEFAULT_CONTENT_ROOT = str(DAPHNE_CONTENT)
 
 # ---------- Path conversion ----------
 _is_wsl = None
@@ -193,14 +187,16 @@ def format_time(ms):
     return "%02d:%02d:%02d.%03d" % (0, ms // 60000, (ms % 60000) // 1000, ms % 1000)
 
 def get_ffmpeg():
-    """Return (exe_path, needs_win_paths, has_cuda)."""
-    if is_wsl() and os.path.exists(WIN_FFMPEG_WSL):
-        # Use Windows ffmpeg via WSL interop (has CUDA), but it needs Windows paths for -i and -f image2
-        return WIN_FFMPEG_WSL, True, True
-    if not is_wsl() and os.path.exists(WIN_FFMPEG_WIN):
-        return WIN_FFMPEG_WIN, False, True
-    # Fallback: system ffmpeg (no CUDA in WSL typically)
-    return SYSTEM_FFMPEG, False, False
+    """Return (exe_path, needs_win_paths, has_cuda).
+
+    Uses the FFMPEG path from paths.py (configurable via project.conf or
+    FFMPEG env var). If the resolved path is a Windows executable accessed
+    from WSL, needs_win_paths is True.
+    """
+    ffmpeg_path = FFMPEG
+    needs_win = is_wsl() and (ffmpeg_path.endswith('.exe') or '\\' in ffmpeg_path)
+    has_cuda = ffmpeg_path != "ffmpeg" and os.path.exists(ffmpeg_path)
+    return ffmpeg_path, needs_win, has_cuda
 
 def extract_chapter_frames_from_segment(chapter_info, chapter_dir, segments):
     """Extract video frames directly from a Daphne .m2v segment.
@@ -583,8 +579,8 @@ def main():
                         help='Remove existing video frames before extraction')
     parser.add_argument('--framefile', type=str, default=DEFAULT_FRAMEFILE,
                         help='Path to Daphne framefile (default: %(default)s)')
-    parser.add_argument('--content-root', type=str, default=None,
-                        help='Path to Daphne content directory (default: from framefile)')
+    parser.add_argument('--content-root', type=str, default=DEFAULT_CONTENT_ROOT,
+                        help='Path to Daphne content directory (default: %(default)s)')
     args = parser.parse_args()
 
     print("=" * 60)
@@ -729,7 +725,8 @@ def main():
         print("--- Phase 1c: Copying PCM files to numbered output ---")
         build_dir = os.path.dirname(OUTPUT_MSU)
         os.makedirs(build_dir, exist_ok=True)
-        final_dir = os.path.normpath(os.path.join(PROJECT_DIR, '..', 'SuperDragonsLairArcade.sfc'))
+        final_dir = str(DISTRIBUTION)
+        os.makedirs(final_dir, exist_ok=True)
         base_name = os.path.splitext(os.path.basename(OUTPUT_MSU))[0]
 
         for name, cdir, xml in chapters:
@@ -759,15 +756,15 @@ def main():
             print(f"Also copied to {final_dir}")
         print()
 
-    # Phase 1d: Copy dragon roar PCM (track 900) to build and sfc directories
+    # Phase 1d: Copy dragon roar PCM (track 900) to build and distribution directories
     if os.path.exists(DRAGON_ROAR_PCM):
         build_dir = os.path.dirname(OUTPUT_MSU)
-        final_dir = os.path.normpath(os.path.join(PROJECT_DIR, '..', 'SuperDragonsLairArcade.sfc'))
+        final_dir = str(DISTRIBUTION)
+        os.makedirs(final_dir, exist_ok=True)
         roar_name = os.path.basename(DRAGON_ROAR_PCM)
         shutil.copy2(DRAGON_ROAR_PCM, os.path.join(build_dir, roar_name))
-        if os.path.isdir(final_dir):
-            shutil.copy2(DRAGON_ROAR_PCM, os.path.join(final_dir, roar_name))
-        print(f"Copied dragon roar PCM (track 900) to build + sfc directories\n")
+        shutil.copy2(DRAGON_ROAR_PCM, os.path.join(final_dir, roar_name))
+        print(f"Copied dragon roar PCM (track 900) to build + distribution directories\n")
     else:
         print(f"WARNING: Dragon roar PCM not found at {DRAGON_ROAR_PCM}\n"
               f"  Run: python3 tools/convert_roar_pcm.py\n")
@@ -825,13 +822,11 @@ def main():
             if result.stdout.strip():
                 print(result.stdout.strip())
 
-            # Copy to sfc folder
+            # Copy to distribution folder
             final_path = os.path.normpath(FINAL_MSU_PATH)
-            if os.path.isdir(os.path.dirname(final_path)):
-                shutil.copy2(OUTPUT_MSU, final_path)
-                print(f"Copied to: {final_path}")
-            else:
-                print(f"NOTE: Target folder doesn't exist, skipping copy to {final_path}")
+            os.makedirs(os.path.dirname(final_path), exist_ok=True)
+            shutil.copy2(OUTPUT_MSU, final_path)
+            print(f"Copied to: {final_path}")
         else:
             print(f"ERROR packaging .msu:")
             print(result.stderr)

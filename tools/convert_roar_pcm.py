@@ -1,23 +1,14 @@
 #!/usr/bin/env python3
 """Convert the dragon roar WAV to MSU-1 PCM format at track 900."""
 import subprocess, os, sys
+from paths import FFMPEG, PROJECT_ROOT, BUILD_DIR as _BUILD_DIR, DISTRIBUTION, wsl_to_windows as to_win_path
 
-FFMPEG = "/mnt/c/Users/chad/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-6.0-full_build/bin/ffmpeg.exe"
-INPUT_WAV = "/mnt/e/gh/SNES-SuperDragonsLairArcade/roar.sfx_normal.wav"
-STEREO_WAV = "/mnt/e/gh/SNES-SuperDragonsLairArcade/data/sounds/dragon_roar_msu1.wav"
+INPUT_WAV = str(PROJECT_ROOT / "roar.sfx_normal.wav")
+STEREO_WAV = str(PROJECT_ROOT / "data" / "sounds" / "dragon_roar_msu1.wav")
 TRACK_NUM = 900
-BUILD_DIR = "/mnt/e/gh/SNES-SuperDragonsLairArcade/build"
-SFC_DIR = "/mnt/e/gh/SuperDragonsLairArcade.sfc"
+BUILD_DIR = str(_BUILD_DIR)
+SFC_DIR = str(DISTRIBUTION)
 BASE_NAME = "SuperDragonsLairArcade"
-
-def to_win_path(path):
-    path = os.path.abspath(path)
-    if path.startswith("/mnt/"):
-        parts = path[5:]
-        drive = parts[0].upper()
-        rest = parts[1:]
-        return drive + ":" + rest.replace("/", "\\")
-    return path
 
 # Step 1: Convert to 44100Hz stereo 16-bit WAV
 print(f"Converting {INPUT_WAV} to 44100Hz stereo...")
