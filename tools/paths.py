@@ -8,8 +8,8 @@ DISTRIBUTION = PROJECT_ROOT / "distribution"
 BUILD_DIR = PROJECT_ROOT / "build"
 TOOLS_DIR = PROJECT_ROOT / "tools"
 LASERDISC_DIR = PROJECT_ROOT / "data" / "laserdisc"
-DAPHNE_FRAMEFILE = LASERDISC_DIR / "dlcdrom.TXT"
-DAPHNE_CONTENT = LASERDISC_DIR / "segments"
+DAPHNE_FRAMEFILE = LASERDISC_DIR / "framefile" / "dlcdrom.TXT"
+DAPHNE_CONTENT = LASERDISC_DIR / "DLCDROM"
 
 
 def _load_config():

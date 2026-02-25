@@ -8,9 +8,9 @@ import os
 import re
 import sys
 
-DIST_DIR = os.path.normpath(os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    '..', 'SuperDragonsLairArcade.sfc'))
+from paths import DISTRIBUTION
+
+DIST_DIR = str(DISTRIBUTION)
 
 ROM_NAME = "SuperDragonsLairArcade.sfc"
 BASE_NAME = "SuperDragonsLairArcade"

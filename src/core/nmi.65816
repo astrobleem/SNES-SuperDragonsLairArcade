@@ -132,6 +132,19 @@ core.nmi.play:
 	pld
 	plb
 	pla
+	;--- PBR guard: fix corrupted Program Bank Register before rti ---
+	;On 65816, interrupts set PBR=$00. rti restores PBR from stack.
+	;If the stacked PBR is corrupted, jsr(0,x) dispatch reads wrong bank.
+	sep #$20
+	pha
+	lda 5,s
+	cmp #ROM
+	beq +
+	  lda #ROM
+	  sta 5,s
++
+	pla
+	;--- end PBR guard ---
 	rti				;return from nmi
 
 core.nmi.init:

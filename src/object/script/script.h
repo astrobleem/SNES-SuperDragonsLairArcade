@@ -67,14 +67,13 @@ _CHAPTER.init:
   lda.w #OBJECT.PROPERTIES.isEvent
   jsr abstract.Iterator.kill.byProperties
 
-  ;clear stale input so newly created events don't react to the previous
+  ;clear stale trigger so newly created events don't react to the previous
   ;chapter's button press during the same play loop iteration.
-  ;Without this, a direction event that triggers a chapter transition leaves
-  ;its button in inputDevice.trigger; the new chapter's events (created at
-  ;higher OopStack slots) get their play() called in the same core.object.play
-  ;pass and see the stale trigger — firing a wrong-direction death event.
-  ldx #0  ;INPUT.DEVICE.ID.0
-  jsr core.input.reset
+  ;IMPORTANT: only clear trigger, NOT old/press. core.input.reset zeros old,
+  ;which makes _checkInputDevice treat a HELD button as a new press next frame
+  ;(old=0 → ~old=$FFFF → trigger = $FFFF AND held_button = held_button).
+  ;Preserving old ensures held buttons stay "already pressed" across chapters.
+  stz.w inputDevice.trigger
 
   ;set chapter properties and kill other chapter scripts
   lda.w #OBJECT.PROPERTIES.isChapter

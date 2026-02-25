@@ -229,7 +229,14 @@ $(chapterscripts): $(chapterfolder)%/chapter.$(chapterscript):$(eventfolder)%.$(
 #	$(xmlchapterconverter) -infile $< -outfolder $(chapterfolder) -videofile $(videofile) -convertedframefolder $(convertedframefolder) -convertedoutfolder $(builddir)/$(chapterfolder)
 
 clean:
-	$(RD) $(chapterfolder)
+	$(RM) $(chapterfolder)/chapter.include
+	$(RM) $(chapterfolder)/chapter_data.include
+	$(RM) $(chapterfolder)/chapter_ld_frames.inc
+	@for dir in $$(find $(chapterfolder) -mindepth 1 -maxdepth 1 -type d | sort); do \
+		name=$$(basename "$$dir"); \
+		echo '.include "data/chapters/'"$$name"'/chapter.script"' >> $(chapterfolder)/chapter.include; \
+		echo '.include "data/chapters/'"$$name"'/chapter.data"' >> $(chapterfolder)/chapter_data.include; \
+	done
 	$(RD) $(builddir)
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name '*.pyc' -delete 2>/dev/null || true

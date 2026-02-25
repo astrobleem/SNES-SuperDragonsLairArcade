@@ -71,8 +71,8 @@ ADDR = {
     'HDMA_channel_enable':      0x7E71E5,  # GLOBAL.HDMA.CHANNEL.ENABLE
 
     # Game state (these are in bank 0 ZP area, $0000-$1FFF)
-    'sceneRow':                 0x001A35,  # GLOBAL.sceneRow (word)
-    'gameMode':                 0x001A37,  # GLOBAL.gameMode (word)
+    'sceneRow':                 0x001A3B,  # GLOBAL.sceneRow (word)
+    'gameMode':                 0x001A3D,  # GLOBAL.gameMode (word)
 
     # Exception handler state (slot 2 / ZP area)
     'excStack':                 0x001993,  # 2 bytes - saved stack pointer

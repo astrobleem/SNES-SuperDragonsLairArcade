@@ -1,7 +1,7 @@
 <chapter name="ugr_exit_room">
 	<timeline>
 		<timestart min="16" second="21" ms="388" frame="23540" />
-		<timeend min="16" second="29" ms="458" frame="23733" />
+		<timeend min="16" second="38" ms="8" frame="23938" />
 	</timeline>
 	<params />
 	<macros />

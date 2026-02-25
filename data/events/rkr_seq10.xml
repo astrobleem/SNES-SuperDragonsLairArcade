@@ -1,7 +1,7 @@
 <chapter name="rkr_seq10">
 	<timeline>
 		<timestart min="14" second="54" ms="254" frame="21448" />
-		<timeend min="15" second="2" ms="462" frame="21645" />
+		<timeend min="15" second="6" ms="424" frame="21740" />
 	</timeline>
 	<params />
 	<macros />

@@ -433,13 +433,13 @@ core.dma.flushQueue:
  */
 core.dma.resetHardware:
   php
+  sei
   sep #$20
   lda #0
   sta.l HDMAEN
   stz.w GLOBAL.HDMA.CHANNEL.ENABLE
 
   rep #$31
-  sei
   ldx #0
   ldy.w #DMA_QUEUE_SLOTS
 - stz.w GLOBAL.dmaQueue.1.transferType,x

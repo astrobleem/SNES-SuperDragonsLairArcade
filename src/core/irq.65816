@@ -220,6 +220,17 @@ _return:
     ply
     plx
     pla
+    ;--- PBR guard: fix corrupted Program Bank Register before rti ---
+    sep #$20
+    pha
+    lda 5,s
+    cmp #ROM
+    beq +
+      lda #ROM
+      sta 5,s
++
+    pla
+    ;--- end PBR guard ---
     rti
 
 _detectedUnhandledIrq:

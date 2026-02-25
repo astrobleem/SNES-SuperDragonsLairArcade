@@ -26,6 +26,22 @@
   lda.w #OBJECT.PROPERTIES.isHdma
   jsr abstract.Iterator.kill.byProperties
 
+  ;kill orphaned Background objects (properties=0, not matched by any property kill)
+  ;Msu1::kill already kills its own framebuffers, but stale backgrounds from
+  ;title screen or other scenes may survive. Kill before vram.init so their
+  ;kill methods can properly deallocate with the current allocator state.
+  lda.w #OBJID.Background.framebuffer
+  jsr abstract.Iterator.kill.byId
+  lda.w #OBJID.Background.generic
+  jsr abstract.Iterator.kill.byId
+  lda.w #OBJID.Background.textlayer.16x16
+  jsr abstract.Iterator.kill.byId
+
+  ;flush DMA queue again — Background kills may have triggered DMA in their
+  ;play methods (if the play loop ran between resetHardware and here).
+  ;Process any pending valid entries, then flush to start clean.
+  jsr core.dma.flushQueue
+
   jsr core.vram.init
   jsr core.cgram.clear
 
