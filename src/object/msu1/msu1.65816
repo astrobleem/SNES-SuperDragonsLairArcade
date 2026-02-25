@@ -348,7 +348,9 @@ _uploadFirstChunk:
   jsr core.dma.registerTransfer
   txs
   bcs +
-    TRIGGER_ERROR E_DmaQueueFull
+    ;DMA queue full — abort frame upload, will retry next cycle
+    stz.b this.frameBusy
+    rts
 
 + ;transfer tiles
   tsx
@@ -368,7 +370,7 @@ _uploadFirstChunk:
 
   ;check if tile transfer has to be splitted between two frames
   stz.b this.tileTransferRemainder
-  
+
   ;always upload half of total tilellength first to even out transfer load
   lda.b this.tilesLength
   lsr a
@@ -382,7 +384,9 @@ _uploadFirstChunk:
 
   txs
   bcs +
-    TRIGGER_ERROR E_DmaQueueFull
+    ;DMA queue full — abort frame upload, will retry next cycle
+    stz.b this.frameBusy
+    rts
 
 +
   rts
@@ -469,7 +473,8 @@ _uploadSecondChunk:
 	jsr core.dma.registerTransfer
 	txs
 	bcs +
-      TRIGGER_ERROR E_DmaQueueFull
+      ;DMA queue full — skip remaining DMA, advance frame
+      bra _uploadSecondChunk_skip
 
 + ;transfer palette (sequential after tiles in MSU stream)
   tsx
@@ -492,7 +497,8 @@ _uploadSecondChunk:
   jsr core.dma.registerTransfer
   txs
   bcs +
-    TRIGGER_ERROR E_DmaQueueFull
+    ;DMA queue full — skip layer toggle, advance frame
+    bra _uploadSecondChunk_skip
 
 +
   jsr _incrementFrame
@@ -509,6 +515,15 @@ _uploadSecondChunk:
   lda #FALSE
   sta this.frameBusy
 
+  rts
+
+;DMA queue full recovery — advance frame counter but don't toggle layers
+;(keeps current framebuffer displayed; next _uploadFirstChunk will re-seek)
+_uploadSecondChunk_skip:
+  rep #$31
+  jsr _incrementFrame
+  lda #FALSE
+  sta this.frameBusy
   rts
 
 _incrementFrame:

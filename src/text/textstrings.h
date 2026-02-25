@@ -134,6 +134,9 @@ TextstringLUT:
 	PTRLONG TextstringLUT T_sceneName.27
 	PTRLONG TextstringLUT T_sceneName.28
 	PTRLONG TextstringLUT T_sceneName.29
+	PTRLONG TextstringLUT T_sceneName.30
+	PTRLONG TextstringLUT T_sceneName.31
+	PTRLONG TextstringLUT T_sceneName.32
 	PTRLONG TextstringLUT T_pause
 	PTRLONG TextstringLUT T_max
 	
