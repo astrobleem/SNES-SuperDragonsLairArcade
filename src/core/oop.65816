@@ -561,8 +561,16 @@ OopHandlerExecute:
     pei (tmp+20)
     pei (tmp+18)
 
-	lda.l OopStack.dp,x	;set direct page
-	sta tmp+2	;save object DP
+	;--- safe DP read with double-read verification ---
+	;OopStack.dp WRAM read is vulnerable to FXPAK bus contention
+	lda.l OopStack.dp,x	;first read
+	sta tmp+2
+	lda.l OopStack.dp,x	;verification read
+	cmp tmp+2
+	beq _dpReadOk
+	  lda.l OopStack.dp,x	;tiebreaker read
+	  sta tmp+2
+_dpReadOk:
 	ldx tmp
 	;--- safe dispatch: explicit ROM read with double-read verification ---
 	;Reads method addr from ROM twice to detect transient bus errors

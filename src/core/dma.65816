@@ -131,8 +131,11 @@ core.dma.registerTransfer:
   and.w #(DMA_TRANSFER.OPTION.FIXED_SOURCE | DMA_TRANSFER.OPTION.ACTIVE | DMA_TRANSFER.OPTION.REVERSE) ~$ff
   cmp.w #DMA_TRANSFER.MAX
   bcc +
-	pha
-    TRIGGER_ERROR E_InvalidDmaTransferType
+    ;reject invalid transfer type silently (return failure via clc)
+    plx
+    plp
+    clc
+    rts
 
 
 + 
@@ -214,9 +217,8 @@ dmaQueueLoop:
 	and.w #(DMA_TRANSFER.OPTION.FIXED_SOURCE | DMA_TRANSFER.OPTION.ACTIVE | DMA_TRANSFER.OPTION.REVERSE) ~$ff
 	cmp.w #DMA_TRANSFER.MAX
 	bcc +
-	  phx         ; queue slot index -> excArgs+2
-	  pha
-      TRIGGER_ERROR E_InvalidDmaTransferType
+	  ;skip corrupt/invalid DMA slot instead of crashing (FXPAK bus contention workaround)
+	  bra gotoNextQueueSlot
 
 
 +

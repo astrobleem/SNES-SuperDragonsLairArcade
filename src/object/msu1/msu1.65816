@@ -1036,6 +1036,17 @@ _msu1SetAdress:
   php
   rep #$31
   phx
+
+  ;drain any pending seek before issuing a new one
+  ;(prevents FXPAK timeout when MSU-1 is still busy from prior playback)
+  sep #$20
+  ldx.w #MSU1_SEEK_TIMEOUT
+-	dex
+	beq +	;drain timeout is non-fatal — proceed to new seek anyway
+	lda.l MSU_STATUS
+	bmi -
++
+  rep #$31
   lda 8,s
   sta.l MSU_ADRESS
   lda 6,s
@@ -1049,7 +1060,7 @@ _msu1SetAdress:
   nop
   nop
   nop
-  
+
   sep #$20
   ldx.w #MSU1_SEEK_TIMEOUT
 -	dex
