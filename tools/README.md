@@ -84,7 +84,7 @@ Install Python dependencies with `pip install -r requirements.txt`.
 Exports DirkSimple `game.lua` scene data to XML event files in `data/events/`. Resolves laserdisc frame numbers to per-segment video timing using `data/segment_timing.json` for frame-accurate chapter seeking. Also derives chapter exit routing (`scene_router` for most scenes, direct transitions for introduction and finale).
 
 ```bash
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/lua_scene_exporter.py"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/lua_scene_exporter.py"
 ```
 
 **Important:** Must be re-run before `make` when changing scene routing. `make` only runs `xmlsceneparser.py` (XML to assembly), not this tool.
@@ -115,13 +115,13 @@ Orchestrates the full MSU-1 video pipeline from Daphne .m2v/.ogg source segments
 
 ```bash
 # Full pipeline (~1hr with 8 workers)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --workers 8"
 
 # Skip frame extraction, reuse existing PNGs (~23 min)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --skip-extract --workers 8"
 
 # Audio-only (skip video extraction, conversion, and packaging)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --skip-convert --skip-package --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --skip-extract --skip-convert --skip-package --workers 8"
 ```
 
 **Key constraints:**
@@ -138,7 +138,7 @@ wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/genera
 Parses the Daphne framefile (`data/laserdisc/dl_lair.txt`), probes each .m2v segment with ffprobe for actual duration, and builds a cumulative timing table. Output: `data/segment_timing.json`.
 
 ```bash
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_segment_timing.py"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_segment_timing.py"
 ```
 
 Run once; only re-run if Daphne source segments change.
@@ -149,13 +149,13 @@ Generates per-scene Mesen Lua test scripts that verify every gameplay scene is b
 
 ```bash
 # Generate all 28 scene test scripts
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_playthrough_tests.py"
 
 # Single scene
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py --scene 15"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_playthrough_tests.py --scene 15"
 
 # Dry-run (show golden paths without generating files)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_playthrough_tests.py --dry-run"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_playthrough_tests.py --dry-run"
 ```
 
 **Must regenerate after every build** because ROM addresses shift. Reads `build/SuperDragonsLairArcade.sym` automatically.
@@ -165,7 +165,7 @@ wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/genera
 Full distribution build: clean ROM build, MSU-1 video/audio generation, frame preservation, and output packaging.
 
 ```bash
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && bash tools/build_dist.sh"
+wsl -e bash -c "cd <wsl-project-root> && bash tools/build_dist.sh"
 ```
 
 ## Graphics & Assets
@@ -260,7 +260,7 @@ Scans all event XMLs and inventories referenced event types, comparing against a
 Clears stale chapter include files and re-runs `xmlsceneparser.py` on all XMLs in `data/events/` to regenerate `chapter.include` and `chapter_data.include`.
 
 ```bash
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && bash tools/regen_chapters.sh"
+wsl -e bash -c "cd <wsl-project-root> && bash tools/regen_chapters.sh"
 ```
 
 ## FXPAK Pro Hardware

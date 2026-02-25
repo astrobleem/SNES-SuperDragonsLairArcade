@@ -16,8 +16,8 @@ This repository contains a complete SNES ROM project that recreates Dragon's Lai
 ### Build System
 - **Platform:** Linux/WSL (Ubuntu) required
 - **Assembler:** WLA-DX 9.3 (pre-built binaries in `tools/wla-dx-9.5-svn/` — despite the directory name, the actual version is 9.3; v9.4+ breaks the build)
-- **Primary Build:** `wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"`
-- **Fast Rebuild:** `wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"` (skip clean if only assembly files changed)
+- **Primary Build:** `wsl -e bash -c "cd <wsl-project-root> && make clean && make"`
+- **Fast Rebuild:** `wsl -e bash -c "cd <wsl-project-root> && make"` (skip clean if only assembly files changed)
 - **Output:** `build/SuperDragonsLairArcade.sfc` (1 MB SNES ROM, 16 banks, HiROM+FastROM)
 - **Warning:** `make clean` deletes `data/chapters/` — wipes all extracted video frames
 
@@ -54,7 +54,7 @@ Install dependencies: `pip install -r requirements.txt` (Pillow, NumPy)
 - 516 chapters defined in `data/events/*.xml` (DirkSimple game data format)
 - Pipeline: `generate_msu_data.py` orchestrates ffmpeg → superfamiconv → tile reduction → msu1blockwriter.py
 - Output: ~568 MB `.msu` file with 256x192 frames, 16 colors, 512 tiles per frame
-- Video timing: 23.976 fps (source video at `data/videos/dl_arcade.mp4`)
+- Video timing: 23.976 fps (source: Daphne `.m2v` segments in `data/laserdisc/segments/`)
 
 ### File Structure
 ```

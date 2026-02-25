@@ -20,13 +20,13 @@ wsl sudo apt-get install -y ffmpeg
 
 ```bash
 # Standard build (clean + build, ~2-3 min)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean && make"
+wsl -e bash -c "cd <wsl-project-root> && make clean && make"
 
 # Fast rebuild (skip clean, ~30 sec if only assembly changed)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make"
+wsl -e bash -c "cd <wsl-project-root> && make"
 
 # Clean build artifacts only
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean"
+wsl -e bash -c "cd <wsl-project-root> && make clean"
 ```
 
 > **Warning:** `make clean` deletes `data/chapters/` — wipes all extracted video frames!
@@ -35,24 +35,24 @@ wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && make clean"
 
 ```bash
 # Generate .msu from existing PNG frames (~23 min with 8 workers)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --skip-extract --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --skip-extract --workers 8"
 
 # Full pipeline: extract frames + convert + package (~1hr+ first time)
-wsl -e bash -c "cd /mnt/e/gh/SNES-SuperDragonsLairArcade && python3 tools/generate_msu_data.py --workers 8"
+wsl -e bash -c "cd <wsl-project-root> && python3 tools/generate_msu_data.py --workers 8"
 ```
 
 ## Emulator Testing
 
 ```bat
 :: Mesen 2 testrunner (from Windows)
-cmd.exe /c "cd /d E:\gh\SNES-SuperDragonsLairArcade\mesen && Mesen.exe --testrunner ..\build\SuperDragonsLairArcade.sfc script.lua > out.txt 2>&1"
+cmd.exe /c "cd /d <project>\distribution && <project>\mesen\Mesen.exe --testrunner SuperDragonsLairArcade.sfc script.lua > out.txt 2>&1"
 ```
 
 ## Troubleshooting
 
 ```bash
 # Check video frame rate
-wsl ffprobe data/videos/dl_arcade.mp4
+wsl ffprobe data/laserdisc/segments/<segment>.m2v
 
 # Verify WLA-DX version (should be 9.3)
 wsl tools/wla-dx-9.5-svn/wla-65816 -h
@@ -66,7 +66,7 @@ wsl bash -c "stat -c '%s' build/SuperDragonsLairArcade.sfc"
 - **ROM Output**: `build/SuperDragonsLairArcade.sfc`
 - **MSU-1 Data**: `build/SuperDragonsLairArcade.msu`
 - **Symbol Table**: `build/SuperDragonsLairArcade.sym`
-- **Source Video**: `data/videos/dl_arcade.mp4`
+- **Source Video**: `data/laserdisc/segments/*.m2v` (Daphne video segments)
 - **Chapter XMLs**: `data/events/*.xml`
 - **Extracted Chapters**: `data/chapters/*/`
 
