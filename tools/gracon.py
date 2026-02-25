@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
+import numpy as np
 import userOptions
-from PIL import ImageFont
-from PIL import ImageDraw
 from PIL import Image
 import logging
 import time
@@ -12,17 +11,17 @@ import os
 from functools import cmp_to_key
 __author__ = "Matthias Nagler <matt@dforce.de>"
 __url__ = ("dforce3000", "dforce3000.de")
-__version__ = "0.1"
+__version__ = "0.2"
 
 '''
 optimizations:
 -flatten tile dict
   tile['data']
-  
+
 -flatten pixel arrays
   tile['data']['pixel']
   tile['data']['indexedPixel']
-  
+
 
 '''
 
@@ -64,7 +63,7 @@ target format sprite tilemap:
 format bg tilemap:
   byte    0            1
           cccccccc    vhopppcc
-          
+
 directcolor mode:
 
 
@@ -88,6 +87,29 @@ BG_TILEMAP_SIZE = 32
 LOOKBACK_TILES = 128
 EMPTY_COLOR = 0
 
+
+# ============ NumPy accelerated helpers ============
+
+def _decompose_snes_rgb(colors):
+    """Extract 5-bit R, G, B channels from SNES 15-bit color array."""
+    r = colors & 0x1f
+    g = (colors >> 5) & 0x1f
+    b = (colors >> 10) & 0x1f
+    return r, g, b
+
+
+def _weighted_color_dist_sq(r1, g1, b1, r2, g2, b2):
+    """Weighted color distance (squared terms before final sqrt).
+    Uses the compareSNESColors redMean formula: (r1 + r2) // 2.
+    Works with scalars, 1-D, and broadcasted N-D numpy arrays."""
+    redMean = (r1 + r2) // 2
+    dr = r1 - r2
+    dg = g1 - g2
+    db = b1 - b2
+    return (((512 + redMean) * dr * dr) >> 8) + 4 * dg * dg + (((767 - redMean) * db * db) >> 8)
+
+
+# ============ Public API (signatures preserved) ============
 
 def print_usage():
     print("Usage: gracon.py -infile <filename> [options]")
@@ -207,7 +229,7 @@ def main():
 
     inputImage = getInputImage(options, options.get('infile'))
     logging.info(f"Input image loaded and reduced in {time.perf_counter() - t0:.2f}s")
-    
+
     t1 = time.perf_counter()
     tiles = parseTiles(inputImage, options)
     logging.info(f"Tiles parsed in {time.perf_counter() - t1:.2f}s")
@@ -232,10 +254,6 @@ def main():
             optimizedTiles = optimizeTiles(palettizedTiles, options)
     else:
         optimizedTiles = palettizedTiles
-
-    # optimizedTiles = optimizeTiles( palettizedTiles, options ) if options.get('optimize') else palettizedTiles
-
-    # debugLogTileStatus(optimizedTiles)
 
     t5 = time.perf_counter()
     writeOutputFiles(optimizedTiles, optimizedPalette, inputImage, options)
@@ -264,20 +282,17 @@ def writeOutputFiles(tiles, palettes, image, options):
     outTiles = augmentOutIds(tiles)
     outPalettes = augmentOutIds(palettes)
 
-    # writeTiles( outTiles, options )
     tileFile = getOutputFile(options, ext='tiles')
     tileFile.write(getTileWriteStream(outTiles, options))
     tileFile.close()
 
     if not options.get('directcolor'):
-        # writePalettes( outPalettes, options )
         palFile = getOutputFile(options, ext='palette')
         palFile.write(getPaletteWriteStream(outPalettes, options))
         palFile.close()
         if options.get('verify'):
             writeSamplePalette(outPalettes, options)
 
-    # writeTileMap( outTiles, outPalettes, options )
     tilemapFile = getOutputFile(options, ext='tilemap')
     tilemapStream = getSpriteTileMapStream(tiles, palettes, options) if options.get(
         'mode') == 'sprite' else getBgTileMapStream(tiles, palettes, options)
@@ -351,7 +366,6 @@ def writeSampleImage(tiles, palettes, image, options):
                 except IndexError:
                     debugLog(pixelPos, 'bad pixel position')
     outFileName = "%s.%s" % (options.get('outfilebase'), 'sample.png')
-    # logging.debug("wrote sample image '%s'." % outFileName)
     sample.save(outFileName, 'PNG')
 
 
@@ -368,12 +382,10 @@ def writeTileMap(tiles, palettes, options):
 
 def getBgTileMapStream(tiles, palettes, options):
     '''writes successive blocks of 32x32 tile tilemaps'''
-    stream = []
     bgTilemaps = getBgTilemaps(tiles, palettes, options)
-    for tile in [tile for tilemap in bgTilemaps for tile in tilemap]:
-        stream.append(bytes([tile & 0xff]))
-        stream.append(bytes([(tile & 0xff00) >> 8]))
-    return b''.join(stream)
+    flat = [tile for tilemap in bgTilemaps for tile in tilemap]
+    arr = np.array(flat, dtype=np.uint16)
+    return arr.tobytes()
 
 
 def writeBgTileMap(tiles, palettes, options):
@@ -522,15 +534,36 @@ def writeBitplaneTile(outFile, tile, options):
 
 
 def getTileWriteStream(tiles, options):
-    stream = []
+    '''NumPy-accelerated bitplane extraction and interleaving.'''
+    bpp = options.get('bpp')
+    directcolor = options.get('directcolor')
+    target = 'pixel' if directcolor else 'indexedPixel'
+    weights = np.array([128, 64, 32, 16, 8, 4, 2, 1], dtype=np.int32)
+
+    output = bytearray()
     for tile in tiles:
-        if tile['refId'] == None:
-            bitplanes = fetchBitplanes(tile, options)
-            for i in range(0, len(bitplanes), 2):
-                while bitplanes[i].notEmpty():
-                    stream.append(bytes([bitplanes[i].first()]))
-                    stream.append(bytes([bitplanes[i+1].first()]))
-    return b''.join(stream)
+        if tile['refId'] is not None:
+            continue
+
+        pixels = np.array([p for row in tile[target] for p in row], dtype=np.int32)
+        if directcolor:
+            pixels = ((pixels & 0x6000) >> 7) | ((pixels & 0x380) >> 4) | ((pixels & 0x1c) >> 2)
+
+        for bp_pair in range(0, bpp, 2):
+            bp0 = ((pixels >> bp_pair) & 1).astype(np.int32)
+            bp1 = ((pixels >> (bp_pair + 1)) & 1).astype(np.int32)
+
+            # Pack 8 bits into bytes via dot product with [128,64,32,16,8,4,2,1]
+            bp0_bytes = bp0.reshape(-1, 8) @ weights
+            bp1_bytes = bp1.reshape(-1, 8) @ weights
+
+            # Interleave: bp0[0], bp1[0], bp0[1], bp1[1], ...
+            interleaved = np.empty(len(bp0_bytes) * 2, dtype=np.uint8)
+            interleaved[0::2] = bp0_bytes.astype(np.uint8)
+            interleaved[1::2] = bp1_bytes.astype(np.uint8)
+            output.extend(interleaved.tobytes())
+
+    return bytes(output)
 
 
 def getPaletteWriteStream(palettes, options):
@@ -552,13 +585,9 @@ def fetchBitplanes(tile, options):
     bitplanes = []
     for bitPlane in range(options.get('bpp')):
         bitplaneTile = BitStream()
-        # debugLog(tile['pixel'],'native')
-        # debugLogExit(tile['indexedPixel'],'indexed')
         target = 'pixel' if options.get('directcolor') else 'indexedPixel'
         for pixel in [pixel for scanline in tile[target] for pixel in scanline]:
             if options.get('directcolor'):
-                # source: -bbbbbgg gggrrrrr target: BBGGGRRR
-                # pixel = ((pixel & 0x7c00) >> 10) | ((pixel & 0x380) >> 7) | ((pixel & 0x1c) >> 2)
                 pixel = (((pixel & 0x6000) >> 7) | (
                     (pixel & 0x380) >> 4) | ((pixel & 0x1c) >> 2))
             bitplaneTile.writeBit(pixel >> bitPlane)
@@ -586,65 +615,69 @@ def getOutputFile(options, ext):
 
 def palettizeTiles(tiles, palettes):
     '''replaces direct tile colors with best-matching entries of assigned palette'''
-    # Shared cache across all tiles for performance
-    colorCache = {}
     result = []
     for tile in tiles:
         if tile['refId'] != None:
             result.append(tile)
         else:
-            result.append(palettizeTile(tile, palettes, colorCache))
+            result.append(palettizeTile(tile, palettes))
     return result
 
 
 def findOptimumTilePalette(palettes, pixels, colorCache=None):
-    if colorCache is None:
-        colorCache = {}
-    
+    '''NumPy-accelerated palette selection via vectorized distance computation.'''
+    flat_pixels = np.array([p for row in pixels for p in row], dtype=np.int32)
+    px_r, px_g, px_b = _decompose_snes_rgb(flat_pixels)
+
     optimumPalette = {'error': INFINITY}
     for palette in [pal for pal in palettes if pal['refId'] == None]:
-        squareError = 0
-        palId = palette['id']
-        for scanline in pixels:
-            for pixel in scanline:
-                # Use cache for color lookups
-                cacheKey = (pixel, palId)
-                if cacheKey in colorCache:
-                    similarColor = colorCache[cacheKey]
-                else:
-                    similarColor = getSimilarColor(pixel, palette['color'])
-                    colorCache[cacheKey] = similarColor
-                squareError += similarColor['error'] * similarColor['error']
+        pal_arr = np.array(palette['color'], dtype=np.int32)
+        pal_r, pal_g, pal_b = _decompose_snes_rgb(pal_arr)
+
+        # Broadcasting: (N_pixels, 1) vs (1, N_palette) -> (N_pixels, N_palette)
+        dist_sq = _weighted_color_dist_sq(
+            px_r[:, None], px_g[:, None], px_b[:, None],
+            pal_r[None, :], pal_g[None, :], pal_b[None, :]
+        )
+        dist = np.sqrt(dist_sq.astype(np.float64))
+        min_dist = dist.min(axis=1)
+        squareError = float(np.sum(min_dist * min_dist))
+
         palette['error'] = math.sqrt(squareError)
         optimumPalette = palette if palette['error'] < optimumPalette['error'] else optimumPalette
     return optimumPalette
 
 
 def palettizeTile(tile, palettes, colorCache=None):
-    if colorCache is None:
-        colorCache = {}
-    # logging.debug('palettizing tile %s' % tile['id'])
-    palette = findOptimumTilePalette(palettes, tile['pixel'], colorCache)
+    '''NumPy-accelerated palette mapping.'''
+    palette = findOptimumTilePalette(palettes, tile['pixel'])
 
-    indexedScanlines = []
-    scanlines = []
+    flat_pixels = np.array([p for row in tile['pixel'] for p in row], dtype=np.int32)
+    pal_arr = np.array(palette['color'], dtype=np.int32)
+    px_r, px_g, px_b = _decompose_snes_rgb(flat_pixels)
+    pal_r, pal_g, pal_b = _decompose_snes_rgb(pal_arr)
 
-    for scanline in tile['pixel']:
-        indexedPixels = []
-        pixels = []
-        for pixel in scanline:
-            # Use cache for color lookups
-            cacheKey = (pixel, palette['id'])
-            if cacheKey in colorCache:
-                similarColor = colorCache[cacheKey]
-            else:
-                similarColor = getSimilarColor(pixel, palette['color'])
-                colorCache[cacheKey] = similarColor
-            indexedPixels.append(palette['color'].index(similarColor['value']))
-            pixels.append(similarColor['value'])
-        # indexedPixels.append( [getSimilarColorIndex( pixel, palette['color'] ) for pixel in scanline] )
-        scanlines.append(pixels)
-        indexedScanlines.append(indexedPixels)
+    # Compute distance from each pixel to each palette color
+    dist_sq = _weighted_color_dist_sq(
+        px_r[:, None], px_g[:, None], px_b[:, None],
+        pal_r[None, :], pal_g[None, :], pal_b[None, :]
+    )
+    dist = np.sqrt(dist_sq.astype(np.float64))
+
+    # Find nearest palette color per pixel
+    # Use last-minimum to match original tie-breaking behavior
+    n_pal = len(pal_arr)
+    nearest_idx = (n_pal - 1 - np.argmin(dist[:, ::-1], axis=1))
+    mapped_colors = pal_arr[nearest_idx]
+
+    nearest_list = nearest_idx.tolist()
+    mapped_list = mapped_colors.tolist()
+
+    h = len(tile['pixel'])
+    w = len(tile['pixel'][0])
+    indexedScanlines = [nearest_list[y*w:(y+1)*w] for y in range(h)]
+    scanlines = [mapped_list[y*w:(y+1)*w] for y in range(h)]
+
     return {
         'indexedPixel': indexedScanlines,
         'pixel': scanlines,
@@ -664,46 +697,12 @@ def palettizeTile(tile, palettes, colorCache=None):
 
 def fetchActualTile(entities, entityId, xStatus, yStatus):
     if entities[entityId]['refId'] == None:
-        # logging.debug('actual    %s[%s%s]' % (entityId, 'X' if entities[entityId]['xMirror'] else 'x', 'Y' if entities[entityId]['yMirror'] else 'y'))
         tile = entities[entityId]
         tile['xMirror'] = xStatus
         tile['yMirror'] = yStatus
         return tile
-        '''
-    return {
-      'indexedPixel'  : entities[entityId]['indexedScanlines'],
-      'pixel'         : entities[entityId]['scanlines'],
-      'palette'       : entities[entityId]['palette'],
-      'id'            : entities[entityId]['id'],
-      'refId'         : entities[entityId]['refId'],
-      'x'             : entities[entityId]['x'],
-      'y'             : entities[entityId]['y'],
-      'xMirror'       : xStatus,
-      'yMirror'       : yStatus
-    }
-    '''
-        # tile = entities[entityId]
-
     else:
-        # logging.debug('reference %s[%s%s]->%s[%s%s]' % (entityId, 'X' if entities[entityId]['xMirror'] else 'x', 'Y' if entities[entityId]['yMirror'] else 'y', entities[entityId]['refId'], 'X' if entities[entities[entityId]['refId']]['xMirror'] else 'x', 'Y' if entities[entities[entityId]['refId']]['yMirror'] else 'y'))
         return fetchActualTile(entities, entities[entityId]['refId'], entities[entityId]['xMirror'] ^ xStatus, entities[entityId]['yMirror'] ^ yStatus)
-
-        # beide gesetzt:0
-        # 1 gesetzt: 1
-        # keins gesetzt: 0
-        '''
-    debugLog({
-      'id'  : tile['id'],
-      'refId'  : tile['refId'],
-      'xMirror'  : tile['xMirror'],
-      'yMirror'  : tile['yMirror'],
-    }, 'tile %s[%s%s]->%s[%s%s]' % tile['id'])
-    '''
-        # tile['yMirror'] = tile['yMirror'] ^ entities[entityId]['yMirror']
-        # tile['xMirror'] = tile['xMirror'] ^ entities[entityId]['xMirror']
-
-    # logging.debug('returning %s[%s%s]' % (tile['id'], 'X' if tile['xMirror'] else 'x', 'Y' if tile['yMirror'] else 'y'))
-    # return tile
 
 
 def fetchActualEntity(entities, entityId):
@@ -719,7 +718,6 @@ def parseGlobalPalettes(tiles, options):
     while (len(globalPalette) > (((options.get('bpp') ** 2) - 1) * options.get('palettes'))):
         nearestIndices = getNearestPaletteIndices(globalPalette)
         globalPalette.pop(max(nearestIndices['id1'], nearestIndices['id2']))
-        # logging.debug('global palette length now at %s, target is %s.' % (len(globalPalette), (((options.get('bpp') ** 2) - 1) * options.get('palettes'))))
     return partitionGlobalPalette(globalPalette, options)
 
 
@@ -780,7 +778,7 @@ def getSimilarPalette(inputPalette, refPalette):
         similarColor = getSimilarColor(color, refPalette['color'])
         squareError += similarColor['error'] * similarColor['error']
     return {
-        'color': [],  # colors,
+        'color': [],
         'refId': refPalette['id'],
         'id': inputPalette['id'],
         'error': math.sqrt(squareError)
@@ -788,17 +786,19 @@ def getSimilarPalette(inputPalette, refPalette):
 
 
 def getSimilarColor(color, refPalette):
-    minError = {
-        'error': INFINITY,
-        'value': None
-    }
-    for refColor in refPalette:
-        diff = compareSNESColors(color, refColor)
-        minError = minError if minError['error'] < diff else {
-            'error': diff,
-            'value': refColor
-        }
-    return minError
+    '''NumPy-accelerated nearest-color search.'''
+    ref_arr = np.array(refPalette, dtype=np.int32)
+    c_r = int(color) & 0x1f
+    c_g = (int(color) >> 5) & 0x1f
+    c_b = (int(color) >> 10) & 0x1f
+    pal_r, pal_g, pal_b = _decompose_snes_rgb(ref_arr)
+
+    dist_sq = _weighted_color_dist_sq(c_r, c_g, c_b, pal_r, pal_g, pal_b)
+    dist = np.sqrt(dist_sq.astype(np.float64))
+
+    # Last-minimum for tie-breaking compatibility with original
+    idx = len(dist) - 1 - int(np.argmin(dist[::-1]))
+    return {'error': float(dist[idx]), 'value': int(ref_arr[idx])}
 
 
 def getSimilarColorIndex(color, refPalette):
@@ -814,17 +814,35 @@ def reducePaletteColorDepth(palette, options):
 
 
 def getNearestPaletteIndices(palette):
-    diffTable = {}
-    for i in range(1, len(palette)):
-        for iRef in range(1, len(palette)):
-            if i != iRef:
-                diffIndex = "%s-%s" % (min(i, iRef), max(i, iRef))
-                diffTable[diffIndex] = {
-                    'difference': compareSNESColors(palette[i], palette[iRef]),
-                    'id1': i,
-                    'id2': iRef
-                }
-    return getMinDifferenceIds(diffTable)
+    '''NumPy-accelerated pairwise color distance computation.'''
+    n = len(palette)
+    if n <= 2:
+        return {'difference': INFINITY, 'id1': 1 if n > 1 else 0, 'id2': 1 if n > 1 else 0}
+
+    # Skip index 0 (transparent color)
+    colors = np.array(palette[1:], dtype=np.int32)
+    m = len(colors)
+    r, g, b = _decompose_snes_rgb(colors)
+
+    # Pairwise distance via broadcasting: (m, 1) vs (1, m) -> (m, m)
+    dist_sq = _weighted_color_dist_sq(
+        r[:, None], g[:, None], b[:, None],
+        r[None, :], g[None, :], b[None, :]
+    )
+    dist = np.sqrt(dist_sq.astype(np.float64))
+
+    # Don't match self
+    np.fill_diagonal(dist, np.inf)
+
+    flat_idx = int(np.argmin(dist))
+    i, j = divmod(flat_idx, m)
+
+    # Convert back to 1-indexed (original skips palette[0])
+    return {
+        'difference': float(dist[i, j]),
+        'id1': int(i + 1),
+        'id2': int(j + 1)
+    }
 
 
 def getMinDifferenceIds(diffTable):
@@ -835,11 +853,117 @@ def getMinDifferenceIds(diffTable):
 
 
 def optimizeTiles(tiles, options):
-    return [checkDuplicateTileFast(tile, tiles, options) for tile in tiles]
+    '''NumPy batch-vectorized tile deduplication.
+
+    Pre-computes all tile pixels and their 4 mirror variants as numpy arrays,
+    then for each tile computes the distance to ALL previous tiles x 4 mirrors
+    in a single broadcasted operation.
+    '''
+    threshold = options.get('tilethreshold')
+    n = len(tiles)
+    if n == 0:
+        return []
+
+    h = len(tiles[0]['pixel'])
+    w = len(tiles[0]['pixel'][0]) if h > 0 else 0
+    num_px = h * w
+
+    if num_px == 0:
+        return list(tiles)
+
+    # Pre-compute all tile pixels as flat numpy arrays
+    all_pixels = np.zeros((n, num_px), dtype=np.int32)
+    for i, tile in enumerate(tiles):
+        all_pixels[i] = [p for row in tile['pixel'] for p in row]
+
+    all_r = all_pixels & 0x1f
+    all_g = (all_pixels >> 5) & 0x1f
+    all_b = (all_pixels >> 10) & 0x1f
+
+    # Pre-compute 4 mirror variants for each tile
+    mirror_r = np.zeros((n, 4, num_px), dtype=np.int32)
+    mirror_g = np.zeros((n, 4, num_px), dtype=np.int32)
+    mirror_b = np.zeros((n, 4, num_px), dtype=np.int32)
+
+    for i in range(n):
+        pix_2d = all_pixels[i].reshape(h, w)
+        for m, variant in enumerate([
+            pix_2d,                    # no mirror
+            pix_2d[:, ::-1],           # x mirror
+            pix_2d[::-1, :],           # y mirror
+            pix_2d[::-1, ::-1],        # xy mirror
+        ]):
+            flat = np.ascontiguousarray(variant).ravel()
+            mirror_r[i, m] = flat & 0x1f
+            mirror_g[i, m] = (flat >> 5) & 0x1f
+            mirror_b[i, m] = (flat >> 10) & 0x1f
+
+    mirror_xflip = [False, True, False, True]
+    mirror_yflip = [False, False, True, True]
+
+    result = []
+    for tile_idx in range(n):
+        tile = tiles[tile_idx]
+
+        if tile_idx == 0:
+            result.append(tile)
+            continue
+
+        # Batch compare all 4 mirrors of current tile against all ref tiles [0..tile_idx-1]
+        # in_* shape: (4, num_px), ref_* shape: (tile_idx, num_px)
+        # Broadcasting: (4, 1, num_px) vs (1, tile_idx, num_px) -> (4, tile_idx, num_px)
+        in_r = mirror_r[tile_idx]       # (4, num_px)
+        in_g = mirror_g[tile_idx]
+        in_b = mirror_b[tile_idx]
+        ref_r = all_r[:tile_idx]         # (tile_idx, num_px)
+        ref_g = all_g[:tile_idx]
+        ref_b = all_b[:tile_idx]
+
+        dr = in_r[:, None, :] - ref_r[None, :, :]
+        dg = in_g[:, None, :] - ref_g[None, :, :]
+        db = in_b[:, None, :] - ref_b[None, :, :]
+
+        # Match original checkDuplicateTileFast precedence bug:
+        # redMean = in_r + ref_r // 2  (NOT (in_r + ref_r) // 2)
+        redMean = in_r[:, None, :] + ref_r[None, :, :] // 2
+
+        per_pixel = (((512 + redMean) * dr * dr) >> 8) + 4 * dg * dg + (((767 - redMean) * db * db) >> 8)
+
+        # Original: squareError += sqrt(per_pixel)**2 = per_pixel (since >= 0)
+        # Then error = sqrt(squareError) = sqrt(sum(per_pixel))
+        totals = per_pixel.sum(axis=2)                    # (4, tile_idx)
+        errors = np.sqrt(totals.astype(np.float64))       # (4, tile_idx)
+
+        # Find overall minimum
+        flat_idx = int(np.argmin(errors))
+        best_mirror = flat_idx // tile_idx
+        best_ref = flat_idx % tile_idx
+        best_error = float(errors.ravel()[flat_idx])
+
+        if best_error < threshold:
+            result.append({
+                'id': tile['id'],
+                'pixel': [],
+                'indexedPixel': [],
+                'palette': {
+                    'color': [],
+                    'id': tile['palette']['id'],
+                    'refId': tiles[best_ref]['palette']['id']
+                },
+                'x': tile['x'],
+                'y': tile['y'],
+                'refId': tiles[best_ref]['id'],
+                'error': best_error,
+                'xMirror': mirror_xflip[best_mirror],
+                'yMirror': mirror_yflip[best_mirror]
+            })
+        else:
+            result.append(tile)
+
+    return result
 
 
 def checkDuplicateTile(tile, refTiles, options):
-    # logging.debug('optimizing tile %s of %s' % (tile['id'],len(refTiles)))
     optimumTile = {'error': INFINITY, 'id': None}
     for refTile in refTiles[:tile['id']]:
         for replacedTile in [compareTile(mirrorTile, refTile) for mirrorTile in mirrorTiles(tile)]:
@@ -848,13 +972,10 @@ def checkDuplicateTile(tile, refTiles, options):
 
 
 def checkDuplicateTileFast(tile, refTiles, options):
-    '''ugly but fast(er)'''
-    # logging.debug('optimizing tile %s of %s' % (tile['id'],len(refTiles)))
+    '''Legacy pure-Python fallback (kept for reference).'''
     optimumTile = {'error': INFINITY, 'id': None}
     mirroredTiles = mirrorTiles(tile)
 
-    # cmpStart = tile['id'] - min(LOOKBACK_TILES, tile['id'])
-    # look back through all tiles!
     cmpStart = 0
     for refTile in refTiles[cmpStart:tile['id']]:
         refPixels = [pixel for scanline in refTile['pixel']
@@ -954,12 +1075,17 @@ def sortSNESColors(SNESCol1, SNESCol2):
 
 
 def compareSNESColors(SNESCol1, SNESCol2):
-    color1 = ColObj(SNESCol1)
-    color2 = ColObj(SNESCol2)
-    redMean = (color1.r + color2.r) // 2
-    r = color1.r - color2.r
-    g = color1.g - color2.g
-    b = color1.b - color2.b
+    '''Inlined version — avoids ColObj allocation overhead.'''
+    r1 = SNESCol1 & 0x1f
+    g1 = (SNESCol1 >> 5) & 0x1f
+    b1 = (SNESCol1 >> 10) & 0x1f
+    r2 = SNESCol2 & 0x1f
+    g2 = (SNESCol2 >> 5) & 0x1f
+    b2 = (SNESCol2 >> 10) & 0x1f
+    redMean = (r1 + r2) // 2
+    r = r1 - r2
+    g = g1 - g2
+    b = b1 - b2
     return math.sqrt((((512+redMean)*r*r) >> 8) + 4*g*g + (((767-redMean)*b*b) >> 8))
 
 
@@ -1063,7 +1189,6 @@ def parseBgTiles(image, options):
 def fetchTile(image, pos, options, tileId):
     tile = []
     palette = [options.get('transcol')]
-    # logging.debug('fetching tile %s' % tileId)
     for yPos in range(pos['y'], pos['y']+options.get('tilesizey')):
         tileLine = []
         for xPos in range(pos['x'], pos['x']+options.get('tilesizex')):
@@ -1083,7 +1208,6 @@ def fetchTile(image, pos, options, tileId):
 
 
 def getInputImage(options, filename):
-    # logging.debug('parsing input image.')
     try:
         inputImage = Image.open(filename)
     except IOError:
@@ -1102,18 +1226,11 @@ def getInputImage(options, filename):
 
 
 def getSnesPixels(image):
-    '''extract color-converted pixels from image'''
-    rawPixels = list(image.getdata())
-    outputPixels = []
-    idx = 0
+    '''NumPy-accelerated RGB-to-SNES color conversion.'''
     width, height = image.size
-    for y in range(height):
-        row = []
-        for x in range(width):
-            row.append(convertColorRGBToSnes(rawPixels[idx]))
-            idx += 1
-        outputPixels.append(row)
-    return outputPixels
+    arr = np.array(image.getdata(), dtype=np.int32).reshape(height, width, 3)
+    snes = ((arr[:, :, 0] & 0xf8) >> 3) | ((arr[:, :, 1] & 0xf8) << 2) | ((arr[:, :, 2] & 0xf8) << 7)
+    return snes.tolist()
 
 
 def padImageReduceColdepth(inputImage, options):
@@ -1130,12 +1247,10 @@ def padImageReduceColdepth(inputImage, options):
     colorCount = (((options.get('bpp') ** 2) - 1) * options.get('palettes'))
     print(f"Reducing to {colorCount} colors. Image size: {paddedImage.size}")
     sys.stdout.flush()
-    # logging.info('Reducing to %s colors.' % colorCount)
     reducedImage = paddedImage.convert(
         'P', palette=Image.ADAPTIVE, colors=colorCount).convert('RGB')
     print("Done reducing colors.")
     sys.stdout.flush()
-    # logging.debug('Done reducing colors.')
     return reducedImage
 
 
@@ -1155,15 +1270,13 @@ def convertColorRGBToSnes(inputColor):
     '''returns 5bit color tuple, format: -bbbbbgg gggrrrrr'''
     return ((inputColor[0] & 0xf8) >> 3) | ((inputColor[1] & 0xf8) << 2) | ((inputColor[2] & 0xf8) << 7)
 
-    #  options['outfilebase']['value'] = args.pop()    #last argument should be output filename
-    #  options['infile']['value'] = args.pop()    #before-last argument should be input filename
-
 
 class BitStream():
     def __init__(self):
         self.bitPos = 7
         self.byte = 0
         self.bitStream = []
+        self._readPos = 0
 
     def writeBit(self, bit):
         self.byte |= (bit & 1) << self.bitPos
@@ -1177,10 +1290,12 @@ class BitStream():
         return self.bitStream
 
     def first(self):
-        return self.bitStream.pop(0)
+        val = self.bitStream[self._readPos]
+        self._readPos += 1
+        return val
 
     def notEmpty(self):
-        return len(self.bitStream) > 0
+        return self._readPos < len(self.bitStream)
 
 
 class Statistics():
