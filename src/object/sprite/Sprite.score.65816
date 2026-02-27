@@ -98,13 +98,45 @@
   sta this.speed.y
   inc this.accel
   
-  ;let score fall down
-  pei (this.speed.y)
-  pei (this.speed.x)
-  CALL Sprite.score.translate.MTD iterator.self
-  pla
-  pla 
- 
+  ;--- translate position (inlined to avoid OOP dispatch ROM reads on FXPAK) ---
+  lda this.speed.y
+  beq _translate_doX
+    clc
+    adc.b dimension.position.y
+    sta.b dimension.position.y
+    bcc _translate_yNoCarry
+      lda this.speed.y
+      bmi _translate_doX
+        sep #$20
+        inc.b dimension.position.y + 2
+        bra _translate_doX
+_translate_yNoCarry:
+      lda this.speed.y
+      bpl _translate_doX
+        sep #$20
+        dec.b dimension.position.y + 2
+
+_translate_doX:
+  rep #$31
+  lda this.speed.x
+  beq _translate_done
+    clc
+    adc.b dimension.position.x
+    sta.b dimension.position.x
+    bcc _translate_xNoCarry
+      lda this.speed.x
+      bmi _translate_done
+        sep #$20
+        inc.b dimension.position.x + 2
+        bra _translate_done
+_translate_xNoCarry:
+      lda this.speed.x
+      bpl _translate_done
+        sep #$20
+        dec.b dimension.position.x + 2
+
+_translate_done:
+  rep #$31
   rts
 
   METHOD kill

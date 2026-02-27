@@ -14,16 +14,26 @@
   jsr core.vram.init
   jsr core.cgram.clear
 
-  ;--- Wait for MSU-1 hardware to settle before re-initialization ---
+  ;--- Wake up FXPAK from deep SD card idle via dummy seek ---
+  rep #$31
+  lda #0
+  sta.l $2000           ;MSU_ADRESS bytes 0-1 = 0 (seek to file offset 0)
+  sta.l $2002           ;MSU_ADRESS bytes 2-3 = 0
+  nop
+  nop
+  nop
+  nop
+  nop
+  nop
+  nop
+  nop
   sep #$20
-  ldx.w #0
+  ldx.w #0              ;65536 iterations (~100ms at 2.68MHz)
 -   lda.l $2000         ;MSU_STATUS: bit 7 = DATA_BUSY
-    bpl +               ;not busy, proceed
+    bpl +               ;not busy → SD card is awake
     dex
     bne -
 + rep #$31
-
-  ;--- Wake up MSU-1 hardware (SD2SNES needs register writes after idle) ---
   NEW Msu1.CLS.PTR hashPtr.1
   CALL Msu1.kill.MTD hashPtr.1
 
