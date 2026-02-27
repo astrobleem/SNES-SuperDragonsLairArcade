@@ -36,6 +36,7 @@ import argparse
 import shutil
 import struct
 import numpy as np
+from PIL import Image
 
 # ---------- Configuration ----------
 from paths import PROJECT_ROOT, BUILD_DIR, TOOLS_DIR, DISTRIBUTION, DAPHNE_FRAMEFILE, DAPHNE_CONTENT, FFMPEG
@@ -50,8 +51,8 @@ DRAGON_ROAR_PCM = os.path.join(PROJECT_DIR, 'data', 'sounds', 'SuperDragonsLairA
 FPS = 24  # MSU-1 playback fps (msu1blockwriter uses integer)
 SOURCE_FPS = 23.9777  # Source video fps for frame number calculation
 BPP = 4
-PALETTES = 1
-MAX_COLORS = PALETTES * (2 ** BPP)  # 1 * 16 = 16 (one sub-palette per frame for reliable conversion)
+PALETTES = 8
+MAX_COLORS = PALETTES * (2 ** BPP)  # 8 * 16 = 128 (8 sub-palettes for color fidelity)
 MAX_TILES = 384  # VRAM tile buffer: 384 tiles at 4BPP (32 bytes/tile) = $3000 bytes
 FRAME_WIDTH = 256
 FRAME_HEIGHT = 160
@@ -233,22 +234,20 @@ def extract_chapter_frames_from_segment(chapter_info, chapter_dir, segments):
         video_path = m2v_path
 
     # Filter chain: yadif deinterlace (29.97i -> progressive) -> fps conversion
-    # to 23.976 -> trim to target range -> reset PTS -> scale -> palette
+    # to 23.976 -> trim to target range -> reset PTS -> scale
+    # Output full-color 24-bit RGB PNGs (palette optimization done in Python)
     # No CUDA, no -ss seeking — CPU decode from start, trim handles offset
     filter_str = (
         f'yadif,fps=24000/1001,'
         f'trim=start={offset_seconds:.6f}:duration={duration_s:.6f},'
         f'setpts=PTS-STARTPTS,'
-        f'scale={FRAME_WIDTH}:{FRAME_HEIGHT}[s];'
-        f'[s]split[s1][s2];'
-        f'[s1]palettegen=max_colors={MAX_COLORS}:stats_mode=single[p];'
-        f'[s2][p]paletteuse=new=1:dither=bayer'
+        f'scale={FRAME_WIDTH}:{FRAME_HEIGHT}'
     )
 
     cmd = [
         ffmpeg_path, '-y',
         '-i', video_path,
-        '-filter_complex', filter_str,
+        '-vf', filter_str,
         '-f', 'image2',
         out_pattern
     ]
@@ -367,16 +366,327 @@ def read_snes_palette(palette_file):
     return palette
 
 
-def decode_tiles_4bpp_rgb(tiles_raw, palette_rgb):
+def rgb_to_bgr555(r, g, b):
+    """Convert 8-bit RGB to SNES BGR555 (16-bit value)."""
+    r5 = int(round(r * 31.0 / 255.0)) & 0x1F
+    g5 = int(round(g * 31.0 / 255.0)) & 0x1F
+    b5 = int(round(b * 31.0 / 255.0)) & 0x1F
+    return r5 | (g5 << 5) | (b5 << 10)
+
+
+def bgr555_to_rgb_float(bgr555):
+    """Convert BGR555 to (R, G, B) as floats in 0-255 range."""
+    r = (bgr555 & 0x1F) * (255.0 / 31.0)
+    g = ((bgr555 >> 5) & 0x1F) * (255.0 / 31.0)
+    b = ((bgr555 >> 10) & 0x1F) * (255.0 / 31.0)
+    return (r, g, b)
+
+
+def simple_kmeans(data, k, max_iter=20):
+    """K-means++ clustering on (N, D) float32 array. Returns (labels, centers)."""
+    N = data.shape[0]
+    if N <= k:
+        labels = np.arange(N, dtype=np.int32)
+        centers = data.copy()
+        # Pad with duplicates if fewer points than clusters
+        if N < k:
+            centers = np.vstack([centers, np.tile(centers[0], (k - N, 1))])
+            labels = np.arange(N, dtype=np.int32)
+        return labels, centers
+
+    rng = np.random.RandomState(42)
+
+    # K-means++ initialization
+    centers = np.empty((k, data.shape[1]), dtype=data.dtype)
+    idx = rng.randint(N)
+    centers[0] = data[idx]
+
+    for c in range(1, k):
+        dists = np.min(np.sum((data[:, None, :] - centers[None, :c, :]) ** 2, axis=2), axis=1)
+        probs = dists / (dists.sum() + 1e-10)
+        idx = rng.choice(N, p=probs)
+        centers[c] = data[idx]
+
+    for _ in range(max_iter):
+        dists = np.sum((data[:, None, :] - centers[None, :, :]) ** 2, axis=2)
+        labels = np.argmin(dists, axis=1).astype(np.int32)
+
+        new_centers = np.empty_like(centers)
+        for c in range(k):
+            mask = labels == c
+            if mask.any():
+                new_centers[c] = data[mask].mean(axis=0)
+            else:
+                new_centers[c] = centers[c]
+
+        if np.allclose(new_centers, centers):
+            break
+        centers = new_centers
+
+    return labels, centers
+
+
+def encode_tiles_4bpp(pixel_indices, tile_palettes, width, height):
+    """Encode pixel index grid to SNES 4BPP tile data + tilemap.
+
+    pixel_indices: (H, W) uint8, values 0-15 (local to each tile's sub-palette)
+    tile_palettes: (tiles_h, tiles_w) uint8, sub-palette number per tile
+    Returns: (tile_data_bytes, tilemap_bytes)
+    """
+    tiles_h = height // 8
+    tiles_w = width // 8
+
+    # Reshape into tiles: (tiles_h, tiles_w, 8, 8)
+    tiles = pixel_indices.reshape(tiles_h, 8, tiles_w, 8)
+    tiles = tiles.transpose(0, 2, 1, 3)
+
+    tile_dict = {}
+    tile_data_list = []
+    tilemap = np.zeros(tiles_h * tiles_w, dtype=np.uint16)
+
+    for tr in range(tiles_h):
+        for tc in range(tiles_w):
+            tile = tiles[tr, tc]  # (8, 8) uint8
+
+            # Encode SNES 4BPP bitplane format
+            encoded = bytearray(32)
+            for row in range(8):
+                bp0 = bp1 = bp2 = bp3 = 0
+                for px in range(8):
+                    idx = int(tile[row, px])
+                    bit = 7 - px
+                    bp0 |= ((idx >> 0) & 1) << bit
+                    bp1 |= ((idx >> 1) & 1) << bit
+                    bp2 |= ((idx >> 2) & 1) << bit
+                    bp3 |= ((idx >> 3) & 1) << bit
+                encoded[2 * row] = bp0
+                encoded[2 * row + 1] = bp1
+                encoded[16 + 2 * row] = bp2
+                encoded[16 + 2 * row + 1] = bp3
+
+            encoded_bytes = bytes(encoded)
+            if encoded_bytes not in tile_dict:
+                tile_dict[encoded_bytes] = len(tile_data_list)
+                tile_data_list.append(encoded_bytes)
+
+            tile_idx = tile_dict[encoded_bytes]
+            pal_num = int(tile_palettes[tr, tc])
+            tilemap[tr * tiles_w + tc] = tile_idx | (pal_num << 10)
+
+    tile_data = b''.join(tile_data_list)
+    tilemap_bytes = tilemap.astype('<u2').tobytes()
+    return tile_data, tilemap_bytes
+
+
+def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file):
+    """Convert full-color PNG to SNES tiles with 8 sub-palettes + Floyd-Steinberg dithering.
+
+    Algorithm:
+    1. Load PNG, quantize pixels to BGR555 color space
+    2. Cluster 8x8 tiles into 8 groups by mean color (K-means)
+    3. Build 15-color sub-palettes per cluster (color 0 reserved = $0000)
+    4. Build BGR555 lookup tables for O(1) nearest-color per sub-palette
+    5. Floyd-Steinberg dithering across entire image (error flows across tile boundaries)
+    6. Encode to SNES 4BPP tiles + tilemap + palette
+    """
+    img = Image.open(png_path).convert('RGB')
+    rgb = np.array(img, dtype=np.float32)  # (H, W, 3)
+    H, W = rgb.shape[:2]
+    tiles_h, tiles_w = H // 8, W // 8
+
+    # Quantize to BGR555 (what SNES can actually display)
+    rgb5 = np.round(rgb * 31.0 / 255.0).clip(0, 31).astype(np.uint8)  # (H, W, 3) 5-bit
+    rgb_q = rgb5.astype(np.float32) * (255.0 / 31.0)  # back to float for processing
+
+    # Per-tile mean colors for clustering
+    tile_blocks = rgb_q.reshape(tiles_h, 8, tiles_w, 8, 3).transpose(0, 2, 1, 3, 4)
+    tile_means = tile_blocks.mean(axis=(2, 3))  # (tiles_h, tiles_w, 3)
+    flat_means = tile_means.reshape(-1, 3)
+
+    labels, _centers = simple_kmeans(flat_means, PALETTES)
+    tile_labels = labels.reshape(tiles_h, tiles_w)
+
+    # Build sub-palettes: collect unique BGR555 values per cluster, reduce to 15
+    sub_palettes = []  # list of 8 lists of 16 BGR555 values
+    sub_palette_rgb = np.zeros((PALETTES, 16, 3), dtype=np.float32)
+
+    for p in range(PALETTES):
+        mask = tile_labels == p
+        positions = np.argwhere(mask)
+
+        bgr555_set = set()
+        for tr, tc in positions:
+            block = rgb5[tr * 8:(tr + 1) * 8, tc * 8:(tc + 1) * 8]  # (8,8,3) uint8
+            for y in range(8):
+                for x in range(8):
+                    r5, g5, b5 = int(block[y, x, 0]), int(block[y, x, 1]), int(block[y, x, 2])
+                    bgr = r5 | (g5 << 5) | (b5 << 10)
+                    bgr555_set.add(bgr)
+
+        bgr555_set.discard(0)  # color 0 is reserved (transparent/black)
+
+        if len(bgr555_set) <= 15:
+            colors = sorted(bgr555_set)
+        else:
+            # K-means reduction to 15 representative colors
+            unique_list = sorted(bgr555_set)
+            unique_rgb = np.array([bgr555_to_rgb_float(c) for c in unique_list], dtype=np.float32)
+            clabels, ccenters = simple_kmeans(unique_rgb, 15)
+            colors = []
+            for c in ccenters:
+                colors.append(rgb_to_bgr555(int(round(c[0])), int(round(c[1])), int(round(c[2]))))
+            # Deduplicate (rounding might produce duplicates)
+            colors = sorted(set(colors))
+            if 0 in colors:
+                colors.remove(0)
+            colors = colors[:15]
+
+        full_palette = [0] + colors
+        while len(full_palette) < 16:
+            full_palette.append(0)
+        sub_palettes.append(full_palette)
+
+        for ci, bgr in enumerate(full_palette):
+            sub_palette_rgb[p, ci] = bgr555_to_rgb_float(bgr)
+
+    # Build BGR555 LUTs for O(1) nearest-color lookup per sub-palette
+    all_bgr = np.arange(32768, dtype=np.uint16)
+    all_r = (all_bgr & 0x1F).astype(np.float32) * (255.0 / 31.0)
+    all_g = ((all_bgr >> 5) & 0x1F).astype(np.float32) * (255.0 / 31.0)
+    all_b = ((all_bgr >> 10) & 0x1F).astype(np.float32) * (255.0 / 31.0)
+    all_rgb_lut = np.stack([all_r, all_g, all_b], axis=1)  # (32768, 3)
+
+    lut_index = np.zeros((PALETTES, 32768), dtype=np.uint8)
+    lut_rgb = np.zeros((PALETTES, 32768, 3), dtype=np.float32)
+
+    for p in range(PALETTES):
+        pal_rgb = sub_palette_rgb[p]  # (16, 3)
+        diffs = all_rgb_lut[:, None, :] - pal_rgb[None, :, :]  # (32768, 16, 3)
+        dists = np.sum(diffs * diffs, axis=2)  # (32768, 16)
+        nearest = np.argmin(dists, axis=1)
+        lut_index[p] = nearest.astype(np.uint8)
+        lut_rgb[p] = pal_rgb[nearest]
+
+    # Floyd-Steinberg dithering (sequential scan, error flows across tile boundaries)
+    # Convert numpy arrays to Python lists for fast element access in the tight loop
+    lut_idx_lists = [lut_index[p].tolist() for p in range(PALETTES)]
+    lut_r_lists = [lut_rgb[p, :, 0].tolist() for p in range(PALETTES)]
+    lut_g_lists = [lut_rgb[p, :, 1].tolist() for p in range(PALETTES)]
+    lut_b_lists = [lut_rgb[p, :, 2].tolist() for p in range(PALETTES)]
+    tile_labels_list = tile_labels.tolist()
+
+    # Error buffer: padded +1 col on each side, +1 row on bottom
+    err_r = [[0.0] * (W + 2) for _ in range(H + 1)]
+    err_g = [[0.0] * (W + 2) for _ in range(H + 1)]
+    err_b = [[0.0] * (W + 2) for _ in range(H + 1)]
+
+    output = np.zeros((H, W), dtype=np.uint8)
+
+    # Pre-extract source image channels as Python lists
+    src_r = rgb_q[:, :, 0].tolist()
+    src_g = rgb_q[:, :, 1].tolist()
+    src_b = rgb_q[:, :, 2].tolist()
+
+    for y in range(H):
+        xp1 = 1  # error buffer x offset (pixel x=0 maps to err index 1)
+        tr = y >> 3  # y // 8
+        er_row = err_r[y]
+        eg_row = err_g[y]
+        eb_row = err_b[y]
+        er_next = err_r[y + 1]
+        eg_next = err_g[y + 1]
+        eb_next = err_b[y + 1]
+        sr_row = src_r[y]
+        sg_row = src_g[y]
+        sb_row = src_b[y]
+
+        for x in range(W):
+            ex = x + xp1  # error buffer index for this pixel
+
+            # Accumulated color = original + diffused error
+            ar = sr_row[x] + er_row[ex]
+            ag = sg_row[x] + eg_row[ex]
+            ab = sb_row[x] + eb_row[ex]
+
+            # Clamp to [0, 255]
+            if ar < 0.0: ar = 0.0
+            elif ar > 255.0: ar = 255.0
+            if ag < 0.0: ag = 0.0
+            elif ag > 255.0: ag = 255.0
+            if ab < 0.0: ab = 0.0
+            elif ab > 255.0: ab = 255.0
+
+            # Quantize accumulated color to BGR555 for LUT lookup
+            r5 = int(ar * 31.0 / 255.0 + 0.5)
+            g5 = int(ag * 31.0 / 255.0 + 0.5)
+            b5 = int(ab * 31.0 / 255.0 + 0.5)
+            if r5 > 31: r5 = 31
+            if g5 > 31: g5 = 31
+            if b5 > 31: b5 = 31
+            bgr = r5 | (g5 << 5) | (b5 << 10)
+
+            # Look up tile's sub-palette
+            p = tile_labels_list[tr][x >> 3]
+
+            # Nearest color via LUT
+            idx = lut_idx_lists[p][bgr]
+            nr = lut_r_lists[p][bgr]
+            ng = lut_g_lists[p][bgr]
+            nb = lut_b_lists[p][bgr]
+
+            output[y, x] = idx
+
+            # Quantization error
+            qr = ar - nr
+            qg = ag - ng
+            qb = ab - nb
+
+            # Distribute error (Floyd-Steinberg: 7/16, 3/16, 5/16, 1/16)
+            # Right (x+1)
+            er_row[ex + 1] += qr * 0.4375
+            eg_row[ex + 1] += qg * 0.4375
+            eb_row[ex + 1] += qb * 0.4375
+            # Bottom-left (x-1, y+1)
+            er_next[ex - 1] += qr * 0.1875
+            eg_next[ex - 1] += qg * 0.1875
+            eb_next[ex - 1] += qb * 0.1875
+            # Bottom (x, y+1)
+            er_next[ex] += qr * 0.3125
+            eg_next[ex] += qg * 0.3125
+            eb_next[ex] += qb * 0.3125
+            # Bottom-right (x+1, y+1)
+            er_next[ex + 1] += qr * 0.0625
+            eg_next[ex + 1] += qg * 0.0625
+            eb_next[ex + 1] += qb * 0.0625
+
+    # Encode to SNES format
+    tile_data, tilemap_data = encode_tiles_4bpp(output, tile_labels.astype(np.uint8), W, H)
+
+    # Write palette: 8 sub-palettes × 16 colors × 2 bytes = 256 bytes
+    pal_bytes = bytearray(PALETTES * 16 * 2)
+    for p in range(PALETTES):
+        for ci in range(16):
+            bgr = sub_palettes[p][ci]
+            offset = (p * 16 + ci) * 2
+            pal_bytes[offset] = bgr & 0xFF
+            pal_bytes[offset + 1] = (bgr >> 8) & 0xFF
+
+    with open(pal_file, 'wb') as f:
+        f.write(pal_bytes)
+    with open(tile_file, 'wb') as f:
+        f.write(tile_data)
+    with open(map_file, 'wb') as f:
+        f.write(tilemap_data)
+
+
+def decode_tiles_4bpp_rgb(tiles_raw, palette_rgb, tile_pal_offsets=None):
     """Decode SNES 4BPP tiles to RGB values using the frame's actual palette.
 
     tiles_raw: (N, 32) uint8 array of raw SNES 4BPP tile data
-    palette_rgb: (16, 3) float32 array of RGB values for the palette
+    palette_rgb: (C, 3) float32 array of RGB values (C=16 single, C=128 multi)
+    tile_pal_offsets: optional (N,) uint16, per-tile palette base offset
+                      (palette_num * 16). If None, all tiles use palette 0.
     Returns: (N, 192) float32 array (64 pixels x 3 RGB channels)
-
-    Comparing tiles in RGB color space (rather than palette index space) is
-    critical because palette indices have no inherent ordering — index 3 and
-    14 might be nearly identical colors while 0 and 1 are completely different.
 
     SNES 4BPP tile format (32 bytes per 8x8 tile):
       Bytes  0-15: bitplanes 0,1 interleaved by row (2 bytes/row x 8 rows)
@@ -386,23 +696,25 @@ def decode_tiles_4bpp_rgb(tiles_raw, palette_rgb):
     N = tiles_raw.shape[0]
     pixel_indices = np.zeros((N, 8, 8), dtype=np.uint8)
     for row in range(8):
-        # Bitplanes 0,1 are in bytes 0-15 (interleaved per row)
         bp0 = tiles_raw[:, 2 * row].astype(np.uint16)
         bp1 = tiles_raw[:, 2 * row + 1].astype(np.uint16)
-        # Bitplanes 2,3 are in bytes 16-31 (interleaved per row)
         bp2 = tiles_raw[:, 16 + 2 * row].astype(np.uint16)
         bp3 = tiles_raw[:, 16 + 2 * row + 1].astype(np.uint16)
         for px in range(8):
-            bit = 7 - px  # MSB = leftmost pixel
+            bit = 7 - px
             pixel_indices[:, row, px] = (
                 ((bp0 >> bit) & 1) |
                 (((bp1 >> bit) & 1) << 1) |
                 (((bp2 >> bit) & 1) << 2) |
                 (((bp3 >> bit) & 1) << 3)
             ).astype(np.uint8)
-    # Map palette indices to RGB colors: (N, 64) indices -> (N, 64, 3) RGB
     flat_indices = pixel_indices.reshape(N, 64)
-    rgb = palette_rgb[flat_indices]  # numpy fancy indexing: (N, 64, 3)
+
+    if tile_pal_offsets is not None:
+        # Offset indices by per-tile sub-palette base for multi-palette lookup
+        flat_indices = flat_indices.astype(np.uint16) + tile_pal_offsets[:, None]
+
+    rgb = palette_rgb[flat_indices]  # (N, 64, 3)
     return rgb.reshape(N, 192)
 
 
@@ -415,9 +727,8 @@ def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
     quality loss evenly rather than concentrating it in the bottom rows.
 
     Uses L2 distance on actual RGB color values (decoded through the frame's
-    palette) for accurate visual similarity matching. This is critical because
-    palette indices have no inherent ordering — two indices that are numerically
-    far apart may map to nearly identical colors.
+    palette) for accurate visual similarity matching. Only merges tiles that
+    share the same sub-palette to preserve color accuracy.
     """
     bytes_per_tile = 8 * BPP  # 32 for 4BPP
 
@@ -429,15 +740,36 @@ def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
 
     tiles = np.frombuffer(tile_data, dtype=np.uint8).reshape(num_tiles, bytes_per_tile)
 
-    # Decode tiles to RGB color space using the frame's actual palette
     palette_rgb = read_snes_palette(palette_file)
-    pixels = decode_tiles_4bpp_rgb(tiles, palette_rgb)  # (N, 192) float32
 
-    # Compute pairwise L2 squared distance matrix using dot product trick:
-    # ||A-B||^2 = ||A||^2 + ||B||^2 - 2*A·B
-    sq_norms = np.sum(pixels * pixels, axis=1)  # (N,)
-    dot_products = pixels @ pixels.T             # (N, N) via BLAS
+    # Read tilemap to get per-tile palette assignment
+    with open(tilemap_file, 'rb') as f:
+        tilemap_raw = f.read()
+    tilemap_arr = np.frombuffer(tilemap_raw, dtype=np.uint16).copy()
+    tm_tile_indices = tilemap_arr & 0x3ff
+    tm_pal_bits = (tilemap_arr >> 10) & 0x7
+
+    # Determine palette for each unique tile (from first tilemap reference)
+    tile_palettes = np.zeros(num_tiles, dtype=np.uint8)
+    seen = np.zeros(num_tiles, dtype=bool)
+    for i in range(len(tilemap_arr)):
+        ti = int(tm_tile_indices[i])
+        if ti < num_tiles and not seen[ti]:
+            tile_palettes[ti] = tm_pal_bits[i]
+            seen[ti] = True
+
+    # Decode tiles to RGB using per-tile sub-palettes
+    tile_pal_offsets = tile_palettes.astype(np.uint16) * 16
+    pixels = decode_tiles_4bpp_rgb(tiles, palette_rgb, tile_pal_offsets)  # (N, 192)
+
+    # Compute pairwise L2 squared distance matrix
+    sq_norms = np.sum(pixels * pixels, axis=1)
+    dot_products = pixels @ pixels.T
     dist = sq_norms[:, None] + sq_norms[None, :] - 2 * dot_products
+
+    # Block cross-palette merges (set distance to infinity)
+    same_pal = tile_palettes[:, None] == tile_palettes[None, :]
+    dist = np.where(same_pal, dist, np.inf)
 
     # Get all unique pairs (i < j) sorted by distance
     rows_idx, cols_idx = np.triu_indices(num_tiles, k=1)
@@ -447,94 +779,73 @@ def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
     # Greedy merge: iterate through closest pairs, merge when both alive
     to_remove = num_tiles - max_tiles
     alive = set(range(num_tiles))
-    merge_target = list(range(num_tiles))  # merge_target[i] = tile that i maps to
+    merge_target = list(range(num_tiles))
     removed = 0
 
     for idx in sort_order:
         if removed >= to_remove:
             break
+        d = pair_dists[sort_order[removed]] if removed < len(sort_order) else 0
         i = int(rows_idx[idx])
         j = int(cols_idx[idx])
         if i not in alive or j not in alive:
             continue
-        # Remove the higher-indexed tile, keep the lower
+        if not np.isfinite(dist[i, j]):
+            break  # only inf-distance pairs remain
         alive.discard(j)
         merge_target[j] = i
         removed += 1
 
-    # Resolve transitive merges (j→i, but i may also have been merged later)
+    # Resolve transitive merges
     for idx in range(num_tiles):
         target = merge_target[idx]
         while merge_target[target] != target:
             target = merge_target[target]
         merge_target[idx] = target
 
-    # Re-index surviving tiles to contiguous 0..(max_tiles-1)
+    # Re-index surviving tiles
     alive_sorted = sorted(alive)
     reindex = {}
     for new_i, old_i in enumerate(alive_sorted):
         reindex[old_i] = new_i
 
-    # Build final remap: old tile index → new contiguous index
     final_remap = np.array([reindex[merge_target[i]] for i in range(num_tiles)],
                            dtype=np.uint16)
 
-    # Update tilemap
-    with open(tilemap_file, 'rb') as f:
-        tilemap_raw = f.read()
-    tilemap = np.frombuffer(tilemap_raw, dtype=np.uint16).copy()
-    tile_indices = tilemap & 0x3ff
-    flags = tilemap & 0xfc00
-
-    # Vectorized remap of all tilemap indices
+    # Update tilemap (preserve palette/flip flags)
+    tile_indices = tilemap_arr & 0x3ff
+    flags = tilemap_arr & 0xfc00
     new_indices = final_remap[tile_indices]
-    tilemap = flags | new_indices
+    tilemap_arr = flags | new_indices
 
-    # Write reduced tiles (only surviving tiles, in original order)
+    # Write reduced tiles
     new_tile_data = tiles[alive_sorted].tobytes()
     with open(tile_file, 'wb') as f:
         f.write(new_tile_data)
 
-    # Write updated tilemap
     with open(tilemap_file, 'wb') as f:
-        f.write(tilemap.tobytes())
+        f.write(tilemap_arr.tobytes())
 
 def convert_frame_superfamiconv(png_path):
-    """Convert one PNG frame to SNES tiles/tilemap/palette using superfamiconv."""
+    """Convert one PNG frame to SNES tiles/tilemap/palette.
+
+    Uses per-tile 8-sub-palette optimization with Floyd-Steinberg dithering
+    for smooth gradients and high color fidelity (120 unique colors).
+    """
     base = png_path[:-4]  # Remove .png
     pal_file = base + '.palette'
     tile_file = base + '.tiles'
     map_file = base + '.tilemap'
 
-    # superfamiconv.exe (Windows binary) only works with relative paths in WSL.
-    # Use cwd=PROJECT_DIR and make all paths relative.
-    sfc = os.path.relpath(SUPERFAMICONV, PROJECT_DIR)
-    rel_png = os.path.relpath(png_path, PROJECT_DIR)
-    rel_pal = os.path.relpath(pal_file, PROJECT_DIR)
-    rel_tile = os.path.relpath(tile_file, PROJECT_DIR)
-    rel_map = os.path.relpath(map_file, PROJECT_DIR)
+    try:
+        per_tile_palette_optimize(png_path, pal_file, tile_file, map_file)
+    except Exception as e:
+        return False, str(e)
 
-    run_kw = dict(capture_output=True, text=True, timeout=30, cwd=PROJECT_DIR)
-
-    # 1. Palette extraction
-    r = subprocess.run([sfc, 'palette', '-i', rel_png, '-d', rel_pal, '-C', str(MAX_COLORS)], **run_kw)
-    if r.returncode != 0:
-        return False, f"palette: {r.stderr.strip()}"
-
-    # 2. Tile conversion (no tile limit — post-process to reduce)
-    r = subprocess.run([sfc, 'tiles', '-i', rel_png, '-p', rel_pal, '-d', rel_tile, '-B', str(BPP)], **run_kw)
-    if r.returncode != 0:
-        return False, f"tiles: {r.stderr.strip()}"
-
-    # 3. Tilemap generation
-    r = subprocess.run([sfc, 'map', '-i', rel_png, '-p', rel_pal, '-t', rel_tile, '-d', rel_map, '-B', str(BPP)], **run_kw)
-    if r.returncode != 0:
-        return False, f"map: {r.stderr.strip()}"
-
-    # 4. Reduce tiles to fit in VRAM buffer (512 max at 4BPP)
+    # Reduce tiles to fit in VRAM buffer (384 max at 4BPP)
     reduce_tiles(tile_file, map_file, pal_file)
 
-    # 5. Pad tilemap to 32x32
+    # Pad tilemap to 32x20 standard size
     pad_tilemap(map_file)
 
     return True, ""
