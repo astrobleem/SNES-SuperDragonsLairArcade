@@ -503,7 +503,17 @@ OopHandlerLoop:
             adc tmp+6	;OBJID * 3 (OopClassLut entry size)
             phx	;save OopStack index (need X for long indexed read)
             tax
-            lda.l OopClassLut,x	;expected class base
+            ;--- safe ROM read with double-read verification ---
+            ;OopClassLut read vulnerable to FXPAK MSU-1 bus contention
+            lda.l OopClassLut,x	;first read
+            sta tmp+8
+            lda.l OopClassLut,x	;verification read
+            cmp tmp+8
+            beq _playValidateReadOk
+              lda.l OopClassLut,x	;tiebreaker read
+              sta tmp+8
+_playValidateReadOk:
+            lda tmp+8		;expected class base
             plx	;restore OopStack index
             clc
             adc #OOPR.rPlay	;expected play pointer

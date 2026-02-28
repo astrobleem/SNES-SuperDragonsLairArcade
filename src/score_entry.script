@@ -5,6 +5,8 @@
   .def objScoreText hashPtr.2
   .def objBackground3 hashPtr.3
   .def objNameEntry hashPtr.8
+;irq.buffer.x/y occupy this._tmp+0 through this._tmp+3 (defined in script.h).
+.def score.waitStart this._tmp+8
   ;--- Stop HDMA hardware and flush DMA queue before cleanup ---
   ;(prevents stale DMA entries from firing after objects are destroyed)
   jsr core.dma.resetHardware
@@ -84,6 +86,9 @@
   ldy #213
   jsr core.irq.position.set
 
+  lda.w FrameCounter
+  sta.b score.waitStart
+
   jsr SavePC
 
   lda.w FrameCounter
@@ -91,6 +96,15 @@
   beq +
     rts
 +
+
+  ;60-second timeout (3600 frames at 60fps) — prevents CRT burn-in
+  lda.w FrameCounter
+  sec
+  sbc.b score.waitStart
+  cmp #3600
+  bcc _score_entry.noTimeout
+  jmp _score_entry.timeout
+_score_entry.noTimeout:
 
   CALL Player.getScore.MTD objPlayer
   pha
@@ -130,6 +144,7 @@
   CALL Player.nameInput.kill.MTD objNameEntry
 
   ;sort by highest score, then delete lowest of the bunch, but only if more scores than required
+
   lda #OBJID.Score
   ldx #sort.score.score
   jsr abstract.Sort.byId
@@ -151,6 +166,12 @@
   lda.w #OBJECT.PROPERTIES.isSerializable
   jsr core.persistency.save
 
+  bra _score_entry.cleanup
+
+_score_entry.timeout:
+  CALL Player.nameInput.kill.MTD objNameEntry
+
+_score_entry.cleanup:
   lda #BRIGHTNESS.NONE
   CALL Brightness.fadeTo.MTD objFameBrightness
 

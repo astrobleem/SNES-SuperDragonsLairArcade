@@ -304,6 +304,10 @@ _uploadFirstChunk:
 
   cmp this.currentFrame
   beq +
+	;retry seek+verify up to 8 times (bus contention can corrupt MSU_DATA reads)
+	lda #8
+	sta this.tmp
+_msu1FrameRetry:
 	lda this.currentFrame
 	jsr _msu1SeekToFrame
 	sep #$20
@@ -311,10 +315,12 @@ _uploadFirstChunk:
 	xba
 	lda.l MSU_DATA
 	xba
-	rep #$31  
+	rep #$31
     cmp this.currentFrame
     beq +
-      ;if reseek didn't help, frame is broken
+      dec this.tmp
+      bne _msu1FrameRetry
+      ;all retries exhausted — frame is broken
       pei (this.currentChapter)
       pha
       TRIGGER_ERROR E_Msu1FrameBad
