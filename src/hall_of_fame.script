@@ -1,7 +1,10 @@
   SCRIPT hall_of_fame
 
   .def objMsu1 hashPtr.5
-  .def fame.waitStart this._tmp+0
+  ;irq.buffer.x/y occupy this._tmp+0 through this._tmp+3 (defined in script.h).
+  ;Using this._tmp+0 here caused a collision that corrupted the saved IRQ H-timer
+  ;position, preventing the DMA IRQ from firing (~33% of the time) → dark screen.
+  .def fame.waitStart this._tmp+8
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties
   jsr abstract.Iterator.killOthers
@@ -132,6 +135,16 @@ _exit:
 
   jsr core.vram.init
   jsr core.cgram.clear
+
+  ;Reset MSU-1 video window/color registers left by attract mode playback.
+  ;Without this, colorAdditionSelect clips all colors to black on the
+  ;next title screen.
+  sep #$20
+  stz.w colorAdditionSelect
+  stz.w window12Sel
+  stz.w windowObjSel
+  stz.w windowMainscreen
+  rep #$31
 
   ldx irq.buffer.x
   ldy irq.buffer.y

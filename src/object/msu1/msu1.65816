@@ -193,6 +193,14 @@ _playCycleDone:
     CALL Background.framebuffer.kill.MTD this.framebuffer.2.obj
 +
 
+  ;Reset colorAdditionSelect (CGWSEL) which was set to CGWSEL_CLIP_COL_INSIDE
+  ;during init.  VideoMask.kill restores window12Sel/windowObjSel/windowMainscreen,
+  ;but nobody restores colorAdditionSelect — leaving stale "clip to black" mode
+  ;that darkens subsequent screens (e.g., title_screen after attract mode).
+  sep #$20
+  stz.w colorAdditionSelect
+  rep #$31
+
   lda #OBJR_kill
   sta 3,s
   rts
@@ -958,6 +966,30 @@ _syncFbDone:
   stz.b this.videoPlaying
 
   jsr _stopAudioTrack
+
+  ;Reset data port to file start after video streaming.
+  ;Without this, the FXPAK data buffer retains stale bytes from
+  ;the last streaming position.  After long idle (60s title screen),
+  ;_isMsu1FilePresent reads garbage and triggers E_Msu1FileNotPresent.
+  rep #$31
+  lda #0
+  sta.l MSU_ADRESS
+  sta.l MSU_ADRESS+2
+  nop
+  nop
+  nop
+  nop
+  nop
+  nop
+  nop
+  nop
+  sep #$20
+  ldx.w #MSU1_SEEK_TIMEOUT
+-   dex
+    beq +
+    lda.l MSU_STATUS
+    bmi -
++
   plp
   rts
 

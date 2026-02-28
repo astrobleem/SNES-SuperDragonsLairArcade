@@ -1,9 +1,11 @@
   SCRIPT losers
   .def objLosersBg hashPtr.1
   .def objLosersSpc hashPtr.2
-  .def konami.step this._tmp
-  .def hold.timer this._tmp+2
-  .def konami.done this._tmp+4
+  ;irq.buffer.x/y occupy this._tmp+0 through this._tmp+3 (defined in script.h).
+  ;Avoid those offsets to prevent collision if IRQ save/restore is ever added.
+  .def konami.step this._tmp+8
+  .def hold.timer this._tmp+10
+  .def konami.done this._tmp+12
 
   lda.w #OBJECT.PROPERTIES.isChapter
   jsr abstract.Iterator.setProperties

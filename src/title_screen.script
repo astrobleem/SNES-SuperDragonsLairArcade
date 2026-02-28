@@ -49,15 +49,22 @@ _title_screen.hasCredits:
   sta.w ScreenMode
   lda.w MainScreen
   and.b #(T_BG1_ENABLE | T_BG2_ENABLE | T_BG3_ENABLE | T_BG4_ENABLE) ~$ff
-
   sta.w MainScreen
+
+  ;Reset MSU-1 video window/color registers that persist after Msu1 is killed.
+  ;Without this, colorAdditionSelect clips all colors to black inside the
+  ;stale window position left by the now-dead VideoMask HDMA.
+  stz.w colorAdditionSelect
+  stz.w window12Sel
+  stz.w windowObjSel
+  stz.w windowMainscreen
   rep #$31
 
   NEW Brightness.CLS.PTR objBrightness
   NEW Background.generic.CLS.PTR objBackground BG.LAYER.1 BG.titlescreen.PTR
 
   lda #BRIGHTNESS.FULL
-  CALL Brightness.fadeTo.MTD objBrightness
+  CALL Brightness.set.MTD objBrightness
 
   NEW Background.generic.CLS.PTR objLogo BG.LAYER.0 BG.logo.PTR
 
@@ -502,10 +509,6 @@ _title_screen.noPalKill:
   jsr core.cgram.clear
 
   ;--- Wake up FXPAK from deep SD card idle via dummy seek ---
-  ;After extended menu navigation, the SD card enters low-power mode.
-  ;A passive DATA_BUSY poll passes instantly (nothing pending), but the
-  ;subsequent Msu1.init seek times out (~12ms too short to wake SD card).
-  ;Fix: trigger a dummy seek to address 0, then poll with generous timeout.
   rep #$31
   lda #0
   sta.l $2000           ;MSU_ADRESS bytes 0-1 = 0 (seek to file offset 0)
@@ -525,9 +528,6 @@ _title_screen.noPalKill:
     dex
     bne -
 + rep #$31
-
-  NEW Msu1.CLS.PTR hashPtr.1
-  CALL Msu1.kill.MTD hashPtr.1
 
   lda.b menu.target
   pha
