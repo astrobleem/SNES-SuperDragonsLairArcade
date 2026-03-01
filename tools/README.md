@@ -8,6 +8,8 @@ Install Python dependencies with `pip install -r requirements.txt`.
 
 | Tool | Purpose |
 | --- | --- |
+| **GUI** | |
+| `converter/gui.py` | Visual MSU converter with preview, frame scrubber, per-segment quality tuning, and segment save/load |
 | **Core Pipeline** | |
 | `lua_scene_exporter.py` | Export DirkSimple `game.lua` scene data to XML event files with frame-accurate timing |
 | `xmlsceneparser.py` | Convert XML chapter events to assembly `.script` + `.data` files (516 chapters) |
@@ -76,6 +78,26 @@ Install Python dependencies with `pip install -r requirements.txt`.
 | `superfamiconv/` | Fast C++ SNES graphics converter (tiles, palettes, tilemaps) |
 | `snesbrr-2006-12-13/` | BRR encoder/decoder for SNES audio samples |
 | `wla-dx-9.5-svn/` | WLA-DX 9.3 assembler/linker for 65816/SPC700 (pre-built) |
+
+## Converter GUI
+
+The converter GUI (`converter/gui.py`) is the primary tool for generating and fine-tuning MSU-1 video data. It wraps the `generate_msu_data.py` pipeline with a visual interface.
+
+```bash
+python converter/gui.py
+```
+
+Key capabilities:
+- **Scene/chapter browser** with live preview of extracted PNG frames alongside SNES 4BPP tile reconstruction
+- **Frame scrubber** with arrow-key single-frame stepping for frame-accurate inspection
+- **Per-segment quality settings** — split chapters into segments, each with independent dithering (none / Floyd-Steinberg / ordered), palette count (1-8), max tiles, grayscale, and shared palette options
+- **Segment save/load** — export segment layouts as JSON for persistence across sessions
+- **Animated clip preview** — render ~2 seconds of converted frames and play back at 24fps
+- **Full pipeline control** — run extraction, audio, conversion, and packaging phases with progress tracking
+
+Supporting modules in `converter/`:
+- `preview.py` — SNES 4BPP tile/tilemap/palette reconstruction (BGR555 decode, per-tile palette offsets, H/V flip)
+- `segments.py` — segment data model with split/delete/merge, time-based lookup, and JSON serialization
 
 ## Core Pipeline
 

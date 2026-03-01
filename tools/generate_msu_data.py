@@ -57,6 +57,59 @@ MAX_TILES = 384  # VRAM tile buffer: 384 tiles at 4BPP (32 bytes/tile) = $3000 b
 FRAME_WIDTH = 256
 FRAME_HEIGHT = 160
 TILEMAP_TARGET_SIZE = 1280  # 32x20 tiles * 2 bytes per entry
+
+# Dithering method constants
+DITHER_NONE = 'none'
+DITHER_FLOYD_STEINBERG = 'floyd-steinberg'
+DITHER_ORDERED = 'ordered'
+DEFAULT_DITHER = DITHER_FLOYD_STEINBERG
+
+# 4x4 Bayer threshold matrix normalized to BGR555 quantization step (~+-4.1 in RGB-255 space)
+_BAYER_4x4 = np.array([
+    [ 0,  8,  2, 10],
+    [12,  4, 14,  6],
+    [ 3, 11,  1,  9],
+    [15,  7, 13,  5],
+], dtype=np.float32)
+_BAYER_4x4_SCALED = (_BAYER_4x4 / 16.0 - 0.5) * (255.0 / 31.0)
+
+# Scale mode constants for frame extraction
+SCALE_STRETCH = 'stretch'
+SCALE_FIT = 'fit'
+SCALE_CROP = 'crop'
+
+# Scene name -> chapter prefix mapping (29 scenes)
+SCENE_PREFIXES = {
+    'introduction': 'intr_',
+    'vestibule': 'vest_',
+    'snake_room': 'snkr_',
+    'bower': 'bowr_',
+    'fire_room': 'firm_',
+    'throne_room': 'thrn_',
+    'tilting_room': 'tltr_',
+    'tentacle_room': 'tntr_',
+    'wind_room': 'wndr_',
+    'giddy_goons': 'gg_',
+    'catwalk_bats': 'cwbt_',
+    'mudmen': 'mudm_',
+    'rolling_balls': 'rbal_',
+    'underground_river': 'ugr_',
+    'flaming_ropes': 'flrp_',
+    'flying_horse': 'fh_',
+    'bubbling_cauldron': 'bcld_',
+    'giant_bat': 'gbat_',
+    'crypt_creeps': 'cc_',
+    'alice_room': 'alrm_',
+    'robot_knight': 'rk_',
+    'smithee': 'sm_',
+    'smithee_reversed': 'smr_',
+    'grim_reaper': 'gr_',
+    'yellow_brick_road': 'ybr_',
+    'black_knight': 'bknt_',
+    'lizard_king': 'lzkg_',
+    'the_dragons_lair': 'tdl_',
+    'attract_mode': 'atmd_',
+}
 AUDIO_SAMPLE_RATE = 44100
 AUDIO_CHANNELS = 2
 MSU1_AUDIO_HEADER = b"MSU1" + struct.pack('<I', 0)  # "MSU1" + loop point (0 = no loop)
@@ -199,7 +252,41 @@ def get_ffmpeg():
     has_cuda = ffmpeg_path != "ffmpeg" and os.path.exists(ffmpeg_path)
     return ffmpeg_path, needs_win, has_cuda
 
-def extract_chapter_frames_from_segment(chapter_info, chapter_dir, segments):
+def _build_scale_filter(width, height, scale_mode, aspect_ratio=None):
+    """Build ffmpeg video filter chain for scaling to the target resolution.
+
+    Returns a list of ffmpeg filter strings (to be comma-joined into a -vf chain).
+
+    Scale modes:
+      stretch: scale=W:H (forces exact dimensions, may distort)
+      fit:     scale to fit inside WxH, pad with black bars
+      crop:    scale to cover WxH, center-crop overflow
+    """
+    filters = []
+
+    # Aspect ratio override (pre-scale) — only meaningful for fit/crop
+    if aspect_ratio and scale_mode != SCALE_STRETCH:
+        ar = aspect_ratio.replace('/', ':')
+        ar_w, ar_h = ar.split(':')
+        filters.append(f'scale=trunc(ih*{ar_w}/{ar_h}/2)*2:ih')
+        filters.append('setsar=1')
+
+    if scale_mode == SCALE_FIT:
+        filters.append(f'scale={width}:{height}:force_original_aspect_ratio=decrease')
+        filters.append(f'pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black')
+    elif scale_mode == SCALE_CROP:
+        filters.append(f'scale={width}:{height}:force_original_aspect_ratio=increase')
+        filters.append(f'crop={width}:{height}')
+    else:
+        # stretch (default)
+        filters.append(f'scale={width}:{height}')
+
+    return filters
+
+
+def extract_chapter_frames_from_segment(chapter_info, chapter_dir, segments,
+                                        scale_mode=SCALE_STRETCH,
+                                        aspect_ratio=None):
     """Extract video frames directly from a Daphne .m2v segment.
 
     Uses CPU-only decode with yadif deinterlace, fps conversion via filter,
@@ -237,11 +324,13 @@ def extract_chapter_frames_from_segment(chapter_info, chapter_dir, segments):
     # to 23.976 -> trim to target range -> reset PTS -> scale
     # Output full-color 24-bit RGB PNGs (palette optimization done in Python)
     # No CUDA, no -ss seeking — CPU decode from start, trim handles offset
+    scale_filters = _build_scale_filter(FRAME_WIDTH, FRAME_HEIGHT,
+                                        scale_mode, aspect_ratio)
     filter_str = (
         f'yadif,fps=24000/1001,'
         f'trim=start={offset_seconds:.6f}:duration={duration_s:.6f},'
         f'setpts=PTS-STARTPTS,'
-        f'scale={FRAME_WIDTH}:{FRAME_HEIGHT}'
+        + ','.join(scale_filters)
     )
 
     cmd = [
@@ -432,6 +521,86 @@ def simple_kmeans(data, k, max_iter=20):
     return labels, centers
 
 
+def compute_shared_palette(png_paths, num_palettes=PALETTES, grayscale=False):
+    """Compute a shared palette from multiple frames for temporal stability.
+
+    Samples colors and tile means from all provided frames, then builds
+    sub-palettes that work well across all of them. This prevents palette
+    shifts between frames, reducing dither "swimming".
+
+    Args:
+        png_paths: List of PNG file paths to sample from
+        num_palettes: Number of sub-palettes
+        grayscale: If True, convert frames to grayscale before sampling
+
+    Returns:
+        List of sub-palettes, each a list of 16 BGR555 values (color 0 = 0x0000)
+    """
+    all_tile_means = []
+    all_tile_bgr555 = []
+
+    for path in png_paths:
+        img = Image.open(path).convert('RGB')
+        if grayscale:
+            img = img.convert('L').convert('RGB')
+        rgb = np.array(img, dtype=np.float32)
+        H, W = rgb.shape[:2]
+        tiles_h, tiles_w = H // 8, W // 8
+
+        rgb5 = np.round(rgb * 31.0 / 255.0).clip(0, 31).astype(np.uint8)
+        rgb_q = rgb5.astype(np.float32) * (255.0 / 31.0)
+
+        tile_blocks = rgb_q.reshape(tiles_h, 8, tiles_w, 8, 3).transpose(0, 2, 1, 3, 4)
+        tile_means = tile_blocks.mean(axis=(2, 3))
+
+        for tr in range(tiles_h):
+            for tc in range(tiles_w):
+                all_tile_means.append(tile_means[tr, tc])
+                block = rgb5[tr * 8:(tr + 1) * 8, tc * 8:(tc + 1) * 8]
+                bgr_set = set()
+                for y in range(8):
+                    for x in range(8):
+                        r5, g5, b5 = int(block[y, x, 0]), int(block[y, x, 1]), int(block[y, x, 2])
+                        bgr = r5 | (g5 << 5) | (b5 << 10)
+                        bgr_set.add(bgr)
+                all_tile_bgr555.append(bgr_set)
+
+    all_tile_means = np.array(all_tile_means, dtype=np.float32)
+
+    labels, _centers = simple_kmeans(all_tile_means, num_palettes)
+
+    sub_palettes = []
+    for p in range(num_palettes):
+        mask = labels == p
+        tile_indices = np.where(mask)[0]
+
+        bgr555_set = set()
+        for ti in tile_indices:
+            bgr555_set.update(all_tile_bgr555[ti])
+        bgr555_set.discard(0)
+
+        if len(bgr555_set) <= 15:
+            colors = sorted(bgr555_set)
+        else:
+            unique_list = sorted(bgr555_set)
+            unique_rgb = np.array([bgr555_to_rgb_float(c) for c in unique_list], dtype=np.float32)
+            clabels, ccenters = simple_kmeans(unique_rgb, 15)
+            colors = []
+            for c in ccenters:
+                colors.append(rgb_to_bgr555(int(round(c[0])), int(round(c[1])), int(round(c[2]))))
+            colors = sorted(set(colors))
+            if 0 in colors:
+                colors.remove(0)
+            colors = colors[:15]
+
+        full_palette = [0] + colors
+        while len(full_palette) < 16:
+            full_palette.append(0)
+        sub_palettes.append(full_palette)
+
+    return sub_palettes
+
+
 def encode_tiles_4bpp(pixel_indices, tile_palettes, width, height):
     """Encode pixel index grid to SNES 4BPP tile data + tilemap.
 
@@ -484,18 +653,30 @@ def encode_tiles_4bpp(pixel_indices, tile_palettes, width, height):
     return tile_data, tilemap_bytes
 
 
-def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file):
-    """Convert full-color PNG to SNES tiles with 8 sub-palettes + Floyd-Steinberg dithering.
+def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file,
+                              num_palettes=PALETTES,
+                              dither_method=DEFAULT_DITHER,
+                              grayscale=False, shared_palette=None):
+    """Convert full-color PNG to SNES tiles with sub-palettes + dithering.
 
     Algorithm:
     1. Load PNG, quantize pixels to BGR555 color space
-    2. Cluster 8x8 tiles into 8 groups by mean color (K-means)
+    2. Cluster 8x8 tiles into groups by mean color (K-means)
     3. Build 15-color sub-palettes per cluster (color 0 reserved = $0000)
     4. Build BGR555 lookup tables for O(1) nearest-color per sub-palette
-    5. Floyd-Steinberg dithering across entire image (error flows across tile boundaries)
+    5. Dithering across entire image (none, ordered, or Floyd-Steinberg)
     6. Encode to SNES 4BPP tiles + tilemap + palette
+
+    Args:
+        num_palettes: Number of sub-palettes (default: 8)
+        dither_method: DITHER_NONE, DITHER_ORDERED, or DITHER_FLOYD_STEINBERG
+        grayscale: If True, convert image to grayscale before processing
+        shared_palette: Pre-computed sub-palettes (list of lists of BGR555 values).
+            If provided, skip per-frame palette building and use these instead.
     """
     img = Image.open(png_path).convert('RGB')
+    if grayscale:
+        img = img.convert('L').convert('RGB')
     rgb = np.array(img, dtype=np.float32)  # (H, W, 3)
     H, W = rgb.shape[:2]
     tiles_h, tiles_w = H // 8, W // 8
@@ -509,51 +690,60 @@ def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file):
     tile_means = tile_blocks.mean(axis=(2, 3))  # (tiles_h, tiles_w, 3)
     flat_means = tile_means.reshape(-1, 3)
 
-    labels, _centers = simple_kmeans(flat_means, PALETTES)
+    labels, _centers = simple_kmeans(flat_means, num_palettes)
     tile_labels = labels.reshape(tiles_h, tiles_w)
 
-    # Build sub-palettes: collect unique BGR555 values per cluster, reduce to 15
-    sub_palettes = []  # list of 8 lists of 16 BGR555 values
-    sub_palette_rgb = np.zeros((PALETTES, 16, 3), dtype=np.float32)
+    # Build sub-palettes (or use shared palette if provided)
+    sub_palettes = []
+    sub_palette_rgb = np.zeros((num_palettes, 16, 3), dtype=np.float32)
 
-    for p in range(PALETTES):
-        mask = tile_labels == p
-        positions = np.argwhere(mask)
+    if shared_palette is not None:
+        for p in range(num_palettes):
+            if p < len(shared_palette):
+                sub_palettes.append(list(shared_palette[p]))
+            else:
+                sub_palettes.append([0] * 16)
+            for ci, bgr in enumerate(sub_palettes[p]):
+                sub_palette_rgb[p, ci] = bgr555_to_rgb_float(bgr)
+    else:
+        for p in range(num_palettes):
+            mask = tile_labels == p
+            positions = np.argwhere(mask)
 
-        bgr555_set = set()
-        for tr, tc in positions:
-            block = rgb5[tr * 8:(tr + 1) * 8, tc * 8:(tc + 1) * 8]  # (8,8,3) uint8
-            for y in range(8):
-                for x in range(8):
-                    r5, g5, b5 = int(block[y, x, 0]), int(block[y, x, 1]), int(block[y, x, 2])
-                    bgr = r5 | (g5 << 5) | (b5 << 10)
-                    bgr555_set.add(bgr)
+            bgr555_set = set()
+            for tr, tc in positions:
+                block = rgb5[tr * 8:(tr + 1) * 8, tc * 8:(tc + 1) * 8]  # (8,8,3) uint8
+                for y in range(8):
+                    for x in range(8):
+                        r5, g5, b5 = int(block[y, x, 0]), int(block[y, x, 1]), int(block[y, x, 2])
+                        bgr = r5 | (g5 << 5) | (b5 << 10)
+                        bgr555_set.add(bgr)
 
-        bgr555_set.discard(0)  # color 0 is reserved (transparent/black)
+            bgr555_set.discard(0)  # color 0 is reserved (transparent/black)
 
-        if len(bgr555_set) <= 15:
-            colors = sorted(bgr555_set)
-        else:
-            # K-means reduction to 15 representative colors
-            unique_list = sorted(bgr555_set)
-            unique_rgb = np.array([bgr555_to_rgb_float(c) for c in unique_list], dtype=np.float32)
-            clabels, ccenters = simple_kmeans(unique_rgb, 15)
-            colors = []
-            for c in ccenters:
-                colors.append(rgb_to_bgr555(int(round(c[0])), int(round(c[1])), int(round(c[2]))))
-            # Deduplicate (rounding might produce duplicates)
-            colors = sorted(set(colors))
-            if 0 in colors:
-                colors.remove(0)
-            colors = colors[:15]
+            if len(bgr555_set) <= 15:
+                colors = sorted(bgr555_set)
+            else:
+                # K-means reduction to 15 representative colors
+                unique_list = sorted(bgr555_set)
+                unique_rgb = np.array([bgr555_to_rgb_float(c) for c in unique_list], dtype=np.float32)
+                clabels, ccenters = simple_kmeans(unique_rgb, 15)
+                colors = []
+                for c in ccenters:
+                    colors.append(rgb_to_bgr555(int(round(c[0])), int(round(c[1])), int(round(c[2]))))
+                # Deduplicate (rounding might produce duplicates)
+                colors = sorted(set(colors))
+                if 0 in colors:
+                    colors.remove(0)
+                colors = colors[:15]
 
-        full_palette = [0] + colors
-        while len(full_palette) < 16:
-            full_palette.append(0)
-        sub_palettes.append(full_palette)
+            full_palette = [0] + colors
+            while len(full_palette) < 16:
+                full_palette.append(0)
+            sub_palettes.append(full_palette)
 
-        for ci, bgr in enumerate(full_palette):
-            sub_palette_rgb[p, ci] = bgr555_to_rgb_float(bgr)
+            for ci, bgr in enumerate(full_palette):
+                sub_palette_rgb[p, ci] = bgr555_to_rgb_float(bgr)
 
     # Build BGR555 LUTs for O(1) nearest-color lookup per sub-palette
     all_bgr = np.arange(32768, dtype=np.uint16)
@@ -562,10 +752,10 @@ def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file):
     all_b = ((all_bgr >> 10) & 0x1F).astype(np.float32) * (255.0 / 31.0)
     all_rgb_lut = np.stack([all_r, all_g, all_b], axis=1)  # (32768, 3)
 
-    lut_index = np.zeros((PALETTES, 32768), dtype=np.uint8)
-    lut_rgb = np.zeros((PALETTES, 32768, 3), dtype=np.float32)
+    lut_index = np.zeros((num_palettes, 32768), dtype=np.uint8)
+    lut_rgb = np.zeros((num_palettes, 32768, 3), dtype=np.float32)
 
-    for p in range(PALETTES):
+    for p in range(num_palettes):
         pal_rgb = sub_palette_rgb[p]  # (16, 3)
         diffs = all_rgb_lut[:, None, :] - pal_rgb[None, :, :]  # (32768, 16, 3)
         dists = np.sum(diffs * diffs, axis=2)  # (32768, 16)
@@ -573,104 +763,133 @@ def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file):
         lut_index[p] = nearest.astype(np.uint8)
         lut_rgb[p] = pal_rgb[nearest]
 
-    # Floyd-Steinberg dithering (sequential scan, error flows across tile boundaries)
-    # Convert numpy arrays to Python lists for fast element access in the tight loop
-    lut_idx_lists = [lut_index[p].tolist() for p in range(PALETTES)]
-    lut_r_lists = [lut_rgb[p, :, 0].tolist() for p in range(PALETTES)]
-    lut_g_lists = [lut_rgb[p, :, 1].tolist() for p in range(PALETTES)]
-    lut_b_lists = [lut_rgb[p, :, 2].tolist() for p in range(PALETTES)]
-    tile_labels_list = tile_labels.tolist()
-
-    # Error buffer: padded +1 col on each side, +1 row on bottom
-    err_r = [[0.0] * (W + 2) for _ in range(H + 1)]
-    err_g = [[0.0] * (W + 2) for _ in range(H + 1)]
-    err_b = [[0.0] * (W + 2) for _ in range(H + 1)]
-
+    # Dithering dispatch
     output = np.zeros((H, W), dtype=np.uint8)
 
-    # Pre-extract source image channels as Python lists
-    src_r = rgb_q[:, :, 0].tolist()
-    src_g = rgb_q[:, :, 1].tolist()
-    src_b = rgb_q[:, :, 2].tolist()
+    if dither_method == DITHER_NONE:
+        # Vectorized nearest-color lookup, no error diffusion
+        bgr_grid = (rgb5[:, :, 0].astype(np.uint16) |
+                    (rgb5[:, :, 1].astype(np.uint16) << 5) |
+                    (rgb5[:, :, 2].astype(np.uint16) << 10))
+        tile_pal_map = np.repeat(np.repeat(tile_labels, 8, axis=0), 8, axis=1)
+        for p in range(num_palettes):
+            mask = tile_pal_map == p
+            output[mask] = lut_index[p][bgr_grid[mask]]
 
-    for y in range(H):
-        xp1 = 1  # error buffer x offset (pixel x=0 maps to err index 1)
-        tr = y >> 3  # y // 8
-        er_row = err_r[y]
-        eg_row = err_g[y]
-        eb_row = err_b[y]
-        er_next = err_r[y + 1]
-        eg_next = err_g[y + 1]
-        eb_next = err_b[y + 1]
-        sr_row = src_r[y]
-        sg_row = src_g[y]
-        sb_row = src_b[y]
+    elif dither_method == DITHER_ORDERED:
+        # Ordered (Bayer) dithering: add threshold matrix, clamp, quantize
+        bayer_tiled = np.tile(_BAYER_4x4_SCALED,
+                              ((H + 3) // 4, (W + 3) // 4))[:H, :W]
+        rgb_dithered = rgb_q.copy()
+        for c in range(3):
+            rgb_dithered[:, :, c] = np.clip(rgb_dithered[:, :, c] + bayer_tiled,
+                                            0, 255)
+        rgb5_d = np.round(rgb_dithered * 31.0 / 255.0).clip(0, 31).astype(np.uint8)
+        bgr_grid = (rgb5_d[:, :, 0].astype(np.uint16) |
+                    (rgb5_d[:, :, 1].astype(np.uint16) << 5) |
+                    (rgb5_d[:, :, 2].astype(np.uint16) << 10))
+        tile_pal_map = np.repeat(np.repeat(tile_labels, 8, axis=0), 8, axis=1)
+        for p in range(num_palettes):
+            mask = tile_pal_map == p
+            output[mask] = lut_index[p][bgr_grid[mask]]
 
-        for x in range(W):
-            ex = x + xp1  # error buffer index for this pixel
+    else:
+        # Floyd-Steinberg error diffusion (default)
+        # Convert numpy arrays to Python lists for fast element access in the tight loop
+        lut_idx_lists = [lut_index[p].tolist() for p in range(num_palettes)]
+        lut_r_lists = [lut_rgb[p, :, 0].tolist() for p in range(num_palettes)]
+        lut_g_lists = [lut_rgb[p, :, 1].tolist() for p in range(num_palettes)]
+        lut_b_lists = [lut_rgb[p, :, 2].tolist() for p in range(num_palettes)]
+        tile_labels_list = tile_labels.tolist()
 
-            # Accumulated color = original + diffused error
-            ar = sr_row[x] + er_row[ex]
-            ag = sg_row[x] + eg_row[ex]
-            ab = sb_row[x] + eb_row[ex]
+        # Error buffer: padded +1 col on each side, +1 row on bottom
+        err_r = [[0.0] * (W + 2) for _ in range(H + 1)]
+        err_g = [[0.0] * (W + 2) for _ in range(H + 1)]
+        err_b = [[0.0] * (W + 2) for _ in range(H + 1)]
 
-            # Clamp to [0, 255]
-            if ar < 0.0: ar = 0.0
-            elif ar > 255.0: ar = 255.0
-            if ag < 0.0: ag = 0.0
-            elif ag > 255.0: ag = 255.0
-            if ab < 0.0: ab = 0.0
-            elif ab > 255.0: ab = 255.0
+        # Pre-extract source image channels as Python lists
+        src_r = rgb_q[:, :, 0].tolist()
+        src_g = rgb_q[:, :, 1].tolist()
+        src_b = rgb_q[:, :, 2].tolist()
 
-            # Quantize accumulated color to BGR555 for LUT lookup
-            r5 = int(ar * 31.0 / 255.0 + 0.5)
-            g5 = int(ag * 31.0 / 255.0 + 0.5)
-            b5 = int(ab * 31.0 / 255.0 + 0.5)
-            if r5 > 31: r5 = 31
-            if g5 > 31: g5 = 31
-            if b5 > 31: b5 = 31
-            bgr = r5 | (g5 << 5) | (b5 << 10)
+        for y in range(H):
+            xp1 = 1  # error buffer x offset (pixel x=0 maps to err index 1)
+            tr = y >> 3  # y // 8
+            er_row = err_r[y]
+            eg_row = err_g[y]
+            eb_row = err_b[y]
+            er_next = err_r[y + 1]
+            eg_next = err_g[y + 1]
+            eb_next = err_b[y + 1]
+            sr_row = src_r[y]
+            sg_row = src_g[y]
+            sb_row = src_b[y]
 
-            # Look up tile's sub-palette
-            p = tile_labels_list[tr][x >> 3]
+            for x in range(W):
+                ex = x + xp1  # error buffer index for this pixel
 
-            # Nearest color via LUT
-            idx = lut_idx_lists[p][bgr]
-            nr = lut_r_lists[p][bgr]
-            ng = lut_g_lists[p][bgr]
-            nb = lut_b_lists[p][bgr]
+                # Accumulated color = original + diffused error
+                ar = sr_row[x] + er_row[ex]
+                ag = sg_row[x] + eg_row[ex]
+                ab = sb_row[x] + eb_row[ex]
 
-            output[y, x] = idx
+                # Clamp to [0, 255]
+                if ar < 0.0: ar = 0.0
+                elif ar > 255.0: ar = 255.0
+                if ag < 0.0: ag = 0.0
+                elif ag > 255.0: ag = 255.0
+                if ab < 0.0: ab = 0.0
+                elif ab > 255.0: ab = 255.0
 
-            # Quantization error
-            qr = ar - nr
-            qg = ag - ng
-            qb = ab - nb
+                # Quantize accumulated color to BGR555 for LUT lookup
+                r5 = int(ar * 31.0 / 255.0 + 0.5)
+                g5 = int(ag * 31.0 / 255.0 + 0.5)
+                b5 = int(ab * 31.0 / 255.0 + 0.5)
+                if r5 > 31: r5 = 31
+                if g5 > 31: g5 = 31
+                if b5 > 31: b5 = 31
+                bgr = r5 | (g5 << 5) | (b5 << 10)
 
-            # Distribute error (Floyd-Steinberg: 7/16, 3/16, 5/16, 1/16)
-            # Right (x+1)
-            er_row[ex + 1] += qr * 0.4375
-            eg_row[ex + 1] += qg * 0.4375
-            eb_row[ex + 1] += qb * 0.4375
-            # Bottom-left (x-1, y+1)
-            er_next[ex - 1] += qr * 0.1875
-            eg_next[ex - 1] += qg * 0.1875
-            eb_next[ex - 1] += qb * 0.1875
-            # Bottom (x, y+1)
-            er_next[ex] += qr * 0.3125
-            eg_next[ex] += qg * 0.3125
-            eb_next[ex] += qb * 0.3125
-            # Bottom-right (x+1, y+1)
-            er_next[ex + 1] += qr * 0.0625
-            eg_next[ex + 1] += qg * 0.0625
-            eb_next[ex + 1] += qb * 0.0625
+                # Look up tile's sub-palette
+                p = tile_labels_list[tr][x >> 3]
+
+                # Nearest color via LUT
+                idx = lut_idx_lists[p][bgr]
+                nr = lut_r_lists[p][bgr]
+                ng = lut_g_lists[p][bgr]
+                nb = lut_b_lists[p][bgr]
+
+                output[y, x] = idx
+
+                # Quantization error
+                qr = ar - nr
+                qg = ag - ng
+                qb = ab - nb
+
+                # Distribute error (Floyd-Steinberg: 7/16, 3/16, 5/16, 1/16)
+                # Right (x+1)
+                er_row[ex + 1] += qr * 0.4375
+                eg_row[ex + 1] += qg * 0.4375
+                eb_row[ex + 1] += qb * 0.4375
+                # Bottom-left (x-1, y+1)
+                er_next[ex - 1] += qr * 0.1875
+                eg_next[ex - 1] += qg * 0.1875
+                eb_next[ex - 1] += qb * 0.1875
+                # Bottom (x, y+1)
+                er_next[ex] += qr * 0.3125
+                eg_next[ex] += qg * 0.3125
+                eb_next[ex] += qb * 0.3125
+                # Bottom-right (x+1, y+1)
+                er_next[ex + 1] += qr * 0.0625
+                eg_next[ex + 1] += qg * 0.0625
+                eb_next[ex + 1] += qb * 0.0625
 
     # Encode to SNES format
     tile_data, tilemap_data = encode_tiles_4bpp(output, tile_labels.astype(np.uint8), W, H)
 
-    # Write palette: 8 sub-palettes × 16 colors × 2 bytes = 256 bytes
-    pal_bytes = bytearray(PALETTES * 16 * 2)
-    for p in range(PALETTES):
+    # Write palette: num_palettes sub-palettes × 16 colors × 2 bytes
+    pal_bytes = bytearray(num_palettes * 16 * 2)
+    for p in range(num_palettes):
         for ci in range(16):
             bgr = sub_palettes[p][ci]
             offset = (p * 16 + ci) * 2
@@ -832,11 +1051,14 @@ def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
     with open(tilemap_file, 'wb') as f:
         f.write(tilemap_arr.tobytes())
 
-def convert_frame_superfamiconv(png_path):
+def convert_frame_superfamiconv(png_path, num_palettes=PALETTES,
+                                dither_method=DEFAULT_DITHER,
+                                max_tiles=MAX_TILES, grayscale=False,
+                                shared_palette=None):
     """Convert one PNG frame to SNES tiles/tilemap/palette.
 
-    Uses per-tile 8-sub-palette optimization with Floyd-Steinberg dithering
-    for smooth gradients and high color fidelity (120 unique colors).
+    Uses per-tile sub-palette optimization with configurable dithering
+    for smooth gradients and high color fidelity.
     """
     base = png_path[:-4]  # Remove .png
     pal_file = base + '.palette'
@@ -844,28 +1066,51 @@ def convert_frame_superfamiconv(png_path):
     map_file = base + '.tilemap'
 
     try:
-        per_tile_palette_optimize(png_path, pal_file, tile_file, map_file)
+        per_tile_palette_optimize(png_path, pal_file, tile_file, map_file,
+                                  num_palettes=num_palettes,
+                                  dither_method=dither_method,
+                                  grayscale=grayscale,
+                                  shared_palette=shared_palette)
     except Exception as e:
         return False, str(e)
 
-    # Reduce tiles to fit in VRAM buffer (384 max at 4BPP)
-    reduce_tiles(tile_file, map_file, pal_file)
+    # Reduce tiles to fit in VRAM buffer
+    reduce_tiles(tile_file, map_file, pal_file, max_tiles=max_tiles)
 
     # Pad tilemap to 32x20 standard size
     pad_tilemap(map_file)
 
     return True, ""
 
-def convert_chapter_frames(chapter_dir, max_workers=4):
+def convert_chapter_frames(chapter_dir, max_workers=4, num_palettes=PALETTES,
+                           dither_method=DEFAULT_DITHER, max_tiles=MAX_TILES,
+                           grayscale=False, shared_palette_enabled=False):
     """Convert all PNG frames in a chapter directory to SNES tiles."""
     pngs = sorted(glob.glob(os.path.join(chapter_dir, "*.gfx_video.png")))
     if not pngs:
         return 0
 
+    # Compute shared palette across chapter frames if enabled
+    shared_pal = None
+    if shared_palette_enabled:
+        # Sample up to 20 evenly-spaced frames for palette computation
+        sample_count = min(20, len(pngs))
+        if sample_count > 0:
+            step = max(1, len(pngs) // sample_count)
+            sample_paths = pngs[::step][:sample_count]
+            shared_pal = compute_shared_palette(sample_paths,
+                                                num_palettes=num_palettes,
+                                                grayscale=grayscale)
+
     converted = 0
     failed = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = {executor.submit(convert_frame_superfamiconv, p): p for p in pngs}
+        futures = {executor.submit(convert_frame_superfamiconv, p,
+                                   num_palettes=num_palettes,
+                                   dither_method=dither_method,
+                                   max_tiles=max_tiles,
+                                   grayscale=grayscale,
+                                   shared_palette=shared_pal): p for p in pngs}
         for future in concurrent.futures.as_completed(futures):
             success, err = future.result()
             if success:
@@ -898,7 +1143,34 @@ def main():
                         help='Path to Daphne framefile (default: %(default)s)')
     parser.add_argument('--content-root', type=str, default=DEFAULT_CONTENT_ROOT,
                         help='Path to Daphne content directory (default: %(default)s)')
+    parser.add_argument('--dither', type=str, default=DEFAULT_DITHER,
+                        choices=[DITHER_NONE, DITHER_FLOYD_STEINBERG, DITHER_ORDERED],
+                        help='Dithering method (default: %(default)s)')
+    parser.add_argument('--palettes', type=int, default=PALETTES,
+                        help='Number of sub-palettes per frame (default: %(default)s)')
+    parser.add_argument('--max-tiles', type=int, default=MAX_TILES,
+                        help='Maximum tiles per frame (default: %(default)s)')
+    parser.add_argument('--grayscale', action='store_true',
+                        help='Convert frames to grayscale before processing')
+    parser.add_argument('--shared-palette', action='store_true',
+                        help='Use shared palette across all frames in each chapter')
+    parser.add_argument('--scale-mode', type=str, default=SCALE_STRETCH,
+                        choices=[SCALE_STRETCH, SCALE_FIT, SCALE_CROP],
+                        help='Frame scaling mode (default: %(default)s)')
+    parser.add_argument('--aspect-ratio', type=str, default=None,
+                        help='Aspect ratio override for fit/crop modes (e.g. 16:9)')
+    parser.add_argument('--scene', type=str, default=None,
+                        choices=list(SCENE_PREFIXES.keys()),
+                        help='Process only chapters belonging to a specific scene')
     args = parser.parse_args()
+
+    # Resolve scene filter to chapter prefix
+    scene_prefix = None
+    if args.scene:
+        scene_prefix = SCENE_PREFIXES.get(args.scene)
+        if not scene_prefix:
+            print(f"ERROR: Unknown scene '{args.scene}'")
+            sys.exit(1)
 
     print("=" * 60)
     print("MSU-1 Video Data Generator")
@@ -911,6 +1183,18 @@ def main():
     print(f"ffmpeg:       {ffmpeg_path}")
     print(f"CUDA GPU:     {'Yes' if has_cuda else 'No (CPU fallback)'}")
     print(f"superfamiconv: {SUPERFAMICONV}")
+    print(f"Dithering:    {args.dither}")
+    print(f"Palettes:     {args.palettes}")
+    print(f"Max tiles:    {args.max_tiles}")
+    print(f"Scale mode:   {args.scale_mode}")
+    if args.aspect_ratio:
+        print(f"Aspect ratio: {args.aspect_ratio}")
+    if args.grayscale:
+        print(f"Grayscale:    Yes")
+    if args.shared_palette:
+        print(f"Shared pal:   Yes (per-chapter)")
+    if args.scene:
+        print(f"Scene filter: {args.scene} (prefix: {scene_prefix})")
 
     # Load Daphne framefile for direct .m2v/.ogg extraction (mandatory)
     if not os.path.exists(args.framefile):
@@ -947,6 +1231,8 @@ def main():
             continue
         if args.chapter and chapter_name != args.chapter:
             continue
+        if scene_prefix and not chapter_name.startswith(scene_prefix):
+            continue
         chapters.append((chapter_name, chapter_dir, xml_path))
 
     print(f"Found {len(chapters)} chapters to process\n")
@@ -981,7 +1267,9 @@ def main():
                 skipped_no_frame += 1
                 continue
 
-            n = extract_chapter_frames_from_segment(info, cdir, daphne_segments)
+            n = extract_chapter_frames_from_segment(info, cdir, daphne_segments,
+                                                     scale_mode=args.scale_mode,
+                                                     aspect_ratio=args.aspect_ratio)
             if n > 0:
                 total_frames += n
                 print(f"[{i+1:3d}/{len(chapters)}] {name}: {n} frames (from .m2v)")
@@ -1090,7 +1378,7 @@ def main():
     # Phase 2: Convert frames to SNES tiles
     total_converted = 0
     if not args.skip_convert:
-        print(f"--- Phase 2: Converting frames to SNES tiles (superfamiconv, {args.workers} workers) ---")
+        print(f"--- Phase 2: Converting frames to SNES tiles ({args.dither} dither, {args.workers} workers) ---")
         convert_start = time.time()
 
         for i, (name, cdir, xml) in enumerate(chapters):
@@ -1105,7 +1393,12 @@ def main():
                 total_converted += len(existing_tiles)
                 continue
 
-            n = convert_chapter_frames(cdir, max_workers=args.workers)
+            n = convert_chapter_frames(cdir, max_workers=args.workers,
+                                       num_palettes=args.palettes,
+                                       dither_method=args.dither,
+                                       max_tiles=args.max_tiles,
+                                       grayscale=args.grayscale,
+                                       shared_palette_enabled=args.shared_palette)
             total_converted += n
             print(f"[{i+1:3d}/{len(chapters)}] {name}: {n}/{len(pngs)} converted")
 

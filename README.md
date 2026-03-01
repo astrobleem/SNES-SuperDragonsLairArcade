@@ -65,6 +65,24 @@ The MSU-1 video data pipeline is a separate step that extracts video frames from
 
 For full build instructions, prerequisites, video pipeline details, and troubleshooting, see **[`BUILD.md`](BUILD.md)**.
 
+### Converter GUI
+
+A tkinter-based GUI (`converter/gui.py`) provides a visual interface for the entire MSU-1 video pipeline with real-time quality tuning:
+
+```bash
+python converter/gui.py
+```
+
+**Features:**
+- **Scene and chapter browser** — select any of the 29 scenes, browse its chapters, and preview extracted frames
+- **Side-by-side preview** — source frame alongside the SNES 4BPP tile reconstruction, updated live as you adjust settings
+- **Frame scrubber** — drag to navigate through chapter frames, or use arrow keys for single-frame stepping
+- **Quality controls** — dithering method (none / Floyd-Steinberg / ordered Bayer), palette count (1-8 sub-palettes), max tile count, grayscale mode, and shared palette (per-chapter temporal stability)
+- **Per-segment quality** — split a chapter into segments with independent quality settings; tweak dithering for a dark scene while keeping defaults elsewhere
+- **Segment save/load** — export segment layouts to JSON files and reload them later, so you don't lose work between sessions
+- **Animated clip preview** — render and play back ~2 seconds of converted frames to see how settings look in motion
+- **Full pipeline execution** — run extraction, audio conversion, tile conversion, and .msu packaging with progress tracking and ETA
+
 ## How It Works
 
 The game is written in 65816 assembly with an abstraction layer inspired by object-oriented programming. Almost everything — textlayers, sound, scores, sprites, keypress events — is an object that gets created, updated each frame, and destroyed when no longer needed. Resources like VRAM, palettes, and DMA channels are allocated dynamically.
@@ -89,6 +107,7 @@ Chapter events are generated from XML data files in `data/events/` — over 516 
 
 - **[`BUILD.md`](BUILD.md)** — Build instructions, troubleshooting, and ROM bank reference
 - **[`QUICKREF.md`](QUICKREF.md)** — Quick reference card for common commands
+- [`converter/`](converter/) — MSU converter GUI with preview, scrubber, and per-segment quality tuning
 - [`src/README.md`](src/README.md) — Script flow and engine architecture
 - [`tools/README.md`](tools/README.md) — Asset pipeline tools and MSU-1 video generation
 - [`data/events/README.md`](data/events/README.md) — Chapter XML reference
