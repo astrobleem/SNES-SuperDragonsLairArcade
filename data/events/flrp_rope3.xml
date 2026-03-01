@@ -15,7 +15,7 @@
 		<event type="direction" automacro="direction" label="direction-1">
 			<timeline>
 				<timestart min="2" second="22" ms="736" />
-				<timeend min="2" second="23" ms="588" />
+				<timeend min="2" second="25" ms="864" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -24,8 +24,8 @@
 		</event>
 		<event type="direction" automacro="direction" label="direction-2">
 			<timeline>
-				<timestart min="2" second="23" ms="588" />
-				<timeend min="2" second="24" ms="440" />
+				<timestart min="2" second="25" ms="864" />
+				<timeend min="2" second="26" ms="698" />
 			</timeline>
 			<params>
 				<str key="type" value="right" />
@@ -35,7 +35,7 @@
 		<event type="direction" automacro="direction" label="direction-3">
 			<timeline>
 				<timestart min="2" second="22" ms="736" />
-				<timeend min="2" second="24" ms="505" />
+				<timeend min="2" second="26" ms="698" />
 			</timeline>
 			<params>
 				<str key="type" value="up" />
@@ -45,7 +45,7 @@
 		<event type="direction" automacro="direction" label="direction-4">
 			<timeline>
 				<timestart min="2" second="22" ms="736" />
-				<timeend min="2" second="24" ms="505" />
+				<timeend min="2" second="26" ms="698" />
 			</timeline>
 			<params>
 				<str key="type" value="down" />
@@ -55,7 +55,7 @@
 		<event type="direction" automacro="direction" label="direction-5">
 			<timeline>
 				<timestart min="2" second="22" ms="736" />
-				<timeend min="2" second="24" ms="505" />
+				<timeend min="2" second="26" ms="698" />
 			</timeline>
 			<params>
 				<str key="type" value="left" />

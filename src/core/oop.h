@@ -113,35 +113,8 @@ OBJID.Event.enter_room_down db
 OBJID.Event.enter_room_upleft db
 OBJID.Event.exit_room db
 OBJID.Event.game_over db
-OBJID.Event.room_transition db
-OBJID.Event.seq_generic db
 OBJID.Event.direction_generic db
-OBJID.Event.hide_dash db
-OBJID.Event.touch db
-OBJID.Event.target db
 OBJID.Event.checkpoint db
-OBJID.Event.confirm db
-OBJID.Event.show_help db
-OBJID.Event.accelerate db
-OBJID.Event.brake db
-OBJID.Event.shake db
-OBJID.Event.player_crash db
-OBJID.Event.opponent_crash db
-OBJID.Event.terrain_crash db
-OBJID.Event.soft_crash db
-OBJID.Event.landing_crash db
-OBJID.Event.explode_crash db
-OBJID.Event.slide_crash db
-OBJID.Event.debris_crash db
-OBJID.Event.wall_crash db
-OBJID.Event.window_crash db
-OBJID.Event.hide_sunscreen db
-
-OBJID.Event.change_dash db
-OBJID.Event.macro_vibrate1 db
-OBJID.Event.macro_vibrate2 db
-OBJID.Event.macro_vibrate3 db
-OBJID.Event.macro_rockfast db
 ;OBJID.Zero db
 OBJID.Right_arrow db
 OBJID.Left_arrow db
@@ -151,7 +124,6 @@ OBJID.Sword_icon db
 OBJID.Shield_icon db
 ;OBJID.Dashboard db
 OBJID.VideoMask db
-OBJID.SteeringWheel db
 OBJID.Background.generic db
 OBJID.Brightness db
 OBJID.Player db
@@ -164,12 +136,10 @@ OBJID.Background.textlayer.16x16 db
 OBJID.Sprite.super db
 OBJID.Palette.rotate db
 OBJID.Player.nameInput db
-OBJID.Background.dashboard db
 OBJID.Sprite.life_dirk db
 OBJID.Sprite.life_counter db
 OBJID.Sprite.score db
 OBJID.Sprite.bang db
-OBJID.Hdma.dashboard.mode db
 MAXOBJID	ds 0
 .ende
 
@@ -210,34 +180,8 @@ OopClassLut:
     PTRLONG OopClassLut Event.enter_room_upleft.CLS
     PTRLONG OopClassLut Event.exit_room.CLS
     PTRLONG OopClassLut Event.game_over.CLS
-    PTRLONG OopClassLut Event.room_transition.CLS
-    PTRLONG OopClassLut Event.seq_generic.CLS
     PTRLONG OopClassLut Event.direction_generic.CLS
-    PTRLONG OopClassLut Event.hide_dash.CLS
-    PTRLONG OopClassLut Event.touch.CLS
-    PTRLONG OopClassLut Event.target.CLS
     PTRLONG OopClassLut Event.checkpoint.CLS
-        PTRLONG OopClassLut Event.confirm.CLS
-        PTRLONG OopClassLut Event.show_help.CLS
-        PTRLONG OopClassLut Event.accelerate.CLS
-        PTRLONG OopClassLut Event.brake.CLS
-        PTRLONG OopClassLut Event.shake.CLS
-        PTRLONG OopClassLut Event.player_crash.CLS
-        PTRLONG OopClassLut Event.opponent_crash.CLS
-        PTRLONG OopClassLut Event.terrain_crash.CLS
-        PTRLONG OopClassLut Event.soft_crash.CLS
-        PTRLONG OopClassLut Event.landing_crash.CLS
-        PTRLONG OopClassLut Event.explode_crash.CLS
-        PTRLONG OopClassLut Event.slide_crash.CLS
-        PTRLONG OopClassLut Event.debris_crash.CLS
-        PTRLONG OopClassLut Event.wall_crash.CLS
-        PTRLONG OopClassLut Event.window_crash.CLS
-        PTRLONG OopClassLut Event.hide_sunscreen.CLS
-        PTRLONG OopClassLut Event.change_dash.CLS
-        PTRLONG OopClassLut Event.macro_vibrate1.CLS
-        PTRLONG OopClassLut Event.macro_vibrate2.CLS
-        PTRLONG OopClassLut Event.macro_vibrate3.CLS
-        PTRLONG OopClassLut Event.macro_rockfast.CLS
         PTRLONG OopClassLut Right_arrow.CLS
         PTRLONG OopClassLut Left_arrow.CLS
         PTRLONG OopClassLut Up_arrow.CLS
@@ -245,7 +189,6 @@ OopClassLut:
         PTRLONG OopClassLut Sword_icon.CLS
         PTRLONG OopClassLut Shield_icon.CLS
         PTRLONG OopClassLut VideoMask.CLS
-        PTRLONG OopClassLut SteeringWheel.CLS
         PTRLONG OopClassLut Background.generic.CLS
         PTRLONG OopClassLut Brightness.CLS
         PTRLONG OopClassLut Player.CLS
@@ -257,10 +200,8 @@ OopClassLut:
         PTRLONG OopClassLut Sprite.super.CLS
         PTRLONG OopClassLut Palette.rotate.CLS
         PTRLONG OopClassLut Player.nameInput.CLS
-        PTRLONG OopClassLut Background.dashboard.CLS
         PTRLONG OopClassLut Sprite.life_dirk.CLS
 	PTRLONG OopClassLut Sprite.life_counter.CLS
 	PTRLONG OopClassLut Sprite.score.CLS
 	PTRLONG OopClassLut Sprite.bang.CLS
-	PTRLONG OopClassLut Hdma.dashboard.mode.CLS
 .ends

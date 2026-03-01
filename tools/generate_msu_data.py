@@ -403,8 +403,14 @@ def simple_kmeans(data, k, max_iter=20):
 
     for c in range(1, k):
         dists = np.min(np.sum((data[:, None, :] - centers[None, :c, :]) ** 2, axis=2), axis=1)
-        probs = dists / (dists.sum() + 1e-10)
-        idx = rng.choice(N, p=probs)
+        total = dists.sum()
+        if total == 0:
+            # All points identical — pick random
+            idx = rng.randint(N)
+        else:
+            probs = dists / total
+            probs /= probs.sum()  # renormalize for float rounding
+            idx = rng.choice(N, p=probs)
         centers[c] = data[idx]
 
     for _ in range(max_iter):

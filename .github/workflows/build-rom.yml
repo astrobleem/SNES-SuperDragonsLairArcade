@@ -1,0 +1,65 @@
+name: Build ROM
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fix line endings
+        run: |
+          find . -type f \( -name "*.py" -o -name "makefile" -o -name "Makefile" \) -exec sed -i 's/\r$//' {} +
+          find tools/snesbrr-2006-12-13/src -type f \( -name "*.cpp" -o -name "*.h" \) -exec sed -i 's/\r$//' {} +
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: pip install numpy Pillow
+
+      - name: Build snesbrr from source
+        run: |
+          cd tools/snesbrr-2006-12-13/src
+          CXXFLAGS="-Os -DNDEBUG -D__fastcall= -D_fileno=fileno -fpermissive"
+          g++ $CXXFLAGS -I. -c base/FileStream.cpp -o FileStream.o
+          g++ $CXXFLAGS -I. -c base/MemoryStream.cpp -o MemoryStream.o
+          g++ $CXXFLAGS -I. -c base/OptionParser.cpp -o OptionParser.o
+          g++ $CXXFLAGS -I. -c base/Stream.cpp -o Stream.o
+          g++ $CXXFLAGS -I. -c base/StreamException.cpp -o StreamException.o
+          g++ $CXXFLAGS -I. -c brr/BrrCodec.cpp -o BrrCodec.o
+          g++ $CXXFLAGS -I. -c brr/main.cpp -o main.o
+          g++ -s -o ../snesbrr.exe *.o
+          chmod +x ../snesbrr.exe
+
+      - name: Set up wla-dx binaries
+        run: |
+          chmod +x tools/wla-dx-9.5-svn/wla-65816
+          chmod +x tools/wla-dx-9.5-svn/wla-spc700
+          chmod +x tools/wla-dx-9.5-svn/wlalink/wlalink
+
+      - name: Generate chapter data from XML events
+        run: |
+          mkdir -p data/chapters
+          for xml in data/events/*.xml; do
+            python3 tools/xmlsceneparser.py -infile "$xml" -outfolder data/chapters/
+          done
+
+      - name: Build ROM
+        run: make clean && make
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/SuperDragonsLairArcade.sfc

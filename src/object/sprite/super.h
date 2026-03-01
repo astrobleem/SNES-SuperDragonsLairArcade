@@ -18,7 +18,7 @@
 
 ;object class static flags, default properties and zero page 
 .define CLASS.FLAGS OBJECT.FLAGS.Present
-.define CLASS.PROPERTIES OBJECT.PROPERTIES.isSprite | OBJECT.PROPERTIES.isDash
+.define CLASS.PROPERTIES OBJECT.PROPERTIES.isSprite
 .define CLASS.ZP_LENGTH zpLen
 .define CLASS.IMPLEMENTS interface.dimension
 

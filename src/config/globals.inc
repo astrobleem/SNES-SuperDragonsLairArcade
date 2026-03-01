@@ -53,7 +53,6 @@ OBJECT.CALL.ARG.1	dw
 .def OBJECT.PROPERTIES.likesHamburgers	1 << 8
 .def OBJECT.PROPERTIES.isCheckpoint	1 << 9
 .def OBJECT.PROPERTIES.isSprite	1 << 10
-.def OBJECT.PROPERTIES.isDash	1 << 11
 .def OBJECT.PROPERTIES.isSerializable	1 << 12
 .def OBJECT.PROPERTIES.isHud   1 << 13
 

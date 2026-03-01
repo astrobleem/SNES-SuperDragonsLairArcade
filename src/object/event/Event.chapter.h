@@ -1,10 +1,6 @@
 .include "src/config/config.inc"
 
 .struct vars
-    bg.dashboard ds 4
-    sprite.dashboard ds 4
-    sprite.steeringWheel ds 4
-    hasDash dw 
     brightness ds 4
 .endst
 		 

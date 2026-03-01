@@ -18,8 +18,6 @@
   sta.b event.resultTarget
   lda OBJECT.CALL.ARG.5,s
   sta.b event.chapterId
-  lda OBJECT.CALL.ARG.6,s
-  sta.b this.hasDash
 
   ;kill all pending events except self
   jsr abstract.Iterator.killOthers
@@ -45,17 +43,6 @@
 
   lda.b event.chapterId
   CALL Msu1.playVideo.MTD event.msu1Handler
-
- 
-  lda this.hasDash
-  beq +
-	NEW SteeringWheel.CLS.PTR this.sprite.steeringWheel 21 112
-    NEW Background.dashboard.CLS.PTR this.bg.dashboard 0 128
-    rts
-+
-  ;kill all dash objects if scene has none
-  lda.w #OBJECT.PROPERTIES.isDash
-  jsr abstract.Iterator.kill.byProperties
 
   rts
 

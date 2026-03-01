@@ -3,6 +3,7 @@
 
 #include "MemoryStream.h"
 #include "StreamException.h"
+#include <cstring>
 
 
 namespace base

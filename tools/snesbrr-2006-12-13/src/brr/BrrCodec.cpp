@@ -3,6 +3,7 @@
 
 #include "BrrCodec.h"
 #include "base/basemath.h"
+#include <cstring>
 
 using namespace base::math;
 
