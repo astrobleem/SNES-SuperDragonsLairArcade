@@ -1,25 +1,19 @@
 # Super Dragon's Lair Arcade (SNES)
 
-![Complete Package](schwag/complete_package.png)
-
 **Super Dragon's Lair Arcade** is a full-motion-video (FMV) game for the Super Nintendo Entertainment System, built on the [Super Road Blaster](https://github.com/snesdev0815/SNES-SuperRoadBlaster) engine by snesdev0815. It runs on real NTSC SNES hardware with MSU-1 audio/video on SD2SNES/FXPAK Pro.
 
 This is a faithful recreation of the 1983 arcade classic — the legendary laserdisc adventure, now on your SNES, complete with authentic packaging and documentation that would feel right at home on a store shelf in 1993.
 
 ## Gameplay
 
+[![Super Dragon's Lair Arcade Trailer](https://img.youtube.com/vi/5phvZVlBUNw/0.jpg)](https://youtu.be/5phvZVlBUNw)
+
 ![Gameplay Preview](SomeGamePlay.gif)
 
 ## What's in the Box
 
-Your complete Super Dragon's Lair Arcade package includes:
-
-- **Game Cartridge** - The SNES ROM with MSU-1 enhancement chip support
 - **User Manual** - Complete 4-page instruction booklet with story, controls, and survival guide
-- **Holographic Trading Card** - Collectible card featuring Dirk the Daring
-- **Soundtrack CD** - Original arcade audio tracks in CD quality
 - **Sticker Sheet** - Dragon's Lair themed stickers
-- **Warranty Card** - Official product registration
 - **Upcoming Releases Preview** - Sneak peek at future titles
 
 > [!NOTE]
