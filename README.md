@@ -6,7 +6,9 @@ This is a faithful recreation of the 1983 arcade classic — the legendary laser
 
 ## Gameplay
 
-[![Super Dragon's Lair Arcade Trailer](https://img.youtube.com/vi/5phvZVlBUNw/0.jpg)](https://youtu.be/5phvZVlBUNw)
+[![Watch the trailer on YouTube](https://img.youtube.com/vi/5phvZVlBUNw/0.jpg)](https://youtu.be/5phvZVlBUNw)
+
+**[Watch the trailer on YouTube](https://youtu.be/5phvZVlBUNw)**
 
 ![Gameplay Preview](SomeGamePlay.gif)
 
