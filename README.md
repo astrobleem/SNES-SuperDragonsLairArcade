@@ -65,6 +65,8 @@ For full build instructions, prerequisites, video pipeline details, and troubles
 
 A tkinter-based GUI (`converter/gui.py`) provides a visual interface for the entire MSU-1 video pipeline, real-time quality tuning, and an interactive event timeline editor. Double-click `converter/GenerateMSUData.bat` to launch — it auto-installs dependencies via [uv](https://docs.astral.sh/uv/).
 
+![Converter GUI](converter/datagen.png)
+
 ```bash
 # Or launch manually:
 python converter/gui.py
