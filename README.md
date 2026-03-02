@@ -63,21 +63,30 @@ For full build instructions, prerequisites, video pipeline details, and troubles
 
 ### Converter GUI
 
-A tkinter-based GUI (`converter/gui.py`) provides a visual interface for the entire MSU-1 video pipeline with real-time quality tuning:
+A tkinter-based GUI (`converter/gui.py`) provides a visual interface for the entire MSU-1 video pipeline, real-time quality tuning, and an interactive event timeline editor. Double-click `converter/GenerateMSUData.bat` to launch — it auto-installs dependencies via [uv](https://docs.astral.sh/uv/).
 
 ```bash
+# Or launch manually:
 python converter/gui.py
 ```
 
-**Features:**
+**Video Pipeline:**
 - **Scene and chapter browser** — select any of the 29 scenes, browse its chapters, and preview extracted frames
 - **Side-by-side preview** — source frame alongside the SNES 4BPP tile reconstruction, updated live as you adjust settings
 - **Frame scrubber** — drag to navigate through chapter frames, or use arrow keys for single-frame stepping
 - **Quality controls** — dithering method (none / Floyd-Steinberg / ordered Bayer), palette count (1-8 sub-palettes), max tile count, grayscale mode, and shared palette (per-chapter temporal stability)
 - **Per-segment quality** — split a chapter into segments with independent quality settings; tweak dithering for a dark scene while keeping defaults elsewhere
-- **Segment save/load** — export segment layouts to JSON files and reload them later, so you don't lose work between sessions
+- **Segment save/load** — export segment layouts to JSON files and reload them later
 - **Animated clip preview** — render and play back ~2 seconds of converted frames to see how settings look in motion
 - **Full pipeline execution** — run extraction, audio conversion, tile conversion, and .msu packaging with progress tracking and ETA
+
+**Event Timeline Editor:**
+- **Multi-track timeline** — each direction event (left, right, up, down, action) is drawn on its own horizontal lane, color-coded by direction, so overlapping events are always visible and individually selectable
+- **Drag to move and resize** — click and drag an event bar to reposition it in time; drag the edges to adjust the start or end frame. Arrow overlay on the source preview updates in real time
+- **Right-click context menu** — add new events at any position, delete events, change direction, toggle correct path vs. death trap, or set the target chapter for transitions
+- **Save XML** — write edited events back to `data/events/*.xml`, preserving non-direction events (checkpoints, room transitions) verbatim. Round-trips frame positions back to absolute timestamps
+- **Export Lua** — generate DirkSimple `game.lua` format for the current chapter in a copy-to-clipboard dialog, making it easy to contribute timing fixes upstream
+- **Dirty state tracking** — modified indicator with save prompts on chapter switch and window close, so you never lose edits accidentally
 
 ## How It Works
 
@@ -103,7 +112,7 @@ Chapter events are generated from XML data files in `data/events/` — over 516 
 
 - **[`BUILD.md`](BUILD.md)** — Build instructions, troubleshooting, and ROM bank reference
 - **[`QUICKREF.md`](QUICKREF.md)** — Quick reference card for common commands
-- [`converter/`](converter/) — MSU converter GUI with preview, scrubber, and per-segment quality tuning
+- [`converter/`](converter/) — MSU converter GUI with preview, quality tuning, and interactive event timeline editor
 - [`src/README.md`](src/README.md) — Script flow and engine architecture
 - [`tools/README.md`](tools/README.md) — Asset pipeline tools and MSU-1 video generation
 - [`data/events/README.md`](data/events/README.md) — Chapter XML reference
