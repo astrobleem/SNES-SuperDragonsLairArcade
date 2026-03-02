@@ -295,8 +295,8 @@ class MSUGeneratorGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Super Dragon's Lair - MSU Data Generator")
-        self.root.geometry("900x800")
-        self.root.minsize(750, 700)
+        self.root.geometry("900x650")
+        self.root.minsize(750, 500)
 
         self.process = None
         self.worker_thread = None
@@ -349,123 +349,14 @@ class MSUGeneratorGUI:
     # UI Construction
     # ------------------------------------------------------------------
     def _build_ui(self):
-        main = ttk.Frame(self.root, padding=8)
-        main.pack(fill=tk.BOTH, expand=True)
+        outer = ttk.Frame(self.root, padding=8)
+        outer.pack(fill=tk.BOTH, expand=True)
 
-        # --- Source Data ---
-        src_frame = ttk.LabelFrame(main, text="Source Data", padding=6)
-        src_frame.pack(fill=tk.X, pady=(0, 4))
+        # --- Scene / Chapter selector (shared, above tabs) ---
+        nav_frame = ttk.Frame(outer)
+        nav_frame.pack(fill=tk.X, pady=(0, 4))
 
-        self.framefile_var = tk.StringVar(value=DEFAULT_FRAMEFILE)
-        self.content_var = tk.StringVar(value=DEFAULT_CONTENT)
-        self.ffmpeg_var = tk.StringVar(value=DEFAULT_FFMPEG)
-
-        self._path_row(src_frame, 0, "Framefile:", self.framefile_var,
-                       self._browse_framefile, is_file=True,
-                       tooltip="Daphne framefile (dlcdrom.TXT)")
-        self._path_row(src_frame, 1, "Content:", self.content_var,
-                       self._browse_content, is_file=False,
-                       tooltip="Directory containing .m2v and .ogg segment files")
-        self._path_row(src_frame, 2, "ffmpeg:", self.ffmpeg_var,
-                       self._browse_ffmpeg, is_file=True,
-                       tooltip="Path to ffmpeg executable (or just 'ffmpeg' if on PATH)")
-
-        self.framefile_status = ttk.Label(src_frame, text="", width=2)
-        self.framefile_status.grid(row=0, column=3, padx=(4, 0))
-        self.content_status = ttk.Label(src_frame, text="", width=2)
-        self.content_status.grid(row=1, column=3, padx=(4, 0))
-        self.ffmpeg_status = ttk.Label(src_frame, text="", width=2)
-        self.ffmpeg_status.grid(row=2, column=3, padx=(4, 0))
-
-        for var in (self.framefile_var, self.content_var, self.ffmpeg_var):
-            var.trace_add("write", lambda *_: self._validate_all())
-
-        # --- Options ---
-        opt_frame = ttk.LabelFrame(main, text="Options", padding=6)
-        opt_frame.pack(fill=tk.X, pady=(0, 4))
-
-        row0 = ttk.Frame(opt_frame)
-        row0.pack(fill=tk.X, pady=(0, 2))
-
-        ttk.Label(row0, text="Workers:").pack(side=tk.LEFT)
-        self.workers_var = tk.StringVar(value="8")
-        workers_spin = ttk.Spinbox(row0, from_=1, to=32, width=4,
-                                   textvariable=self.workers_var)
-        workers_spin.pack(side=tk.LEFT, padx=(4, 16))
-        Tooltip(workers_spin, "Number of parallel worker threads for tile conversion")
-
-        self.clean_var = tk.BooleanVar(value=False)
-        clean_cb = ttk.Checkbutton(row0, text="Clean (re-extract all)",
-                                   variable=self.clean_var)
-        clean_cb.pack(side=tk.LEFT)
-        Tooltip(clean_cb, "Delete existing extracted frames before re-extracting from .m2v")
-
-        row1 = ttk.Frame(opt_frame)
-        row1.pack(fill=tk.X)
-
-        ttk.Label(row1, text="Phases:").pack(side=tk.LEFT)
-        self.phase_extract = tk.BooleanVar(value=True)
-        self.phase_audio = tk.BooleanVar(value=True)
-        self.phase_convert = tk.BooleanVar(value=True)
-        self.phase_package = tk.BooleanVar(value=True)
-
-        for text, var in [("Extract", self.phase_extract),
-                          ("Audio", self.phase_audio),
-                          ("Convert", self.phase_convert),
-                          ("Package", self.phase_package)]:
-            ttk.Checkbutton(row1, text=text, variable=var).pack(side=tk.LEFT, padx=(8, 0))
-
-        # Row 2 — Quality Settings
-        row2 = ttk.Frame(opt_frame)
-        row2.pack(fill=tk.X, pady=(2, 0))
-
-        ttk.Label(row2, text="Dithering:").pack(side=tk.LEFT)
-        self.dither_var = tk.StringVar(value="Floyd-Steinberg")
-        dither_cb = ttk.Combobox(row2, textvariable=self.dither_var, width=14,
-                                 values=["None", "Floyd-Steinberg", "Ordered"],
-                                 state="readonly")
-        dither_cb.pack(side=tk.LEFT, padx=(4, 16))
-        dither_cb.bind("<<ComboboxSelected>>", lambda e: self._on_quality_changed())
-        Tooltip(dither_cb, "Dithering method for tile conversion")
-
-        ttk.Label(row2, text="Palettes:").pack(side=tk.LEFT)
-        self.palettes_var = tk.StringVar(value="8")
-        palettes_spin = ttk.Spinbox(row2, from_=1, to=8, width=3,
-                                    textvariable=self.palettes_var)
-        palettes_spin.pack(side=tk.LEFT, padx=(4, 16))
-        self.palettes_var.trace_add("write", lambda *_: self._on_quality_changed())
-        Tooltip(palettes_spin, "Number of sub-palettes per frame (1-8)")
-
-        ttk.Label(row2, text="Max Tiles:").pack(side=tk.LEFT)
-        self.max_tiles_var = tk.StringVar(value="384")
-        tiles_spin = ttk.Spinbox(row2, from_=1, to=512, width=4,
-                                 textvariable=self.max_tiles_var)
-        tiles_spin.pack(side=tk.LEFT, padx=(4, 0))
-        self.max_tiles_var.trace_add("write", lambda *_: self._on_quality_changed())
-        Tooltip(tiles_spin, "Maximum tiles per frame (VRAM limit)")
-
-        # Row 3 — Additional Options
-        row3 = ttk.Frame(opt_frame)
-        row3.pack(fill=tk.X, pady=(2, 0))
-
-        self.grayscale_var = tk.BooleanVar(value=False)
-        gs_cb = ttk.Checkbutton(row3, text="Grayscale", variable=self.grayscale_var,
-                                command=self._on_quality_changed)
-        gs_cb.pack(side=tk.LEFT)
-        Tooltip(gs_cb, "Convert frames to grayscale before processing")
-
-        self.shared_palette_var = tk.BooleanVar(value=False)
-        sp_cb = ttk.Checkbutton(row3, text="Shared Palette (per-chapter)",
-                                variable=self.shared_palette_var,
-                                command=self._on_quality_changed)
-        sp_cb.pack(side=tk.LEFT, padx=(16, 0))
-        Tooltip(sp_cb, "Use shared palette across all frames in each chapter to reduce swimming")
-
-        # Row 4 — Scene Selector
-        row4 = ttk.Frame(opt_frame)
-        row4.pack(fill=tk.X, pady=(2, 0))
-
-        ttk.Label(row4, text="Scene:").pack(side=tk.LEFT)
+        ttk.Label(nav_frame, text="Scene:").pack(side=tk.LEFT)
         scene_names = [
             "All Scenes",
             "introduction", "vestibule", "snake_room", "bower", "fire_room",
@@ -478,22 +369,39 @@ class MSUGeneratorGUI:
             "the_dragons_lair", "attract_mode",
         ]
         self.scene_var = tk.StringVar(value="All Scenes")
-        scene_cb = ttk.Combobox(row4, textvariable=self.scene_var, width=24,
+        scene_cb = ttk.Combobox(nav_frame, textvariable=self.scene_var, width=24,
                                 values=scene_names, state="readonly")
         scene_cb.pack(side=tk.LEFT, padx=(4, 0))
         scene_cb.bind("<<ComboboxSelected>>", lambda e: self._on_scene_changed())
-        Tooltip(scene_cb, "Process only chapters belonging to a specific scene")
+        Tooltip(scene_cb, "Select a scene to browse its chapters")
 
-        ttk.Label(row4, text="Chapter:").pack(side=tk.LEFT, padx=(16, 0))
+        ttk.Label(nav_frame, text="Chapter:").pack(side=tk.LEFT, padx=(16, 0))
         self.chapter_var = tk.StringVar(value="")
-        self.chapter_cb = ttk.Combobox(row4, textvariable=self.chapter_var, width=30,
+        self.chapter_cb = ttk.Combobox(nav_frame, textvariable=self.chapter_var, width=30,
                                        state="readonly")
         self.chapter_cb.pack(side=tk.LEFT, padx=(4, 0))
         self.chapter_cb.bind("<<ComboboxSelected>>", lambda e: self._on_chapter_changed())
         Tooltip(self.chapter_cb, "Select a chapter to preview its frames")
 
+        # --- Notebook tabs ---
+        self.notebook = ttk.Notebook(outer)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+
+        self._build_editor_tab()
+        self._build_generate_tab()
+
+        # Arrow keys for single-frame stepping
+        self.root.bind("<Left>", lambda e: self._step_frame(-1))
+        self.root.bind("<Right>", lambda e: self._step_frame(1))
+        self.root.bind("<Delete>", self._on_delete_key)
+
+    def _build_editor_tab(self):
+        """Build the Editor tab: preview, scrubber, events, segments."""
+        tab = ttk.Frame(self.notebook, padding=4)
+        self.notebook.add(tab, text="Editor")
+
         # --- Preview Panels ---
-        preview_frame = ttk.LabelFrame(main, text="Preview", padding=5)
+        preview_frame = ttk.LabelFrame(tab, text="Preview", padding=5)
         preview_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 4))
 
         src_frame = ttk.Frame(preview_frame)
@@ -511,7 +419,7 @@ class MSUGeneratorGUI:
         self.snes_photo = None
 
         # --- Scrubber ---
-        scrubber_frame = ttk.Frame(main)
+        scrubber_frame = ttk.Frame(tab)
         scrubber_frame.pack(fill=tk.X, pady=(0, 4))
 
         self.scrub_var = tk.DoubleVar(value=0.0)
@@ -533,12 +441,53 @@ class MSUGeneratorGUI:
                                      anchor=tk.E)
         self.scrub_label.pack(side=tk.RIGHT)
 
-        # Arrow keys for single-frame stepping
-        self.root.bind("<Left>", lambda e: self._step_frame(-1))
-        self.root.bind("<Right>", lambda e: self._step_frame(1))
+        # --- Quality Settings ---
+        qual_frame = ttk.LabelFrame(tab, text="Quality", padding=4)
+        qual_frame.pack(fill=tk.X, pady=(0, 4))
+
+        qual_row1 = ttk.Frame(qual_frame)
+        qual_row1.pack(fill=tk.X)
+
+        ttk.Label(qual_row1, text="Dithering:").pack(side=tk.LEFT)
+        self.dither_var = tk.StringVar(value="Floyd-Steinberg")
+        dither_cb = ttk.Combobox(qual_row1, textvariable=self.dither_var, width=14,
+                                 values=["None", "Floyd-Steinberg", "Ordered"],
+                                 state="readonly")
+        dither_cb.pack(side=tk.LEFT, padx=(4, 16))
+        dither_cb.bind("<<ComboboxSelected>>", lambda e: self._on_quality_changed())
+        Tooltip(dither_cb, "Dithering method for tile conversion")
+
+        ttk.Label(qual_row1, text="Palettes:").pack(side=tk.LEFT)
+        self.palettes_var = tk.StringVar(value="8")
+        palettes_spin = ttk.Spinbox(qual_row1, from_=1, to=8, width=3,
+                                    textvariable=self.palettes_var)
+        palettes_spin.pack(side=tk.LEFT, padx=(4, 16))
+        self.palettes_var.trace_add("write", lambda *_: self._on_quality_changed())
+        Tooltip(palettes_spin, "Number of sub-palettes per frame (1-8)")
+
+        ttk.Label(qual_row1, text="Max Tiles:").pack(side=tk.LEFT)
+        self.max_tiles_var = tk.StringVar(value="384")
+        tiles_spin = ttk.Spinbox(qual_row1, from_=1, to=512, width=4,
+                                 textvariable=self.max_tiles_var)
+        tiles_spin.pack(side=tk.LEFT, padx=(4, 16))
+        self.max_tiles_var.trace_add("write", lambda *_: self._on_quality_changed())
+        Tooltip(tiles_spin, "Maximum tiles per frame (VRAM limit)")
+
+        self.grayscale_var = tk.BooleanVar(value=False)
+        gs_cb = ttk.Checkbutton(qual_row1, text="Grayscale", variable=self.grayscale_var,
+                                command=self._on_quality_changed)
+        gs_cb.pack(side=tk.LEFT)
+        Tooltip(gs_cb, "Convert frames to grayscale before processing")
+
+        self.shared_palette_var = tk.BooleanVar(value=False)
+        sp_cb = ttk.Checkbutton(qual_row1, text="Shared Palette",
+                                variable=self.shared_palette_var,
+                                command=self._on_quality_changed)
+        sp_cb.pack(side=tk.LEFT, padx=(8, 0))
+        Tooltip(sp_cb, "Use shared palette across all frames in each chapter to reduce swimming")
 
         # --- Event Timeline (multi-track) ---
-        evt_outer = ttk.Frame(main)
+        evt_outer = ttk.Frame(tab)
         evt_outer.pack(fill=tk.X, pady=(0, 2))
         ttk.Label(evt_outer, text="Events:").pack(side=tk.LEFT, padx=(0, 4), anchor=tk.N)
         self.evt_canvas = tk.Canvas(evt_outer, height=20, bg="#1a1a2e",
@@ -552,7 +501,7 @@ class MSUGeneratorGUI:
         self.evt_canvas.bind("<Motion>", self._on_evt_hover)
 
         # Event button row
-        evt_btn_frame = ttk.Frame(main)
+        evt_btn_frame = ttk.Frame(tab)
         evt_btn_frame.pack(fill=tk.X, pady=(0, 2))
 
         self.save_xml_btn = ttk.Button(evt_btn_frame, text="Save XML",
@@ -570,10 +519,8 @@ class MSUGeneratorGUI:
         self.evt_dirty_label = ttk.Label(evt_btn_frame, text="")
         self.evt_dirty_label.pack(side=tk.LEFT, padx=(10, 0))
 
-        self.root.bind("<Delete>", self._on_delete_key)
-
         # --- Segments ---
-        seg_frame = ttk.LabelFrame(main, text="Segments", padding=4)
+        seg_frame = ttk.LabelFrame(tab, text="Segments", padding=4)
         seg_frame.pack(fill=tk.X, pady=(0, 4))
 
         self.seg_canvas = tk.Canvas(seg_frame, height=24, bg="#2b2b2b",
@@ -612,8 +559,92 @@ class MSUGeneratorGUI:
         self.seg_info_label = ttk.Label(seg_btn_frame, text="No segments")
         self.seg_info_label.pack(side=tk.LEFT, padx=(10, 0))
 
+    def _build_generate_tab(self):
+        """Build the Generate tab: source data, pipeline options, progress, log."""
+        tab = ttk.Frame(self.notebook, padding=4)
+        self.notebook.add(tab, text="Generate")
+
+        # --- Source Data ---
+        src_frame = ttk.LabelFrame(tab, text="Source Data", padding=6)
+        src_frame.pack(fill=tk.X, pady=(0, 4))
+
+        self.framefile_var = tk.StringVar(value=DEFAULT_FRAMEFILE)
+        self.content_var = tk.StringVar(value=DEFAULT_CONTENT)
+        self.ffmpeg_var = tk.StringVar(value=DEFAULT_FFMPEG)
+
+        self._path_row(src_frame, 0, "Framefile:", self.framefile_var,
+                       self._browse_framefile, is_file=True,
+                       tooltip="Daphne framefile (dlcdrom.TXT)")
+        self._path_row(src_frame, 1, "Content:", self.content_var,
+                       self._browse_content, is_file=False,
+                       tooltip="Directory containing .m2v and .ogg segment files")
+        self._path_row(src_frame, 2, "ffmpeg:", self.ffmpeg_var,
+                       self._browse_ffmpeg, is_file=True,
+                       tooltip="Path to ffmpeg executable (or just 'ffmpeg' if on PATH)")
+
+        self.framefile_status = ttk.Label(src_frame, text="", width=2)
+        self.framefile_status.grid(row=0, column=3, padx=(4, 0))
+        self.content_status = ttk.Label(src_frame, text="", width=2)
+        self.content_status.grid(row=1, column=3, padx=(4, 0))
+        self.ffmpeg_status = ttk.Label(src_frame, text="", width=2)
+        self.ffmpeg_status.grid(row=2, column=3, padx=(4, 0))
+
+        for var in (self.framefile_var, self.content_var, self.ffmpeg_var):
+            var.trace_add("write", lambda *_: self._validate_all())
+
+        # --- Pipeline Options ---
+        opt_frame = ttk.LabelFrame(tab, text="Pipeline Options", padding=6)
+        opt_frame.pack(fill=tk.X, pady=(0, 4))
+
+        row0 = ttk.Frame(opt_frame)
+        row0.pack(fill=tk.X, pady=(0, 2))
+
+        ttk.Label(row0, text="Workers:").pack(side=tk.LEFT)
+        self.workers_var = tk.StringVar(value="8")
+        workers_spin = ttk.Spinbox(row0, from_=1, to=32, width=4,
+                                   textvariable=self.workers_var)
+        workers_spin.pack(side=tk.LEFT, padx=(4, 16))
+        Tooltip(workers_spin, "Number of parallel worker threads for tile conversion")
+
+        self.clean_var = tk.BooleanVar(value=False)
+        clean_cb = ttk.Checkbutton(row0, text="Clean (re-extract all)",
+                                   variable=self.clean_var)
+        clean_cb.pack(side=tk.LEFT)
+        Tooltip(clean_cb, "Delete existing extracted frames before re-extracting from .m2v")
+
+        row1 = ttk.Frame(opt_frame)
+        row1.pack(fill=tk.X)
+
+        ttk.Label(row1, text="Phases:").pack(side=tk.LEFT)
+        self.phase_extract = tk.BooleanVar(value=True)
+        self.phase_audio = tk.BooleanVar(value=True)
+        self.phase_convert = tk.BooleanVar(value=True)
+        self.phase_package = tk.BooleanVar(value=True)
+
+        for text, var in [("Extract", self.phase_extract),
+                          ("Audio", self.phase_audio),
+                          ("Convert", self.phase_convert),
+                          ("Package", self.phase_package)]:
+            ttk.Checkbutton(row1, text=text, variable=var).pack(side=tk.LEFT, padx=(8, 0))
+
+        self.manifest_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(row1, text="Auto-manifest",
+                        variable=self.manifest_var).pack(side=tk.LEFT, padx=(16, 0))
+
+        # --- Generate / Cancel ---
+        btn_frame = ttk.Frame(tab)
+        btn_frame.pack(fill=tk.X, pady=(0, 4))
+
+        self.generate_btn = ttk.Button(btn_frame, text="Generate",
+                                       command=self._start_generation)
+        self.generate_btn.pack(side=tk.LEFT, padx=(0, 8))
+
+        self.cancel_btn = ttk.Button(btn_frame, text="Cancel",
+                                     command=self._cancel_generation, state=tk.DISABLED)
+        self.cancel_btn.pack(side=tk.LEFT)
+
         # --- Progress ---
-        prog_frame = ttk.LabelFrame(main, text="Progress", padding=6)
+        prog_frame = ttk.LabelFrame(tab, text="Progress", padding=6)
         prog_frame.pack(fill=tk.X, pady=(0, 4))
 
         self.phase_label = ttk.Label(prog_frame, text="Ready")
@@ -637,7 +668,7 @@ class MSUGeneratorGUI:
         self.time_label.pack(fill=tk.X, pady=(2, 0))
 
         # --- Log Output ---
-        log_frame = ttk.LabelFrame(main, text="Log Output", padding=4)
+        log_frame = ttk.LabelFrame(tab, text="Log Output", padding=4)
         log_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 4))
 
         self.log_text = tk.Text(log_frame, wrap=tk.WORD, state=tk.DISABLED,
@@ -652,24 +683,6 @@ class MSUGeneratorGUI:
         self.log_text.tag_configure("warn", foreground="#cc8800")
         self.log_text.tag_configure("phase", foreground="#0066cc", font=("Consolas", 9, "bold"))
         self.log_text.tag_configure("success", foreground="#008800")
-
-        # --- Bottom bar ---
-        bottom = ttk.Frame(main)
-        bottom.pack(fill=tk.X)
-
-        self.generate_btn = ttk.Button(bottom, text="Generate",
-                                       command=self._start_generation)
-        self.generate_btn.pack(side=tk.LEFT, padx=(0, 8))
-
-        self.cancel_btn = ttk.Button(bottom, text="Cancel",
-                                     command=self._cancel_generation, state=tk.DISABLED)
-        self.cancel_btn.pack(side=tk.LEFT)
-
-        self.manifest_var = tk.BooleanVar(value=True)
-        manifest_cb = ttk.Checkbutton(bottom, text="Auto-manifest",
-                                      variable=self.manifest_var)
-        manifest_cb.pack(side=tk.RIGHT)
-        Tooltip(manifest_cb, "Automatically generate manifest.xml after successful packaging")
 
     def _path_row(self, parent, row, label, var, browse_cmd, is_file=True, tooltip=None):
         ttk.Label(parent, text=label).grid(row=row, column=0, sticky=tk.W, padx=(0, 4))
