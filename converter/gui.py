@@ -15,8 +15,12 @@ import subprocess
 import threading
 import time
 import tkinter as tk
+import xml.etree.ElementTree as ET
+from dataclasses import dataclass
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
+from tkinter import simpledialog
+from typing import List, Optional, Tuple
 
 # ---------------------------------------------------------------------------
 # Path resolution — import defaults from tools/paths.py
@@ -66,6 +70,177 @@ SCENE_PREFIXES = {
 }
 
 TARGET_FPS = 24000.0 / 1001.0  # ~23.976 fps
+EVENTS_DIR = PROJECT_ROOT / "data" / "events"
+
+# Direction event colors for timeline strip and arrow overlay
+DIR_COLORS = {
+    'left':   '#e8c840',  # gold
+    'right':  '#40a8e8',  # blue
+    'up':     '#60d060',  # green
+    'down':   '#e86040',  # red/orange
+    'action': '#c060e0',  # purple
+}
+
+# Arrow positions on the 256x192 SNES screen (center of arrow)
+DIR_POSITIONS = {
+    'left':   (60, 80),
+    'right':  (160, 80),
+    'up':     (110, 36),
+    'down':   (110, 156),
+    'action': (120, 80),
+}
+
+
+@dataclass
+class ChapterEvent:
+    """A direction event parsed from a chapter XML file."""
+    direction: str       # 'left', 'right', 'up', 'down', 'action'
+    start_frame: int     # chapter-relative
+    end_frame: int       # chapter-relative
+    label: str           # 'direction-1' = correct, others = death traps
+    target: str          # result chapter name
+    result_type: str = 'playchapter'  # 'playchapter', 'none', 'lastcheckpoint', etc.
+
+
+@dataclass
+class ChapterMeta:
+    """Chapter-level context needed for XML round-tripping and Lua export."""
+    chapter_name: str
+    chapter_start_ms: float       # absolute ms from XML <timeline><timestart>
+    chapter_end_ms: float         # absolute ms from XML <timeline><timeend>
+    chapter_start_frame: Optional[int]  # laserdisc frame attr (may be absent)
+    default_result_type: str      # 'playchapter', 'lastcheckpoint', etc.
+    default_result_target: str    # target chapter name or ''
+    non_direction_events: list    # raw XML strings for checkpoint etc. (preserved verbatim)
+
+
+def _parse_time_ms(el) -> float:
+    """Parse min/second(or sec)/ms attributes from a time element into total ms."""
+    return (int(el.get("min", "0")) * 60000
+            + int(el.get("second", el.get("sec", "0"))) * 1000
+            + int(el.get("ms", "0")))
+
+
+def _detect_result(result_el) -> Tuple[str, str]:
+    """Detect result type and target from a <result> element.
+
+    Returns (result_type, target_name). For elements like <playchapter name="x"/>,
+    returns ('playchapter', 'x'). For <lastcheckpoint/>, returns ('lastcheckpoint', '').
+    For <none name="x"/>, returns ('none', 'x').
+    """
+    if result_el is None:
+        return ('none', '')
+    for child in result_el:
+        name = child.get("name", "")
+        return (child.tag, name)
+    return ('none', '')
+
+
+def _parse_chapter_events(chapter_name: str) -> Tuple[List[ChapterEvent], Optional[ChapterMeta]]:
+    """Parse direction events and chapter metadata from a chapter's XML file.
+
+    Returns (events, meta). If the XML doesn't exist or has no timeline,
+    returns ([], None).
+    """
+    xml_path = EVENTS_DIR / f"{chapter_name}.xml"
+    if not xml_path.exists():
+        return ([], None)
+
+    try:
+        tree = ET.parse(str(xml_path))
+    except ET.ParseError:
+        return ([], None)
+
+    root = tree.getroot()
+
+    # Chapter timeline
+    ch_tl = root.find("timeline")
+    if ch_tl is None:
+        return ([], None)
+    ch_start_el = ch_tl.find("timestart")
+    ch_end_el = ch_tl.find("timeend")
+    if ch_start_el is None:
+        return ([], None)
+
+    ch_start_ms = _parse_time_ms(ch_start_el)
+    ch_end_ms = _parse_time_ms(ch_end_el) if ch_end_el is not None else ch_start_ms
+
+    # Laserdisc frame attribute (optional)
+    ch_start_frame = None
+    frame_attr = ch_start_el.get("frame")
+    if frame_attr is not None:
+        try:
+            ch_start_frame = int(frame_attr)
+        except ValueError:
+            pass
+
+    # Chapter-level default result
+    ch_result_el = root.find("result")
+    default_result_type, default_result_target = _detect_result(ch_result_el)
+
+    events_el = root.find("events")
+
+    # Collect non-direction events as raw XML strings
+    non_direction_events = []
+    results = []
+
+    if events_el is not None:
+        for ev in events_el.findall("event"):
+            if ev.get("type") != "direction":
+                # Preserve non-direction events verbatim
+                non_direction_events.append(
+                    ET.tostring(ev, encoding="unicode"))
+                continue
+
+            # Direction type
+            direction = "action"
+            params = ev.find("params")
+            if params is not None:
+                for s in params.findall("str"):
+                    if s.get("key") == "type":
+                        direction = s.get("value", "action")
+
+            # Event timeline (absolute timestamps)
+            ev_tl = ev.find("timeline")
+            if ev_tl is None:
+                continue
+            ev_start = ev_tl.find("timestart")
+            ev_end = ev_tl.find("timeend")
+            if ev_start is None or ev_end is None:
+                continue
+
+            start_ms = _parse_time_ms(ev_start)
+            end_ms = _parse_time_ms(ev_end)
+
+            # Convert to chapter-relative frames
+            start_frame = max(0, int((start_ms - ch_start_ms) / 1000.0 * TARGET_FPS))
+            end_frame = max(0, int((end_ms - ch_start_ms) / 1000.0 * TARGET_FPS))
+
+            # Label and result
+            label = ev.get("label", "")
+            result_type, target = _detect_result(ev.find("result"))
+
+            results.append(ChapterEvent(
+                direction=direction,
+                start_frame=start_frame,
+                end_frame=end_frame,
+                label=label,
+                target=target,
+                result_type=result_type,
+            ))
+
+    meta = ChapterMeta(
+        chapter_name=chapter_name,
+        chapter_start_ms=ch_start_ms,
+        chapter_end_ms=ch_end_ms,
+        chapter_start_frame=ch_start_frame,
+        default_result_type=default_result_type,
+        default_result_target=default_result_target,
+        non_direction_events=non_direction_events,
+    )
+
+    return (results, meta)
+
 
 # Phase weights for overall progress (renormalized when phases skipped)
 PHASE_WEIGHTS = {
@@ -152,6 +327,18 @@ class MSUGeneratorGUI:
         # Segment state
         self._segment_list = None
         self._selected_segment_idx = 0
+
+        # Event overlay state
+        self._chapter_events = []  # List[ChapterEvent] for current chapter
+        self._chapter_meta = None  # ChapterMeta for current chapter
+
+        # Event editing state
+        self._events_dirty = False
+        self._selected_event_idx = -1
+        self._drag_mode = None       # None | 'move' | 'resize_left' | 'resize_right'
+        self._drag_start_x = 0
+        self._drag_orig_start = 0
+        self._drag_orig_end = 0
 
         self._build_ui()
         self._validate_all()
@@ -349,6 +536,41 @@ class MSUGeneratorGUI:
         # Arrow keys for single-frame stepping
         self.root.bind("<Left>", lambda e: self._step_frame(-1))
         self.root.bind("<Right>", lambda e: self._step_frame(1))
+
+        # --- Event Timeline (multi-track) ---
+        evt_outer = ttk.Frame(main)
+        evt_outer.pack(fill=tk.X, pady=(0, 2))
+        ttk.Label(evt_outer, text="Events:").pack(side=tk.LEFT, padx=(0, 4), anchor=tk.N)
+        self.evt_canvas = tk.Canvas(evt_outer, height=20, bg="#1a1a2e",
+                                    highlightthickness=0)
+        self.evt_canvas.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.evt_canvas.bind("<Configure>", lambda e: self._redraw_event_canvas())
+        self.evt_canvas.bind("<Button-1>", self._on_evt_press)
+        self.evt_canvas.bind("<B1-Motion>", self._on_evt_drag)
+        self.evt_canvas.bind("<ButtonRelease-1>", self._on_evt_release)
+        self.evt_canvas.bind("<Button-3>", self._on_evt_right_click)
+        self.evt_canvas.bind("<Motion>", self._on_evt_hover)
+
+        # Event button row
+        evt_btn_frame = ttk.Frame(main)
+        evt_btn_frame.pack(fill=tk.X, pady=(0, 2))
+
+        self.save_xml_btn = ttk.Button(evt_btn_frame, text="Save XML",
+                                        command=self._save_events_xml,
+                                        state=tk.DISABLED)
+        self.save_xml_btn.pack(side=tk.LEFT, padx=(0, 5))
+        Tooltip(self.save_xml_btn, "Save edited events back to XML")
+
+        self.export_lua_btn = ttk.Button(evt_btn_frame, text="Export Lua",
+                                          command=self._export_events_lua,
+                                          state=tk.DISABLED)
+        self.export_lua_btn.pack(side=tk.LEFT, padx=(0, 5))
+        Tooltip(self.export_lua_btn, "Export events as DirkSimple game.lua format")
+
+        self.evt_dirty_label = ttk.Label(evt_btn_frame, text="")
+        self.evt_dirty_label.pack(side=tk.LEFT, padx=(10, 0))
+
+        self.root.bind("<Delete>", self._on_delete_key)
 
         # --- Segments ---
         seg_frame = ttk.LabelFrame(main, text="Segments", padding=4)
@@ -915,6 +1137,16 @@ class MSUGeneratorGUI:
 
     def _on_chapter_changed(self):
         """Chapter combobox changed: load frames and setup scrubber."""
+        # Dirty guard: prompt to save before switching
+        if self._events_dirty:
+            answer = messagebox.askyesnocancel(
+                "Save Changes?",
+                "Event timeline has been modified. Save before switching?")
+            if answer is None:  # Cancel
+                return
+            if answer:  # Yes
+                self._save_events_xml()
+
         chapter = self.chapter_var.get()
         if not chapter:
             self._clear_preview()
@@ -965,9 +1197,21 @@ class MSUGeneratorGUI:
         self._redraw_seg_canvas()
         self._update_seg_info()
 
+        # Parse direction events from XML
+        events, meta = _parse_chapter_events(chapter)
+        self._chapter_events = events
+        self._chapter_meta = meta
+        self._selected_event_idx = -1
+        self._events_dirty = False
+        self._update_evt_dirty_label()
+        self._redraw_event_canvas()
+
         # Show first frame
         self._show_frame(0)
-        self._log(f"Loaded {chapter}: {num_frames} frames")
+        evt_count = len(self._chapter_events)
+        correct = sum(1 for e in self._chapter_events if e.label == 'direction-1')
+        evt_msg = f", {evt_count} events ({correct} correct)" if evt_count else ""
+        self._log(f"Loaded {chapter}: {num_frames} frames{evt_msg}")
 
     def _clear_preview(self):
         """Clear preview canvases and reset scrubber."""
@@ -983,6 +1227,12 @@ class MSUGeneratorGUI:
         self.scrub_var.set(0)
         self.scrub_label.configure(text="Frame 0 / 0")
         self._segment_list = None
+        self._chapter_events = []
+        self._chapter_meta = None
+        self._selected_event_idx = -1
+        self._events_dirty = False
+        self._update_evt_dirty_label()
+        self.evt_canvas.delete("all")
         self.split_btn.configure(state=tk.DISABLED)
         self.delete_seg_btn.configure(state=tk.DISABLED)
         self.save_seg_btn.configure(state=tk.DISABLED)
@@ -1012,6 +1262,9 @@ class MSUGeneratorGUI:
                 self._redraw_seg_canvas()
                 self._update_seg_info()
 
+        # Update event timeline playhead
+        self._redraw_event_canvas()
+
         # Debounce the actual frame display
         if self._scrub_timer is not None:
             self.root.after_cancel(self._scrub_timer)
@@ -1032,6 +1285,9 @@ class MSUGeneratorGUI:
             # Source frame
             src_img = Image.open(png_path)
             self._display_on_canvas(self.src_canvas, src_img, "src_photo")
+
+            # Draw direction arrow overlays on source canvas
+            self._draw_event_overlay(idx)
 
             # SNES reconstruction: check for existing tile data
             base = png_path[:-4]  # remove .png
@@ -1182,11 +1438,607 @@ class MSUGeneratorGUI:
                 self._redraw_seg_canvas()
                 self._update_seg_info()
 
+        # Update event timeline playhead
+        self._redraw_event_canvas()
+
         # Show immediately (no debounce for arrow keys)
         if self._scrub_timer is not None:
             self.root.after_cancel(self._scrub_timer)
             self._scrub_timer = None
         self._show_frame(idx)
+
+    # ------------------------------------------------------------------
+    # Event timeline strip + arrow overlay
+    # ------------------------------------------------------------------
+    _EVT_TRACK_HEIGHT = 20  # pixels per event track
+
+    def _resize_evt_canvas(self):
+        """Resize event canvas height to fit one track per event."""
+        n = max(1, len(self._chapter_events))
+        h = n * self._EVT_TRACK_HEIGHT
+        self.evt_canvas.configure(height=h)
+
+    def _redraw_event_canvas(self):
+        """Redraw the multi-track event timeline strip below the scrubber."""
+        c = self.evt_canvas
+        c.delete("all")
+        if not self._chapter_events or not self._chapter_frames:
+            self.evt_canvas.configure(height=self._EVT_TRACK_HEIGHT)
+            return
+
+        self._resize_evt_canvas()
+
+        cw = c.winfo_width()
+        if cw <= 1:
+            cw = 400
+
+        total_frames = len(self._chapter_frames)
+        if total_frames <= 0:
+            return
+
+        th = self._EVT_TRACK_HEIGHT
+        total_h = len(self._chapter_events) * th
+
+        for i, ev in enumerate(self._chapter_events):
+            y0 = i * th
+            y1 = y0 + th
+
+            # Track separator line
+            if i > 0:
+                c.create_line(0, y0, cw, y0, fill="#333355", width=1)
+
+            x0 = int(ev.start_frame / total_frames * cw)
+            x1 = int(ev.end_frame / total_frames * cw)
+            x1 = max(x1, x0 + 2)  # minimum 2px wide
+            color = DIR_COLORS.get(ev.direction, '#888888')
+            # Death traps (label != 'direction-1') drawn dimmer
+            if ev.label != 'direction-1':
+                color = self._dim_color(color, 0.35)
+            c.create_rectangle(x0, y0 + 1, x1, y1 - 1, fill=color, outline="")
+
+            # Selection highlight
+            if i == self._selected_event_idx:
+                c.create_rectangle(x0, y0 + 1, x1, y1 - 1, fill="",
+                                   outline="white", width=2)
+
+            # Direction letter when wide enough
+            if x1 - x0 > 14:
+                letter = ev.direction[0].upper()
+                mid_x = (x0 + x1) // 2
+                mid_y = (y0 + y1) // 2
+                c.create_text(mid_x, mid_y, text=letter,
+                              fill="white", font=("Segoe UI", 8, "bold"))
+
+        # Playhead line (spans all tracks)
+        idx = int(self.scrub_var.get())
+        px = int(idx / total_frames * cw)
+        c.create_line(px, 0, px, total_h, fill="white", width=1)
+
+    # ------------------------------------------------------------------
+    # Event timeline interaction
+    # ------------------------------------------------------------------
+    def _evt_hit_test(self, px, py):
+        """Hit-test pixel (x,y) on evt_canvas. Returns (event_index, zone).
+
+        Each event occupies its own horizontal track. zone is 'left_edge',
+        'right_edge', 'body', or 'none'.
+        """
+        if not self._chapter_events or not self._chapter_frames:
+            return (-1, 'none')
+
+        cw = self.evt_canvas.winfo_width()
+        if cw <= 1:
+            return (-1, 'none')
+        total_frames = len(self._chapter_frames)
+        if total_frames <= 0:
+            return (-1, 'none')
+
+        th = self._EVT_TRACK_HEIGHT
+        track = int(py // th)
+        if track < 0 or track >= len(self._chapter_events):
+            return (-1, 'none')
+
+        ev = self._chapter_events[track]
+        x0 = int(ev.start_frame / total_frames * cw)
+        x1 = int(ev.end_frame / total_frames * cw)
+        x1 = max(x1, x0 + 2)
+
+        EDGE_PX = 6
+        if x0 <= px <= x1:
+            if px <= x0 + EDGE_PX:
+                return (track, 'left_edge')
+            elif px >= x1 - EDGE_PX:
+                return (track, 'right_edge')
+            else:
+                return (track, 'body')
+
+        return (track, 'none')
+
+    def _on_evt_hover(self, event):
+        """Update cursor shape based on hover position."""
+        idx, zone = self._evt_hit_test(event.x, event.y)
+        if zone in ('left_edge', 'right_edge'):
+            self.evt_canvas.configure(cursor="sb_h_double_arrow")
+        elif zone == 'body':
+            self.evt_canvas.configure(cursor="fleur")
+        else:
+            self.evt_canvas.configure(cursor="")
+
+    def _on_evt_press(self, event):
+        """Mouse button 1 pressed on event canvas: select + start drag."""
+        idx, zone = self._evt_hit_test(event.x, event.y)
+        self._selected_event_idx = idx
+        if idx >= 0 and zone != 'none':
+            ev = self._chapter_events[idx]
+            if zone == 'left_edge':
+                self._drag_mode = 'resize_left'
+            elif zone == 'right_edge':
+                self._drag_mode = 'resize_right'
+            else:
+                self._drag_mode = 'move'
+            self._drag_start_x = event.x
+            self._drag_orig_start = ev.start_frame
+            self._drag_orig_end = ev.end_frame
+        else:
+            self._drag_mode = None
+        self._redraw_event_canvas()
+
+    def _on_evt_drag(self, event):
+        """Mouse drag on event canvas: move or resize event."""
+        if self._drag_mode is None or self._selected_event_idx < 0:
+            return
+        if not self._chapter_frames:
+            return
+
+        cw = self.evt_canvas.winfo_width()
+        if cw <= 1:
+            return
+        total_frames = len(self._chapter_frames)
+
+        dx_px = event.x - self._drag_start_x
+        dx_frames = int(dx_px / cw * total_frames)
+        ev = self._chapter_events[self._selected_event_idx]
+
+        if self._drag_mode == 'move':
+            new_start = self._drag_orig_start + dx_frames
+            new_end = self._drag_orig_end + dx_frames
+            span = self._drag_orig_end - self._drag_orig_start
+            if new_start < 0:
+                new_start = 0
+                new_end = span
+            if new_end > total_frames:
+                new_end = total_frames
+                new_start = total_frames - span
+            ev.start_frame = new_start
+            ev.end_frame = new_end
+        elif self._drag_mode == 'resize_left':
+            new_start = self._drag_orig_start + dx_frames
+            new_start = max(0, min(new_start, ev.end_frame - 1))
+            ev.start_frame = new_start
+        elif self._drag_mode == 'resize_right':
+            new_end = self._drag_orig_end + dx_frames
+            new_end = max(ev.start_frame + 1, min(new_end, total_frames))
+            ev.end_frame = new_end
+
+        self._mark_events_dirty()
+        self._redraw_event_canvas()
+
+    def _on_evt_release(self, event):
+        """Mouse button released: end drag."""
+        self._drag_mode = None
+
+    def _on_evt_right_click(self, event):
+        """Right-click context menu on event canvas."""
+        idx, zone = self._evt_hit_test(event.x, event.y)
+        menu = tk.Menu(self.root, tearoff=0)
+
+        if idx >= 0:
+            self._selected_event_idx = idx
+            self._redraw_event_canvas()
+            ev = self._chapter_events[idx]
+
+            # Change Direction submenu
+            dir_menu = tk.Menu(menu, tearoff=0)
+            for d in ('left', 'right', 'up', 'down', 'action'):
+                label = f"{'> ' if d == ev.direction else '  '}{d.capitalize()}"
+                dir_menu.add_command(
+                    label=label,
+                    command=lambda d=d: self._change_event_direction(idx, d))
+            menu.add_cascade(label="Change Direction", menu=dir_menu)
+
+            # Correct path toggle
+            if ev.label == 'direction-1':
+                menu.add_command(label="Mark as Death Trap",
+                                 command=lambda: self._set_event_label(idx, False))
+            else:
+                menu.add_command(label="Mark as Correct Path",
+                                 command=lambda: self._set_event_label(idx, True))
+
+            menu.add_command(label="Set Target Chapter...",
+                             command=lambda: self._edit_event_target(idx))
+            menu.add_separator()
+            menu.add_command(label="Delete Event",
+                             command=lambda: self._delete_event(idx))
+        else:
+            # Add event submenu on empty space
+            add_menu = tk.Menu(menu, tearoff=0)
+            for d in ('left', 'right', 'up', 'down', 'action'):
+                add_menu.add_command(
+                    label=d.capitalize(),
+                    command=lambda d=d: self._add_event(event.x, d))
+            menu.add_cascade(label="Add Event", menu=add_menu)
+
+        menu.post(event.x_root, event.y_root)
+
+    def _on_delete_key(self, event):
+        """Delete key pressed: remove selected event."""
+        if self._selected_event_idx >= 0 and self._chapter_events:
+            self._delete_event(self._selected_event_idx)
+
+    # ------------------------------------------------------------------
+    # Event CRUD operations
+    # ------------------------------------------------------------------
+    def _add_event(self, px, direction):
+        """Add a new direction event centered at the clicked pixel position."""
+        if not self._chapter_frames:
+            return
+        cw = self.evt_canvas.winfo_width()
+        if cw <= 1:
+            return
+        total_frames = len(self._chapter_frames)
+
+        center_frame = int(px / cw * total_frames)
+        half_span = 7  # 15-frame default span
+        start = max(0, center_frame - half_span)
+        end = min(total_frames, center_frame + half_span + 1)
+
+        # Auto-label: direction-{N+1}
+        n = len(self._chapter_events) + 1
+        label = f"direction-{n}"
+
+        ev = ChapterEvent(
+            direction=direction,
+            start_frame=start,
+            end_frame=end,
+            label=label,
+            target="",
+            result_type="playchapter",
+        )
+        self._chapter_events.append(ev)
+        self._selected_event_idx = len(self._chapter_events) - 1
+        self._mark_events_dirty()
+        self._redraw_event_canvas()
+
+    def _delete_event(self, idx):
+        """Delete event at index."""
+        if 0 <= idx < len(self._chapter_events):
+            self._chapter_events.pop(idx)
+            self._selected_event_idx = -1
+            self._mark_events_dirty()
+            self._redraw_event_canvas()
+
+    def _change_event_direction(self, idx, direction):
+        """Change the direction of event at index."""
+        if 0 <= idx < len(self._chapter_events):
+            self._chapter_events[idx].direction = direction
+            self._mark_events_dirty()
+            self._redraw_event_canvas()
+            # Refresh arrow overlay
+            frame_idx = int(self.scrub_var.get())
+            self._draw_event_overlay(frame_idx)
+
+    def _set_event_label(self, idx, is_correct):
+        """Toggle event between correct path (direction-1) and death trap."""
+        if not (0 <= idx < len(self._chapter_events)):
+            return
+        if is_correct:
+            # Demote any existing direction-1
+            for i, ev in enumerate(self._chapter_events):
+                if ev.label == 'direction-1':
+                    ev.label = f'direction-{i + 1}'
+            self._chapter_events[idx].label = 'direction-1'
+        else:
+            self._chapter_events[idx].label = f'direction-{idx + 1}'
+        self._mark_events_dirty()
+        self._redraw_event_canvas()
+
+    def _edit_event_target(self, idx):
+        """Edit target chapter name via dialog."""
+        if not (0 <= idx < len(self._chapter_events)):
+            return
+        ev = self._chapter_events[idx]
+        result = simpledialog.askstring(
+            "Target Chapter",
+            f"Target chapter for {ev.direction} event:",
+            initialvalue=ev.target,
+            parent=self.root)
+        if result is not None:
+            ev.target = result.strip()
+            self._mark_events_dirty()
+
+    # ------------------------------------------------------------------
+    # Dirty state tracking
+    # ------------------------------------------------------------------
+    def _mark_events_dirty(self):
+        """Mark events as modified."""
+        self._events_dirty = True
+        self._update_evt_dirty_label()
+
+    def _clear_events_dirty(self):
+        """Clear the modified flag."""
+        self._events_dirty = False
+        self._update_evt_dirty_label()
+
+    def _update_evt_dirty_label(self):
+        """Update the dirty indicator label and button states."""
+        has_meta = self._chapter_meta is not None
+        if self._events_dirty:
+            self.evt_dirty_label.configure(text="* Modified", foreground="orange")
+            self.save_xml_btn.configure(state=tk.NORMAL if has_meta else tk.DISABLED)
+        else:
+            if has_meta and self._chapter_events:
+                self.evt_dirty_label.configure(text="Saved", foreground="green")
+            else:
+                self.evt_dirty_label.configure(text="")
+            self.save_xml_btn.configure(state=tk.DISABLED)
+        self.export_lua_btn.configure(
+            state=tk.NORMAL if (has_meta and self._chapter_events) else tk.DISABLED)
+
+    @staticmethod
+    def _dim_color(hex_color: str, factor: float) -> str:
+        """Dim a hex color by blending toward black."""
+        r = int(hex_color[1:3], 16)
+        g = int(hex_color[3:5], 16)
+        b = int(hex_color[5:7], 16)
+        r = int(r * factor)
+        g = int(g * factor)
+        b = int(b * factor)
+        return f"#{r:02x}{g:02x}{b:02x}"
+
+    def _draw_event_overlay(self, frame_idx):
+        """Draw directional arrows on the source canvas for active events."""
+        self.src_canvas.delete("event_overlay")
+        if not self._chapter_events:
+            return
+
+        # Get canvas dimensions and image scale
+        cw = self.src_canvas.winfo_width()
+        ch_canvas = self.src_canvas.winfo_height()
+        if cw <= 1 or ch_canvas <= 1:
+            return
+
+        # SNES frame is 256x192
+        img_w, img_h = 256, 192
+        scale = min(cw / img_w, ch_canvas / img_h)
+        # Image is centered on canvas
+        offset_x = (cw - img_w * scale) / 2
+        offset_y = (ch_canvas - img_h * scale) / 2
+
+        for ev in self._chapter_events:
+            # Only show correct-path arrows (direction-1)
+            if ev.label != 'direction-1':
+                continue
+            if not (ev.start_frame <= frame_idx < ev.end_frame):
+                continue
+
+            pos = DIR_POSITIONS.get(ev.direction)
+            if pos is None:
+                continue
+            color = DIR_COLORS.get(ev.direction, '#e8c840')
+
+            # Scale SNES coords to canvas coords
+            cx = offset_x + pos[0] * scale
+            cy = offset_y + pos[1] * scale
+            sz = 14 * scale  # arrow size
+
+            points = self._arrow_points(ev.direction, cx, cy, sz)
+            if points:
+                self.src_canvas.create_polygon(
+                    points, fill=color, outline="white", width=1,
+                    tags="event_overlay")
+
+    @staticmethod
+    def _arrow_points(direction, cx, cy, sz):
+        """Return polygon points for an arrow triangle pointing in direction."""
+        half = sz / 2
+        if direction == 'left':
+            return [cx - half, cy, cx + half, cy - half, cx + half, cy + half]
+        elif direction == 'right':
+            return [cx + half, cy, cx - half, cy - half, cx - half, cy + half]
+        elif direction == 'up':
+            return [cx, cy - half, cx - half, cy + half, cx + half, cy + half]
+        elif direction == 'down':
+            return [cx, cy + half, cx - half, cy - half, cx + half, cy - half]
+        elif direction == 'action':
+            # Diamond shape for action
+            return [cx, cy - half, cx + half, cy, cx, cy + half, cx - half, cy]
+        return None
+
+    # ------------------------------------------------------------------
+    # Save XML / Export Lua
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _ms_to_time_attrs(total_ms, frame=None):
+        """Convert total ms to min/second/ms attribute dict."""
+        total_ms = max(0, total_ms)
+        minutes = int(total_ms // 60000)
+        remainder = total_ms - minutes * 60000
+        seconds = int(remainder // 1000)
+        ms = int(remainder % 1000)
+        d = {"min": str(minutes), "second": str(seconds), "ms": str(ms)}
+        if frame is not None:
+            d["frame"] = str(frame)
+        return d
+
+    def _save_events_xml(self):
+        """Save edited events back to the chapter's XML file."""
+        meta = self._chapter_meta
+        if meta is None:
+            return
+
+        # Build XML tree
+        root = ET.Element("chapter", name=meta.chapter_name)
+
+        # Chapter timeline
+        tl = ET.SubElement(root, "timeline")
+        ts_attrs = self._ms_to_time_attrs(meta.chapter_start_ms,
+                                           frame=meta.chapter_start_frame)
+        ET.SubElement(tl, "timestart", **ts_attrs)
+        te_attrs = self._ms_to_time_attrs(meta.chapter_end_ms)
+        ET.SubElement(tl, "timeend", **te_attrs)
+
+        ET.SubElement(root, "params")
+        ET.SubElement(root, "macros")
+
+        # Events
+        events_el = ET.SubElement(root, "events")
+
+        # Non-direction events (preserved verbatim)
+        for raw_xml in meta.non_direction_events:
+            try:
+                parsed = ET.fromstring(raw_xml)
+                events_el.append(parsed)
+            except ET.ParseError:
+                pass
+
+        # Direction events from editor
+        for ev in self._chapter_events:
+            # Convert chapter-relative frames back to absolute ms
+            abs_start_ms = meta.chapter_start_ms + ev.start_frame / TARGET_FPS * 1000
+            abs_end_ms = meta.chapter_start_ms + ev.end_frame / TARGET_FPS * 1000
+
+            ev_el = ET.SubElement(events_el, "event",
+                                  type="direction", automacro="direction",
+                                  label=ev.label)
+            ev_tl = ET.SubElement(ev_el, "timeline")
+            ET.SubElement(ev_tl, "timestart", **self._ms_to_time_attrs(abs_start_ms))
+            ET.SubElement(ev_tl, "timeend", **self._ms_to_time_attrs(abs_end_ms))
+
+            params = ET.SubElement(ev_el, "params")
+            ET.SubElement(params, "str", key="type", value=ev.direction)
+
+            result = ET.SubElement(ev_el, "result")
+            if ev.result_type and ev.result_type != 'none':
+                attrs = {"name": ev.target} if ev.target else {}
+                ET.SubElement(result, ev.result_type, **attrs)
+            elif ev.target:
+                ET.SubElement(result, "none", name=ev.target)
+
+        # Chapter-level result
+        ch_result = ET.SubElement(root, "result")
+        if meta.default_result_type:
+            attrs = {"name": meta.default_result_target} if meta.default_result_target else {}
+            ET.SubElement(ch_result, meta.default_result_type, **attrs)
+
+        # Write with indentation
+        ET.indent(root, space="\t")
+        xml_path = EVENTS_DIR / f"{meta.chapter_name}.xml"
+        tree = ET.ElementTree(root)
+        tree.write(str(xml_path), encoding="unicode", xml_declaration=False)
+        # Append trailing newline
+        with open(str(xml_path), "a") as f:
+            f.write("\n")
+
+        self._clear_events_dirty()
+        self._log(f"Saved events to {xml_path.name}", tag="success")
+
+    def _export_events_lua(self):
+        """Export current events as DirkSimple game.lua format in a dialog."""
+        meta = self._chapter_meta
+        if meta is None or not self._chapter_events:
+            return
+
+        # Derive sequence name by stripping scene prefix
+        seq_name = meta.chapter_name
+        for scene, prefix in SCENE_PREFIXES.items():
+            if seq_name.startswith(prefix):
+                seq_name = seq_name[len(prefix):]
+                break
+
+        # Build Lua text
+        lines = []
+        lines.append(f"    {seq_name} = {{")
+
+        # start_time
+        if meta.chapter_start_frame is not None:
+            lines.append(f"        start_time = time_laserdisc_frame({meta.chapter_start_frame}),")
+        else:
+            lines.append(f"        start_time = time_laserdisc_noseek(),")
+
+        # timeout (chapter default result)
+        ch_end_rel_ms = meta.chapter_end_ms - meta.chapter_start_ms
+        s = int(ch_end_rel_ms // 1000)
+        ms = int(ch_end_rel_ms % 1000)
+        target_seq = meta.default_result_target
+        for scene, prefix in SCENE_PREFIXES.items():
+            if target_seq.startswith(prefix):
+                target_seq = target_seq[len(prefix):]
+                break
+        if target_seq:
+            lines.append(f"        timeout = {{ when=time_to_ms({s}, {ms}), nextsequence=\"{target_seq}\" }},")
+        else:
+            lines.append(f"        timeout = {{ when=time_to_ms({s}, {ms}) }},")
+
+        # actions
+        lines.append(f"        actions = {{")
+        for ev in self._chapter_events:
+            direction_str = ev.direction
+            if direction_str == 'action':
+                direction_str = 'button'
+
+            from_ms = ev.start_frame / TARGET_FPS * 1000
+            to_ms = ev.end_frame / TARGET_FPS * 1000
+            from_s = int(from_ms // 1000)
+            from_rem = int(from_ms % 1000)
+            to_s = int(to_ms // 1000)
+            to_rem = int(to_ms % 1000)
+
+            ev_target = ev.target
+            for scene, prefix in SCENE_PREFIXES.items():
+                if ev_target.startswith(prefix):
+                    ev_target = ev_target[len(prefix):]
+                    break
+
+            target_part = f', nextsequence="{ev_target}"' if ev_target else ""
+            lines.append(
+                f"            {{ input=\"{direction_str}\", "
+                f"from=time_to_ms({from_s}, {from_rem}), "
+                f"to=time_to_ms({to_s}, {to_rem})"
+                f"{target_part} }},")
+
+        lines.append(f"        }}")
+        lines.append(f"    }},")
+
+        lua_text = "\n".join(lines)
+
+        # Show in dialog
+        dialog = tk.Toplevel(self.root)
+        dialog.title(f"Lua Export — {meta.chapter_name}")
+        dialog.geometry("600x400")
+        dialog.transient(self.root)
+
+        text = tk.Text(dialog, wrap=tk.NONE, font=("Consolas", 10))
+        text.insert("1.0", lua_text)
+        text.configure(state=tk.DISABLED)
+
+        scrollbar = ttk.Scrollbar(dialog, orient=tk.VERTICAL, command=text.yview)
+        text.configure(yscrollcommand=scrollbar.set)
+
+        text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        btn_frame = ttk.Frame(dialog)
+        btn_frame.pack(fill=tk.X, padx=8, pady=4)
+
+        def copy_to_clipboard():
+            dialog.clipboard_clear()
+            dialog.clipboard_append(lua_text)
+            copy_btn.configure(text="Copied!")
+            dialog.after(1500, lambda: copy_btn.configure(text="Copy to Clipboard"))
+
+        copy_btn = ttk.Button(btn_frame, text="Copy to Clipboard",
+                               command=copy_to_clipboard)
+        copy_btn.pack(side=tk.RIGHT)
 
     # ------------------------------------------------------------------
     # Clip preview (animated ~2s playback)
@@ -1554,6 +2406,15 @@ class MSUGeneratorGUI:
     # Window close
     # ------------------------------------------------------------------
     def _on_close(self):
+        if self._events_dirty:
+            answer = messagebox.askyesnocancel(
+                "Save Changes?",
+                "Event timeline has been modified. Save before closing?")
+            if answer is None:  # Cancel
+                return
+            if answer:  # Yes
+                self._save_events_xml()
+
         if self.is_running:
             if not messagebox.askokcancel(
                 "Generation in progress",
