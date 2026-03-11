@@ -19,9 +19,10 @@ class Segment:
     end_time: float         # seconds, exclusive
     dither_method: str      # 'none', 'floyd-steinberg', 'ordered'
     num_palettes: int       # 1-8
-    max_tiles: int          # 1-384
+    max_tiles: int          # 1-512
     grayscale: bool = False
     shared_palette: bool = False
+    palette_method: str = 'tileaware'
 
 
 class SegmentList:
@@ -37,9 +38,10 @@ class SegmentList:
 
     @classmethod
     def create_default(cls, duration: float, dither_method: str = 'floyd-steinberg',
-                       num_palettes: int = 8, max_tiles: int = 384,
+                       num_palettes: int = 8, max_tiles: int = 512,
                        grayscale: bool = False,
-                       shared_palette: bool = False) -> 'SegmentList':
+                       shared_palette: bool = False,
+                       palette_method: str = 'tileaware') -> 'SegmentList':
         """Create a SegmentList with one segment covering the full duration."""
         seg = Segment(
             start_time=0.0,
@@ -49,6 +51,7 @@ class SegmentList:
             max_tiles=max_tiles,
             grayscale=grayscale,
             shared_palette=shared_palette,
+            palette_method=palette_method,
         )
         return cls([seg])
 
@@ -108,6 +111,7 @@ class SegmentList:
             max_tiles=seg.max_tiles,
             grayscale=seg.grayscale,
             shared_palette=seg.shared_palette,
+            palette_method=seg.palette_method,
         )
         right = Segment(
             start_time=t,
@@ -117,6 +121,7 @@ class SegmentList:
             max_tiles=seg.max_tiles,
             grayscale=seg.grayscale,
             shared_palette=seg.shared_palette,
+            palette_method=seg.palette_method,
         )
 
         self.segments[idx] = left
@@ -159,7 +164,7 @@ class SegmentList:
             self.segments = [Segment(
                 start_time=0.0, end_time=new_duration,
                 dither_method='floyd-steinberg',
-                num_palettes=8, max_tiles=384,
+                num_palettes=8, max_tiles=512,
             )]
             return
 
@@ -177,6 +182,7 @@ class SegmentList:
         for d in data:
             d.setdefault('grayscale', False)
             d.setdefault('shared_palette', False)
+            d.setdefault('palette_method', 'tileaware')
         segments = [Segment(**d) for d in data]
         return cls(segments)
 

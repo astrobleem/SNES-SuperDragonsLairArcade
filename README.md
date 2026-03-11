@@ -76,7 +76,7 @@ python converter/gui.py
 - **Scene and chapter browser** — select any of the 29 scenes, browse its chapters, and preview extracted frames
 - **Side-by-side preview** — source frame alongside the SNES 4BPP tile reconstruction, updated live as you adjust settings
 - **Frame scrubber** — drag to navigate through chapter frames, or use arrow keys for single-frame stepping
-- **Quality controls** — dithering method (none / Floyd-Steinberg / ordered Bayer), palette count (1-8 sub-palettes), max tile count, grayscale mode, and shared palette (per-chapter temporal stability)
+- **Quality controls** — dithering method (none / Floyd-Steinberg / ordered Bayer), palette count (1-8 sub-palettes), max tile count, grayscale mode, shared palette (per-chapter temporal stability), and palette optimization method (K-Means or Tile-Aware)
 - **Per-segment quality** — split a chapter into segments with independent quality settings; tweak dithering for a dark scene while keeping defaults elsewhere
 - **Segment save/load** — export segment layouts to JSON files and reload them later
 - **Animated clip preview** — render and play back ~2 seconds of converted frames to see how settings look in motion
@@ -89,6 +89,26 @@ python converter/gui.py
 - **Save XML** — write edited events back to `data/events/*.xml`, preserving non-direction events (checkpoints, room transitions) verbatim. Round-trips frame positions back to absolute timestamps
 - **Export Lua** — generate DirkSimple `game.lua` format for the current chapter in a copy-to-clipboard dialog, making it easy to contribute timing fixes upstream
 - **Dirty state tracking** — modified indicator with save prompts on chapter switch and window close, so you never lose edits accidentally
+
+### Tile-Aware Palette Optimization
+
+The MSU-1 video pipeline includes a tile-aware palette optimizer that jointly optimizes tile-to-palette assignment and palette colors simultaneously, using perceptual color weighting and iterative refinement. Compared to the previous K-Means approach (which assigned tiles to palettes once and never revisited), the tile-aware method produces significantly better color reproduction — especially in scenes with complex lighting and color gradients.
+
+The VRAM tile budget has also been raised from 384 to 512 tiles per frame, making full use of the SNES VRAM allocation and reducing lossy tile merging.
+
+**Throne Room** — Source | K-Means 384 tiles (old) | Tile-Aware 512 tiles (new):
+
+![Throne Room comparison](docs/images/palette_comparison_thrn_enter_room.png)
+
+**Snake Room** — dramatic reduction in color banding and palette artifacts:
+
+![Snake Room comparison](docs/images/palette_comparison_snkr_enter_room.png)
+
+**Giddy Goons** — improved color fidelity in stone textures and shadows:
+
+![Giddy Goons comparison](docs/images/palette_comparison_gg_enter_room.png)
+
+Select the palette method in the converter GUI or pass `--palette-method tileaware` on the CLI.
 
 ## How It Works
 

@@ -466,7 +466,7 @@ class MSUGeneratorGUI:
         Tooltip(palettes_spin, "Number of sub-palettes per frame (1-8)")
 
         ttk.Label(qual_row1, text="Max Tiles:").pack(side=tk.LEFT)
-        self.max_tiles_var = tk.StringVar(value="384")
+        self.max_tiles_var = tk.StringVar(value="512")
         tiles_spin = ttk.Spinbox(qual_row1, from_=1, to=512, width=4,
                                  textvariable=self.max_tiles_var)
         tiles_spin.pack(side=tk.LEFT, padx=(4, 16))
@@ -485,6 +485,14 @@ class MSUGeneratorGUI:
                                 command=self._on_quality_changed)
         sp_cb.pack(side=tk.LEFT, padx=(8, 0))
         Tooltip(sp_cb, "Use shared palette across all frames in each chapter to reduce swimming")
+
+        ttk.Label(qual_row1, text="Palette:").pack(side=tk.LEFT, padx=(8, 0))
+        self.palette_method_var = tk.StringVar(value="Tile-Aware")
+        palette_cb = ttk.Combobox(qual_row1, textvariable=self.palette_method_var, width=10,
+                                  values=["K-Means", "Tile-Aware"], state="readonly")
+        palette_cb.pack(side=tk.LEFT, padx=(4, 0))
+        palette_cb.bind("<<ComboboxSelected>>", lambda e: self._on_quality_changed())
+        Tooltip(palette_cb, "Palette optimization method: K-Means (fast) or Tile-Aware (better quality)")
 
         # --- Event Timeline (multi-track) ---
         evt_outer = ttk.Frame(tab)
@@ -810,6 +818,8 @@ class MSUGeneratorGUI:
             args.append("--grayscale")
         if self.shared_palette_var.get():
             args.append("--shared-palette")
+
+        args += ["--palette-method", self._get_palette_method()]
 
         # Scene filter
         scene_val = self.scene_var.get()
@@ -1202,6 +1212,7 @@ class MSUGeneratorGUI:
             max_tiles=self._get_max_tiles(),
             grayscale=self.grayscale_var.get(),
             shared_palette=self.shared_palette_var.get(),
+            palette_method=self._get_palette_method(),
         )
         self._selected_segment_idx = 0
         self.split_btn.configure(state=tk.NORMAL)
@@ -1362,7 +1373,12 @@ class MSUGeneratorGUI:
         try:
             return int(self.max_tiles_var.get())
         except (ValueError, tk.TclError):
-            return 384
+            return 512
+
+    def _get_palette_method(self):
+        """Get current palette method as CLI string."""
+        mapping = {"K-Means": "kmeans", "Tile-Aware": "tileaware"}
+        return mapping.get(self.palette_method_var.get(), "tileaware")
 
     def _on_quality_changed(self):
         """Quality settings changed: update segment and reconvert preview."""
@@ -1377,6 +1393,7 @@ class MSUGeneratorGUI:
             seg.shared_palette = self.shared_palette_var.get()
             seg.num_palettes = self._get_palettes()
             seg.max_tiles = self._get_max_tiles()
+            seg.palette_method = self._get_palette_method()
             self._redraw_seg_canvas()
 
         # Debounce reconversion
@@ -1397,6 +1414,7 @@ class MSUGeneratorGUI:
         max_tiles = self._get_max_tiles()
         dither_method = self._get_dither_method()
         grayscale = self.grayscale_var.get()
+        palette_method = self._get_palette_method()
 
         if max_tiles < 1 or max_tiles > 512:
             return
@@ -1412,6 +1430,7 @@ class MSUGeneratorGUI:
                     dither_method=dither_method,
                     max_tiles=max_tiles,
                     grayscale=grayscale,
+                    palette_method=palette_method,
                 )
                 if ok:
                     base = preview_path[:-4]
@@ -2082,6 +2101,7 @@ class MSUGeneratorGUI:
         max_tiles = self._get_max_tiles()
         dither_method = self._get_dither_method()
         grayscale = self.grayscale_var.get()
+        palette_method = self._get_palette_method()
 
         cancel = threading.Event()
         self._clip_cancel = cancel
@@ -2113,6 +2133,7 @@ class MSUGeneratorGUI:
                         dither_method=dither_method,
                         max_tiles=max_tiles,
                         grayscale=grayscale,
+                        palette_method=palette_method,
                     )
                     if ok:
                         base = png_path[:-4]
@@ -2313,6 +2334,8 @@ class MSUGeneratorGUI:
             self.max_tiles_var.set(str(seg.max_tiles))
             self.grayscale_var.set(seg.grayscale)
             self.shared_palette_var.set(seg.shared_palette)
+            pal_method_map = {"kmeans": "K-Means", "tileaware": "Tile-Aware"}
+            self.palette_method_var.set(pal_method_map.get(seg.palette_method, "Tile-Aware"))
         finally:
             self._updating_controls = False
 

@@ -7,7 +7,7 @@ Pipeline:
 2. Extract video frames from MP4 per chapter (ffmpeg with CUDA GPU accel)
 3. Convert frames to SNES tiles/tilemap/palette (superfamiconv)
    - Each 256x160 frame produces up to 640 unique 8x8 tiles, but SNES VRAM
-     budget is 384 at 4BPP. reduce_tiles() merges the 256 most visually
+     budget is 512 at 4BPP. reduce_tiles() merges the most visually
      similar pairs using RGB-space L2 distance with a global greedy algorithm.
 4. Package into .msu file (msu1blockwriter.py)
 
@@ -53,7 +53,7 @@ SOURCE_FPS = 23.9777  # Source video fps for frame number calculation
 BPP = 4
 PALETTES = 8
 MAX_COLORS = PALETTES * (2 ** BPP)  # 8 * 16 = 128 (8 sub-palettes for color fidelity)
-MAX_TILES = 384  # VRAM tile buffer: 384 tiles at 4BPP (32 bytes/tile) = $3000 bytes
+MAX_TILES = 512  # VRAM tile buffer: 512 tiles at 4BPP (32 bytes/tile) = $4000 bytes
 FRAME_WIDTH = 256
 FRAME_HEIGHT = 160
 TILEMAP_TARGET_SIZE = 1280  # 32x20 tiles * 2 bytes per entry
@@ -601,6 +601,90 @@ def compute_shared_palette(png_paths, num_palettes=PALETTES, grayscale=False):
     return sub_palettes
 
 
+def tileaware_palette_generate(rgb5, tiles_h, tiles_w, num_palettes):
+    """Generate sub-palettes using tile-aware iterative optimization.
+
+    Converts the BGR555-quantized image into tiles and calls
+    tiledpalettequant's build_palettes_tileaware() for joint tile-palette
+    assignment and palette color optimization.
+
+    Args:
+        rgb5: (H, W, 3) uint8 array of 5-bit RGB components
+        tiles_h, tiles_w: tile grid dimensions
+        num_palettes: number of sub-palettes
+
+    Returns:
+        (sub_palettes, tile_labels):
+            sub_palettes: list of num_palettes lists of 16 BGR555 values
+            tile_labels: (tiles_h, tiles_w) int array of palette assignments
+    """
+    from tiledpalettequant import build_palettes_tileaware
+
+    # Build BGR555 uint16 pixel grid
+    bgr_pixels = (rgb5[:, :, 0].astype(np.uint16) |
+                  (rgb5[:, :, 1].astype(np.uint16) << 5) |
+                  (rgb5[:, :, 2].astype(np.uint16) << 10))
+
+    # Reshape into (n_tiles, 8, 8) tiles
+    snes_tiles = bgr_pixels.reshape(tiles_h, 8, tiles_w, 8).transpose(0, 2, 1, 3)
+    snes_tiles = snes_tiles.reshape(-1, 8, 8)
+
+    palettes, _indexed_tiles, tile_pal_ids = build_palettes_tileaware(
+        snes_tiles,
+        num_palettes=num_palettes,
+        colors_per_palette=16,
+        trans_color=0x0000,
+    )
+
+    tile_labels = tile_pal_ids.reshape(tiles_h, tiles_w).astype(int)
+    return palettes, tile_labels
+
+
+def compute_shared_palette_tileaware(png_paths, num_palettes=PALETTES, grayscale=False):
+    """Compute a shared palette using tile-aware optimization across multiple frames.
+
+    Loads sampled frames, converts to BGR555 tiles, concatenates all tiles,
+    and runs tiledpalettequant's joint optimization on the combined set.
+
+    Args:
+        png_paths: List of PNG file paths to sample from
+        num_palettes: Number of sub-palettes
+        grayscale: If True, convert frames to grayscale
+
+    Returns:
+        List of sub-palettes, each a list of 16 BGR555 values (color 0 = 0x0000)
+    """
+    from tiledpalettequant import build_palettes_tileaware
+
+    all_tiles = []
+    for path in png_paths:
+        img = Image.open(path).convert('RGB')
+        if grayscale:
+            img = img.convert('L').convert('RGB')
+        rgb = np.array(img, dtype=np.float32)
+        H, W = rgb.shape[:2]
+        tiles_h, tiles_w = H // 8, W // 8
+
+        rgb5 = np.round(rgb * 31.0 / 255.0).clip(0, 31).astype(np.uint8)
+        bgr_pixels = (rgb5[:, :, 0].astype(np.uint16) |
+                      (rgb5[:, :, 1].astype(np.uint16) << 5) |
+                      (rgb5[:, :, 2].astype(np.uint16) << 10))
+        tiles = bgr_pixels.reshape(tiles_h, 8, tiles_w, 8).transpose(0, 2, 1, 3)
+        tiles = tiles.reshape(-1, 8, 8)
+        all_tiles.append(tiles)
+
+    combined = np.concatenate(all_tiles, axis=0)
+
+    palettes, _indexed_tiles, _tile_pal_ids = build_palettes_tileaware(
+        combined,
+        num_palettes=num_palettes,
+        colors_per_palette=16,
+        trans_color=0x0000,
+    )
+
+    return palettes
+
+
 def encode_tiles_4bpp(pixel_indices, tile_palettes, width, height):
     """Encode pixel index grid to SNES 4BPP tile data + tilemap.
 
@@ -656,7 +740,8 @@ def encode_tiles_4bpp(pixel_indices, tile_palettes, width, height):
 def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file,
                               num_palettes=PALETTES,
                               dither_method=DEFAULT_DITHER,
-                              grayscale=False, shared_palette=None):
+                              grayscale=False, shared_palette=None,
+                              palette_method='kmeans'):
     """Convert full-color PNG to SNES tiles with sub-palettes + dithering.
 
     Algorithm:
@@ -685,19 +770,19 @@ def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file,
     rgb5 = np.round(rgb * 31.0 / 255.0).clip(0, 31).astype(np.uint8)  # (H, W, 3) 5-bit
     rgb_q = rgb5.astype(np.float32) * (255.0 / 31.0)  # back to float for processing
 
-    # Per-tile mean colors for clustering
-    tile_blocks = rgb_q.reshape(tiles_h, 8, tiles_w, 8, 3).transpose(0, 2, 1, 3, 4)
-    tile_means = tile_blocks.mean(axis=(2, 3))  # (tiles_h, tiles_w, 3)
-    flat_means = tile_means.reshape(-1, 3)
-
-    labels, _centers = simple_kmeans(flat_means, num_palettes)
-    tile_labels = labels.reshape(tiles_h, tiles_w)
-
-    # Build sub-palettes (or use shared palette if provided)
+    # Build sub-palettes and tile-to-palette assignments
     sub_palettes = []
     sub_palette_rgb = np.zeros((num_palettes, 16, 3), dtype=np.float32)
 
     if shared_palette is not None:
+        # Shared palette takes priority over palette_method — assignment only
+        # Per-tile mean colors for clustering (tile assignment)
+        tile_blocks = rgb_q.reshape(tiles_h, 8, tiles_w, 8, 3).transpose(0, 2, 1, 3, 4)
+        tile_means = tile_blocks.mean(axis=(2, 3))
+        flat_means = tile_means.reshape(-1, 3)
+        labels, _centers = simple_kmeans(flat_means, num_palettes)
+        tile_labels = labels.reshape(tiles_h, tiles_w)
+
         for p in range(num_palettes):
             if p < len(shared_palette):
                 sub_palettes.append(list(shared_palette[p]))
@@ -705,7 +790,23 @@ def per_tile_palette_optimize(png_path, pal_file, tile_file, map_file,
                 sub_palettes.append([0] * 16)
             for ci, bgr in enumerate(sub_palettes[p]):
                 sub_palette_rgb[p, ci] = bgr555_to_rgb_float(bgr)
+
+    elif palette_method == 'tileaware':
+        # Tile-aware joint optimization of palette colors + tile assignment
+        sub_palettes, tile_labels = tileaware_palette_generate(
+            rgb5, tiles_h, tiles_w, num_palettes)
+        for p in range(num_palettes):
+            for ci, bgr in enumerate(sub_palettes[p]):
+                sub_palette_rgb[p, ci] = bgr555_to_rgb_float(bgr)
+
     else:
+        # K-means: cluster tiles by mean color, then reduce colors per cluster
+        tile_blocks = rgb_q.reshape(tiles_h, 8, tiles_w, 8, 3).transpose(0, 2, 1, 3, 4)
+        tile_means = tile_blocks.mean(axis=(2, 3))
+        flat_means = tile_means.reshape(-1, 3)
+        labels, _centers = simple_kmeans(flat_means, num_palettes)
+        tile_labels = labels.reshape(tiles_h, tiles_w)
+
         for p in range(num_palettes):
             mask = tile_labels == p
             positions = np.argwhere(mask)
@@ -946,7 +1047,7 @@ def decode_tiles_4bpp_rgb(tiles_raw, palette_rgb, tile_pal_offsets=None):
 def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
     """Reduce tile count to max_tiles using global greedy merge in RGB color space.
 
-    SNES VRAM budget is $3000 bytes = 384 tiles at 4BPP. Video frames at
+    SNES VRAM budget is $4000 bytes = 512 tiles at 4BPP. Video frames at
     256x160 can have up to 640 unique tiles. This function finds the most
     similar tile pairs across the ENTIRE image and merges them, distributing
     quality loss evenly rather than concentrating it in the bottom rows.
@@ -1054,7 +1155,8 @@ def reduce_tiles(tile_file, tilemap_file, palette_file, max_tiles=MAX_TILES):
 def convert_frame_superfamiconv(png_path, num_palettes=PALETTES,
                                 dither_method=DEFAULT_DITHER,
                                 max_tiles=MAX_TILES, grayscale=False,
-                                shared_palette=None):
+                                shared_palette=None,
+                                palette_method='kmeans'):
     """Convert one PNG frame to SNES tiles/tilemap/palette.
 
     Uses per-tile sub-palette optimization with configurable dithering
@@ -1070,7 +1172,8 @@ def convert_frame_superfamiconv(png_path, num_palettes=PALETTES,
                                   num_palettes=num_palettes,
                                   dither_method=dither_method,
                                   grayscale=grayscale,
-                                  shared_palette=shared_palette)
+                                  shared_palette=shared_palette,
+                                  palette_method=palette_method)
     except Exception as e:
         return False, str(e)
 
@@ -1084,7 +1187,8 @@ def convert_frame_superfamiconv(png_path, num_palettes=PALETTES,
 
 def convert_chapter_frames(chapter_dir, max_workers=4, num_palettes=PALETTES,
                            dither_method=DEFAULT_DITHER, max_tiles=MAX_TILES,
-                           grayscale=False, shared_palette_enabled=False):
+                           grayscale=False, shared_palette_enabled=False,
+                           palette_method='kmeans'):
     """Convert all PNG frames in a chapter directory to SNES tiles."""
     pngs = sorted(glob.glob(os.path.join(chapter_dir, "*.gfx_video.png")))
     if not pngs:
@@ -1098,9 +1202,12 @@ def convert_chapter_frames(chapter_dir, max_workers=4, num_palettes=PALETTES,
         if sample_count > 0:
             step = max(1, len(pngs) // sample_count)
             sample_paths = pngs[::step][:sample_count]
-            shared_pal = compute_shared_palette(sample_paths,
-                                                num_palettes=num_palettes,
-                                                grayscale=grayscale)
+            if palette_method == 'tileaware':
+                shared_pal = compute_shared_palette_tileaware(
+                    sample_paths, num_palettes=num_palettes, grayscale=grayscale)
+            else:
+                shared_pal = compute_shared_palette(
+                    sample_paths, num_palettes=num_palettes, grayscale=grayscale)
 
     converted = 0
     failed = 0
@@ -1110,7 +1217,8 @@ def convert_chapter_frames(chapter_dir, max_workers=4, num_palettes=PALETTES,
                                    dither_method=dither_method,
                                    max_tiles=max_tiles,
                                    grayscale=grayscale,
-                                   shared_palette=shared_pal): p for p in pngs}
+                                   shared_palette=shared_pal,
+                                   palette_method=palette_method): p for p in pngs}
         for future in concurrent.futures.as_completed(futures):
             success, err = future.result()
             if success:
@@ -1154,6 +1262,9 @@ def main():
                         help='Convert frames to grayscale before processing')
     parser.add_argument('--shared-palette', action='store_true',
                         help='Use shared palette across all frames in each chapter')
+    parser.add_argument('--palette-method', type=str, default='kmeans',
+                        choices=['kmeans', 'tileaware'],
+                        help='Palette optimization method (default: %(default)s)')
     parser.add_argument('--scale-mode', type=str, default=SCALE_STRETCH,
                         choices=[SCALE_STRETCH, SCALE_FIT, SCALE_CROP],
                         help='Frame scaling mode (default: %(default)s)')
@@ -1184,6 +1295,7 @@ def main():
     print(f"CUDA GPU:     {'Yes' if has_cuda else 'No (CPU fallback)'}")
     print(f"superfamiconv: {SUPERFAMICONV}")
     print(f"Dithering:    {args.dither}")
+    print(f"Palette opt:  {args.palette_method}")
     print(f"Palettes:     {args.palettes}")
     print(f"Max tiles:    {args.max_tiles}")
     print(f"Scale mode:   {args.scale_mode}")
@@ -1398,7 +1510,8 @@ def main():
                                        dither_method=args.dither,
                                        max_tiles=args.max_tiles,
                                        grayscale=args.grayscale,
-                                       shared_palette_enabled=args.shared_palette)
+                                       shared_palette_enabled=args.shared_palette,
+                                       palette_method=args.palette_method)
             total_converted += n
             print(f"[{i+1:3d}/{len(chapters)}] {name}: {n}/{len(pngs)} converted")
 
