@@ -75,7 +75,7 @@ distribution/*
 !distribution/README.md
 
 # Daphne laserdisc segments (large, user-supplied)
-data/laserdisc/segments/
+data/laserdisc/DLCDROM/
 
 # OS generated files
 .DS_Store
