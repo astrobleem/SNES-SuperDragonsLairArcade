@@ -94,6 +94,8 @@ python converter/gui.py
 
 The MSU-1 video pipeline includes a tile-aware palette optimizer that jointly optimizes tile-to-palette assignment and palette colors simultaneously, using perceptual color weighting and iterative refinement. Compared to the previous K-Means approach (which assigned tiles to palettes once and never revisited), the tile-aware method produces significantly better color reproduction — especially in scenes with complex lighting and color gradients.
 
+A spatial smoothing pass runs after palette assignment, reassigning tiles to match their neighbors' sub-palette when the error cost is acceptable (threshold: Euler's number *e*). This eliminates visible 8x8 block artifacts in smooth gradient regions like skies and lighting effects, where adjacent tiles would otherwise land on different sub-palettes and create jarring color discontinuities at tile boundaries.
+
 The VRAM tile budget has also been raised from 384 to 512 tiles per frame, making full use of the SNES VRAM allocation and reducing lossy tile merging.
 
 **Throne Room** — Source | K-Means 384 tiles (old) | Tile-Aware 512 tiles (new):

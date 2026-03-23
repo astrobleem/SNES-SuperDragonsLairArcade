@@ -1249,6 +1249,13 @@ def padImageReduceColdepth(inputImage, options):
     sys.stdout.flush()
     reducedImage = paddedImage.convert(
         'P', palette=Image.ADAPTIVE, colors=colorCount).convert('RGB')
+    # Keep source key-color pixels exact so they remain palette index 0 after quantization.
+    trans_rgb = convertColorSnesToRGB(options.get('transcol'))
+    src = np.array(paddedImage, dtype=np.uint8)
+    reduced = np.array(reducedImage, dtype=np.uint8)
+    trans_mask = np.all(src == np.array(trans_rgb, dtype=np.uint8), axis=2)
+    reduced[trans_mask] = trans_rgb
+    reducedImage = Image.fromarray(reduced, mode='RGB')
     print("Done reducing colors.")
     sys.stdout.flush()
     return reducedImage

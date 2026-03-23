@@ -35,6 +35,7 @@ import glob
 import argparse
 import shutil
 import struct
+import math
 import numpy as np
 from PIL import Image
 
@@ -601,6 +602,95 @@ def compute_shared_palette(png_paths, num_palettes=PALETTES, grayscale=False):
     return sub_palettes
 
 
+def _smooth_tile_assignments(tile_labels, palettes, snes_tiles,
+                             tiles_h, tiles_w,
+                             max_error_ratio=math.e, max_iterations=3):
+    """Spatially smooth tile-to-palette assignments to reduce boundary artifacts.
+
+    For each tile, if a majority of its 4-connected neighbors use a different
+    palette and switching has acceptable quantization error cost, reassign it.
+    This eliminates visible 8x8 block artifacts in smooth gradient regions
+    where adjacent tiles land on different sub-palettes.
+
+    Args:
+        tile_labels: (tiles_h, tiles_w) int, current palette assignments
+        palettes: list of num_palettes lists of 16 BGR555 values (index 0 = transparent)
+        snes_tiles: (n_tiles, 8, 8) uint16 BGR555 pixel data
+        tiles_h, tiles_w: grid dimensions
+        max_error_ratio: maximum allowed error increase per tile (1.15 = 15%)
+        max_iterations: maximum smoothing iterations
+
+    Returns:
+        (tiles_h, tiles_w) int array of smoothed palette assignments
+    """
+    n_tiles = tiles_h * tiles_w
+    num_palettes = len(palettes)
+
+    # Precompute full (n_tiles, num_palettes) error matrix — fully vectorized.
+    # For each palette, compute weighted quantization error for ALL tiles at once.
+    # Pixel data: (n_tiles, 64) uint16 BGR555 values
+    pixels = snes_tiles.reshape(n_tiles, 64).astype(np.int32)
+    px_r = (pixels & 0x1F).astype(np.float64)           # (n_tiles, 64)
+    px_g = ((pixels >> 5) & 0x1F).astype(np.float64)
+    px_b = ((pixels >> 10) & 0x1F).astype(np.float64)
+
+    error_matrix = np.zeros((n_tiles, num_palettes), dtype=np.float64)
+    for p in range(num_palettes):
+        bgr = np.array(palettes[p][1:], dtype=np.int32)  # skip transparent
+        pr = (bgr & 0x1F).astype(np.float64)             # (15,)
+        pg = ((bgr >> 5) & 0x1F).astype(np.float64)
+        pb = ((bgr >> 10) & 0x1F).astype(np.float64)
+        # Distance from each pixel to each palette color: (n_tiles, 64, 15)
+        dr = px_r[:, :, None] - pr[None, None, :]
+        dg = px_g[:, :, None] - pg[None, None, :]
+        db = px_b[:, :, None] - pb[None, None, :]
+        dist = 2.0 * dr * dr + 4.0 * dg * dg + db * db
+        # Min distance per pixel, then mean across tile (equal weight per pixel)
+        error_matrix[:, p] = dist.min(axis=2).mean(axis=1)
+
+    labels = tile_labels.copy()
+
+    for iteration in range(max_iterations):
+        changed = 0
+        for r in range(tiles_h):
+            for c in range(tiles_w):
+                current_pal = labels[r, c]
+                idx = r * tiles_w + c
+
+                # Collect 4-connected neighbor palettes
+                neighbor_pals = []
+                if r > 0:           neighbor_pals.append(labels[r - 1, c])
+                if r < tiles_h - 1: neighbor_pals.append(labels[r + 1, c])
+                if c > 0:           neighbor_pals.append(labels[r, c - 1])
+                if c < tiles_w - 1: neighbor_pals.append(labels[r, c + 1])
+
+                if not neighbor_pals:
+                    continue
+
+                # Find majority neighbor palette
+                counts = {}
+                for p in neighbor_pals:
+                    counts[p] = counts.get(p, 0) + 1
+                majority_pal = max(counts, key=counts.get)
+                majority_count = counts[majority_pal]
+
+                if majority_pal == current_pal or majority_count < 2:
+                    continue
+
+                # Check error ratio from precomputed matrix
+                current_error = error_matrix[idx, current_pal]
+                alt_error = error_matrix[idx, majority_pal]
+
+                if current_error > 0 and alt_error / current_error <= max_error_ratio:
+                    labels[r, c] = majority_pal
+                    changed += 1
+
+        if changed == 0:
+            break
+
+    return labels
+
+
 def tileaware_palette_generate(rgb5, tiles_h, tiles_w, num_palettes):
     """Generate sub-palettes using tile-aware iterative optimization.
 
@@ -637,6 +727,11 @@ def tileaware_palette_generate(rgb5, tiles_h, tiles_w, num_palettes):
     )
 
     tile_labels = tile_pal_ids.reshape(tiles_h, tiles_w).astype(int)
+
+    # Spatial smoothing: reduce palette boundary artifacts in gradient regions
+    tile_labels = _smooth_tile_assignments(
+        tile_labels, palettes, snes_tiles, tiles_h, tiles_w)
+
     return palettes, tile_labels
 
 
@@ -1262,7 +1357,7 @@ def main():
                         help='Convert frames to grayscale before processing')
     parser.add_argument('--shared-palette', action='store_true',
                         help='Use shared palette across all frames in each chapter')
-    parser.add_argument('--palette-method', type=str, default='kmeans',
+    parser.add_argument('--palette-method', type=str, default='tileaware',
                         choices=['kmeans', 'tileaware'],
                         help='Palette optimization method (default: %(default)s)')
     parser.add_argument('--scale-mode', type=str, default=SCALE_STRETCH,
